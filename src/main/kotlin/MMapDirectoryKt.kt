@@ -19,7 +19,7 @@ import java.util.concurrent.Future
 import java.lang.reflect.Field
 import java.lang.reflect.Method
 
-import ByteBufferGuardKt.BufferCleaner
+import ByteBufferGuard.BufferCleaner
 
 /**
  * Created by GBarbieri on 23.01.2017.
