@@ -32,7 +32,7 @@ public class MMapDirectory {
     public static final String UNMAP_NOT_SUPPORTED_REASON;
 
     /** Reference to a BufferCleaner that does unmapping; {@code null} if not supported. */
-    public static final BufferCleaner CLEANER;
+    static final BufferCleaner CLEANER;
 
     static {
         final Object hack = AccessController.doPrivileged((PrivilegedAction<Object>) MMapDirectory::unmapHackImpl);
@@ -102,7 +102,7 @@ public class MMapDirectory {
         }
     }
 
-    private static BufferCleaner newBufferCleaner(final Class<?> unmappableBufferClass, final MethodHandle unmapper) {
+    static BufferCleaner newBufferCleaner(final Class<?> unmappableBufferClass, final MethodHandle unmapper) {
         assert Objects.equals(methodType(void.class, ByteBuffer.class), unmapper.type());
         return (String resourceDescription, ByteBuffer buffer) -> {
             if (!buffer.isDirect()) {

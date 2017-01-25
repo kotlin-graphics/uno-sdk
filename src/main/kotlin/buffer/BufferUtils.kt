@@ -1,3 +1,5 @@
+package buffer
+
 /*
  * Copyright (c) 2009-2012 jMonkeyEngine
  * All rights reserved.
@@ -30,11 +32,20 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import buffer.ByteBufferGuard.BufferCleaner
+import buffer.MMapDirectory.newBufferCleaner
+import com.jogamp.opengl.util.GLBuffers
+import java.lang.invoke.MethodHandles.*
+import java.lang.invoke.MethodType.methodType
 import java.lang.reflect.InvocationTargetException
 import java.lang.reflect.Method
 import java.nio.*
+import java.security.AccessController
+import java.security.PrivilegedAction
+import java.util.*
 import java.util.logging.Level
 import java.util.logging.Logger
+
 
 fun ByteBuffer.destroy() = BufferUtils.destroyDirectBuffer(this)
 fun ShortBuffer.destroy() = BufferUtils.destroyDirectBuffer(this)
@@ -142,3 +153,113 @@ class BufferUtils {
     }
 }
 
+fun main(args: Array<String>) {
+
+    val bb = GLBuffers.newDirectByteBuffer(1_000_000_000)
+
+    println(bb)
+
+    bb.destroy()
+
+    println(bb)
+}
+
+public class BU {
+
+    /**
+     * `true`, if this platform supports unmapping mmapped files.
+     */
+    var UNMAP_SUPPORTED: Boolean
+
+    /**
+     * if [.UNMAP_SUPPORTED] is `false`, this contains the reason why unmapping is not supported.
+     */
+    var UNMAP_NOT_SUPPORTED_REASON: String?
+
+    /** Reference to a BufferCleaner that does unmapping; `null` if not supported.  */
+    internal var CLEANER: BufferCleaner?
+
+    init {
+        val hack = AccessController.doPrivileged(unmapHackImpl() as PrivilegedAction<Any>);
+        if (hack is BufferCleaner) {
+            CLEANER = hack as BufferCleaner
+            UNMAP_SUPPORTED = true;
+            UNMAP_NOT_SUPPORTED_REASON = null;
+        } else {
+            CLEANER = null;
+            UNMAP_SUPPORTED = false;
+            UNMAP_NOT_SUPPORTED_REASON = hack.toString();
+        }
+    }
+
+    companion object {
+        //    @SuppressForbidden(reason = "Needs access to private APIs in DirectBuffer, sun.misc.Cleaner, and sun.misc.Unsafe to enable hack")
+        fun unmapHackImpl(): Any {
+            val lookup = lookup()
+            try {
+                try {
+                    // *** sun.misc.Unsafe unmapping (Java 9+) ***
+                    val unsafeClass = Class.forName("sun.misc.Unsafe")
+                    // first check if Unsafe has the right method, otherwise we can give up
+                    // without doing any security critical stuff:
+                    val unmapper = lookup.findVirtual(unsafeClass, "invokeCleaner",
+                            methodType(Void.TYPE, ByteBuffer::class.java))
+                    // fetch the unsafe instance and bind it to the virtual MH:
+                    val f = unsafeClass.getDeclaredField("theUnsafe")
+                    f.isAccessible = true
+                    val theUnsafe = f.get(null)
+                    return newBufferCleaner(ByteBuffer::class.java, unmapper.bindTo(theUnsafe))
+                } catch (se: SecurityException) {
+                    // rethrow to report errors correctly (we need to catch it here, as we also catch RuntimeException below!):
+                    throw se
+                } catch (e: ReflectiveOperationException) {
+                    // *** sun.misc.Cleaner unmapping (Java 8) ***
+                    val directBufferClass = Class.forName("java.nio.DirectByteBuffer")
+
+                    val m = directBufferClass.getMethod("cleaner")
+                    m.isAccessible = true
+                    val directBufferCleanerMethod = lookup.unreflect(m)
+                    val cleanerClass = directBufferCleanerMethod.type().returnType()
+
+                    /* "Compile" a MH that basically is equivalent to the following code:
+             * void unmapper(ByteBuffer byteBuffer) {
+             *   sun.misc.Cleaner cleaner = ((java.nio.DirectByteBuffer) byteBuffer).cleaner();
+             *   if (Objects.nonNull(cleaner)) {
+             *     cleaner.clean();
+             *   } else {
+             *     noop(cleaner); // the noop is needed because MethodHandles#guardWithTest always needs ELSE
+             *   }
+             * }
+             */
+                    val cleanMethod = lookup.findVirtual(cleanerClass, "clean", methodType(Void.TYPE))
+                    val nonNullTest = lookup.findStatic(Objects::class.java, "nonNull", methodType(Boolean::class.javaPrimitiveType, Any::class.java))
+                            .asType(methodType(Boolean::class.javaPrimitiveType, cleanerClass))
+                    val noop = dropArguments(constant(Void::class.java, null).asType(methodType(Void.TYPE)), 0, cleanerClass)
+                    val unmapper = filterReturnValue(directBufferCleanerMethod, guardWithTest(nonNullTest, cleanMethod, noop))
+                            .asType(methodType(Void.TYPE, ByteBuffer::class.java))
+                    return newBufferCleaner(directBufferClass, unmapper)
+                } catch (e: RuntimeException) {
+                    val directBufferClass = Class.forName("java.nio.DirectByteBuffer")
+                    val m = directBufferClass.getMethod("cleaner")
+                    m.isAccessible = true
+                    val directBufferCleanerMethod = lookup.unreflect(m)
+                    val cleanerClass = directBufferCleanerMethod.type().returnType()
+                    val cleanMethod = lookup.findVirtual(cleanerClass, "clean", methodType(Void.TYPE))
+                    val nonNullTest = lookup.findStatic(Objects::class.java, "nonNull", methodType(Boolean::class.javaPrimitiveType, Any::class.java)).asType(methodType(Boolean::class.javaPrimitiveType, cleanerClass))
+                    val noop = dropArguments(constant(Void::class.java, null).asType(methodType(Void.TYPE)), 0, cleanerClass)
+                    val unmapper = filterReturnValue(directBufferCleanerMethod, guardWithTest(nonNullTest, cleanMethod, noop)).asType(methodType(Void.TYPE, ByteBuffer::class.java))
+                    return newBufferCleaner(directBufferClass, unmapper)
+                }
+
+            } catch (se: SecurityException) {
+                return "Unmapping is not supported, because not all required permissions are given to the Lucene JAR file: " + se +
+                        " [Please grant at least the following permissions: RuntimePermission(\"accessClassInPackage.sun.misc\") " +
+                        " and ReflectPermission(\"suppressAccessChecks\")]"
+            } catch (e: ReflectiveOperationException) {
+                return "Unmapping is not supported on this platform, because internal Java APIs are not compatible with this Lucene version: " + e
+            } catch (e: RuntimeException) {
+                return "Unmapping is not supported on this platform, because internal Java APIs are not compatible with this Lucene version: " + e
+            }
+        }
+    }
+}
