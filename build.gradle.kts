@@ -66,5 +66,5 @@ allprojects {
 //        put("Main-Class", "com.mkyong.DateUtils")
 //    }
 //
-//    baseName = project.name + "-all"
+//    baseName = project.extensions.getName + "-all"
 //}
