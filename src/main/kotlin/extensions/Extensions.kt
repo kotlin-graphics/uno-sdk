@@ -1,16 +1,16 @@
 package extensions
 
-import com.jogamp.common.net.Uri
+import com.jogamp.opengl.GL2ES2
+import com.jogamp.opengl.util.glsl.ShaderCode
 import com.jogamp.opengl.util.glsl.ShaderProgram
-import java.nio.ByteBuffer
-import java.nio.ShortBuffer
+import com.sun.xml.internal.fastinfoset.util.StringArray
 
 /**
  * Created by GBarbieri on 27.01.2017.
  */
 
-val String.uri
-    get() = Uri.valueOf(javaClass.getResource(this))
-
 val ShaderProgram.name
     get() = program()
+
+fun ShaderCode.create(gl: GL2ES2, type: Int, context: Class<*>, sourceFiles: Array<String>)
+        = ShaderCode.create(gl, type, sourceFiles.size, context, sourceFiles, false)
