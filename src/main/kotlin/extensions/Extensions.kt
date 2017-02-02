@@ -1,9 +1,9 @@
 package extensions
 
+import com.jogamp.common.net.Uri
 import com.jogamp.opengl.GL2ES2
 import com.jogamp.opengl.util.glsl.ShaderCode
 import com.jogamp.opengl.util.glsl.ShaderProgram
-import com.sun.xml.internal.fastinfoset.util.StringArray
 
 /**
  * Created by GBarbieri on 27.01.2017.
@@ -41,3 +41,5 @@ class ShaderProgramUtil() {
                 createShaderProgram(gl, context, shaderSrc)
     }
 }
+
+fun String.uri(context: Class<*>) = Uri.valueOf(context.getResource(this))

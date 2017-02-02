@@ -12,6 +12,7 @@ import com.jogamp.opengl.GL3
 import com.jogamp.opengl.GL3ES3.*
 import com.jogamp.opengl.util.glsl.ShaderCode
 import com.jogamp.opengl.util.glsl.ShaderProgram
+import extensions.uri
 
 /**
 
@@ -88,27 +89,29 @@ class Program {
         name = shaderProgram.program()
     }
 
-    constructor(gl: GL3, shaders: Array<Uri>, uniforms: Array<String>) {
+    constructor(gl: GL3, shaders: Array<String>, uniforms: Array<String> = arrayOf()) {
 
         val shaderProgram = ShaderProgram()
 
-        shaders.forEach { shaderProgram.add(ShaderCode.create(gl, it.type, 1, arrayOf(it), false)) }
+        val shaderCodes = shaders.map { ShaderCode.create(gl, it.type, 1,
+                arrayOf(Uri.valueOf(javaClass.classLoader.getResource(it))), false) }
+        shaderCodes.forEach { shaderProgram.add(it) }
 
         shaderProgram.link(gl, System.err)
 
-        shaders.forEach { shaderProgram.destroy(gl) }
-
         name = shaderProgram.program()
+
+        shaderCodes.forEach { it.destroy(gl) }
 
         uniforms.forEach {
             val i = gl.glGetUniformLocation(name, it)
-            if(i != -1)
+            if (i != -1)
                 this.uniforms[it] = i
         }
     }
 
-    val Uri.extension
-        get() = toString().substring(toString().lastIndexOf('.') + 1)
+    val String.extension
+        get() = substring(lastIndexOf('.') + 1)
 
     /**
      * https://www.khronos.org/opengles/sdk/tools/Reference-Compiler/
@@ -119,7 +122,7 @@ class Program {
      * .geom - a geometry shader
      * .frag - a fragment shader
      * .comp - a compute shader     */
-    val Uri.type
+    val String.type
         get() = when (extension) {
             "vert" -> GL_VERTEX_SHADER
             "tesc" -> GL_TESS_CONTROL_SHADER
