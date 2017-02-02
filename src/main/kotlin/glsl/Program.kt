@@ -12,7 +12,6 @@ import com.jogamp.opengl.GL3
 import com.jogamp.opengl.GL3ES3.*
 import com.jogamp.opengl.util.glsl.ShaderCode
 import com.jogamp.opengl.util.glsl.ShaderProgram
-import extensions.uri
 
 /**
 
