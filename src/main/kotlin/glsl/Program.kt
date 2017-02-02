@@ -93,8 +93,9 @@ class Program {
 
         val shaderProgram = ShaderProgram()
 
-        val shaderCodes = shaders.map { ShaderCode.create(gl, it.type, 1,
-                arrayOf(Uri.valueOf(javaClass.classLoader.getResource(it))), false) }
+        val shaderCodes = shaders.map {
+            ShaderCode.create(gl, it.type, 1, arrayOf(Uri.valueOf(javaClass.classLoader.getResource(it))), false)
+        }
         shaderCodes.forEach { shaderProgram.add(it) }
 
         shaderProgram.link(gl, System.err)
@@ -107,6 +108,8 @@ class Program {
             val i = gl.glGetUniformLocation(name, it)
             if (i != -1)
                 this.uniforms[it] = i
+            else
+                System.err.print("unable to find $it uniform location!")
         }
     }
 

@@ -43,7 +43,7 @@ class App : GLEventListener {
 
 //            println("a ${javaClass.classLoader.getResource("shader.vert").toString()}")
 //            println("b ${Uri.valueOf(javaClass.getResource("shader.vert"))}")
-            val program = Program(this, javaClass, arrayOf("shader.vert", "shader.frag"))
+//            val program = Program(this, javaClass, arrayOf("shader.vert", "shader.frag"))
         }
     }
 
