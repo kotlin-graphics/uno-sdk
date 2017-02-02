@@ -42,4 +42,5 @@ class ShaderProgramUtil() {
     }
 }
 
-fun String.uri(context: Class<*>) = Uri.valueOf(context.getResource(this))
+val String.url
+        get() = javaClass.getResource(this)
