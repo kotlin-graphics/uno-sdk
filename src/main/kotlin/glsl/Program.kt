@@ -20,6 +20,7 @@ import com.jogamp.opengl.util.glsl.ShaderProgram
 class Program {
 
     var name: Int = 0
+    val uniforms = HashMap<String, Int>()
 
     constructor(gl: GL3, shadersRoot: String, shadersSrc: String) : this(gl, shadersRoot, shadersSrc, shadersSrc)
 
@@ -98,6 +99,12 @@ class Program {
         shaders.forEach { shaderProgram.destroy(gl) }
 
         name = shaderProgram.program()
+
+        uniforms.forEach {
+            val i = gl.glGetUniformLocation(name, it)
+            if(i != -1)
+                this.uniforms[it] = i
+        }
     }
 
     val Uri.extension
