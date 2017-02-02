@@ -9,6 +9,7 @@ import com.jogamp.common.net.Uri
 import com.jogamp.opengl.GL2ES2.GL_FRAGMENT_SHADER
 import com.jogamp.opengl.GL2ES2.GL_VERTEX_SHADER
 import com.jogamp.opengl.GL3
+import com.jogamp.opengl.GL3ES3.*
 import com.jogamp.opengl.util.glsl.ShaderCode
 import com.jogamp.opengl.util.glsl.ShaderProgram
 
@@ -16,7 +17,7 @@ import com.jogamp.opengl.util.glsl.ShaderProgram
 
  * @author GBarbieri
  */
-class Program  {
+class Program {
 
     var name: Int = 0
 
@@ -32,7 +33,6 @@ class Program  {
             replaceFragNew: Array<String>)
 
             : this(gl, shadersRoot, shadersSrc, shadersSrc, replaceVertOld, replaceVertNew, replaceFragOld, replaceFragNew)
-
 
 
     @JvmOverloads constructor(
@@ -86,4 +86,40 @@ class Program  {
 
         name = shaderProgram.program()
     }
+
+    constructor(gl: GL3, shaders: Array<Uri>, uniforms: Array<String>) {
+
+        val shaderProgram = ShaderProgram()
+
+        shaders.forEach { shaderProgram.add(ShaderCode.create(gl, it.type, 1, arrayOf(it), false)) }
+
+        shaderProgram.link(gl, System.err)
+
+        shaders.forEach { shaderProgram.destroy(gl) }
+
+        name = shaderProgram.program()
+    }
+
+    val Uri.extension
+        get() = toString().substring(toString().lastIndexOf('.') + 1)
+
+    /**
+     * https://www.khronos.org/opengles/sdk/tools/Reference-Compiler/
+     *
+     * .vert - a vertex shader
+     * .tesc - a tessellation control shader
+     * .tese - a tessellation evaluation shader
+     * .geom - a geometry shader
+     * .frag - a fragment shader
+     * .comp - a compute shader     */
+    val Uri.type
+        get() = when (extension) {
+            "vert" -> GL_VERTEX_SHADER
+            "tesc" -> GL_TESS_CONTROL_SHADER
+            "tese" -> GL_TESS_EVALUATION_SHADER
+            "geom" -> GL_GEOMETRY_SHADER
+            "frag" -> GL_FRAGMENT_SHADER
+            "comp" -> GL_COMPUTE_SHADER
+            else -> throw Error("invalid shader extension")
+        }
 }
