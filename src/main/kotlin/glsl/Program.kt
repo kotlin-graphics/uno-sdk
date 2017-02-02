@@ -129,4 +129,6 @@ class Program {
             "comp" -> GL_COMPUTE_SHADER
             else -> throw Error("invalid shader extension")
         }
+
+    operator fun get(s: String) = uniforms[s]
 }
