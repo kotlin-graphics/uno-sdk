@@ -48,3 +48,8 @@ val String.url
         get() = javaClass.getResource(this)
 
 fun floatBufferOf(vararg elements: Float) = GLBuffers.newDirectFloatBuffer(elements)
+fun floatBufferOf(vararg elements: Number) = GLBuffers.newDirectFloatBuffer(elements.map(Number::toFloat).toFloatArray())
+fun intBufferOf(vararg elements: Int) = GLBuffers.newDirectIntBuffer(elements)
+fun intBufferOf(vararg elements: Number) = GLBuffers.newDirectIntBuffer(elements.map(Number::toInt).toIntArray())
+fun shortBufferOf(vararg elements: Short) = GLBuffers.newDirectShortBuffer(elements)
+fun shortBufferOf(vararg elements: Number) = GLBuffers.newDirectShortBuffer(elements.map(Number::toShort).toShortArray())
