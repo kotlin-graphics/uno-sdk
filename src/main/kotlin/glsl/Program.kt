@@ -10,6 +10,7 @@ import com.jogamp.opengl.GL2ES2.GL_FRAGMENT_SHADER
 import com.jogamp.opengl.GL2ES2.GL_VERTEX_SHADER
 import com.jogamp.opengl.GL3
 import com.jogamp.opengl.GL3ES3.*
+import com.jogamp.opengl.GLException
 import com.jogamp.opengl.util.glsl.ShaderCode
 import com.jogamp.opengl.util.glsl.ShaderProgram
 
@@ -95,7 +96,13 @@ class Program {
         val shaderCodes = shaders.map {
             ShaderCode.create(gl, it.type, 1, arrayOf(Uri.valueOf(javaClass.classLoader.getResource(it))), false)
         }
-        shaderCodes.forEach { shaderProgram.add(it) }
+        shaderCodes.forEach {
+            try {
+                shaderProgram.add(gl, it, System.err)
+            } catch (ex: GLException) {
+                System.err.println("shader $it")
+            }
+        }
 
         shaderProgram.link(gl, System.err)
 
