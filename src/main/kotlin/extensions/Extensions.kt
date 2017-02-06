@@ -1,11 +1,9 @@
 package extensions
 
-import com.jogamp.common.net.Uri
 import com.jogamp.opengl.GL2ES2
 import com.jogamp.opengl.util.GLBuffers
 import com.jogamp.opengl.util.glsl.ShaderCode
 import com.jogamp.opengl.util.glsl.ShaderProgram
-import java.nio.FloatBuffer
 
 /**
  * Created by GBarbieri on 27.01.2017.
@@ -45,7 +43,7 @@ class ShaderProgramUtil() {
 }
 
 val String.url
-        get() = javaClass.getResource(this)
+        get() = javaClass.classLoader.getResource(this)
 
 fun floatBufferOf(vararg elements: Float) = GLBuffers.newDirectFloatBuffer(elements)
 fun floatBufferOf(vararg elements: Number) = GLBuffers.newDirectFloatBuffer(elements.map(Number::toFloat).toFloatArray())
