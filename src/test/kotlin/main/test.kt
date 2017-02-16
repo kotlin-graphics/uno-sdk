@@ -1,14 +1,11 @@
 package main
 
-import com.jogamp.common.net.Uri
 import com.jogamp.newt.opengl.GLWindow
 import com.jogamp.opengl.GLAutoDrawable
 import com.jogamp.opengl.GLCapabilities
 import com.jogamp.opengl.GLEventListener
 import com.jogamp.opengl.GLProfile
 import com.jogamp.opengl.util.Animator
-import extensions.uri
-import glsl.Program
 import io.kotlintest.specs.StringSpec
 
 /**
