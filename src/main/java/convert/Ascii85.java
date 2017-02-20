@@ -38,7 +38,7 @@ public class Ascii85 {
         if (payload == null || payload.length == 0) {
             throw new IllegalArgumentException("You must provide a non-zero length input");
         }
-        //By using five ASCII characters to represent four bytes of binary data the encoded size ¹ is larger than the original
+        //By using five ASCII characters to represent four bytes of binary data the encoded size is larger than the original
         StringBuilder stringBuff = new StringBuilder(payload.length * 5 / 4);
         //We break the payload into int (4 bytes)
         byte[] chunk = new byte[4];
