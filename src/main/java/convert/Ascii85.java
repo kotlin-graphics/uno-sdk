@@ -38,7 +38,7 @@ public class Ascii85 {
         if (payload == null || payload.length == 0) {
             throw new IllegalArgumentException("You must provide a non-zero length input");
         }
-        //By using five ASCII characters to represent four bytes of binary data the encoded size ¹⁄₄ is larger than the original
+        //By using five ASCII characters to represent four bytes of binary data the encoded size ¹ is larger than the original
         StringBuilder stringBuff = new StringBuilder(payload.length * 5 / 4);
         //We break the payload into int (4 bytes)
         byte[] chunk = new byte[4];
@@ -96,7 +96,7 @@ public class Ascii85 {
         if (chars == null || chars.length() == 0) {
             throw new IllegalArgumentException("You must provide a non-zero length input");
         }
-        //By using five ASCII characters to represent four bytes of binary data the encoded size ¹⁄₄ is larger than the original
+        //By using five ASCII characters to represent four bytes of binary data the encoded size is larger than the original
         ByteBuffer bytebuff = ByteBuffer.allocate((chars.length() * 4 / 5));
         //1. Whitespace characters may occur anywhere to accommodate line length limitations. So lets strip it.
         chars = REMOVE_WHITESPACE.matcher(chars).replaceAll("");
