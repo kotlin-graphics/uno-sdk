@@ -89,7 +89,7 @@ class Program {
         name = shaderProgram.program()
     }
 
-    constructor(gl: GL3, shaders: Array<String>, uniforms: Array<String> = arrayOf()) {
+    constructor(gl: GL3, shaders: Array<String>, uniforms: Array<String> = emptyArray()) {
 
         val shaderProgram = ShaderProgram()
 
@@ -118,29 +118,6 @@ class Program {
                 System.err.print("unable to find $it uniform location!")
         }
     }
-
-    val String.extension
-        get() = substring(lastIndexOf('.') + 1)
-
-    /**
-     * https://www.khronos.org/opengles/sdk/tools/Reference-Compiler/
-     *
-     * .vert - a vertex shader
-     * .tesc - a tessellation control shader
-     * .tese - a tessellation evaluation shader
-     * .geom - a geometry shader
-     * .frag - a fragment shader
-     * .comp - a compute shader     */
-    val String.type
-        get() = when (extension) {
-            "vert" -> GL_VERTEX_SHADER
-            "tesc" -> GL_TESS_CONTROL_SHADER
-            "tese" -> GL_TESS_EVALUATION_SHADER
-            "geom" -> GL_GEOMETRY_SHADER
-            "frag" -> GL_FRAGMENT_SHADER
-            "comp" -> GL_COMPUTE_SHADER
-            else -> throw Error("invalid shader extension")
-        }
 
     operator fun get(s: String) = uniforms[s]
 }
