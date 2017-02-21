@@ -8,7 +8,7 @@ import com.jogamp.opengl.util.glsl.ShaderCode
  */
 
 fun shaderCodeOf(string: String, gl: GL2ES2, context: Class<*>): ShaderCode = ShaderCode.create(gl, string.type, context::class.java,
-        if (string.contains('/')) string.substringBeforeLast('/') else "", null, string, "vert", null, true)
+        if (string.contains('/')) string.substringAfterLast('/') else "", null, string, "vert", null, true)
 
 
 /**
