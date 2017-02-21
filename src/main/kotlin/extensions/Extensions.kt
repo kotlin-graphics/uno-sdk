@@ -64,3 +64,12 @@ fun intBufferOf(vararg elements: Number): IntBuffer = GLBuffers.newDirectIntBuff
 
 fun longBufferOf(vararg elements: Long): LongBuffer = GLBuffers.newDirectLongBuffer(elements)
 fun longBufferOf(vararg elements: Number): LongBuffer = GLBuffers.newDirectLongBuffer(elements.map(Number::toLong).toLongArray())
+
+
+fun floatBufferBig(size: Int): FloatBuffer = GLBuffers.newDirectFloatBuffer(size)
+fun doubleBufferBig(size: Int): DoubleBuffer = GLBuffers.newDirectDoubleBuffer(size)
+
+fun byteBufferBig(size: Int): ByteBuffer = GLBuffers.newDirectByteBuffer(size)
+fun shortBufferBig(size: Int): ShortBuffer = GLBuffers.newDirectShortBuffer(size)
+fun intBufferBig(size: Int): IntBuffer = GLBuffers.newDirectIntBuffer(size)
+fun longBufferBig(size: Int): LongBuffer = GLBuffers.newDirectLongBuffer(size)
