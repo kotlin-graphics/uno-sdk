@@ -4,6 +4,7 @@ import com.jogamp.opengl.GL2ES2
 import com.jogamp.opengl.util.GLBuffers
 import com.jogamp.opengl.util.glsl.ShaderCode
 import com.jogamp.opengl.util.glsl.ShaderProgram
+import main.BYTES
 import java.net.URL
 import java.nio.*
 
@@ -47,23 +48,60 @@ class ShaderProgramUtil() {
 fun String.URL(clazz: Class<*>): URL = clazz.classLoader.getResource(this)
 
 
-fun floatBufferOf(floats: FloatArray): FloatBuffer = GLBuffers.newDirectFloatBuffer(floats)
-fun floatBufferOf(elements: Array<Number>): FloatBuffer = GLBuffers.newDirectFloatBuffer(elements.map(Number::toFloat).toFloatArray())
+fun FloatArray.toFloatBuffer(): FloatBuffer = GLBuffers.newDirectFloatBuffer(this)
+fun FloatArray.toByteBuffer(): ByteBuffer {
+    val res = byteBufferBig(size * Float.BYTES)
+    forEachIndexed { i, f -> res.putFloat(i * Float.BYTES, f) }
+    return res
+}
 
-fun doubleBufferOf(doubles: DoubleArray): DoubleBuffer = GLBuffers.newDirectDoubleBuffer(doubles)
-fun doubleBufferOf(elements: Array<Number>): DoubleBuffer = GLBuffers.newDirectDoubleBuffer(elements.map(Number::toDouble).toDoubleArray())
+fun DoubleArray.toDoubleBuffer(): DoubleBuffer = GLBuffers.newDirectDoubleBuffer(this)
+fun DoubleArray.toByteBuffer(): ByteBuffer {
+    val res = byteBufferBig(size * Double.BYTES)
+    forEachIndexed { i, d -> res.putDouble(i * Double.BYTES, d) }
+    return res
+}
 
-fun byteBufferOf(elements: ByteArray): ByteBuffer = GLBuffers.newDirectByteBuffer(elements)
-fun byteBufferOf(elements: Array<Number>): ByteBuffer = GLBuffers.newDirectByteBuffer(elements.map(Number::toByte).toByteArray())
+fun ByteArray.toByteBuffer(): ByteBuffer = GLBuffers.newDirectByteBuffer(this)
 
-fun shortBufferOf(elements: ShortArray): ShortBuffer = GLBuffers.newDirectShortBuffer(elements)
-fun shortBufferOf(elements: Array<Number>): ShortBuffer = GLBuffers.newDirectShortBuffer(elements.map(Number::toShort).toShortArray())
+fun ShortArray.toShortBuffer(): ShortBuffer = GLBuffers.newDirectShortBuffer(this)
+fun ShortArray.toByteBuffer(): ByteBuffer {
+    val res = byteBufferBig(size * Short.BYTES)
+    forEachIndexed { i, s -> res.putShort(i * Short.BYTES, s) }
+    return res
+}
 
-fun intBufferOf(elements: IntArray): IntBuffer = GLBuffers.newDirectIntBuffer(elements)
-fun intBufferOf(elements: Array<Number>): IntBuffer = GLBuffers.newDirectIntBuffer(elements.map(Number::toInt).toIntArray())
+fun IntArray.toIntBuffer(): IntBuffer = GLBuffers.newDirectIntBuffer(this)
+fun IntArray.toByteBuffer(): ByteBuffer {
+    val res = byteBufferBig(size * Int.BYTES)
+    forEachIndexed { i, int -> res.putInt(i * Int.BYTES, int) }
+    return res
+}
 
-fun longBufferOf(elements: LongArray): LongBuffer = GLBuffers.newDirectLongBuffer(elements)
-fun longBufferOf(elements: Array<Number>): LongBuffer = GLBuffers.newDirectLongBuffer(elements.map(Number::toLong).toLongArray())
+fun LongArray.toLongBuffer(): LongBuffer = GLBuffers.newDirectLongBuffer(this)
+fun LongArray.toByteBuffer(): ByteBuffer {
+    val res = byteBufferBig(size * Long.BYTES)
+    forEachIndexed { i, long -> res.putLong(i * Long.BYTES, long) }
+    return res
+}
+
+fun floatBufferOf(vararg floats: Float): FloatBuffer = GLBuffers.newDirectFloatBuffer(floats)
+fun floatBufferOf(vararg elements: Number): FloatBuffer = GLBuffers.newDirectFloatBuffer(elements.map(Number::toFloat).toFloatArray())
+
+fun doubleBufferOf(vararg elements: Double): DoubleBuffer = GLBuffers.newDirectDoubleBuffer(elements)
+fun doubleBufferOf(vararg elements: Number): DoubleBuffer = GLBuffers.newDirectDoubleBuffer(elements.map(Number::toDouble).toDoubleArray())
+
+fun byteBufferOf(vararg elements: Byte): ByteBuffer = GLBuffers.newDirectByteBuffer(elements)
+fun byteBufferOf(vararg elements: Number): ByteBuffer = GLBuffers.newDirectByteBuffer(elements.map(Number::toByte).toByteArray())
+
+fun shortBufferOf(vararg elements: Short): ShortBuffer = GLBuffers.newDirectShortBuffer(elements)
+fun shortBufferOf(vararg elements: Number): ShortBuffer = GLBuffers.newDirectShortBuffer(elements.map(Number::toShort).toShortArray())
+
+fun intBufferOf(vararg elements: Int): IntBuffer = GLBuffers.newDirectIntBuffer(elements)
+fun intBufferOf(vararg elements: Number): IntBuffer = GLBuffers.newDirectIntBuffer(elements.map(Number::toInt).toIntArray())
+
+fun longBufferOf(vararg elements: Long): LongBuffer = GLBuffers.newDirectLongBuffer(elements)
+fun longBufferOf(vararg elements: Number): LongBuffer = GLBuffers.newDirectLongBuffer(elements.map(Number::toLong).toLongArray())
 
 
 fun floatBufferBig(size: Int): FloatBuffer = GLBuffers.newDirectFloatBuffer(size)
