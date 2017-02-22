@@ -9,13 +9,12 @@ import com.jogamp.opengl.util.glsl.ShaderCode
  * Created by GBarbieri on 21.02.2017.
  */
 
-fun shaderCodeOf(string: String, gl: GL2ES2, context: Class<*>): ShaderCode =
-        ShaderCode.create(gl, string.type, context,
-                if (string.contains('/')) string.substringBeforeLast('/') else "",  // root
-                null,
-                string.substringAfterLast('/').substringBefore('.'),    // src
-                string.substringAfterLast('.'), // extension
-                null, true)
+fun shaderCodeOf(string: String, gl: GL2ES2, context: Class<*>): ShaderCode {
+    val root = if (string.contains('/')) string.substringBeforeLast('/') else ""
+    val name = string.substringAfterLast('/').substringBefore('.')
+    val extension = string.substringAfterLast('.')
+    return ShaderCode.create(gl, string.type, context, root, null, name, extension, null, true)
+}
 
 
 /**

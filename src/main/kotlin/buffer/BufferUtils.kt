@@ -66,7 +66,7 @@ class BufferUtils {
                 ?: loadMethod("sun.nio.ch.DirectBuffer", "attachment")
         // Apache Harmony
         val freeMethod = try {
-            ByteBuffer.allocateDirect(1).javaClass.getMethod("free")
+            ByteBuffer.allocateDirect(1)::class.java.getMethod("free")
         } catch (ex: NoSuchMethodException) {
             null
         } catch (ex: SecurityException) {
@@ -85,7 +85,7 @@ class BufferUtils {
             } catch (ex: ClassNotFoundException) {
                 return null // the direct buffer implementation was not found
             } catch (t: Throwable) {
-                if (t.javaClass.name == "java.lang.reflect.InaccessibleObjectException")
+                if (t::class.java.name == "java.lang.reflect.InaccessibleObjectException")
                     return null// the class is in an unexported module
                 else
                     throw t
@@ -115,7 +115,7 @@ class BufferUtils {
                                     if (cleaner is Runnable)    // jdk.internal.ref.Cleaner implements Runnable in Java 9
                                         loadMethod(Runnable::class.java.name, "run")
                                     else    // sun.misc.Cleaner does not implement Runnable in Java < 9
-                                        loadMethod(cleaner.javaClass.name, "clean")
+                                        loadMethod(cleaner::class.java.name, "clean")
 
                             if (localCleanMethod == null)
                                 Logger.getLogger(BufferUtils::class.java.name).log(Level.SEVERE,

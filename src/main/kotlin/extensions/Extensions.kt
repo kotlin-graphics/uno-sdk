@@ -15,7 +15,7 @@ import java.nio.*
 val ShaderProgram.name
     get() = program()
 
-fun ShaderCode.create(gl: GL2ES2, type: Int, context: Class<*>, sourceFiles: Array<String>)
+fun ShaderCode.create(gl: GL2ES2, type: Int, context: Class<*>, sourceFiles: Array<String>): ShaderCode
         = ShaderCode.create(gl, type, sourceFiles.size, context, sourceFiles, false)
 
 fun createShaderProgram(gl: GL2ES2, context: Class<*>, shaderSrc: String): ShaderProgram {
@@ -51,14 +51,14 @@ fun String.URL(clazz: Class<*>): URL = clazz.classLoader.getResource(this)
 fun FloatArray.toFloatBuffer(): FloatBuffer = GLBuffers.newDirectFloatBuffer(this)
 fun FloatArray.toByteBuffer(): ByteBuffer {
     val res = byteBufferBig(size * Float.BYTES)
-    forEachIndexed { i, f -> res.putFloat(i * Float.BYTES, f) }
+    forEachIndexed { i, float -> res.putFloat(i * Float.BYTES, float) }
     return res
 }
 
 fun DoubleArray.toDoubleBuffer(): DoubleBuffer = GLBuffers.newDirectDoubleBuffer(this)
 fun DoubleArray.toByteBuffer(): ByteBuffer {
     val res = byteBufferBig(size * Double.BYTES)
-    forEachIndexed { i, d -> res.putDouble(i * Double.BYTES, d) }
+    forEachIndexed { i, double -> res.putDouble(i * Double.BYTES, double) }
     return res
 }
 
@@ -67,7 +67,7 @@ fun ByteArray.toByteBuffer(): ByteBuffer = GLBuffers.newDirectByteBuffer(this)
 fun ShortArray.toShortBuffer(): ShortBuffer = GLBuffers.newDirectShortBuffer(this)
 fun ShortArray.toByteBuffer(): ByteBuffer {
     val res = byteBufferBig(size * Short.BYTES)
-    forEachIndexed { i, s -> res.putShort(i * Short.BYTES, s) }
+    forEachIndexed { i, short -> res.putShort(i * Short.BYTES, short) }
     return res
 }
 
