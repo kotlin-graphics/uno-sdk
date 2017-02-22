@@ -2,7 +2,7 @@ buildscript {
 
     repositories {
         gradleScriptKotlin()
-        maven { setUrl("http://dl.bintray.com/kotlin/kotlin-eap-1.1") }
+//        maven { setUrl("http://dl.bintray.com/kotlin/kotlin-eap-1.1") }
     }
 
     dependencies {
@@ -57,7 +57,7 @@ dependencies {
 allprojects {
     repositories {
         maven { setUrl("https://jitpack.io") }
-        maven { setUrl("http://dl.bintray.com/kotlin/kotlin-eap-1.1") }
+//        maven { setUrl("http://dl.bintray.com/kotlin/kotlin-eap-1.1") }
     }
 }
 
