@@ -7,6 +7,7 @@ import main.glm
 import mat.Mat4
 import vec._3.Vec3
 import vec._4.Vec4
+import java.nio.FloatBuffer
 import java.util.*
 
 /**
@@ -175,7 +176,7 @@ class MatrixStack(
 //        top().perspective((float) Math . toRadians (defFOV), aspectRatio, zNear, zFar);
 //        return this;
 //    }
-//
-//
+
+    infix fun to(buffer: FloatBuffer) = currMat to buffer
 
 }
