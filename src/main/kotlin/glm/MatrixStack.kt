@@ -7,6 +7,7 @@ import main.glm
 import mat.Mat4
 import vec._3.Vec3
 import vec._4.Vec4
+import java.util.*
 
 /**
  * Implements a stack for glm::mat4 transformations.
@@ -35,20 +36,21 @@ class MatrixStack(
         mat: Mat4 = Mat4()
 ) {
 
-    internal val matrices = mutableListOf(mat)
+    internal val matrices = Stack<Mat4>()
+    internal var currMat = mat
 
     // Stack Maintanence Functions
     // These functions maintain the matrix stack. You must take care not to underflow or overflow the stack
 
     /** Preserves the current matrix on the stack   */
     fun push(): MatrixStack {
-        matrices.add(Mat4(top()))
+        matrices.push(Mat4(currMat))
         return this
     }
 
     /** Restores the most recently preserved matrix.    */
     fun pop(): MatrixStack {
-        matrices.removeAt(matrices.lastIndex)
+        currMat = matrices.pop()
         return this
     }
 
@@ -59,7 +61,7 @@ class MatrixStack(
         return this
     }
 
-    fun top() = matrices.last()
+    fun top() = currMat
 
     // Rotation Matrix Functions
 
@@ -146,8 +148,8 @@ class MatrixStack(
     /** Applies a uniform scale matrix  */
     fun translate(x: Float, y: Float, z: Float) = top().translate_(x, y, z)
 
-    fun identity(): MatrixStack {
-        top() put 1f
+    fun setIdentity(): MatrixStack {
+        currMat put 1f
         return this
     }
 
@@ -161,11 +163,10 @@ class MatrixStack(
 //
 
 
-//    public MatrixStack setMatrix(Mat4 mat4)
-//    {
-//        matrices.set(matrices.size() - 1, mat4);
-//        return this;
-//    }
+    fun setMatrix(mat: Mat4): MatrixStack {
+        currMat put mat
+        return this;
+    }
 //
 //    public MatrixStack perspective(float defFOV, float aspectRatio, float zNear, float zFar)
 //    {
