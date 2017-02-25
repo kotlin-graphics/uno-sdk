@@ -5,6 +5,7 @@ package glm
 
 import main.glm
 import mat.Mat4
+import vec._2.Vec2i
 import vec._3.Vec3
 import vec._4.Vec4
 import java.nio.FloatBuffer
@@ -93,20 +94,20 @@ class MatrixStack(
         val y = axis.y * inv
         val z = axis.z * inv
 
-        TODO()
-//        glm::mat4 theMat(1.0f);
-//        theMat[0].x = (axis.x * axis.x) + ((1 - axis.x * axis.x) * fCos);
-//        theMat[1].x = axis.x * axis.y * (fInvCos) - (axis.z * fSin);
-//        theMat[2].x = axis.x * axis.z * (fInvCos) + (axis.y * fSin);
-//
-//        theMat[0].y = axis.x * axis.y * (fInvCos) + (axis.z * fSin);
-//        theMat[1].y = (axis.y * axis.y) + ((1 - axis.y * axis.y) * fCos);
-//        theMat[2].y = axis.y * axis.z * (fInvCos) - (axis.x * fSin);
-//
-//        theMat[0].z = axis.x * axis.z * (fInvCos) - (axis.y * fSin);
-//        theMat[1].z = axis.y * axis.z * (fInvCos) + (axis.x * fSin);
-//        theMat[2].z = (axis.z * axis.z) + ((1 - axis.z * axis.z) * fCos);
-//        m_currMatrix *= theMat;
+        val theMat = Mat4(1.0f)
+        theMat[0].x = axis.x * axis.x + (1 - axis.x * axis.x) * cos
+        theMat[1].x = axis.x * axis.y * invCos - axis.z * sin
+        theMat[2].x = axis.x * axis.z * invCos + axis.y * sin
+
+        theMat[0].y = axis.x * axis.y * invCos + axis.z * sin
+        theMat[1].y = axis.y * axis.y + (1 - axis.y * axis.y) * cos
+        theMat[2].y = axis.y * axis.z * invCos - axis.x * sin
+
+        theMat[0].z = axis.x * axis.z * invCos - axis.y * sin
+        theMat[1].z = axis.y * axis.z * invCos + axis.x * sin
+        theMat[2].z = axis.z * axis.z + (1 - axis.z * axis.z) * cos
+        currMat.mul_(theMat)
+
         return this
     }
 
@@ -152,34 +153,93 @@ class MatrixStack(
         return this
     }
 
-    fun setIdentity(): MatrixStack {
-        currMat put 1f
+    // Camera Matrix Functions
+    // These functions right-multiply the current matrix with a matrix that transforms from a world space to
+    // the camera space expected by the Perspective() or Orthographic() functions.
+
+    /**
+     * Applies a matrix that transforms to a camera-space defined by a position, a target in the world, and an up direction.
+     *
+     * @param cameraPos The world-space position of the camera.
+     * @param lookatPos The world-space position the camera should be facing. It should not be equal to \a cameraPos.
+     * @param upDir The world-space direction vector that should be considered up. The generated matrix will be bad
+     *      if the up direction is along the same direction as the direction the camera faces (the direction between
+     *      cameraPos and lookatPos).        */
+    fun lookAt(cameraPos: Vec3, lookatPos: Vec3, upDir: Vec3): MatrixStack {
+        TODO()
+        //currMat.mul_(glm.lookAt(cameraPos, lookatPos, upDir))
+    }
+
+
+    // Projection Matrix Functions
+    // These functions right-multiply the current matrix with a projection matrix of some form. These functions all
+    // transform positions into the 4D homogeneous space expected by the output of OpenGL vertex shaders. As such, these
+    // can be used directly with GLSL shaders.
+    // The space that these matrices transform from is defined as follows. The pre-projection space, called camera space
+    // or eye space, has the camera/eye position at the origin. The camera faces down the -Z axis, so objects with larger
+    // negative Z values are farther away. +Y is up and +X is to the right.
+
+    /**
+     * Applies a standard, OpenGL-style perspective projection matrix.
+     * @param degFOV The field of view. This is the angle in degrees between directly forward and the farthest visible
+     *      point horizontally.
+     * @param aspectRatio The ratio of the width of the view area to the height.
+     * @param zNear The closest camera-space distance to the camera that can be seen. The projection will be clipped
+     * against this value. It cannot be negative or 0.0.
+     * @param zFar The farthest camera-space distance from the camera that can be seen. The projection will be clipped
+     * against this value. It must be larger than zNear.     */
+    fun perspective(degFOV: Float, aspectRatio: Float, zNear: Float, zFar: Float): MatrixStack {
+        currMat.mul_(glm.perspective(degFOV, aspectRatio, zNear, zFar))
+        return this
+    }
+
+    /**
+     * Applies a standard, OpenGL-style orthographic projection matrix.
+     * @param left The left camera-space position in the X axis that will be captured within the projection.
+     * @param right The right camera-space position in the X axis that will be captured within the projection.
+     * @param bottom The bottom camera-space position in the Y axis that will be captured within the projection.
+     * @param top The top camera-space position in the Y axis that will be captured within the projection.
+     * @param zNear The front camera-space position in the Z axis that will be captured within the projection.
+     * @param zFar The rear camera-space position in the Z axis that will be captured within the projection.     */
+    @JvmOverloads fun orthographic(left: Float, right: Float, bottom: Float, top: Float, zNear: Float = -1f, zFar: Float = 1f): MatrixStack {
+        currMat.mul_(glm.ortho(left, right, bottom, top, zNear, zFar))
+        return this
+    }
+
+    /**
+     * Applies an ortho matrix for pixel-accurate reproduction.
+     * A common use for orthographic projections is to create an ortho matrix that allows for pixel-accurate
+     * reproduction of textures. It allows you to provide vertices directly in window space.
+     * The camera space that this function creates can have the origin at the top-left (with +y going down) or
+     * bottom-left (with +y going up). Note that a top-left orientation will have to flip the Y coordinate, which means
+     * that the winding order of any triangles are reversed.
+     * The depth range is arbitrary and up to the user.
+     * @param size The size of the window space.
+     * @param depthRange The near and far depth range. The x coord is zNear, and the y coord is zFar.
+     * @param isTopLeft True if this should be top-left orientation, false if it should be bottom-left.     */
+    @JvmOverloads fun pixelPerfectOrtho(size: Vec2i, depthRange: Vec2i, isTopLeft: Boolean = true) =
+            if (isTopLeft)
+                translate(-1.0f, 1.0f, (depthRange.x + depthRange.y) / 2.0f)
+                        .scale(2.0f / size.x, -2.0f / size.y, 1.0f)
+            else
+                translate(-1.0f, -1.0f, (depthRange.x + depthRange.y) / 2.0f)
+                        .scale(2.0f / size.x, 2.0f / size.y, 2.0f / (depthRange.y - depthRange.x))
+
+
+    fun applyMatrix(theMatrix: Mat4): MatrixStack {
+        currMat.mul_(theMatrix)
         return this
     }
 
 
-//
-//    public MatrixStack applyMatrix(Mat4 mat4)
-//    {
-//        top().mul(mat4);
-//        return this;
-//    }
-//
-
-
     fun setMatrix(mat: Mat4): MatrixStack {
         currMat put mat
-        return this;
+        return this
     }
-//
-//    public MatrixStack perspective(float defFOV, float aspectRatio, float zNear, float zFar)
-//    {
-//        // FIXME There is no mulPerspective method !!
-////        top().mulPerspective((float) Math.toRadians(defFOV), aspectRatio, zNear, zFar);
-//        top().perspective((float) Math . toRadians (defFOV), aspectRatio, zNear, zFar);
-//        return this;
-//    }
 
-    infix fun to(buffer: FloatBuffer) = currMat to buffer
 
+    fun setIdentity(): MatrixStack {
+        currMat put 1f
+        return this
+    }
 }
