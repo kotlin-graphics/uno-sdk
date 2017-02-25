@@ -123,19 +123,19 @@ class MatrixStack(
     // These functions right-multiply the current matrix with a scaling matrix of some form.
 
     /** Applies a scale matrix, with the given glm::vec4 as the axis scales    */
-    fun scale(scale: Vec4) = top().scale_(scale.x, scale.y, scale.z)
+    fun scale(scale: Vec4) = scale(scale.x, scale.y, scale.z)
 
     /** Applies a scale matrix, with the given glm::vec3 as the axis scales    */
-    fun scale(scale: Vec3) = top().scale_(scale.x, scale.y, scale.z)
+    fun scale(scale: Vec3) = scale(scale.x, scale.y, scale.z)
 
     /** Applies a scale matrix, with the given values as the axis scales    */
-    fun scale(scaleX: Float, scaleY: Float, scaleZ: Float) = top().scale_(scaleX, scaleY, scaleZ)
-
-    /** Applies a uniform scale matrix  */
-    fun scale(scale: Float): MatrixStack {
-        currMat.scale_(scale, scale, scale)
+    fun scale(scaleX: Float, scaleY: Float, scaleZ: Float): MatrixStack {
+        currMat.scale_(scaleX, scaleY, scaleZ)
         return this
     }
+
+    /** Applies a uniform scale matrix  */
+    fun scale(scale: Float) = scale(scale, scale, scale)
 
     // Translation Matrix Functions
     // These functions right-multiply the current matrix with a translation matrix of some form.
