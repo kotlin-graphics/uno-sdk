@@ -147,7 +147,10 @@ class MatrixStack(
     fun translate(offset: Float) = translate(offset, offset, offset)
 
     /** Applies a uniform scale matrix  */
-    fun translate(x: Float, y: Float, z: Float) = top().translate_(x, y, z)
+    fun translate(x: Float, y: Float, z: Float): MatrixStack {
+        top().translate_(x, y, z)
+        return this
+    }
 
     fun setIdentity(): MatrixStack {
         currMat put 1f
