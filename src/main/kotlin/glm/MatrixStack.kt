@@ -8,7 +8,6 @@ import mat.Mat4
 import vec._2.Vec2i
 import vec._3.Vec3
 import vec._4.Vec4
-import java.nio.FloatBuffer
 import java.util.*
 
 /**
@@ -133,7 +132,10 @@ class MatrixStack(
     fun scale(scaleX: Float, scaleY: Float, scaleZ: Float) = top().scale_(scaleX, scaleY, scaleZ)
 
     /** Applies a uniform scale matrix  */
-    fun scale(scale: Float) = top().scale_(scale, scale, scale)
+    fun scale(scale: Float): MatrixStack {
+        currMat.scale_(scale, scale, scale)
+        return this
+    }
 
     // Translation Matrix Functions
     // These functions right-multiply the current matrix with a translation matrix of some form.
