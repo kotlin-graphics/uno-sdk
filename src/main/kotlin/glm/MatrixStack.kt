@@ -245,9 +245,8 @@ class MatrixStack(
         return this
     }
 
-    fun run(vararg transforms: MatrixStack.() -> Any, code: () -> Any) {
+    fun run(code: () -> Any) {
         push()
-        transforms.forEach { it() }
         code()
         pop()
     }
