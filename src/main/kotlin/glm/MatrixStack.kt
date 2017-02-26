@@ -244,4 +244,10 @@ class MatrixStack(
         currMat put 1f
         return this
     }
+
+    fun run(code: () -> Any) {
+        push()
+        code()
+        pop()
+    }
 }
