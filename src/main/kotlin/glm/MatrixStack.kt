@@ -245,7 +245,7 @@ class MatrixStack(
         return this
     }
 
-    fun run(code: () -> Any) {
+    fun run(code: MatrixStack.() -> Any) {
         push()
         code()
         pop()
