@@ -245,7 +245,7 @@ class MatrixStack(
         return this
     }
 
-    inline infix fun MatrixStack.run(block: MatrixStack.() -> Any): MatrixStack {
+    inline infix fun run(block: MatrixStack.() -> Any): MatrixStack {
         push()
         block()
         pop()
