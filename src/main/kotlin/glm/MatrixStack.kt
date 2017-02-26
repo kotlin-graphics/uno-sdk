@@ -245,9 +245,5 @@ class MatrixStack(
         return this
     }
 
-    fun run(code: MatrixStack.() -> Any) {
-        push()
-        code()
-        pop()
-    }
+    fun run(vararg blocks: MatrixStack.() -> Any) = blocks.forEach { push(); it(); pop(); }
 }
