@@ -12,8 +12,8 @@ fun programOf(gl: GL2ES2, context: Class<*>, vararg strings: String): Int {
     val shaders =
             if (strings[0].contains('.'))
                 strings.toList()
-            else{
-                val root = if(strings[0].endsWith('/')) strings[0] else strings[0] + '/'
+            else {
+                val root = if (strings[0].endsWith('/')) strings[0] else strings[0] + '/'
                 strings.drop(1).map { root + it }
             }
 
@@ -26,8 +26,10 @@ fun programOf(gl: GL2ES2, context: Class<*>, vararg strings: String): Int {
     shaderProgram.link(gl, System.err)
 
     shaderCodes.forEach {
-        gl.glDetachShader(shaderProgram.program(), it.id())
-        gl.glDeleteShader(it.id())
+        for (i in 0 until it.shader().capacity()) {
+            gl.glDetachShader(shaderProgram.program(), it.shader()[i])
+            gl.glDeleteShader(it.shader()[i])
+        }
     }
 
     return shaderProgram.program()
