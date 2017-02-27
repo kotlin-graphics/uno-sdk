@@ -9,7 +9,6 @@ import com.jogamp.common.net.Uri
 import com.jogamp.opengl.GL2ES2.GL_FRAGMENT_SHADER
 import com.jogamp.opengl.GL2ES2.GL_VERTEX_SHADER
 import com.jogamp.opengl.GL3
-import com.jogamp.opengl.GL3ES3.*
 import com.jogamp.opengl.GLException
 import com.jogamp.opengl.util.glsl.ShaderCode
 import com.jogamp.opengl.util.glsl.ShaderProgram
@@ -87,20 +86,11 @@ class Program {
         name = shaderProgram.program()
     }
 
-    constructor(gl: GL3, shaders: Array<String>, uniforms: Array<String> = emptyArray()) {
+    constructor(gl: GL3, context: Class<*>, shaders: Array<String>, uniforms: Array<String> = emptyArray()) {
 
         val shaderProgram = ShaderProgram()
 
-        val shaderCodes = shaders.map {
-            ShaderCode.create(gl, it.type, 1, arrayOf(Uri.valueOf(this::class.java.classLoader.getResource(it))), false)
-        }
-        shaderCodes.forEach {
-            try {
-                shaderProgram.add(gl, it, System.err)
-            } catch (ex: GLException) {
-                System.err.println("shader $it")
-            }
-        }
+        val shaderCodes = shaders.map { shaderCodeOf(it, gl, context) }.onEach { shaderProgram.add(gl, it, System.err) }
 
         shaderProgram.link(gl, System.err)
 
