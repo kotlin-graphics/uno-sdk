@@ -107,5 +107,5 @@ class Program {
         }
     }
 
-    operator fun get(s: String) = uniforms[s]
+    operator fun get(s: String) = uniforms[s]!!
 }
