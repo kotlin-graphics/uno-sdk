@@ -19,7 +19,7 @@ import com.jogamp.opengl.util.glsl.ShaderProgram
  */
 class Program {
 
-    var name = 0
+    @JvmField var name = 0
     val uniforms = HashMap<String, Int>()
 
     constructor(gl: GL3, shadersRoot: String, shadersSrc: String) : this(gl, shadersRoot, shadersSrc, shadersSrc)
