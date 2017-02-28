@@ -107,5 +107,44 @@ class Program {
         }
     }
 
+    constructor(gl: GL3, context: Class<*>, vararg strings: String) {
+
+        val shaderProgram = ShaderProgram()
+
+        val root =
+                if (strings[0].isShader())
+                    ""
+                else
+                    if (strings[0].endsWith('/'))
+                        strings[0]
+                    else
+                        strings[0] + '/'
+
+        val (shaders, uniforms) = strings.drop(if (root.isEmpty()) 0 else 1).partition { it.isShader() }
+
+        val shaderCodes = shaders.map { shaderCodeOf(root + it, gl, context) }.onEach { shaderProgram.add(gl, it, System.err) }
+
+        shaderProgram.link(gl, System.err)
+
+        shaderCodes.forEach {
+            for (i in 0 until it.shader().capacity()) {
+                gl.glDetachShader(shaderProgram.program(), it.shader()[i])
+                gl.glDeleteShader(it.shader()[i])
+            }
+        }
+
+        name = shaderProgram.program()
+
+        uniforms.forEach {
+            val i = gl.glGetUniformLocation(name, it)
+            if (i != -1)
+                this.uniforms[it] = i
+            else
+                println("unable to find '$it' uniform location!")
+        }
+    }
+
     operator fun get(s: String): Int = uniforms[s]!!
+
+    internal fun String.isShader() = contains(".vert") || contains(".tesc") || contains(".tese") || contains(".geom") || contains(".frag") || contains(".comp")
 }

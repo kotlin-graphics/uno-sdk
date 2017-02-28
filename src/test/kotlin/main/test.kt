@@ -6,37 +6,56 @@ import com.jogamp.opengl.GLCapabilities
 import com.jogamp.opengl.GLEventListener
 import com.jogamp.opengl.GLProfile
 import com.jogamp.opengl.util.Animator
+import com.jogamp.opengl.util.glsl.ShaderProgram
+import glsl.Program
+import glsl.shaderCodeOf
 import io.kotlintest.specs.StringSpec
 
 /**
  * Created by GBarbieri on 02.02.2017.
  */
 
+
 class Test : StringSpec() {
 
     init {
 
         "test" {
-            println("test")
             val app = App()
 
             window.addGLEventListener(app)
             window.isVisible = true
 
             animator.start()
-            println("/test")
         }
     }
 }
 
-val window = GLWindow.create(GLCapabilities(GLProfile.get(GLProfile.GL3)))
+val window: GLWindow = GLWindow.create(GLCapabilities(GLProfile.get(GLProfile.GL3)))
 val animator = Animator(window)
 
 class App : GLEventListener {
 
     override fun init(drawable: GLAutoDrawable) {
-        println("init")
-        with(drawable.gl.gL3) {
+
+        val gl = drawable.gl.gL3
+
+        with(gl) {
+
+//            val program = ShaderProgram()
+//
+//            val vert = shaderCodeOf("main/shader.vert", gl, this::class.java)
+//            val frag = shaderCodeOf("main/shader.frag", gl, this::class.java)
+//
+//            program.add(gl, vert, System.err)
+//            program.add(gl, frag, System.err)
+//
+//            program.link(gl, System.err)
+
+            val a = Program(gl, this::class.java, "main", "shader.vert", "shader.frag", "matrix", "myTexture")
+            val b = Program(gl, this::class.java, "main/shader.vert", "main/shader.frag", "matrix", "myTexture")
+
+            println("ok")
 
 //            println("a ${javaClass.classLoader.getResource("shader.vert").toString()}")
 //            println("b ${Uri.valueOf(javaClass.getResource("shader.vert"))}")
@@ -45,17 +64,15 @@ class App : GLEventListener {
     }
 
     override fun reshape(drawable: GLAutoDrawable, x: Int, y: Int, width: Int, height: Int) {
-        println("reshape")
+
         animator.remove(window)
         window.destroy()
     }
 
     override fun display(drawable: GLAutoDrawable) {
-        println("display")
     }
 
     override fun dispose(drawable: GLAutoDrawable) {
-        println("dispose")
         System.exit(0)
     }
 }
