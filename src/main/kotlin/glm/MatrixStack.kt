@@ -4,6 +4,7 @@
 package glm
 
 import main.glm
+import main.rad
 import mat.Mat4
 import vec._2.Vec2i
 import vec._3.Vec3
@@ -75,7 +76,7 @@ class MatrixStack(
     fun rotate(axis: Vec3, angDegCCW: Float) = rotate(axis.x, axis.y, axis.z, angDegCCW)
 
     fun rotate(axisX: Float, axisY: Float, axisZ: Float, angDegCCW: Float): MatrixStack {
-        top().rotate_(angDegCCW, axisX, axisY, axisZ)
+        currMat.rotate_(angDegCCW.rad, axisX, axisY, axisZ)
         return this
     }
 

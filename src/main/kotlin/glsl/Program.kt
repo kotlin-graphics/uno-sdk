@@ -9,7 +9,6 @@ import com.jogamp.common.net.Uri
 import com.jogamp.opengl.GL2ES2.GL_FRAGMENT_SHADER
 import com.jogamp.opengl.GL2ES2.GL_VERTEX_SHADER
 import com.jogamp.opengl.GL3
-import com.jogamp.opengl.GLException
 import com.jogamp.opengl.util.glsl.ShaderCode
 import com.jogamp.opengl.util.glsl.ShaderProgram
 
@@ -19,7 +18,7 @@ import com.jogamp.opengl.util.glsl.ShaderProgram
  */
 class Program {
 
-    var name = 0
+    @JvmField var name = 0
     val uniforms = HashMap<String, Int>()
 
     constructor(gl: GL3, shadersRoot: String, shadersSrc: String) : this(gl, shadersRoot, shadersSrc, shadersSrc)
