@@ -1,4 +1,3 @@
-
 apply {
     plugin("kotlin")
     plugin("maven")
@@ -11,11 +10,9 @@ buildscript {
     }
 
     dependencies {
-        classpath(kotlinModule("gradle-plugin", "1.1.0-rc-91"))
+        classpath(kotlinModule("gradle-plugin", "1.1.0"))
     }
 }
-
-
 
 repositories {
     gradleScriptKotlin()
@@ -23,14 +20,14 @@ repositories {
 
 dependencies {
 
-    compile(kotlinModule("stdlib", "1.1.0-rc-91"))
+    compile(kotlinModule("stdlib", "1.1.0"))
 
-    testCompile("io.kotlintest:kotlintest:1.3.5")
+    testCompile("com.github.elect86:kotlintest:d8878d6da0944ec6bcbcdad6a1540bba021d768d")
 
-    compile("com.github.elect86:glm:a13fb0e529")
+    compile("com.github.elect86:glm:05859e02c3529f7a95b4b8cefbeb16f9b5e0b515")
 
     val jogl = "2.3.2"
-    
+
     compile("org.jogamp.gluegen:gluegen-rt:$jogl")
     compile("org.jogamp.jogl:jogl-all:$jogl")
 }
