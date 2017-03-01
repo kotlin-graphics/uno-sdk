@@ -143,7 +143,7 @@ class Program {
         }
     }
 
-    operator fun get(s: String) = uniforms[s]!!
+    operator fun get(s: String): Int = uniforms[s]!!
 
     internal fun String.isShader() = contains(".vert") || contains(".tesc") || contains(".tese") || contains(".geom") || contains(".frag") || contains(".comp")
 }
