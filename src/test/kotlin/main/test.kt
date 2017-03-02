@@ -6,10 +6,11 @@ import com.jogamp.opengl.GLCapabilities
 import com.jogamp.opengl.GLEventListener
 import com.jogamp.opengl.GLProfile
 import com.jogamp.opengl.util.Animator
-import com.jogamp.opengl.util.glsl.ShaderProgram
+import extensions.floatBufferBig
+import glm.MatrixStack
 import glsl.Program
-import glsl.shaderCodeOf
 import io.kotlintest.specs.StringSpec
+import mat.Mat4
 
 /**
  * Created by GBarbieri on 02.02.2017.
@@ -21,12 +22,51 @@ class Test : StringSpec() {
     init {
 
         "test" {
-            val app = App()
 
-            window.addGLEventListener(app)
-            window.isVisible = true
+            val parthenonWidth = 14.0f
+            val parthenonLength = 20.0f
+            val parthenonColumnHeight = 5.0f
+            val parthenonBaseHeight = 1.0f
+            val parthenonTopHeight = 2.0f
 
-            animator.start()
+            val stack = MatrixStack()
+
+
+            val a = stack
+                    .translate(20.0f, 0.0f, -10.0f)
+                    .translate(
+                            0.0f,
+                            parthenonColumnHeight + parthenonBaseHeight + parthenonTopHeight / 2.0f,
+                            parthenonLength / 2.0f)
+                    .rotateX(-135f)
+                    .top()
+//                    .rotateY(45f)
+
+            val top = stack.top()
+
+            val b = Mat4()
+                    .translate_(20.0f, 0.0f, -10.0f)
+                    .translate_(
+                            0.0f,
+                            parthenonColumnHeight + parthenonBaseHeight + parthenonTopHeight / 2.0f,
+                            parthenonLength / 2.0f)
+                    .rotate(-135f.rad, 1f, 0f, 0f)
+
+//            for(i in 0 until 16){
+//                println("a "+a[i])
+////                println("b "+b[i])
+//            }
+
+// .rotate_(45f, 0f, 1f, 0f)
+
+            println()
+
+//            val app = App()
+//
+//            window.addGLEventListener(app)
+//            window.isVisible = true
+//
+//            animator.start()
         }
     }
 }
@@ -42,7 +82,7 @@ class App : GLEventListener {
 
         with(gl) {
 
-//            val program = ShaderProgram()
+            //            val program = ShaderProgram()
 //
 //            val vert = shaderCodeOf("main/shader.vert", gl, this::class.java)
 //            val frag = shaderCodeOf("main/shader.frag", gl, this::class.java)

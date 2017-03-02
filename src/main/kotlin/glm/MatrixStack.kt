@@ -152,7 +152,7 @@ class MatrixStack(
 
     /** Applies a uniform scale matrix  */
     fun translate(x: Float, y: Float, z: Float): MatrixStack {
-        top().translate_(x, y, z)
+        currMat.translate_(x, y, z)
         return this
     }
 
