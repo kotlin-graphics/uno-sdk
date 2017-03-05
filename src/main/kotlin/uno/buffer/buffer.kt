@@ -1,4 +1,4 @@
-package buffer
+package uno.buffer
 
 /*
  * Copyright (c) 2009-2012 jMonkeyEngine
@@ -32,8 +32,8 @@ package buffer
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import buffer.ByteBufferGuard.BufferCleaner
-import buffer.MMapDirectory.newBufferCleaner
+import uno.buffer.ByteBufferGuard.BufferCleaner
+import uno.buffer.MMapDirectory.newBufferCleaner
 import com.jogamp.opengl.util.GLBuffers
 import java.lang.invoke.MethodHandles.*
 import java.lang.invoke.MethodType.methodType

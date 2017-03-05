@@ -1,4 +1,4 @@
-package debug
+package uno.debug
 
 import com.jogamp.opengl.GL2ES2.GL_DEBUG_SEVERITY_NOTIFICATION
 import com.jogamp.opengl.GL2ES2.GL_DEBUG_SEVERITY_LOW

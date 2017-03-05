@@ -1,10 +1,10 @@
-package glsl
+package uno.glsl
 
 import com.jogamp.opengl.GL2ES2
 import com.jogamp.opengl.util.glsl.ShaderProgram
 
 /**
- * Created by GBarbieri on 22.02.2017.
+ * Created by elect on 05/03/17.
  */
 
 fun programOf(gl: GL2ES2, context: Class<*>, vararg strings: String): Int {

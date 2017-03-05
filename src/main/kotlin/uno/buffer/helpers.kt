@@ -1,52 +1,12 @@
-package extensions
+package uno.buffer
 
-import com.jogamp.opengl.GL2ES2
 import com.jogamp.opengl.util.GLBuffers
-import com.jogamp.opengl.util.glsl.ShaderCode
-import com.jogamp.opengl.util.glsl.ShaderProgram
 import main.BYTES
-import java.net.URL
 import java.nio.*
 
 /**
- * Created by GBarbieri on 27.01.2017.
+ * Created by elect on 05/03/17.
  */
-
-val ShaderProgram.name
-    get() = program()
-
-fun ShaderCode.create(gl: GL2ES2, type: Int, context: Class<*>, sourceFiles: Array<String>): ShaderCode
-        = ShaderCode.create(gl, type, sourceFiles.size, context, sourceFiles, false)
-
-fun createShaderProgram(gl: GL2ES2, context: Class<*>, shaderSrc: String): ShaderProgram {
-
-    val program = ShaderProgram()
-
-    val vertShader = ShaderCode.create(gl, GL2ES2.GL_VERTEX_SHADER, 1, context, arrayOf("$shaderSrc.vert"), false)
-    val fragShader = ShaderCode.create(gl, GL2ES2.GL_FRAGMENT_SHADER, 1, context, arrayOf("$shaderSrc.frag"), false)
-
-    program.add(vertShader)
-    program.add(fragShader)
-
-    program.init(gl)
-
-    program.link(gl, System.err)
-
-    vertShader.destroy(gl)
-    fragShader.destroy(gl)
-
-    return program
-}
-
-class ShaderProgramUtil() {
-    companion object {
-        @JvmStatic fun create(gl: GL2ES2, context: Class<*>, shaderSrc: String): ShaderProgram =
-                createShaderProgram(gl, context, shaderSrc)
-    }
-}
-
-fun String.URL(clazz: Class<*>): URL = clazz.classLoader.getResource(this)
-
 
 fun FloatArray.toFloatBuffer(): FloatBuffer = GLBuffers.newDirectFloatBuffer(this)
 fun FloatArray.toByteBuffer(): ByteBuffer {

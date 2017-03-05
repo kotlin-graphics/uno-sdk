@@ -1,4 +1,4 @@
-package gl
+package uno.gl
 
 import com.jogamp.opengl.GL
 import com.jogamp.opengl.GL.*

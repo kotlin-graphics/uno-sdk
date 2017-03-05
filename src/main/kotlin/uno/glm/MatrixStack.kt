@@ -1,7 +1,7 @@
 /** Copyright (C) 2011 by Jason L. McKesson **/
 /** This file is licensed by the MIT License. **/
 
-package glm
+package uno.glm
 
 import main.glm
 import main.rad
@@ -35,8 +35,7 @@ import java.util.*
  */
 class MatrixStack(
         /** Initializes the matrix stack with the identity matrix or the given matrix   */
-        mat: Mat4 = Mat4()
-) {
+        mat: Mat4 = Mat4()) {
 
     internal val matrices = Stack<Mat4>()
     internal var currMat = mat

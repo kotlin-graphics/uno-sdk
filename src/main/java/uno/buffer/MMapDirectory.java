@@ -1,4 +1,4 @@
-package buffer;
+package uno.buffer;
 
 /**
  * Created by GBarbieri on 24.01.2017.
@@ -17,7 +17,7 @@ import java.util.Objects;
 import static java.lang.invoke.MethodHandles.*;
 import static java.lang.invoke.MethodType.methodType;
 
-import buffer.ByteBufferGuard.BufferCleaner;
+import uno.buffer.ByteBufferGuard.BufferCleaner;
 
 public class MMapDirectory {
 

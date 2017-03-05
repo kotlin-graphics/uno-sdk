@@ -1,4 +1,4 @@
-package glsl
+package uno.glsl
 
 /**
  * Created by GBarbieri on 24.01.2017.

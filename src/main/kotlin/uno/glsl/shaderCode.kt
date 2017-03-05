@@ -1,4 +1,4 @@
-package glsl
+package uno.glsl
 
 import com.jogamp.opengl.GL2ES2
 import com.jogamp.opengl.GL2ES2.GL_VERTEX_SHADER
@@ -16,6 +16,8 @@ fun shaderCodeOf(string: String, gl: GL2ES2, context: Class<*>): ShaderCode {
     return ShaderCode.create(gl, string.type, context, root, null, name, extension, null, true)
 }
 
+fun ShaderCode.create(gl: GL2ES2, type: Int, context: Class<*>, sourceFiles: Array<String>): ShaderCode
+        = ShaderCode.create(gl, type, sourceFiles.size, context, sourceFiles, false)
 
 /**
  * https://www.khronos.org/opengles/sdk/tools/Reference-Compiler/
