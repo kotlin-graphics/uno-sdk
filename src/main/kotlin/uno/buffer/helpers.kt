@@ -9,6 +9,9 @@ import java.nio.*
  */
 
 
+fun FloatBuffer.put(vararg floats: Float) = floats.forEachIndexed { i, f -> put(i, f) }
+
+
 fun FloatArray.toFloatBuffer(): FloatBuffer = GLBuffers.newDirectFloatBuffer(this)
 fun FloatArray.toByteBuffer(): ByteBuffer {
     val res = byteBufferBig(size * Float.BYTES)
