@@ -9,7 +9,10 @@ import java.nio.*
  */
 
 
-fun FloatBuffer.put(vararg floats: Float) = floats.forEachIndexed { i, f -> put(i, f) }
+fun FloatBuffer.put(vararg floats: Float): FloatBuffer {
+    floats.forEachIndexed { i, f -> put(i, f) }
+    return this
+}
 
 
 fun FloatArray.toFloatBuffer(): FloatBuffer = GLBuffers.newDirectFloatBuffer(this)
