@@ -6,11 +6,10 @@ import com.jogamp.opengl.GLCapabilities
 import com.jogamp.opengl.GLEventListener
 import com.jogamp.opengl.GLProfile
 import com.jogamp.opengl.util.Animator
-import extensions.floatBufferBig
-import glm.MatrixStack
-import glsl.Program
 import io.kotlintest.specs.StringSpec
 import mat.Mat4
+import uno.glm.MatrixStack
+import uno.glsl.Program
 
 /**
  * Created by GBarbieri on 02.02.2017.

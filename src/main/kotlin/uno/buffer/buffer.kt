@@ -47,13 +47,13 @@ import java.util.logging.Level
 import java.util.logging.Logger
 
 
-fun ByteBuffer.destroy() = BufferUtils.destroyDirectBuffer(this)
-fun ShortBuffer.destroy() = BufferUtils.destroyDirectBuffer(this)
-fun IntBuffer.destroy() = BufferUtils.destroyDirectBuffer(this)
-fun LongBuffer.destroy() = BufferUtils.destroyDirectBuffer(this)
-fun FloatBuffer.destroy() = BufferUtils.destroyDirectBuffer(this)
-fun DoubleBuffer.destroy() = BufferUtils.destroyDirectBuffer(this)
-fun CharBuffer.destroy() = BufferUtils.destroyDirectBuffer(this)
+fun ByteBuffer.destroy() = BufferUtils.destroyBuffer(this)
+fun ShortBuffer.destroy() = BufferUtils.destroyBuffer(this)
+fun IntBuffer.destroy() = BufferUtils.destroyBuffer(this)
+fun LongBuffer.destroy() = BufferUtils.destroyBuffer(this)
+fun FloatBuffer.destroy() = BufferUtils.destroyBuffer(this)
+fun DoubleBuffer.destroy() = BufferUtils.destroyBuffer(this)
+fun CharBuffer.destroy() = BufferUtils.destroyBuffer(this)
 
 class BufferUtils {
 
@@ -91,7 +91,7 @@ class BufferUtils {
             }
         }
 
-        @JvmStatic fun destroyDirectBuffer(vararg toBeDestroyed: Buffer) = toBeDestroyed.forEach{BufferUtils::}
+        @JvmStatic fun destroyBuffers(vararg toBeDestroyed: Buffer) = toBeDestroyed.forEach(BufferUtils.Companion::destroyBuffer)
 
         /**
          * This function explicitly calls the Cleaner method of a direct buffer.
@@ -99,7 +99,7 @@ class BufferUtils {
          * @param toBeDestroyed
          * *            The direct buffer that will be "cleaned". Utilizes reflection.
          */
-        @JvmStatic fun destroyDirectBuffer(toBeDestroyed: Buffer) {
+        @JvmStatic fun destroyBuffer(toBeDestroyed: Buffer) {
             try {
                 if (freeMethod != null)
                     freeMethod.invoke(toBeDestroyed)
@@ -133,7 +133,7 @@ class BufferUtils {
                             else {  // Try the alternate approach of getting the viewed buffer first
                                 val viewedBuffer = localViewedBufferMethod.invoke(toBeDestroyed)
                                 if (viewedBuffer != null)
-                                    destroyDirectBuffer(viewedBuffer as Buffer)
+                                    destroyBuffer(viewedBuffer as Buffer)
                                 else
                                     Logger.getLogger(BufferUtils::class.java.name).log(Level.SEVERE,
                                             "Buffer cannot be destroyed: {0}", toBeDestroyed)
