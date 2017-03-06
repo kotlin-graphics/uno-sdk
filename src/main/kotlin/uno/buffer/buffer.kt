@@ -32,9 +32,9 @@ package uno.buffer
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import com.jogamp.opengl.util.GLBuffers
 import uno.buffer.ByteBufferGuard.BufferCleaner
 import uno.buffer.MMapDirectory.newBufferCleaner
-import com.jogamp.opengl.util.GLBuffers
 import java.lang.invoke.MethodHandles.*
 import java.lang.invoke.MethodType.methodType
 import java.lang.reflect.InvocationTargetException
@@ -62,8 +62,7 @@ class BufferUtils {
         // Oracle JRE / OpenJDK
         val cleanerMethod = loadMethod("sun.nio.ch.DirectBuffer", "cleaner")
         val cleanMethod = loadMethod("sun.misc.Cleaner", "clean")
-        val viewedBufferMethod = loadMethod("sun.nio.ch.DirectBuffer", "viewedBuffer")
-                ?: loadMethod("sun.nio.ch.DirectBuffer", "attachment")
+        val viewedBufferMethod = loadMethod("sun.nio.ch.DirectBuffer", "viewedBuffer") ?: loadMethod("sun.nio.ch.DirectBuffer", "attachment")
         // Apache Harmony
         val freeMethod = try {
             ByteBuffer.allocateDirect(1)::class.java.getMethod("free")
@@ -91,6 +90,8 @@ class BufferUtils {
                     throw t
             }
         }
+
+        @JvmStatic fun destroyDirectBuffer(vararg toBeDestroyed: Buffer) = toBeDestroyed.forEach{BufferUtils::}
 
         /**
          * This function explicitly calls the Cleaner method of a direct buffer.
