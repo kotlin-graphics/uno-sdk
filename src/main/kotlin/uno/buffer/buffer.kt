@@ -55,7 +55,7 @@ fun FloatBuffer.destroy() = BufferUtils.destroyBuffer(this)
 fun DoubleBuffer.destroy() = BufferUtils.destroyBuffer(this)
 fun CharBuffer.destroy() = BufferUtils.destroyBuffer(this)
 
-fun destroyBuffers(vararg toBeDestroyed: Buffer) = BufferUtils.Companion::destroyBuffers
+fun destroyBuffers(vararg toBeDestroyed: Buffer) = BufferUtils.destroyBuffers(toBeDestroyed)
 
 class BufferUtils {
 
