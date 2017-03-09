@@ -3,12 +3,12 @@
 
 package uno.glm
 
-import main.glm
-import main.rad
-import mat.Mat4
-import vec._2.Vec2i
-import vec._3.Vec3
-import vec._4.Vec4
+import glm.glm
+import glm.rad
+import glm.mat.Mat4
+import glm.vec._2.Vec2i
+import glm.vec._3.Vec3
+import glm.vec._4.Vec4
 import java.util.*
 
 /**
@@ -105,7 +105,7 @@ class MatrixStack(
         theMat[0].z = axis.x * axis.z * invCos - axis.y * sin
         theMat[1].z = axis.y * axis.z * invCos + axis.x * sin
         theMat[2].z = axis.z * axis.z + (1 - axis.z * axis.z) * cos
-        currMat.mul_(theMat)
+        currMat.times_(theMat)
 
         return this
     }
@@ -191,7 +191,7 @@ class MatrixStack(
      * @param zFar The farthest camera-space distance from the camera that can be seen. The projection will be clipped
      * against this value. It must be larger than zNear.     */
     fun perspective(degFOV: Float, aspectRatio: Float, zNear: Float, zFar: Float): MatrixStack {
-        currMat.mul_(glm.perspective(degFOV, aspectRatio, zNear, zFar))
+        currMat.times_(glm.perspective(degFOV, aspectRatio, zNear, zFar))
         return this
     }
 
@@ -204,7 +204,7 @@ class MatrixStack(
      * @param zNear The front camera-space position in the Z axis that will be captured within the projection.
      * @param zFar The rear camera-space position in the Z axis that will be captured within the projection.     */
     @JvmOverloads fun orthographic(left: Float, right: Float, bottom: Float, top: Float, zNear: Float = -1f, zFar: Float = 1f): MatrixStack {
-        currMat.mul_(glm.ortho(left, right, bottom, top, zNear, zFar))
+        currMat.times_(glm.ortho(left, right, bottom, top, zNear, zFar))
         return this
     }
 
@@ -229,7 +229,7 @@ class MatrixStack(
 
 
     fun applyMatrix(theMatrix: Mat4): MatrixStack {
-        currMat.mul_(theMatrix)
+        currMat.times_(theMatrix)
         return this
     }
 

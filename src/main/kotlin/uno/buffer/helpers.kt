@@ -1,7 +1,7 @@
 package uno.buffer
 
 import com.jogamp.opengl.util.GLBuffers
-import main.BYTES
+import glm.BYTES
 import uno.kotlin.Quadruple
 import uno.kotlin.Quintuple
 import java.nio.*
