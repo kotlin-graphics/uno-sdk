@@ -1,4 +1,4 @@
-package main
+package uno
 
 import com.jogamp.newt.opengl.GLWindow
 import com.jogamp.opengl.GLAutoDrawable
@@ -7,7 +7,8 @@ import com.jogamp.opengl.GLEventListener
 import com.jogamp.opengl.GLProfile
 import com.jogamp.opengl.util.Animator
 import io.kotlintest.specs.StringSpec
-import mat.Mat4
+import glm.mat.Mat4
+import glm.rad
 import uno.glm.MatrixStack
 import uno.glsl.Program
 

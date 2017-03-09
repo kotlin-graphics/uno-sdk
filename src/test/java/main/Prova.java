@@ -1,6 +1,6 @@
 package main;
 
-import glm.MatrixStack;
+import uno.glm.MatrixStack;
 
 /**
  * Created by elect on 15/02/17.
