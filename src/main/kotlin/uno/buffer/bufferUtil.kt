@@ -47,112 +47,101 @@ import java.util.logging.Level
 import java.util.logging.Logger
 
 
-fun ByteBuffer.destroy() = BufferUtils.destroyBuffer(this)
-fun ShortBuffer.destroy() = BufferUtils.destroyBuffer(this)
-fun IntBuffer.destroy() = BufferUtils.destroyBuffer(this)
-fun LongBuffer.destroy() = BufferUtils.destroyBuffer(this)
-fun FloatBuffer.destroy() = BufferUtils.destroyBuffer(this)
-fun DoubleBuffer.destroy() = BufferUtils.destroyBuffer(this)
-fun CharBuffer.destroy() = BufferUtils.destroyBuffer(this)
+fun ByteBuffer.destroy() = destroyBuffer(this)
+fun ShortBuffer.destroy() = destroyBuffer(this)
+fun IntBuffer.destroy() = destroyBuffer(this)
+fun LongBuffer.destroy() = destroyBuffer(this)
+fun FloatBuffer.destroy() = destroyBuffer(this)
+fun DoubleBuffer.destroy() = destroyBuffer(this)
+fun CharBuffer.destroy() = destroyBuffer(this)
 
-fun destroyBuffers(vararg toBeDestroyed: Buffer) = toBeDestroyed.forEach(BufferUtils.Companion::destroyBuffer)
+// Oracle JRE / OpenJDK
+private val cleanerMethod = loadMethod("sun.nio.ch.DirectBuffer", "cleaner")
+private val cleanMethod = loadMethod("sun.misc.Cleaner", "clean")
+private val viewedBufferMethod = loadMethod("sun.nio.ch.DirectBuffer", "viewedBuffer") ?: loadMethod("sun.nio.ch.DirectBuffer", "attachment")
+// Apache Harmony
+private val freeMethod = try {
+    ByteBuffer.allocateDirect(1)::class.java.getMethod("free")
+} catch (ex: NoSuchMethodException) {
+    null
+} catch (ex: SecurityException) {
+    null
+}
 
-class BufferUtils {
+private fun loadMethod(className: String, methodName: String): Method? {
+    try {
+        val method = Class.forName(className).getMethod(methodName)
+        method.isAccessible = true// according to the Java documentation, by default, a reflected object is not accessible
+        return method
+    } catch (ex: NoSuchMethodException) {
+        return null // the method was not found
+    } catch (ex: SecurityException) {
+        return null // setAccessible not allowed by security policy
+    } catch (ex: ClassNotFoundException) {
+        return null // the direct buffer implementation was not found
+    } catch (t: Throwable) {
+        if (t::class.java.name == "java.lang.reflect.InaccessibleObjectException")
+            return null// the class is in an unexported module
+        else
+            throw t
+    }
+}
 
-    companion object {
+fun destroyBuffers(vararg toBeDestroyed: Buffer) = toBeDestroyed.forEach(::destroyBuffer)
 
-        // Oracle JRE / OpenJDK
-        val cleanerMethod = loadMethod("sun.nio.ch.DirectBuffer", "cleaner")
-        val cleanMethod = loadMethod("sun.misc.Cleaner", "clean")
-        val viewedBufferMethod = loadMethod("sun.nio.ch.DirectBuffer", "viewedBuffer") ?: loadMethod("sun.nio.ch.DirectBuffer", "attachment")
-        // Apache Harmony
-        val freeMethod = try {
-            ByteBuffer.allocateDirect(1)::class.java.getMethod("free")
-        } catch (ex: NoSuchMethodException) {
-            null
-        } catch (ex: SecurityException) {
-            null
-        }
+/**
+ * This function explicitly calls the Cleaner method of a direct buffer.
 
-        private fun loadMethod(className: String, methodName: String): Method? {
-            try {
-                val method = Class.forName(className).getMethod(methodName)
-                method.isAccessible = true// according to the Java documentation, by default, a reflected object is not accessible
-                return method
-            } catch (ex: NoSuchMethodException) {
-                return null // the method was not found
-            } catch (ex: SecurityException) {
-                return null // setAccessible not allowed by security policy
-            } catch (ex: ClassNotFoundException) {
-                return null // the direct buffer implementation was not found
-            } catch (t: Throwable) {
-                if (t::class.java.name == "java.lang.reflect.InaccessibleObjectException")
-                    return null// the class is in an unexported module
-                else
-                    throw t
-            }
-        }
+ * @param toBeDestroyed
+ * *            The direct buffer that will be "cleaned". Utilizes reflection.
+ */
+fun destroyBuffer(toBeDestroyed: Buffer) {
+    try {
+        if (freeMethod != null)
+            freeMethod.invoke(toBeDestroyed)
+        else {
+            //TODO load the methods only once, store them into a cache (only for Java >= 9)
+            val localCleanerMethod = cleanerMethod ?: loadMethod(toBeDestroyed.javaClass.name, "cleaner")
 
-        @JvmStatic fun destroyBuffers(vararg toBeDestroyed: Buffer) = toBeDestroyed.forEach(BufferUtils.Companion::destroyBuffer)
+            if (localCleanerMethod == null)
+                Logger.getLogger("bufferUtils").log(Level.SEVERE, "Buffer cannot be destroyed: {0}", toBeDestroyed)
+            else {
+                val cleaner = localCleanerMethod.invoke(toBeDestroyed)
+                if (cleaner != null) {
+                    val localCleanMethod = cleanMethod ?:
+                            if (cleaner is Runnable)    // jdk.internal.ref.Cleaner implements Runnable in Java 9
+                                loadMethod(Runnable::class.java.name, "run")
+                            else    // sun.misc.Cleaner does not implement Runnable in Java < 9
+                                loadMethod(cleaner::class.java.name, "clean")
 
-        /**
-         * This function explicitly calls the Cleaner method of a direct buffer.
+                    if (localCleanMethod == null)
+                        Logger.getLogger("bufferUtils").log(Level.SEVERE, "Buffer cannot be destroyed: {0}", toBeDestroyed)
+                    else
+                        localCleanMethod.invoke(cleaner)
 
-         * @param toBeDestroyed
-         * *            The direct buffer that will be "cleaned". Utilizes reflection.
-         */
-        @JvmStatic fun destroyBuffer(toBeDestroyed: Buffer) {
-            try {
-                if (freeMethod != null)
-                    freeMethod.invoke(toBeDestroyed)
-                else {
-                    //TODO load the methods only once, store them into a cache (only for Java >= 9)
-                    val localCleanerMethod = cleanerMethod ?: loadMethod(toBeDestroyed.javaClass.name, "cleaner")
+                } else {
+                    val localViewedBufferMethod = viewedBufferMethod ?: loadMethod(toBeDestroyed.javaClass.name, "viewedBuffer")
 
-                    if (localCleanerMethod == null)
-                        Logger.getLogger(BufferUtils::class.java.name).log(Level.SEVERE, "Buffer cannot be destroyed: {0}", toBeDestroyed)
-                    else {
-                        val cleaner = localCleanerMethod.invoke(toBeDestroyed)
-                        if (cleaner != null) {
-                            val localCleanMethod = cleanMethod ?:
-                                    if (cleaner is Runnable)    // jdk.internal.ref.Cleaner implements Runnable in Java 9
-                                        loadMethod(Runnable::class.java.name, "run")
-                                    else    // sun.misc.Cleaner does not implement Runnable in Java < 9
-                                        loadMethod(cleaner::class.java.name, "clean")
-
-                            if (localCleanMethod == null)
-                                Logger.getLogger(BufferUtils::class.java.name).log(Level.SEVERE,
-                                        "Buffer cannot be destroyed: {0}", toBeDestroyed)
-                            else
-                                localCleanMethod.invoke(cleaner)
-
-                        } else {
-                            val localViewedBufferMethod = viewedBufferMethod ?: loadMethod(toBeDestroyed.javaClass.name, "viewedBuffer")
-
-                            if (localViewedBufferMethod == null)
-                                Logger.getLogger(BufferUtils::class.java.name).log(Level.SEVERE,
-                                        "Buffer cannot be destroyed: {0}", toBeDestroyed)
-                            else {  // Try the alternate approach of getting the viewed buffer first
-                                val viewedBuffer = localViewedBufferMethod.invoke(toBeDestroyed)
-                                if (viewedBuffer != null)
-                                    destroyBuffer(viewedBuffer as Buffer)
-                                else
-                                    Logger.getLogger(BufferUtils::class.java.name).log(Level.SEVERE,
-                                            "Buffer cannot be destroyed: {0}", toBeDestroyed)
-                            }
-                        }
+                    if (localViewedBufferMethod == null)
+                        Logger.getLogger("bufferUtils").log(Level.SEVERE, "Buffer cannot be destroyed: {0}", toBeDestroyed)
+                    else {  // Try the alternate approach of getting the viewed buffer first
+                        val viewedBuffer = localViewedBufferMethod.invoke(toBeDestroyed)
+                        if (viewedBuffer != null)
+                            destroyBuffer(viewedBuffer as Buffer)
+                        else
+                            Logger.getLogger("bufferUtils").log(Level.SEVERE, "Buffer cannot be destroyed: {0}", toBeDestroyed)
                     }
                 }
-            } catch (ex: IllegalAccessException) {
-                Logger.getLogger(BufferUtils::class.java.name).log(Level.SEVERE, "{0}", ex)
-            } catch (ex: IllegalArgumentException) {
-                Logger.getLogger(BufferUtils::class.java.name).log(Level.SEVERE, "{0}", ex)
-            } catch (ex: InvocationTargetException) {
-                Logger.getLogger(BufferUtils::class.java.name).log(Level.SEVERE, "{0}", ex)
-            } catch (ex: SecurityException) {
-                Logger.getLogger(BufferUtils::class.java.name).log(Level.SEVERE, "{0}", ex)
             }
         }
+    } catch (ex: IllegalAccessException) {
+        Logger.getLogger("bufferUtils").log(Level.SEVERE, "{0}", ex)
+    } catch (ex: IllegalArgumentException) {
+        Logger.getLogger("bufferUtils").log(Level.SEVERE, "{0}", ex)
+    } catch (ex: InvocationTargetException) {
+        Logger.getLogger("bufferUtils").log(Level.SEVERE, "{0}", ex)
+    } catch (ex: SecurityException) {
+        Logger.getLogger("bufferUtils").log(Level.SEVERE, "{0}", ex)
     }
 }
 
