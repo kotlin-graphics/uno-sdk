@@ -111,22 +111,22 @@ class MatrixStack(
     }
 
     /** Applies a rotation matrix about the +X axis, with the given angle in degrees    */
-    fun rotateX(angDegCCW: Float) = rotate(1f, 0f, 0f, angDegCCW)
+    infix fun rotateX(angDegCCW: Float) = rotate(1f, 0f, 0f, angDegCCW)
 
     /** Applies a rotation matrix about the +Y axis, with the given angle in degrees    */
-    fun rotateY(angDegCCW: Float) = rotate(0f, 1f, 0f, angDegCCW)
+    infix fun rotateY(angDegCCW: Float) = rotate(0f, 1f, 0f, angDegCCW)
 
     /** Applies a rotation matrix about the +Z axis, with the given angle in degrees    */
-    fun rotateZ(angDegCCW: Float) = rotate(0f, 0f, 1f, angDegCCW)
+    infix fun rotateZ(angDegCCW: Float) = rotate(0f, 0f, 1f, angDegCCW)
 
     // Scale Matrix Functions
     // These functions right-multiply the current matrix with a scaling matrix of some form.
 
     /** Applies a scale matrix, with the given glm::vec4 as the axis scales    */
-    fun scale(scale: Vec4) = scale(scale.x, scale.y, scale.z)
+    infix fun scale(scale: Vec4) = scale(scale.x, scale.y, scale.z)
 
     /** Applies a scale matrix, with the given glm::vec3 as the axis scales    */
-    fun scale(scale: Vec3) = scale(scale.x, scale.y, scale.z)
+    infix fun scale(scale: Vec3) = scale(scale.x, scale.y, scale.z)
 
     /** Applies a scale matrix, with the given values as the axis scales    */
     fun scale(scaleX: Float, scaleY: Float, scaleZ: Float): MatrixStack {
@@ -135,19 +135,19 @@ class MatrixStack(
     }
 
     /** Applies a uniform scale matrix  */
-    fun scale(scale: Float) = scale(scale, scale, scale)
+    infix fun scale(scale: Float) = scale(scale, scale, scale)
 
     // Translation Matrix Functions
     // These functions right-multiply the current matrix with a translation matrix of some form.
 
     /** Applies a translation matrix, with the given glm::vec4 as the offset   */
-    fun translate(offset: Vec4) = translate(offset.x, offset.y, offset.z)
+    infix fun translate(offset: Vec4) = translate(offset.x, offset.y, offset.z)
 
     /** Applies a translation matrix, with the given glm::vec3 as the offset   */
-    fun translate(offset: Vec3) = translate(offset.x, offset.y, offset.z)
+    infix fun translate(offset: Vec3) = translate(offset.x, offset.y, offset.z)
 
     /** Applies a translation matrix, with the given X, Y and Z values as the offset   */
-    fun translate(offset: Float) = translate(offset, offset, offset)
+    infix fun translate(offset: Float) = translate(offset, offset, offset)
 
     /** Applies a uniform scale matrix  */
     fun translate(x: Float, y: Float, z: Float): MatrixStack {
@@ -228,13 +228,13 @@ class MatrixStack(
                         .scale(2.0f / size.x, 2.0f / size.y, 2.0f / (depthRange.y - depthRange.x))
 
 
-    fun applyMatrix(theMatrix: Mat4): MatrixStack {
+    infix fun applyMatrix(theMatrix: Mat4): MatrixStack {
         currMat.times_(theMatrix)
         return this
     }
 
 
-    fun setMatrix(mat: Mat4): MatrixStack {
+    infix fun setMatrix(mat: Mat4): MatrixStack {
         currMat put mat
         return this
     }
