@@ -10,7 +10,7 @@ class Caps(
         gl: GL,
         profile: Profile) {
 
-    val version = Version(gl, profile)
+//    val version = Version(gl, profile)
 
 
 
