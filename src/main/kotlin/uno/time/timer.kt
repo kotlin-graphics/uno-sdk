@@ -20,6 +20,7 @@ class Timer(var type: Type, val secDuration: Float) {
 
     private var absPrevTime = 0f
     private var secAccumTime = 0f
+    private val start = System.currentTimeMillis()
 
     init {
         if (type != Type.Infinite)
@@ -42,7 +43,7 @@ class Timer(var type: Type, val secDuration: Float) {
      *  Will only return true for SINGLE timers that have reached their duration.   */
     fun update(): Boolean {
 
-        val absCurrTime = System.currentTimeMillis() / 1_000f
+        val absCurrTime = (System.currentTimeMillis() - start) / 1_000f
         if (!hasUpdated) {
             absPrevTime = absCurrTime
             hasUpdated = true
@@ -102,4 +103,10 @@ class Timer(var type: Type, val secDuration: Float) {
     fun getDuration() = secDuration
 
     enum class Type {Loop, Single, Infinite, MAX }
+}
+
+fun main(args: Array<String>) {
+
+    val timer = Timer(Timer.Type.Single, 1f)
+
 }
