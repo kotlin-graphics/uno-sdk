@@ -27,8 +27,10 @@ dependencies {
     compile("com.github.elect86:glm:a2b384e0128111c06e4bcbdab3550acb2cf5da35")
 
     val jogl = "2.3.2"
-    compile("org.jogamp.gluegen:gluegen-rt-android:$jogl")
-    compile("org.jogamp.jogl:jogl-all-android:$jogl")
+    compile("org.jogamp.gluegen:gluegen-rt:$jogl")
+    compile("org.jogamp.jogl:jogl-all:$jogl")
+//    compile("org.jogamp.gluegen:gluegen-rt-android:$jogl")
+//    compile("org.jogamp.jogl:jogl-all-android:$jogl")
 }
 
 allprojects {
