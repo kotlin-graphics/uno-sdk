@@ -24,7 +24,7 @@ dependencies {
 
     testCompile("com.github.elect86:kotlintest:d8878d6da0944ec6bcbcdad6a1540bba021d768d")
 
-    compile("com.github.elect86:glm:a2b384e0128111c06e4bcbdab3550acb2cf5da35")
+    compile("com.github.elect86:glm:f5eb8cd98a773881f4f78a14e3b7173a0d7385b1")
 
     val jogl = "2.3.2"
     compile("org.jogamp.gluegen:gluegen-rt:$jogl")
