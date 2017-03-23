@@ -12,13 +12,12 @@ import glm.vec._3.Vec3
  * Created by elect on 17/03/17.
  */
 
-/** Abstract base class used by ViewPole to identify that it provides a viewing matrix. */
 abstract class ViewProvider {
 
     /** Computes the camera matrix. */
     abstract fun calcMatrix(res: Mat4): Mat4
 
-    abstract fun calcMatrix(): Mat4
+    fun calcMatrix() = calcMatrix(Mat4())
 }
 
 /** Utility object containing the ObjectPole's position and orientation information.    */
@@ -37,15 +36,8 @@ private val axisVectors = arrayOf(
 enum class Axis {X, Y, Z, MAX }
 enum class RotateMode {DUAL_AXIS, BIAXIAL, SPIN }
 
-fun calcRotationQuat(axis: Axis, radAngle: Float, res: Quat) = glm.angleAxis(radAngle, axisVectors[axis.ordinal], res)
-fun calcRotationQuat(axis: Axis, radAngle: Float) = glm.angleAxis(radAngle, axisVectors[axis.ordinal])
 
-private val mat4_A = Mat4()
-private val mat4_B = Mat4()
-private val vec2i_A = Vec2i()
-private val vec3_A = Vec3()
-private val quat_A = Quat()
-private val quat_B = Quat()
+fun calcRotationQuat(axis: Axis, radAngle: Float, res: Quat) = glm.angleAxis(radAngle, axisVectors[axis.ordinal], res)
 
 /**
  *  Mouse-based control over the orientation and position of an object.
@@ -90,9 +82,9 @@ class ObjectPole : ViewProvider {
     private var rotateMode = RotateMode.DUAL_AXIS
     private var isDragging = false
 
-    private lateinit var prevMousePos: Vec2i
-    private lateinit var startDragMousePos: Vec2i
-    private lateinit var startDragOrient: Quat
+    private var prevMousePos = Vec2i()
+    private var startDragMousePos = Vec2i()
+    private var startDragOrient = Quat()
 
     /**
      * Creates an object pole with a given initial position and orientation.
@@ -100,7 +92,7 @@ class ObjectPole : ViewProvider {
      * @param initialData The starting position and orientation of the object in world space.
      * @param rotateScale The number of degrees to rotate the object per window space pixel
      * @param actionButton The mouse button to listen for. All other mouse buttons are ignored.
-     * @param pLookatProvider An object that will compute a view matrix. This defines the view space that orientations
+     * @param lookatProvider An object that will compute a view matrix. This defines the view space that orientations
      * can be relative to. If it is NULL, then orientations will be relative to the world.
      */
     constructor(initialData: ObjectData, rotateScale: Float, actionButton: Short, lookatProvider: ViewProvider) {
@@ -115,13 +107,13 @@ class ObjectPole : ViewProvider {
     /** Generates the local-to-world matrix for this object.    */
     override fun calcMatrix(res: Mat4): Mat4 {
 
-        res put 1f
-        res.set(3, po.position, 1f)
+        synchronized(this) {
+            res put 1f
+            res.set(3, po.position, 1f)
 
-        return res times_ (po.orientation to mat4_A)
+            return res times_ po.orientation.toMat4()
+        }
     }
-
-    override fun calcMatrix() = calcMatrix(mat4_B)
 
     /** Retrieves the current position and orientation of the object.   */
     fun getPosOrient() = po
@@ -142,9 +134,8 @@ class ObjectPole : ViewProvider {
     /**
      * Notifies the pole of a mouse button being pressed or released.
      *
-     * @param event The mouse event
-     * @param position The mouse position at the moment of the mouse click.     */
-    fun mousePressed(event: MouseEvent, position: Vec2i) {
+     * @param event The mouse event */
+    fun mousePressed(event: MouseEvent) {
 
         // Ignore button presses when dragging.
         if (!isDragging)
@@ -159,46 +150,47 @@ class ObjectPole : ViewProvider {
                         else
                             RotateMode.DUAL_AXIS
 
-                prevMousePos put position
-                startDragMousePos put position
+                prevMousePos.put(event.x, event.y)
+                startDragMousePos.put(event.x, event.y)
                 startDragOrient put po.orientation
 
                 isDragging = true
             }
     }
 
-    fun mouseReleased(event: MouseEvent, position: Vec2i) {
+    fun mouseReleased(event: MouseEvent) {
 
         // Ignore up buttons if not dragging.
         if (isDragging)
 
             if (event.button == actionButton) {
 
-                mouseMove(position)
+                mouseDragged(event)
 
                 isDragging = false
             }
     }
 
     /** Notifies the pole that the mouse has moved to the given absolute position.  */
-    fun mouseMove(position: Vec2i) {
+    fun mouseDragged(event: MouseEvent) {
 
         if (isDragging) {
 
-            val diff = position.minus(prevMousePos, vec2i_A)
+            val position = vec2i_A.put(event.x, event.y)
+            val diff = position.minus(prevMousePos, vec2i_B)
 
             when (rotateMode) {
 
                 RotateMode.DUAL_AXIS -> {
 
-                    val rot = calcRotationQuat(Axis.Y, glm.toRad(diff.y * rotateScale), quat_A)
-                    calcRotationQuat(Axis.X, glm.toRad(diff.y * rotateScale)).times(rot, rot).normalize_()
+                    val rot = calcRotationQuat(Axis.Y, glm.toRad(diff.x * rotateScale), quat_A)
+                    calcRotationQuat(Axis.X, glm.toRad(diff.y * rotateScale), quat_B).times(rot, rot).normalize_()
                     rotateView(rot)
                 }
 
                 RotateMode.BIAXIAL -> {
 
-                    val initDiff = position.minus(startDragMousePos, vec2i_A)
+                    val initDiff = position.minus(startDragMousePos, vec2i_C)
 
                     var axis = Axis.X
                     var degAngle = initDiff.y * rotateScale
@@ -222,28 +214,28 @@ class ObjectPole : ViewProvider {
         val fromInitial_ = if (isDragging) fromInitial else false
 
         val orient = if (fromInitial_) startDragOrient else po.orientation
-        rot.times(orient, po.orientation).normalize_()
+        po.orientation = rot.times(orient, quat_C).normalize_()
     }
 
     fun rotateLocal(rot: Quat, fromInitial: Boolean = false) {
 
-        val fromInitial_ = if (!isDragging) fromInitial else false
+        val fromInitial_ = if (isDragging) fromInitial else false
 
         val orient = if (fromInitial_) startDragOrient else po.orientation
-        orient.times(rot, po.orientation).normalize_()
+        po.orientation = orient.times(rot, quat_D).normalize_()
     }
 
     fun rotateView(rot: Quat, fromInitial: Boolean = false) {
 
-        val fromInitial_ = if (!isDragging) fromInitial else false
+        val fromInitial_ = if (isDragging) fromInitial else false
 
         if (view != null) {
 
-            val viewQuat = view!!.calcMatrix(mat4_A).to(quat_A)
-            val invViewQuat = viewQuat.conjugate(quat_B)
+            val viewQuat = view!!.calcMatrix(mat4_A) to quat_E
+            val invViewQuat = viewQuat.conjugate(quat_F)
             val orient = if (fromInitial_) startDragOrient else po.orientation
 
-            invViewQuat.times_(rot).times_(viewQuat).times_(orient).normalize_()
+            (rot.times(orient, po.orientation)).normalize_()
 
         } else
             rotateWorld(rot, fromInitial_)
@@ -312,7 +304,7 @@ class ViewPole : ViewProvider {
     private val actionButton: Short
 
     //Used when rotating.
-    private var isDragging = true
+    private var isDragging = false
     private var rotateMode = RotateMode.DUAL_AXIS_ROTATE
 
     private var degStartDragSpin = 0f
@@ -357,16 +349,14 @@ class ViewPole : ViewProvider {
         res.translate_(0.0f, 0.0f, -currView.radius)
 
         //Rotate the world to look in the right direction..
-        val fullRotation = glm.angleAxis(currView.degSpinRotation, 0.0f, 0.0f, 1.0f, quat_A) times_ currView.orient
-        res times_ (fullRotation to mat4_A)
+        val fullRotation = glm.angleAxis(currView.degSpinRotation, 0.0f, 0.0f, 1.0f, quat_G) times_ currView.orient
+        res times_ (fullRotation to mat4_B)
 
         // Translate the world by the negation of the lookat point, placing the origin at the lookat point.
-        res translate_ -currView.targetPos
+        res.translate_(-currView.targetPos.x, -currView.targetPos.y, -currView.targetPos.z)
 
         return res
     }
-
-    override fun calcMatrix() = calcMatrix(mat4_B)
 
     /** Resets the view to the initial view. Will fail if currently dragging.   */
     fun reset() {
@@ -379,8 +369,8 @@ class ViewPole : ViewProvider {
         val radAngleDiff = glm.toRad(xDiff * viewScale.rotationScale)
 
         // Rotate about the world-space Y axis.
-        glm.angleAxis(radAngleDiff, 0f, 1f, 0f, quat_A)
-        startDragOrient.times(quat_A, currView.orient)
+        glm.angleAxis(radAngleDiff, 0f, 1f, 0f, quat_H)
+        startDragOrient.times(quat_H, currView.orient)
     }
 
     fun processYChange(yDiff: Int, clearXZ: Boolean = false) {
@@ -388,20 +378,21 @@ class ViewPole : ViewProvider {
         val radAngleDiff = glm.toRad(yDiff * viewScale.rotationScale)
 
         // Rotate about the local-space X axis.
-        glm.angleAxis(radAngleDiff, 1f, 0f, 0f, currView.orient) times_ startDragOrient
+        glm.angleAxis(radAngleDiff, 1f, 0f, 0f, quat_I)
+        quat_I.times(startDragOrient, currView.orient)
     }
 
     fun processXYChange(xDiff: Int, yDiff: Int) {
 
-        val radXAngleDiff = glm.toRad(yDiff * viewScale.rotationScale)
-        val radYAngleDiff = glm.toRad(xDiff * viewScale.rotationScale)
+        val radXAngleDiff = glm.toRad(xDiff * viewScale.rotationScale)
+        val radYAngleDiff = glm.toRad(yDiff * viewScale.rotationScale)
 
         // Rotate about the world-space Y axis.
-        glm.angleAxis(radXAngleDiff, 0.0f, 1.0f, 0.0f, quat_A)
-        startDragOrient.times(quat_A, currView.orient)
+        glm.angleAxis(radXAngleDiff, 0.0f, 1.0f, 0.0f, quat_J)
+        startDragOrient.times(quat_J, currView.orient)
         //Rotate about the local-space X axis.
-        glm.angleAxis(radYAngleDiff, 1.0f, 0.0f, 0.0f, quat_A)
-        quat_A.times(currView.orient, currView.orient)
+        glm.angleAxis(radYAngleDiff, 1.0f, 0.0f, 0.0f, quat_K)
+        quat_K.times(currView.orient, currView.orient)
     }
 
     fun processSpinAxis(xDiff: Int, yDiff: Int) {
@@ -425,7 +416,7 @@ class ViewPole : ViewProvider {
 
     fun onDragRotate(curr: Vec2i) {
 
-        val diff = curr.minus(startDragMouseLoc, vec2i_A)
+        val diff = curr.minus(startDragMouseLoc, vec2i_D)
 
         when (rotateMode) {
 
@@ -471,9 +462,10 @@ class ViewPole : ViewProvider {
             currView.radius = viewScale.maxRadius
     }
 
-    fun mouseMove(position: Vec2i) {
+
+    fun mouseDragged(event: MouseEvent) {
         if (isDragging)
-            onDragRotate(position)
+            onDragRotate(vec2i_E.put(event.x, event.y))
     }
 
     /**
@@ -481,11 +473,11 @@ class ViewPole : ViewProvider {
      *
      * These functions provide input, since Poles cannot get input for themselves. See \ref module_glutil_poles
      * "the Pole manual" for details.   */
+    fun mousePressed(event: MouseEvent) {
 
-    fun mousePressed(event: MouseEvent, position: Vec2i) {
-
+        val position = vec2i_F.put(event.x, event.y)
         // Ignore all other button presses when dragging.
-        if (isDragging)
+        if (!isDragging)
 
             if (event.button == actionButton) {
 
@@ -498,7 +490,7 @@ class ViewPole : ViewProvider {
             }
     }
 
-    fun mouseReleased(event: MouseEvent, position: Vec2i) {
+    fun mouseReleased(event: MouseEvent) {
 
         // Ignore all other button releases when not dragging
         if (isDragging)
@@ -506,10 +498,10 @@ class ViewPole : ViewProvider {
             if (event.button == actionButton)
 
                 if (rotateMode == RotateMode.DUAL_AXIS_ROTATE || rotateMode == RotateMode.SPIN_VIEW_AXIS || rotateMode == RotateMode.BIAXIAL_ROTATE)
-                    endDragRotate(position)
+                    endDragRotate(vec2i_G.put(event.x, event.y))
     }
 
-    fun mouseWheel(event: MouseEvent, position: Vec2i) =
+    fun mouseWheel(event: MouseEvent) =
             if (event.rotation[1] > 0)
                 moveCloser(event.isShiftDown)
             else
@@ -517,7 +509,7 @@ class ViewPole : ViewProvider {
 
     fun buttonPressed(event: KeyEvent) {
 
-        val distance = if(event.isShiftDown) viewScale.largePosOffset else viewScale.smallPosOffset
+        val distance = if (event.isShiftDown) viewScale.largePosOffset else viewScale.smallPosOffset
 
         when (event.keyCode) {
 
@@ -533,16 +525,16 @@ class ViewPole : ViewProvider {
     fun offsetTargetPos(dir: TargetOffsetDir, worldDistance: Float) {
 
         val offsetDir = offsets[dir.ordinal]
-        offsetTargetPos(offsetDir times_ worldDistance)
+        offsetTargetPos(offsetDir.times(worldDistance, vec3_A))
     }
 
     fun offsetTargetPos(cameraoffset: Vec3) {
 
-        val currMat = calcMatrix(mat4_B)
-        val orientation = currMat.to(quat_A)
+        val currMat = calcMatrix(mat4_C)
+        val orientation = currMat.to(quat_L)
 
-        val invOrient = orientation.conjugate(quat_B)
-        val worldOffset = invOrient.times(cameraoffset, vec3_A)
+        val invOrient = orientation.conjugate(quat_M)
+        val worldOffset = invOrient.times(cameraoffset, vec3_B)
 
         currView.targetPos plus_ worldOffset
     }
@@ -573,4 +565,28 @@ class ViewPole : ViewProvider {
     }
 }
 
-
+private val mat4_A = Mat4()
+private val mat4_B = Mat4()
+private val mat4_C = Mat4()
+private val vec2i_A = Vec2i()
+private val vec2i_B = Vec2i()
+private val vec2i_C = Vec2i()
+private val vec2i_D = Vec2i()
+private val vec2i_E = Vec2i()
+private val vec2i_F = Vec2i()
+private val vec2i_G = Vec2i()
+private val vec3_A = Vec3()
+private val vec3_B = Vec3()
+private val quat_A = Quat()
+private val quat_B = Quat()
+private val quat_C = Quat()
+private val quat_D = Quat()
+private val quat_E = Quat()
+private val quat_F = Quat()
+private val quat_G = Quat()
+private val quat_H = Quat()
+private val quat_I = Quat()
+private val quat_J = Quat()
+private val quat_K = Quat()
+private val quat_L = Quat()
+private val quat_M = Quat()
