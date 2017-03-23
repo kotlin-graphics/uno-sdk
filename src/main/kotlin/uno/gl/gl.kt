@@ -1,11 +1,20 @@
 package uno.gl
 
+import com.jogamp.newt.opengl.GLWindow
 import com.jogamp.opengl.GL
 import com.jogamp.opengl.GL.*
+import com.jogamp.opengl.GL3
 
 /**
  * Created by elect on 05/03/17.
  */
+
+inline infix fun GLWindow.gl3(crossinline inject: GL3.() -> Unit) {
+    invoke(false) { glAutoDrawable ->
+        glAutoDrawable.gl.gL3.inject()
+        false
+    }
+}
 
 fun checkError(gl: GL, location: String) {
 
