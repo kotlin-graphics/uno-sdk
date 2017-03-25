@@ -3,7 +3,15 @@ package uno.gl
 import com.jogamp.newt.opengl.GLWindow
 import com.jogamp.opengl.GL
 import com.jogamp.opengl.GL.*
+import com.jogamp.opengl.GL2ES3.GL_UNIFORM_BUFFER
+import com.jogamp.opengl.GL2ES3.GL_UNIFORM_BUFFER_OFFSET_ALIGNMENT
 import com.jogamp.opengl.GL3
+import glm.L
+import uno.buffer.byteBufferBig
+import uno.buffer.destroy
+import uno.buffer.intBufferBig
+import java.nio.ByteBuffer
+import java.nio.IntBuffer
 
 /**
  * Created by elect on 05/03/17.
@@ -32,3 +40,4 @@ fun checkError(gl: GL, location: String) {
         throw Error("OpenGL Error($errorString): $location")
     }
 }
+
