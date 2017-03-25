@@ -541,6 +541,18 @@ class ViewPole : ViewProvider {
 
         currView.targetPos plus_ worldOffset
     }
+    
+    fun keyPressed(event: KeyEvent) {
+        val distance = if(event.isShiftDown) viewScale.smallPosOffset else viewScale.largePosOffset
+        when(event.keyCode) {
+            KeyEvent.VK_W -> offsetTargetPos(TargetOffsetDir.FORWARD, distance)
+            KeyEvent.VK_S -> offsetTargetPos(TargetOffsetDir.BACKWARD, distance)
+            KeyEvent.VK_D -> offsetTargetPos(TargetOffsetDir.RIGHT, distance)
+            KeyEvent.VK_A -> offsetTargetPos(TargetOffsetDir.LEFT, distance)
+            KeyEvent.VK_E -> offsetTargetPos(TargetOffsetDir.UP, distance)
+            KeyEvent.VK_Q -> offsetTargetPos(TargetOffsetDir.FORWARD, distance)
+        }
+    }
 
     val offsets = arrayOf(
             Vec3(+0.0f, +1.0f, +0.0f),
