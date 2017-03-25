@@ -304,7 +304,8 @@ class ViewPole : ViewProvider {
     private val actionButton: Short
 
     //Used when rotating.
-    private var isDragging = false
+    var isDragging = false
+        private set
     private var rotateMode = RotateMode.DUAL_AXIS_ROTATE
 
     private var degStartDragSpin = 0f
@@ -321,6 +322,9 @@ class ViewPole : ViewProvider {
         set(value) {
             viewScale.rotationScale = value
         }
+
+    /** Retrieves the current viewing information.  */
+    fun getView() = currView
 
     /**
      * Creates a view pole with the given initial target position, view definition, and action button.
