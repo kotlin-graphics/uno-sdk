@@ -22,11 +22,10 @@ abstract class ViewProvider {
 
 /** Utility object containing the ObjectPole's position and orientation information.    */
 class ObjectData(
-
         /** The world-space position of the object. */
-        var position: Vec3,
+        @JvmField var position: Vec3,
         /** The world-space orientation of the object.  */
-        var orientation: Quat)
+        @JvmField var orientation: Quat)
 
 private val axisVectors = arrayOf(
         Vec3(1, 0, 0),
@@ -246,30 +245,30 @@ class ObjectPole : ViewProvider {
 /** Utility object containing the ViewPole's view information.     */
 class ViewData(
         /** The starting target position position.  */
-        var targetPos: Vec3,
+        @JvmField var targetPos: Vec3,
         /** The initial orientation aroudn the target position. */
-        var orient: Quat,
+        @JvmField var orient: Quat,
         /** The initial radius of the camera from the target point. */
-        var radius: Float,
+        @JvmField var radius: Float,
         /** The initial spin rotation of the "up" axis, relative to \a orient   */
-        var degSpinRotation: Float)
+        @JvmField var degSpinRotation: Float)
 
 /** Utility object describing the scale of the ViewPole.    */
 class ViewScale(
         /** The closest the radius to the target point can get. */
-        var minRadius: Float,
+        @JvmField var minRadius: Float,
         /** The farthest the radius to the target point can get.    */
-        var maxRadius: Float,
+        @JvmField var maxRadius: Float,
         /** The radius change to use when the SHIFT key isn't held while mouse wheel scrolling. */
-        var largeRadiusDelta: Float,
+        @JvmField var largeRadiusDelta: Float,
         /** The radius change to use when the SHIFT key \em is held while mouse wheel scrolling.    */
-        var smallRadiusDelta: Float,
+        @JvmField var smallRadiusDelta: Float,
         /** The position offset to use when the SHIFT key isn't held while pressing a movement key. */
-        var largePosOffset: Float,
+        @JvmField var largePosOffset: Float,
         /** The position offset to use when the SHIFT key \em is held while pressing a movement key.    */
-        var smallPosOffset: Float,
+        @JvmField var smallPosOffset: Float,
         /** The number of degrees to rotate the view per window space pixel the mouse moves when dragging.  */
-        var rotationScale: Float)
+        @JvmField var rotationScale: Float)
 
 /**
  * Mouse-based control over the orientation and position of the camera.
