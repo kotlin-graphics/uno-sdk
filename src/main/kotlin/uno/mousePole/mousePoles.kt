@@ -104,7 +104,7 @@ class ObjectPole : ViewProvider {
     }
 
     /** Generates the local-to-world matrix for this object.    */
-    override fun calcMatrix(res: Mat4): Mat4 {
+    @Synchronized override fun calcMatrix(res: Mat4): Mat4 {
 
         synchronized(this) {
             res put 1f
@@ -134,7 +134,7 @@ class ObjectPole : ViewProvider {
      * Notifies the pole of a mouse button being pressed or released.
      *
      * @param event The mouse event */
-    fun mousePressed(event: MouseEvent) {
+    @Synchronized fun mousePressed(event: MouseEvent) {
 
         // Ignore button presses when dragging.
         if (!isDragging)
@@ -157,7 +157,7 @@ class ObjectPole : ViewProvider {
             }
     }
 
-    fun mouseReleased(event: MouseEvent) {
+    @Synchronized fun mouseReleased(event: MouseEvent) {
 
         // Ignore up buttons if not dragging.
         if (isDragging)
@@ -171,7 +171,7 @@ class ObjectPole : ViewProvider {
     }
 
     /** Notifies the pole that the mouse has moved to the given absolute position.  */
-    fun mouseDragged(event: MouseEvent) {
+    @Synchronized fun mouseDragged(event: MouseEvent) {
 
         if (isDragging) {
 
@@ -341,7 +341,7 @@ class ViewPole : ViewProvider {
     }
 
     /** Generates the world-to-camera matrix for the view.     */
-    override fun calcMatrix(res: Mat4): Mat4 {
+    @Synchronized override fun calcMatrix(res: Mat4): Mat4 {
 
         res put 1f
 
@@ -476,7 +476,7 @@ class ViewPole : ViewProvider {
      *
      * These functions provide input, since Poles cannot get input for themselves. See \ref module_glutil_poles
      * "the Pole manual" for details.   */
-    fun mousePressed(event: MouseEvent) {
+    @Synchronized fun mousePressed(event: MouseEvent) {
 
         val position = vec2i_F.put(event.x, event.y)
         // Ignore all other button presses when dragging.
@@ -493,7 +493,7 @@ class ViewPole : ViewProvider {
             }
     }
 
-    fun mouseReleased(event: MouseEvent) {
+    @Synchronized fun mouseReleased(event: MouseEvent) {
 
         // Ignore all other button releases when not dragging
         if (isDragging)
@@ -504,13 +504,13 @@ class ViewPole : ViewProvider {
                     endDragRotate(vec2i_G.put(event.x, event.y))
     }
 
-    fun mouseWheel(event: MouseEvent) =
+    @Synchronized fun mouseWheel(event: MouseEvent) =
             if (event.rotation[1] > 0)
                 moveCloser(event.isShiftDown)
             else
                 moveAway(event.isShiftDown)
 
-    fun buttonPressed(event: KeyEvent) {
+    @Synchronized fun buttonPressed(event: KeyEvent) {
 
         val distance = if (event.isShiftDown) viewScale.largePosOffset else viewScale.smallPosOffset
 
@@ -541,10 +541,10 @@ class ViewPole : ViewProvider {
 
         currView.targetPos plus_ worldOffset
     }
-    
+
     fun keyPressed(event: KeyEvent) {
-        val distance = if(event.isShiftDown) viewScale.smallPosOffset else viewScale.largePosOffset
-        when(event.keyCode) {
+        val distance = if (event.isShiftDown) viewScale.smallPosOffset else viewScale.largePosOffset
+        when (event.keyCode) {
             KeyEvent.VK_W -> offsetTargetPos(TargetOffsetDir.FORWARD, distance)
             KeyEvent.VK_S -> offsetTargetPos(TargetOffsetDir.BACKWARD, distance)
             KeyEvent.VK_D -> offsetTargetPos(TargetOffsetDir.RIGHT, distance)
