@@ -22,11 +22,10 @@ abstract class ViewProvider {
 
 /** Utility object containing the ObjectPole's position and orientation information.    */
 class ObjectData(
-
         /** The world-space position of the object. */
-        var position: Vec3,
+        @JvmField var position: Vec3,
         /** The world-space orientation of the object.  */
-        var orientation: Quat)
+        @JvmField var orientation: Quat)
 
 private val axisVectors = arrayOf(
         Vec3(1, 0, 0),
@@ -105,7 +104,7 @@ class ObjectPole : ViewProvider {
     }
 
     /** Generates the local-to-world matrix for this object.    */
-    override fun calcMatrix(res: Mat4): Mat4 {
+    @Synchronized override fun calcMatrix(res: Mat4): Mat4 {
 
         synchronized(this) {
             res put 1f
@@ -135,7 +134,7 @@ class ObjectPole : ViewProvider {
      * Notifies the pole of a mouse button being pressed or released.
      *
      * @param event The mouse event */
-    fun mousePressed(event: MouseEvent) {
+    @Synchronized fun mousePressed(event: MouseEvent) {
 
         // Ignore button presses when dragging.
         if (!isDragging)
@@ -158,7 +157,7 @@ class ObjectPole : ViewProvider {
             }
     }
 
-    fun mouseReleased(event: MouseEvent) {
+    @Synchronized fun mouseReleased(event: MouseEvent) {
 
         // Ignore up buttons if not dragging.
         if (isDragging)
@@ -172,7 +171,7 @@ class ObjectPole : ViewProvider {
     }
 
     /** Notifies the pole that the mouse has moved to the given absolute position.  */
-    fun mouseDragged(event: MouseEvent) {
+    @Synchronized fun mouseDragged(event: MouseEvent) {
 
         if (isDragging) {
 
@@ -246,30 +245,30 @@ class ObjectPole : ViewProvider {
 /** Utility object containing the ViewPole's view information.     */
 class ViewData(
         /** The starting target position position.  */
-        var targetPos: Vec3,
+        @JvmField var targetPos: Vec3,
         /** The initial orientation aroudn the target position. */
-        var orient: Quat,
+        @JvmField var orient: Quat,
         /** The initial radius of the camera from the target point. */
-        var radius: Float,
+        @JvmField var radius: Float,
         /** The initial spin rotation of the "up" axis, relative to \a orient   */
-        var degSpinRotation: Float)
+        @JvmField var degSpinRotation: Float)
 
 /** Utility object describing the scale of the ViewPole.    */
 class ViewScale(
         /** The closest the radius to the target point can get. */
-        var minRadius: Float,
+        @JvmField var minRadius: Float,
         /** The farthest the radius to the target point can get.    */
-        var maxRadius: Float,
+        @JvmField var maxRadius: Float,
         /** The radius change to use when the SHIFT key isn't held while mouse wheel scrolling. */
-        var largeRadiusDelta: Float,
+        @JvmField var largeRadiusDelta: Float,
         /** The radius change to use when the SHIFT key \em is held while mouse wheel scrolling.    */
-        var smallRadiusDelta: Float,
+        @JvmField var smallRadiusDelta: Float,
         /** The position offset to use when the SHIFT key isn't held while pressing a movement key. */
-        var largePosOffset: Float,
+        @JvmField var largePosOffset: Float,
         /** The position offset to use when the SHIFT key \em is held while pressing a movement key.    */
-        var smallPosOffset: Float,
+        @JvmField var smallPosOffset: Float,
         /** The number of degrees to rotate the view per window space pixel the mouse moves when dragging.  */
-        var rotationScale: Float)
+        @JvmField var rotationScale: Float)
 
 /**
  * Mouse-based control over the orientation and position of the camera.
@@ -304,7 +303,8 @@ class ViewPole : ViewProvider {
     private val actionButton: Short
 
     //Used when rotating.
-    private var isDragging = false
+    var isDragging = false
+        private set
     private var rotateMode = RotateMode.DUAL_AXIS_ROTATE
 
     private var degStartDragSpin = 0f
@@ -322,6 +322,9 @@ class ViewPole : ViewProvider {
             viewScale.rotationScale = value
         }
 
+    /** Retrieves the current viewing information.  */
+    fun getView() = currView
+
     /**
      * Creates a view pole with the given initial target position, view definition, and action button.
      *
@@ -338,7 +341,7 @@ class ViewPole : ViewProvider {
     }
 
     /** Generates the world-to-camera matrix for the view.     */
-    override fun calcMatrix(res: Mat4): Mat4 {
+    @Synchronized override fun calcMatrix(res: Mat4): Mat4 {
 
         res put 1f
 
@@ -473,7 +476,7 @@ class ViewPole : ViewProvider {
      *
      * These functions provide input, since Poles cannot get input for themselves. See \ref module_glutil_poles
      * "the Pole manual" for details.   */
-    fun mousePressed(event: MouseEvent) {
+    @Synchronized fun mousePressed(event: MouseEvent) {
 
         val position = vec2i_F.put(event.x, event.y)
         // Ignore all other button presses when dragging.
@@ -490,7 +493,7 @@ class ViewPole : ViewProvider {
             }
     }
 
-    fun mouseReleased(event: MouseEvent) {
+    @Synchronized fun mouseReleased(event: MouseEvent) {
 
         // Ignore all other button releases when not dragging
         if (isDragging)
@@ -501,13 +504,13 @@ class ViewPole : ViewProvider {
                     endDragRotate(vec2i_G.put(event.x, event.y))
     }
 
-    fun mouseWheel(event: MouseEvent) =
+    @Synchronized fun mouseWheel(event: MouseEvent) =
             if (event.rotation[1] > 0)
                 moveCloser(event.isShiftDown)
             else
                 moveAway(event.isShiftDown)
 
-    fun buttonPressed(event: KeyEvent) {
+    @Synchronized fun buttonPressed(event: KeyEvent) {
 
         val distance = if (event.isShiftDown) viewScale.largePosOffset else viewScale.smallPosOffset
 
@@ -537,6 +540,18 @@ class ViewPole : ViewProvider {
         val worldOffset = invOrient.times(cameraoffset, vec3_B)
 
         currView.targetPos plus_ worldOffset
+    }
+
+    fun keyPressed(event: KeyEvent) {
+        val distance = if (event.isShiftDown) viewScale.smallPosOffset else viewScale.largePosOffset
+        when (event.keyCode) {
+            KeyEvent.VK_W -> offsetTargetPos(TargetOffsetDir.FORWARD, distance)
+            KeyEvent.VK_S -> offsetTargetPos(TargetOffsetDir.BACKWARD, distance)
+            KeyEvent.VK_D -> offsetTargetPos(TargetOffsetDir.RIGHT, distance)
+            KeyEvent.VK_A -> offsetTargetPos(TargetOffsetDir.LEFT, distance)
+            KeyEvent.VK_E -> offsetTargetPos(TargetOffsetDir.UP, distance)
+            KeyEvent.VK_Q -> offsetTargetPos(TargetOffsetDir.FORWARD, distance)
+        }
     }
 
     val offsets = arrayOf(
