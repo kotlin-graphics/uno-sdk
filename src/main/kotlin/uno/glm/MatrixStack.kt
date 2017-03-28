@@ -40,7 +40,7 @@ class MatrixStack(
     internal val matrices = Stack<Mat4>()
     internal var currMat = mat
 
-    // Stack Maintanence Functions
+    // Stack Maintenance Functions
     // These functions maintain the matrix stack. You must take care not to underflow or overflow the stack
 
     /** Preserves the current matrix on the stack   */
@@ -58,6 +58,8 @@ class MatrixStack(
     /** Restores the current matrix to the value of the most recently preserved matrix.
      *  This function does not affect the depth of the matrix stack.    */
     fun reset(): MatrixStack {
+        println(matrices.size)
+        println(matrices.lastIndex)
         matrices.last() put matrices[matrices.lastIndex - 1]
         currMat = matrices.last()
         return this
@@ -246,7 +248,7 @@ class MatrixStack(
         return this
     }
 
-    inline infix fun run(block: MatrixStack.() -> Unit): MatrixStack {
+    inline infix fun apply(block: MatrixStack.() -> Unit): MatrixStack {
         push()
         block()
         pop()
