@@ -254,4 +254,11 @@ class MatrixStack(
         pop()
         return this
     }
+
+    inline infix fun run(block: MatrixStack.() -> Unit): Unit {
+        push()
+        val result = block()
+        pop()
+        return result
+    }
 }
