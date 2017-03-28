@@ -51,5 +51,4 @@ class GlDebugOutput : GLDebugListener {
         else if (0 <= source && source == event.dbgSource && type == event.dbgType && severity == event.dbgSeverity)
             received = true
     }
-
 }
