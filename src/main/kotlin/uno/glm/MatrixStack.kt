@@ -59,6 +59,7 @@ class MatrixStack(
      *  This function does not affect the depth of the matrix stack.    */
     fun reset(): MatrixStack {
         matrices.last() put matrices[matrices.lastIndex - 1]
+        currMat = matrices.last()
         return this
     }
 
