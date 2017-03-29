@@ -3,18 +3,45 @@ package uno.gl
 import com.jogamp.newt.opengl.GLWindow
 import com.jogamp.opengl.GL
 import com.jogamp.opengl.GL.*
+import com.jogamp.opengl.GL2
 import com.jogamp.opengl.GL2ES3
 import com.jogamp.opengl.GL2ES3.GL_UNIFORM_BUFFER
 import com.jogamp.opengl.GL3
 import glm.L
-import uno.buffer.byteBufferBig
-import uno.buffer.destroy
-import uno.buffer.intBufferBig
+import glm.b
+import glm.vec._2.Vec2
+import uno.buffer.*
 import java.nio.ByteBuffer
 
 /**
  * Created by elect on 05/03/17.
  */
+
+/* -------------------------- GL_EXT_texture_sRGB -------------------------- */
+val GL_COMPRESSED_SRGB_S3TC_DXT1_EXT = 0x8C4C
+val GL_COMPRESSED_SRGB_ALPHA_S3TC_DXT1_EXT = 0x8C4D
+val GL_COMPRESSED_SRGB_ALPHA_S3TC_DXT3_EXT = 0x8C4E
+val GL_COMPRESSED_SRGB_ALPHA_S3TC_DXT5_EXT = 0x8C4F
+
+/* --------------------- GL_ATI_texture_compression_3dc -------------------- */
+val GL_COMPRESSED_LUMINANCE_ALPHA_3DC_ATI = 0x8837
+
+/* -------------------- GL_3DFX_texture_compression_FXT1 ------------------- */
+val GL_COMPRESSED_RGB_FXT1_3DFX = 0x86B0
+val GL_COMPRESSED_RGBA_FXT1_3DFX = 0x86B1
+
+/* ------------------- GL_OES_compressed_paletted_texture ------------------ */
+val GL_PALETTE4_RGB8_OES = 0x8B90
+val GL_PALETTE4_RGBA8_OES = 0x8B91
+val GL_PALETTE4_R5_G6_B5_OES = 0x8B92
+val GL_PALETTE4_RGBA4_OES = 0x8B93
+val GL_PALETTE4_RGB5_A1_OES = 0x8B94
+val GL_PALETTE8_RGB8_OES = 0x8B95
+val GL_PALETTE8_RGBA8_OES = 0x8B96
+val GL_PALETTE8_R5_G6_B5_OES = 0x8B97
+val GL_PALETTE8_RGBA4_OES = 0x8B98
+val GL_PALETTE8_RGB5_A1_OES = 0x8B99
+
 
 inline infix fun GLWindow.gl3(crossinline inject: GL3.() -> Unit) {
     invoke(false) { glAutoDrawable ->
@@ -40,46 +67,41 @@ fun checkError(gl: GL, location: String) {
     }
 }
 
-/** This object can only be constructed after an OpenGL context has been created and initialized.   */
-class UniformBlockArray @JvmOverloads constructor(gl: GL3, uboSize: Int, private val arrayCount: Int, private var blockOffset: Int = 0) {
-
-    private val storage: ByteBuffer
-    val size
-        get() = arrayCount
-    /** The array offset should be multiplied by the array index to get the offset for a particular element. */
-    val arrayOffset
-        get() = blockOffset
-
-    init {
-        val uniformBufferAlignSize = intBufferBig(1)
-        gl.glGetIntegerv(GL2ES3.GL_UNIFORM_BUFFER_OFFSET_ALIGNMENT, uniformBufferAlignSize)
-
-        blockOffset = uboSize
-        blockOffset += uniformBufferAlignSize[0] - (blockOffset % uniformBufferAlignSize[0])
-
-        val sizeMaterialUniformBuffer = blockOffset * arrayCount
-
-        storage = byteBufferBig(arrayCount * blockOffset)
-
-        uniformBufferAlignSize.destroy()
-    }
-
-    fun createBufferObject(gl: GL3): Int = with(gl) {
-
-        val bufferObject = intBufferBig(1)
-        glGenBuffers(1, bufferObject)
-        glBindBuffer(GL_UNIFORM_BUFFER, bufferObject[0])
-        glBufferData(GL_UNIFORM_BUFFER, storage.capacity().L, storage, GL_STATIC_DRAW)
-        glBindBuffer(GL_UNIFORM_BUFFER, 0)
-
-        val result = bufferObject[0]
-        bufferObject.destroy()
-
-        return result
-    }
-
-    operator fun set(blockIndex: Int, buffer: ByteBuffer) {
-        for(i in 0 until buffer.capacity())
-            storage.put(blockIndex * blockOffset + i, buffer.get(i))
-    }
+fun GL.getInteger(pname: Int): Int {
+    glGetIntegerv(pname, int)
+    return int[0]
 }
+
+fun GL3.getInteger64(pname: Int): Long {
+    glGetInteger64v(pname, long)
+    return long[0]
+}
+
+fun GL2.getIntegeri(pname: Int, index: Int): Int {
+    glGetIntegeri_v(pname, index, int)
+    return int[0]
+}
+
+fun GL.getFloat(pname: Int): Float {
+    glGetFloatv(pname, floats)
+    return floats[0]
+}
+
+fun GL.getVec2(pname: Int): Vec2 {
+    glGetFloatv(pname, floats)
+    return Vec2(floats)
+}
+
+
+fun GL.getBoolean(pname: Int): Boolean {
+    glGetBooleanv(pname, byte)
+    return byte[0] != 0.b
+}
+
+fun GL.getString(pname: Int): String = glGetString(pname)
+fun GL2.getStringi(pname: Int, index: Int): String = glGetStringi(pname, index)
+
+private val byte = byteBufferBig(1)
+private val int = intBufferBig(1)
+private val long = longBufferBig(1)
+private val floats = floatBufferBig(2)
