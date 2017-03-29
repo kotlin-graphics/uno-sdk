@@ -16,6 +16,9 @@ fun shaderCodeOf(gl: GL2ES2, context: Class<*>, shader: String): ShaderCode {
     return ShaderCode.create(gl, shader.type, context, root, null, name, extension, null, true)
 }
 
+fun shaderCodeOf(gl: GL2ES2, context: Class<*>, root: String, shader: String): ShaderCode =
+        ShaderCode.create(gl, shader.type, context, root, null, shader, shader.substringAfterLast('.'), null, true)
+
 fun ShaderCode.create(gl: GL2ES2, type: Int, context: Class<*>, sourceFiles: Array<String>): ShaderCode
         = ShaderCode.create(gl, type, sourceFiles.size, context, sourceFiles, false)
 

@@ -27,7 +27,7 @@ import com.jogamp.opengl.util.glsl.ShaderProgram
 
     val name = shaderProgram.program()
 
-    val shaderCodes = shaders.map { shaderCodeOf(gl, context, it) }
+    val shaderCodes = shaders.map { shaderCodeOf(gl, context, root, it) }
 
     shaderCodes.forEach { shaderProgram.add(gl, it) }
 
