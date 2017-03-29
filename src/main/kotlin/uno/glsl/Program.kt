@@ -89,7 +89,7 @@ class Program {
 
         val shaderProgram = ShaderProgram()
 
-        val shaderCodes = shaders.map { shaderCodeOf(it, gl, context) }.onEach { shaderProgram.add(gl, it, System.err) }
+        val shaderCodes = shaders.map { shaderCodeOf(gl, context, it) }.onEach { shaderProgram.add(gl, it, System.err) }
 
         shaderProgram.link(gl, System.err)
 
@@ -121,7 +121,7 @@ class Program {
 
         val (shaders, uniforms) = strings.drop(if (root.isEmpty()) 0 else 1).partition { it.isShader() }
 
-        val shaderCodes = shaders.map { shaderCodeOf(root + it, gl, context) }.onEach { shaderProgram.add(gl, it, System.err) }
+        val shaderCodes = shaders.map { shaderCodeOf(gl, context, root + it) }.onEach { shaderProgram.add(gl, it, System.err) }
 
         shaderProgram.link(gl, System.err)
 
