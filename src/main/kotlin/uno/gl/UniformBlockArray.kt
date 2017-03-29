@@ -55,4 +55,6 @@ class UniformBlockArray @JvmOverloads constructor(gl: GL3, uboSize: Int, private
         for(i in 0 until buffer.capacity())
             storage.put(blockIndex * blockOffset + i, buffer.get(i))
     }
+
+    fun dispose() = storage.destroy()
 }
