@@ -1,7 +1,8 @@
 package uno.gl
 
-import com.jogamp.opengl.GL
-import com.jogamp.opengl.GL2ES3
+import com.jogamp.opengl.GL.GL_STATIC_DRAW
+import com.jogamp.opengl.GL2ES3.GL_UNIFORM_BUFFER
+import com.jogamp.opengl.GL2ES3.GL_UNIFORM_BUFFER_OFFSET_ALIGNMENT
 import com.jogamp.opengl.GL3
 import glm.L
 import uno.buffer.byteBufferBig
@@ -25,7 +26,7 @@ class UniformBlockArray @JvmOverloads constructor(gl: GL3, uboSize: Int, private
 
     init {
         val uniformBufferAlignSize = intBufferBig(1)
-        gl.glGetIntegerv(GL2ES3.GL_UNIFORM_BUFFER_OFFSET_ALIGNMENT, uniformBufferAlignSize)
+        gl.glGetIntegerv(GL_UNIFORM_BUFFER_OFFSET_ALIGNMENT, uniformBufferAlignSize)
 
         blockOffset = uboSize
         blockOffset += uniformBufferAlignSize[0] - (blockOffset % uniformBufferAlignSize[0])
@@ -41,9 +42,8 @@ class UniformBlockArray @JvmOverloads constructor(gl: GL3, uboSize: Int, private
 
         val bufferObject = intBufferBig(1)
         glGenBuffers(1, bufferObject)
-        glBindBuffer(GL2ES3.GL_UNIFORM_BUFFER, bufferObject[0])
-        glBufferData(GL2ES3.GL_UNIFORM_BUFFER, storage.capacity().L, storage, GL.GL_STATIC_DRAW)
-        glBindBuffer(GL2ES3.GL_UNIFORM_BUFFER, 0)
+
+        uploadBufferObject(gl, bufferObject[0])
 
         val result = bufferObject[0]
         bufferObject.destroy()
@@ -51,8 +51,14 @@ class UniformBlockArray @JvmOverloads constructor(gl: GL3, uboSize: Int, private
         return result
     }
 
+    fun uploadBufferObject(gl: GL3, bufferName: Int) = with(gl) {
+        glBindBuffer(GL_UNIFORM_BUFFER, bufferName)
+        glBufferData(GL_UNIFORM_BUFFER, storage.capacity().L, storage, GL_STATIC_DRAW)
+        glBindBuffer(GL_UNIFORM_BUFFER, 0)
+    }
+
     operator fun set(blockIndex: Int, buffer: ByteBuffer) {
-        for(i in 0 until buffer.capacity())
+        for (i in 0 until buffer.capacity())
             storage.put(blockIndex * blockOffset + i, buffer.get(i))
     }
 
