@@ -76,6 +76,9 @@ class Caps(
         val glsl440Comp = glslVersions.contains("440 compatibility")
         val glsl450Core = glslVersions.contains("450 core")
         val glsl450Comp = glslVersions.contains("450 cocompatibilityre")
+
+        fun check(majorVersionRequire: Int, minorVersionRequire: Int) =
+                MAJOR_VERSION * 100 + MINOR_VERSION * 10 >= (majorVersionRequire * 100 + minorVersionRequire * 10)
     }
 
     inner class Extensions(gl: GL) {
@@ -406,7 +409,7 @@ class Caps(
         var NUM_PROGRAM_BINARY_FORMATS = 0
         var PROGRAM_BINARY_FORMATS = 0
         var NUM_SHADER_BINARY_FORMATS = 0
-        var SHADER_BINARY_FORMATS: Nothing = TODO()
+        var SHADER_BINARY_FORMATS = 0 //TODO
 
         init {
 
@@ -804,8 +807,7 @@ class Caps(
     }
 
 
-    fun check(majorVersionRequire: Int, minorVersionRequire: Int) =
-            version.MAJOR_VERSION * 100 + version.MINOR_VERSION * 10 >= (majorVersionRequire * 100 + minorVersionRequire * 10)
+    fun check(majorVersionRequire: Int, minorVersionRequire: Int) = version.check(majorVersionRequire, minorVersionRequire)
 
     enum class Profile(@JvmField val i: Int) {
 
