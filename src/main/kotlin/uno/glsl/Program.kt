@@ -45,8 +45,8 @@ class Program {
             replaceFragOld: Array<String>? = null,
             replaceFragNew: Array<String>? = null) {
 
-        val vertShader = ShaderCode.create(gl, GL_VERTEX_SHADER, this::class.java, shadersRoot, null, vertSrc, "vert", null, true)
-        val fragShader = ShaderCode.create(gl, GL_FRAGMENT_SHADER, this::class.java, shadersRoot, null, fragSrc, "frag", null, true)
+        val vertShader = ShaderCode.create(gl, GL_VERTEX_SHADER, javaClass, shadersRoot, null, vertSrc, "vert", null, true)
+        val fragShader = ShaderCode.create(gl, GL_FRAGMENT_SHADER, javaClass, shadersRoot, null, fragSrc, "frag", null, true)
 
         if (replaceVertOld != null && replaceVertNew != null)
             repeat(replaceVertOld.size, { vertShader.replaceInShaderSource(replaceVertOld[it], replaceVertNew[it]) })
