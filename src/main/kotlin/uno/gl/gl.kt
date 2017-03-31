@@ -1,12 +1,9 @@
 package uno.gl
 
 import com.jogamp.newt.opengl.GLWindow
-import com.jogamp.opengl.GL
+import com.jogamp.opengl.*
 import com.jogamp.opengl.GL.*
-import com.jogamp.opengl.GL2
-import com.jogamp.opengl.GL2ES3
 import com.jogamp.opengl.GL2ES3.GL_UNIFORM_BUFFER
-import com.jogamp.opengl.GL3
 import glm.L
 import glm.b
 import glm.vec._2.Vec2
@@ -63,7 +60,7 @@ fun checkError(gl: GL, location: String) {
             GL_OUT_OF_MEMORY -> errorString = "GL_OUT_OF_MEMORY"
             else -> errorString = "UNKNOWN"
         }
-        throw Error("OpenGL Error($errorString): $location")
+        throw GLException("OpenGL Error($errorString): $location")
     }
 }
 
