@@ -22,9 +22,9 @@ dependencies {
 
     compile(kotlinModule("stdlib", "1.1.1"))
 
-    testCompile("com.github.elect86:kotlintest:d8878d6da0944ec6bcbcdad6a1540bba021d768d")
+    testCompile("io.kotlintest:kotlintest:2.0.0")
 
-    compile("com.github.elect86:glm:f1885685fa044755c190a94007709cff70813413")
+    compile("com.github.elect86:glm:e4975b24b6d9eb1b8efb01aa561b8bd622fd4e7e")
 
     val jogl = "2.3.2"
     compile("org.jogamp.gluegen:gluegen-rt:$jogl")

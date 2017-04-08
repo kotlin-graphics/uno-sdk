@@ -194,7 +194,7 @@ class MatrixStack(
      * @param zFar The farthest camera-space distance from the camera that can be seen. The projection will be clipped
      * against this value. It must be larger than zNear.     */
     fun perspective(degFOV: Float, aspectRatio: Float, zNear: Float, zFar: Float): MatrixStack {
-        currMat.times_(glm.perspective(glm.toRad(degFOV), aspectRatio, zNear, zFar))
+        currMat.times_(glm.perspective(glm.radians(degFOV), aspectRatio, zNear, zFar))
         return this
     }
 

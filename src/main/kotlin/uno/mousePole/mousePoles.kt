@@ -182,8 +182,8 @@ class ObjectPole : ViewProvider {
 
                 RotateMode.DUAL_AXIS -> {
 
-                    val rot = calcRotationQuat(Axis.Y, glm.toRad(diff.x * rotateScale), quat_A)
-                    calcRotationQuat(Axis.X, glm.toRad(diff.y * rotateScale), quat_B).times(rot, rot).normalize_()
+                    val rot = calcRotationQuat(Axis.Y, glm.radians(diff.x * rotateScale), quat_A)
+                    calcRotationQuat(Axis.X, glm.radians(diff.y * rotateScale), quat_B).times(rot, rot).normalize_()
                     rotateView(rot)
                 }
 
@@ -198,11 +198,11 @@ class ObjectPole : ViewProvider {
                         axis = Axis.Y
                         degAngle = initDiff.x * rotateScale
                     }
-                    val rot = calcRotationQuat(axis, glm.toRad(degAngle), quat_A)
+                    val rot = calcRotationQuat(axis, glm.radians(degAngle), quat_A)
                     rotateView(rot, true)
                 }
 
-                RotateMode.SPIN -> rotateView(calcRotationQuat(Axis.Z, glm.toRad(-diff.x * rotateScale), quat_A))
+                RotateMode.SPIN -> rotateView(calcRotationQuat(Axis.Z, glm.radians(-diff.x * rotateScale), quat_A))
             }
             prevMousePos put position
         }
@@ -369,7 +369,7 @@ class ViewPole : ViewProvider {
 
     fun processXChange(xDiff: Int, clearY: Boolean = false) {
 
-        val radAngleDiff = glm.toRad(xDiff * viewScale.rotationScale)
+        val radAngleDiff = glm.radians(xDiff * viewScale.rotationScale)
 
         // Rotate about the world-space Y axis.
         glm.angleAxis(radAngleDiff, 0f, 1f, 0f, quat_H)
@@ -378,7 +378,7 @@ class ViewPole : ViewProvider {
 
     fun processYChange(yDiff: Int, clearXZ: Boolean = false) {
 
-        val radAngleDiff = glm.toRad(yDiff * viewScale.rotationScale)
+        val radAngleDiff = glm.radians(yDiff * viewScale.rotationScale)
 
         // Rotate about the local-space X axis.
         glm.angleAxis(radAngleDiff, 1f, 0f, 0f, quat_I)
@@ -387,8 +387,8 @@ class ViewPole : ViewProvider {
 
     fun processXYChange(xDiff: Int, yDiff: Int) {
 
-        val radXAngleDiff = glm.toRad(xDiff * viewScale.rotationScale)
-        val radYAngleDiff = glm.toRad(yDiff * viewScale.rotationScale)
+        val radXAngleDiff = glm.radians(xDiff * viewScale.rotationScale)
+        val radYAngleDiff = glm.radians(yDiff * viewScale.rotationScale)
 
         // Rotate about the world-space Y axis.
         glm.angleAxis(radXAngleDiff, 0.0f, 1.0f, 0.0f, quat_J)
