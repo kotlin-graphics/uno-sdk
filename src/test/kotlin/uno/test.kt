@@ -9,6 +9,7 @@ import com.jogamp.opengl.util.Animator
 import io.kotlintest.specs.StringSpec
 import glm.mat.Mat4
 import glm.rad
+import uno.caps.Caps
 import uno.glm.MatrixStack
 import uno.glsl.Program
 

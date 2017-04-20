@@ -1,14 +1,16 @@
 package uno.gl
 
 import com.jogamp.newt.opengl.GLWindow
-import com.jogamp.opengl.*
+import com.jogamp.opengl.GL
 import com.jogamp.opengl.GL.*
-import com.jogamp.opengl.GL2ES3.GL_UNIFORM_BUFFER
-import glm.L
-import glm.b
+import com.jogamp.opengl.GL3
+import com.jogamp.opengl.GLException
 import glm.vec._2.Vec2
-import uno.buffer.*
-import java.nio.ByteBuffer
+import org.lwjgl.opengl.GL11.glGetFloatv
+import uno.buffer.byteBufferBig
+import uno.buffer.floatBufferBig
+import uno.buffer.intBufferBig
+import uno.buffer.longBufferBig
 
 /**
  * Created by elect on 05/03/17.
@@ -64,41 +66,13 @@ fun checkError(gl: GL, location: String) {
     }
 }
 
-fun GL.getInteger(pname: Int): Int {
-    glGetIntegerv(pname, int)
-    return int[0]
+fun glGetVec2(pname: Int): Vec2 {
+    glGetFloatv(pname, vec2)
+    return Vec2(vec2)
 }
-
-fun GL3.getInteger64(pname: Int): Long {
-    glGetInteger64v(pname, long)
-    return long[0]
-}
-
-fun GL2.getIntegeri(pname: Int, index: Int): Int {
-    glGetIntegeri_v(pname, index, int)
-    return int[0]
-}
-
-fun GL.getFloat(pname: Int): Float {
-    glGetFloatv(pname, floats)
-    return floats[0]
-}
-
-fun GL.getVec2(pname: Int): Vec2 {
-    glGetFloatv(pname, floats)
-    return Vec2(floats)
-}
-
-
-fun GL.getBoolean(pname: Int): Boolean {
-    glGetBooleanv(pname, byte)
-    return byte[0] != 0.b
-}
-
-fun GL.getString(pname: Int): String = glGetString(pname)
-fun GL2.getStringi(pname: Int, index: Int): String = glGetStringi(pname, index)
 
 private val byte = byteBufferBig(1)
 private val int = intBufferBig(1)
 private val long = longBufferBig(1)
-private val floats = floatBufferBig(2)
+private val float = floatBufferBig(1)
+private val vec2 = floatBufferBig(2)
