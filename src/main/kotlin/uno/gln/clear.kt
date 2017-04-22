@@ -1,4 +1,4 @@
-package uno.glNext
+package uno.gln
 
 import glm.f
 import org.lwjgl.opengl.GL11

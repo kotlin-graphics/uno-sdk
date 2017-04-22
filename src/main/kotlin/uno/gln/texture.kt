@@ -1,4 +1,4 @@
-package uno.glNext
+package uno.gln
 
 import gli.Texture2d
 import gli.gl.Format

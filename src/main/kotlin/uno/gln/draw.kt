@@ -1,4 +1,4 @@
-package uno.glNext
+package uno.gln
 
 import org.lwjgl.opengl.GL11
 import org.lwjgl.opengl.GL11.glDrawArrays

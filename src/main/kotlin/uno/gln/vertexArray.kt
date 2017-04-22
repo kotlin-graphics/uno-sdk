@@ -1,4 +1,4 @@
-package uno.glNext
+package uno.gln
 
 import glm.L
 import org.lwjgl.opengl.GL15

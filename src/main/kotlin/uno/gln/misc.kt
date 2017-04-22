@@ -1,4 +1,4 @@
-package uno.glNext
+package uno.gln
 
 import glm.set
 import glm.vec._2.Vec2i

@@ -1,4 +1,4 @@
-package uno.glNext
+package uno.gln
 
 import glm.mat.Mat3
 import glm.mat.Mat4

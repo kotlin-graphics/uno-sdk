@@ -1,4 +1,4 @@
-package uno.glNext
+package uno.gln
 
 import com.jogamp.opengl.GL3
 import org.lwjgl.opengl.ARBES2Compatibility

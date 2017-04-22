@@ -1,4 +1,4 @@
-package uno.glNext
+package uno.gln
 
 import glm.vec._2.Vec2i
 import org.lwjgl.opengl.GL11
