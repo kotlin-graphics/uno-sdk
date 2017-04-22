@@ -5,7 +5,7 @@ apply plugin: 'kotlin'
 
 buildscript {
 
-    ext.kotlinVersion = '1.1.2-eap-73'
+    ext.kotlinVersion = '1.1.2-eap-77'
 
     repositories {
         mavenCentral()
@@ -24,6 +24,7 @@ dependencies {
     testCompile("io.kotlintest:kotlintest:2.0.0")
 
     compile "com.github.kotlin-graphics:glm:8b98e9b98e275276df999fd631663d347b43f509"
+    compile "com.github.kotlin-graphics:gli:7df4588153a4e570d7857266b9303b6da2e02e56"
 
     ext.jogl = "2.3.2"
     compile "org.jogamp.gluegen:gluegen-rt:$jogl"
