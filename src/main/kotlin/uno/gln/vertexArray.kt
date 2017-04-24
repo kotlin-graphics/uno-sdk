@@ -129,6 +129,9 @@ fun glDisableVertexAttribArray(layout: VertexLayout) = GL20.glDisableVertexAttri
 fun glDisableVertexAttribArray(attribute: VertexAttribute) = GL20.glDisableVertexAttribArray(attribute.index)
 
 
+fun glVertexAttribPointer(index: Int, size: Int, type: Int, normalized: Boolean, stride: Int, pointer: Int) =
+        GL20.glVertexAttribPointer(index, size, type, normalized, stride, pointer.L)
+
 fun glVertexAttribPointer(index: Int, size: Int, type: Int, normalized: Boolean, stride: Int) =
         glVertexAttribPointer(index, size, type, normalized, stride, 0)
 
