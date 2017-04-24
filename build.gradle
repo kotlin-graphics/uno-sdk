@@ -23,8 +23,8 @@ dependencies {
 
     testCompile("io.kotlintest:kotlintest:2.0.0")
 
-    compile "com.github.kotlin-graphics:glm:90a6ca088e7766d23112f64bcce49f759de412af"
-    compile "com.github.kotlin-graphics:gli:e7fc7ae4d96091bd700fa4652783bfeb19cb03d2"
+    compile "com.github.kotlin-graphics:glm:d631edc89d9070dab1dc2b303334bf1102005691"
+    compile "com.github.kotlin-graphics:gli:c04616d6f4b7991ff5dae331ebceebc1c7deb187"
 
     ext.jogl = "2.3.2"
     compile "org.jogamp.gluegen:gluegen-rt:$jogl"
@@ -68,6 +68,4 @@ task packageSources(type: Jar, dependsOn: 'classes') {
     classifier = 'sources'
 }
 
-artifacts {
-    archives packageSources
-}
+artifacts { archives packageSources }
