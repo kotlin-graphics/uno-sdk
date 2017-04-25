@@ -16,75 +16,79 @@ import glm.glm
 
 object glf {
 
-    class v2fv2f {
-
-        companion object {
-            val SIZE = Vec2.SIZE * 2
-        }
-    }
-
     object pos2 : VertexLayout {
+        val SIZE = Vec2.SIZE
         override var attribute = arrayOf(
-                VertexAttribute(semantic.attr.POSITION, Vec2.length, GL11.GL_FLOAT, false, Vec2.SIZE, 0))
+                VertexAttribute(semantic.attr.POSITION, Vec2.length, GL11.GL_FLOAT, false, SIZE, 0))
     }
 
     object pos3 : VertexLayout {
+        val SIZE = Vec3.SIZE
         override var attribute = arrayOf(
-                VertexAttribute(semantic.attr.POSITION, Vec3.length, GL11.GL_FLOAT, false, Vec3.SIZE, 0))
+                VertexAttribute(semantic.attr.POSITION, Vec3.length, GL11.GL_FLOAT, false, SIZE, 0))
     }
 
     object pos4 : VertexLayout {
+        val SIZE = Vec4.SIZE
         override var attribute = arrayOf(
-                VertexAttribute(semantic.attr.POSITION, Vec4.length, GL11.GL_FLOAT, false, Vec4.SIZE, 0))
+                VertexAttribute(semantic.attr.POSITION, Vec4.length, GL11.GL_FLOAT, false, SIZE, 0))
     }
 
     object pos3_col4 : VertexLayout {
+        val SIZE = Vec3.SIZE + Vec4.SIZE
         override var attribute = arrayOf(
-                VertexAttribute(semantic.attr.POSITION, Vec3.length, GL11.GL_FLOAT, false, Vec3.SIZE + Vec4.SIZE, 0),
-                VertexAttribute(semantic.attr.COLOR, Vec4.length, GL11.GL_FLOAT, false, Vec3.SIZE + Vec4.SIZE, Vec4.SIZE.L))
+                VertexAttribute(semantic.attr.POSITION, Vec3.length, GL11.GL_FLOAT, false, SIZE, 0),
+                VertexAttribute(semantic.attr.COLOR, Vec4.length, GL11.GL_FLOAT, false, SIZE, Vec4.SIZE.L))
     }
 
     object pos4_col4 : VertexLayout {
+        val SIZE = Vec4.SIZE * 2
         override var attribute = arrayOf(
-                VertexAttribute(semantic.attr.POSITION, Vec4.length, GL11.GL_FLOAT, false, Vec4.SIZE * 2, 0),
-                VertexAttribute(semantic.attr.COLOR, Vec4.length, GL11.GL_FLOAT, false, Vec4.SIZE * 2, Vec4.SIZE.L))
+                VertexAttribute(semantic.attr.POSITION, Vec4.length, GL11.GL_FLOAT, false, SIZE, 0),
+                VertexAttribute(semantic.attr.COLOR, Vec4.length, GL11.GL_FLOAT, false, SIZE, Vec4.SIZE.L))
     }
 
 
     object pos2_tc2 : VertexLayout {
+        val SIZE = Vec2.SIZE * 2
         override var attribute = arrayOf(
-                VertexAttribute(semantic.attr.POSITION, Vec2.length, GL11.GL_FLOAT, false, Vec2.SIZE * 2, 0),
-                VertexAttribute(semantic.attr.TEXCOORD, Vec2.length, GL11.GL_FLOAT, false, Vec2.SIZE * 2, Vec2.SIZE.L))
+                VertexAttribute(semantic.attr.POSITION, Vec2.length, GL11.GL_FLOAT, false, SIZE, 0),
+                VertexAttribute(semantic.attr.TEXCOORD, Vec2.length, GL11.GL_FLOAT, false, SIZE, Vec2.SIZE.L))
     }
 
     object pos2us_tc2us : VertexLayout {
+        val SIZE = Vec2us.SIZE * 2
         override var attribute = arrayOf(
-                VertexAttribute(semantic.attr.POSITION, Vec2us.length, GL11.GL_UNSIGNED_SHORT, false, Vec2us.SIZE * 2, 0),
-                VertexAttribute(semantic.attr.TEXCOORD, Vec2us.length, GL11.GL_UNSIGNED_SHORT, false, Vec2us.SIZE * 2, Vec2us.SIZE.L))
+                VertexAttribute(semantic.attr.POSITION, Vec2us.length, GL11.GL_UNSIGNED_SHORT, false, SIZE, 0),
+                VertexAttribute(semantic.attr.TEXCOORD, Vec2us.length, GL11.GL_UNSIGNED_SHORT, false, SIZE, Vec2us.SIZE.L))
     }
 
     object pos3_tc2 : VertexLayout {
+        val SIZE = Vec3.SIZE + Vec2.SIZE
         override var attribute = arrayOf(
-                VertexAttribute(semantic.attr.POSITION, Vec3.length, GL11.GL_FLOAT, false, Vec3.SIZE + Vec2.SIZE, 0),
-                VertexAttribute(semantic.attr.TEXCOORD, Vec2.length, GL11.GL_FLOAT, false, Vec3.SIZE + Vec2.SIZE, Vec3.SIZE.L))
+                VertexAttribute(semantic.attr.POSITION, Vec3.length, GL11.GL_FLOAT, false, SIZE, 0),
+                VertexAttribute(semantic.attr.TEXCOORD, Vec2.length, GL11.GL_FLOAT, false, SIZE, Vec3.SIZE.L))
     }
 
     object pos3_col4ub : VertexLayout {
+        val SIZE = Vec3.SIZE + Vec4ub.SIZE
         override var attribute = arrayOf(
-                VertexAttribute(semantic.attr.POSITION, Vec3.length, GL11.GL_FLOAT, false, Vec3.SIZE + Vec4ub.SIZE, 0),
-                VertexAttribute(semantic.attr.COLOR, Vec4ub.length, GL11.GL_UNSIGNED_BYTE, false, Vec3.SIZE + Vec4ub.SIZE, Vec3.SIZE.L))
+                VertexAttribute(semantic.attr.POSITION, Vec3.length, GL11.GL_FLOAT, false, SIZE, 0),
+                VertexAttribute(semantic.attr.COLOR, Vec4ub.length, GL11.GL_UNSIGNED_BYTE, false, SIZE, Vec3.SIZE.L))
     }
 
     object pos2_tc3 : VertexLayout {
+        val SIZE = Vec2.SIZE + Vec3.SIZE
         override var attribute = arrayOf(
-                VertexAttribute(semantic.attr.POSITION, Vec2.length, GL11.GL_FLOAT, false, Vec2.SIZE + Vec3.SIZE, 0),
-                VertexAttribute(semantic.attr.TEXCOORD, Vec3.length, GL11.GL_FLOAT, false, Vec2.SIZE + Vec3.SIZE, Vec2.SIZE.L))
+                VertexAttribute(semantic.attr.POSITION, Vec2.length, GL11.GL_FLOAT, false, SIZE, 0),
+                VertexAttribute(semantic.attr.TEXCOORD, Vec3.length, GL11.GL_FLOAT, false, SIZE, Vec2.SIZE.L))
     }
 
     object pos3_tc3 : VertexLayout {
+        val SIZE = Vec3.SIZE * 2
         override var attribute = arrayOf(
-                VertexAttribute(semantic.attr.POSITION, Vec3.length, GL11.GL_FLOAT, false, Vec3.SIZE * 2, 0),
-                VertexAttribute(semantic.attr.TEXCOORD, Vec3.length, GL11.GL_FLOAT, false, Vec3.SIZE * 2, Vec3.SIZE.L))
+                VertexAttribute(semantic.attr.POSITION, Vec3.length, GL11.GL_FLOAT, false, SIZE, 0),
+                VertexAttribute(semantic.attr.TEXCOORD, Vec3.length, GL11.GL_FLOAT, false, SIZE, Vec3.SIZE.L))
     }
 }
 

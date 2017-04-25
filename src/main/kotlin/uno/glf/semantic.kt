@@ -7,62 +7,62 @@ package uno.glf
 object semantic {
 
     object buffer {
-        val STATIC = 0
-        val DYNAMIC = 1
+        var STATIC = 0
+        var DYNAMIC = 1
     }
 
     object uniform {
-        val MATERIAL = 0
-        val TRANSFORM0 = 1
-        val TRANSFORM1 = 2
-        val INDIRECTION = 3
-        val CONSTANT = 0
-        val PER_FRAME = 1
-        val PER_PASS = 2
-        val LIGHT = 3
+        var MATERIAL = 0
+        var TRANSFORM0 = 1
+        var TRANSFORM1 = 2
+        var INDIRECTION = 3
+        var CONSTANT = 0
+        var PER_FRAME = 1
+        var PER_PASS = 2
+        var LIGHT = 3
     }
 
     object sampler {
-        val DIFFUSE = 0
-        val POSITION = 4
-        val TEXCOORD = 5
-        val COLOR = 6
+        var DIFFUSE = 0
+        var POSITION = 4
+        var TEXCOORD = 5
+        var COLOR = 6
     }
 
     object image {
-        val DIFFUSE = 0
-        val PICKING = 1
+        var DIFFUSE = 0
+        var PICKING = 1
     }
 
     object attr {
-        val POSITION = 0
-        val NORMAL = 1
-        val COLOR = 3
-        val TEXCOORD = 4
-        val DRAW_ID = 5
+        var POSITION = 0
+        var NORMAL = 1
+        var COLOR = 3
+        var TEXCOORD = 4
+        var DRAW_ID = 5
     }
 
     object vert {
-        val POSITION = 0
-        val COLOR = 3
-        val TEXCOORD = 4
-        val INSTANCE = 7
+        var POSITION = 0
+        var COLOR = 3
+        var TEXCOORD = 4
+        var INSTANCE = 7
     }
 
     object frag {
-        val COLOR = 0
-        val RED = 0
-        val GREEN = 1
-        val BLUE = 2
-        val ALPHA = 0
+        var COLOR = 0
+        var RED = 0
+        var GREEN = 1
+        var BLUE = 2
+        var ALPHA = 0
     }
 
     object renderbuffer {
-        val DEPTH = 0
-        val COLOR0 = 1
+        var DEPTH = 0
+        var COLOR0 = 1
     }
 
     object storage {
-        val VERTEX = 0
+        var VERTEX = 0
     }
 }
