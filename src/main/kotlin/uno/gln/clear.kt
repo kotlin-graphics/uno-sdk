@@ -24,4 +24,6 @@ object Clear {
     fun depth() = depth(1f)
     fun depth(depth: Float) = GL30.glClearBufferfv(GL11.GL_DEPTH, 0, floatBuffer.put(0, depth))
     fun depth(depth: Number) = depth(depth.f)
+
+    // TODO stencil
 }
