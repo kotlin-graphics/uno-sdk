@@ -164,6 +164,7 @@ fun glUniform4(location: Int, vec3: Vec3) = GL20.glUniform4f(location, vec3.x, v
 fun glUniform4(location: Int, vec4: Vec4) = GL20.glUniform4f(location, vec4.x, vec4.y, vec4.z, vec4.w)
 
 fun glUniform(location: Int, vec4: Vec4) = GL20.glUniform4f(location, vec4.x, vec4.y, vec4.z, vec4.w)
+fun glUniform(location: Int, mat4: Mat4) = GL20.glUniform4fv(location, mat4 to mat4Buffer)
 
 fun glUniformMatrix4f(location: Int, value: FloatArray) {
     for (i in 0..15)
