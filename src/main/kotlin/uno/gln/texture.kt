@@ -3,7 +3,7 @@ package uno.gln
 import gli.Texture2d
 import gli.gl.Format
 import glm.set
-import glm.vec._2.Vec2i
+import glm.vec2.Vec2i
 import org.lwjgl.opengl.*
 import org.lwjgl.opengl.GL11.*
 import java.nio.ByteBuffer

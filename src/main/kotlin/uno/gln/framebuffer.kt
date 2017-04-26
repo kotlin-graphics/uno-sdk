@@ -1,6 +1,6 @@
 package uno.gln
 
-import glm.vec._2.Vec2i
+import glm.vec2.Vec2i
 import org.lwjgl.opengl.GL11
 import org.lwjgl.opengl.GL30
 import org.lwjgl.opengl.GL30.*

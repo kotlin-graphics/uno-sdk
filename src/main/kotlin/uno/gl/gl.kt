@@ -5,7 +5,7 @@ import com.jogamp.opengl.GL
 import com.jogamp.opengl.GL.*
 import com.jogamp.opengl.GL3
 import com.jogamp.opengl.GLException
-import glm.vec._2.Vec2
+import glm.vec2.Vec2
 import org.lwjgl.opengl.GL11.glGetFloatv
 import uno.buffer.byteBufferBig
 import uno.buffer.floatBufferBig

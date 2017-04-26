@@ -1,7 +1,7 @@
 package uno.caps
 
 import com.jogamp.opengl.GLES1.GL_ETC1_RGB8_OES
-import glm.vec._2.Vec2
+import glm.vec2.Vec2
 import org.lwjgl.opengl.EXTTextureCompressionLATC.*
 import org.lwjgl.opengl.EXTTextureCompressionS3TC.*
 import org.lwjgl.opengl.EXTTextureFilterAnisotropic.GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT

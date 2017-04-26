@@ -5,10 +5,10 @@ package uno.glm
 
 import glm.glm
 import glm.rad
-import glm.mat.Mat4
-import glm.vec._2.Vec2i
-import glm.vec._3.Vec3
-import glm.vec._4.Vec4
+import glm.mat4x4.Mat4
+import glm.vec2.Vec2i
+import glm.vec3.Vec3
+import glm.vec4.Vec4
 import java.util.*
 
 /**

@@ -6,10 +6,9 @@ import com.jogamp.opengl.GLCapabilities
 import com.jogamp.opengl.GLEventListener
 import com.jogamp.opengl.GLProfile
 import com.jogamp.opengl.util.Animator
-import io.kotlintest.specs.StringSpec
-import glm.mat.Mat4
+import glm.mat4x4.Mat4
 import glm.rad
-import uno.caps.Caps
+import io.kotlintest.specs.StringSpec
 import uno.glm.MatrixStack
 import uno.glsl.Program
 

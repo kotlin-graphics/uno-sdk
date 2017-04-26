@@ -1,7 +1,7 @@
 package uno.gln
 
 import glm.L
-import glm.mat.Mat4
+import glm.mat4x4.Mat4
 import glm.set
 import org.lwjgl.opengl.ARBUniformBufferObject.GL_UNIFORM_BUFFER
 import org.lwjgl.opengl.GL15
