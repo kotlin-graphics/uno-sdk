@@ -1,5 +1,6 @@
 import org.gradle.internal.os.OperatingSystem
 
+apply plugin: 'java'
 apply plugin: 'kotlin'
 
 // jitpack
@@ -27,7 +28,7 @@ dependencies {
     testCompile("io.kotlintest:kotlintest:2.0.0")
 
     compile "com.github.kotlin-graphics:glm:058335f9da130e6ee96e70aeaae97a396acaa92b"
-    compile 'com.github.kotlin-graphics:gli:605d4f850ada1776ddca1deec463a492ed223707'
+    compile 'com.github.kotlin-graphics:gli:660f5a767e55478ae140dbfc67e34519439c370a'
 
     ext.jogl = "2.3.2"
     compile "org.jogamp.gluegen:gluegen-rt:$jogl"
