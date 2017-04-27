@@ -23,7 +23,7 @@ dependencies {
 
     testCompile("io.kotlintest:kotlintest:2.0.0")
 
-    compile "com.github.kotlin-graphics:glm:02125abbc3cb587c5d4ef5c1f74de50a29d90515"
+    compile "com.github.kotlin-graphics:glm:c5c7ab9eb07208bc899247252f9ae49e38a4df95"
     compile 'com.github.kotlin-graphics:gli:33466cf374f988e1c68acceae4f87d4a297688d7'
 
     ext.jogl = "2.3.2"
