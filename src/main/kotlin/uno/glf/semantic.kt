@@ -38,7 +38,7 @@ object semantic {
         var POSITION = 0
         var NORMAL = 1
         var COLOR = 3
-        var TEXCOORD = 4
+        var TEX_COORD = 4
         var DRAW_ID = 5
     }
 
