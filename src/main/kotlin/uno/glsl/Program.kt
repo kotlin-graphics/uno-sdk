@@ -13,15 +13,13 @@ import com.jogamp.opengl.GL3
 import com.jogamp.opengl.util.glsl.ShaderCode
 import com.jogamp.opengl.util.glsl.ShaderProgram
 import org.lwjgl.opengl.GL20
-import org.lwjgl.opengl.GL32.GL_GEOMETRY_SHADER
 import java.io.File
-import kotlin.reflect.KClass
 
 /**
 
  * @author GBarbieri
  */
-class Program {
+open class Program {
 
     @JvmField val name: Int
     val uniforms = HashMap<String, Int>()
