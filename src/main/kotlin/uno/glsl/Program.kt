@@ -155,11 +155,14 @@ open class Program {
         val root =
                 if (strings[0].isShader())
                     ""
-                else
-                    if (strings[0].endsWith('/'))
-                        strings[0]
-                    else
-                        strings[0] + '/'
+                else {
+                    var r = strings[0]
+                    if(r[0] != '/')
+                        r = "/$r"
+                    if(!r.endsWith('/'))
+                        r = "$r/"
+                    r
+                }
 
         val (shaders, uniforms) = strings.drop(if (root.isEmpty()) 0 else 1).partition { it.isShader() }
 
