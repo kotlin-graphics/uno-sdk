@@ -28,7 +28,7 @@ dependencies {
     testCompile("io.kotlintest:kotlintest:2.0.0")
 
     compile 'com.github.kotlin-graphics:glm:c86a65913cdac916f3a202367b7a27b3495fc688'
-    compile 'com.github.kotlin-graphics:gli:1865f5ce67256d644efa8069017c873798c7f165'
+    compile 'com.github.kotlin-graphics:gli:af2855aff02a0054435fcd724de359f2fff5e6d6'
 
     ext.jogl = "2.3.2"
     compile "org.jogamp.gluegen:gluegen-rt:$jogl"
