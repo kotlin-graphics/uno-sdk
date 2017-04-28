@@ -255,4 +255,15 @@ open class Program {
 
         return program
     }
+
+    private val String.type
+        get() = when (substringAfterLast('.')) {
+            "vert" -> GL_VERTEX_SHADER
+            "tesc" -> com.jogamp.opengl.GL3ES3.GL_TESS_CONTROL_SHADER
+            "tese" -> com.jogamp.opengl.GL3ES3.GL_TESS_EVALUATION_SHADER
+            "geom" -> com.jogamp.opengl.GL3ES3.GL_GEOMETRY_SHADER
+            "frag" -> com.jogamp.opengl.GL3ES3.GL_FRAGMENT_SHADER
+            "comp" -> com.jogamp.opengl.GL3ES3.GL_COMPUTE_SHADER
+            else -> throw Error("invalid shader extension")
+        }
 }

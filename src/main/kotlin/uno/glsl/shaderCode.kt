@@ -34,7 +34,7 @@ fun ShaderCode.create(gl: GL2ES2, type: Int, context: Class<*>, sourceFiles: Arr
  * .geom - a geometry shader
  * .frag - a fragment shader
  * .comp - a compute shader     */
-internal val String.type
+private val String.type
     get() = when (substringAfterLast('.')) {
         "vert" -> GL_VERTEX_SHADER
         "tesc" -> GL_TESS_CONTROL_SHADER
