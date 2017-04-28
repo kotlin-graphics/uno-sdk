@@ -46,21 +46,36 @@ import com.jogamp.opengl.util.glsl.ShaderProgram
 }
 
 @JvmOverloads fun programOf(gl: GL2ES2, context: Class<*>, root: String,
-              shaderA: String, shaderB: String,
-              bindAttribLocation: Map<String, Int> = emptyMap()) =
+
+                            shaderA: String, shaderB: String,
+
+                            bindAttribLocation: Map<String, Int> = emptyMap()) =
+
         programOf(gl, context, root, arrayOf(shaderA, shaderB))
 
+
 @JvmOverloads fun programOf(gl: GL2ES2, context: Class<*>, root: String,
-              shaderA: String, shaderB: String, shaderC: String,
-              bindAttribLocation: Map<String, Int> = emptyMap()) =
+
+                            shaderA: String, shaderB: String, shaderC: String,
+
+                            bindAttribLocation: Map<String, Int> = emptyMap()) =
+
         programOf(gl, context, root, arrayOf(shaderA, shaderB, shaderC))
 
-@JvmOverloads fun programOf(gl: GL2ES2, context: Class<*>, root: String,
-              shaderA: String, shaderB: String, shaderC: String, shaderD: String,
-              bindAttribLocation: Map<String, Int> = emptyMap()) =
-        programOf(gl, context, root, arrayOf(shaderA, shaderB, shaderC, shaderD))
 
 @JvmOverloads fun programOf(gl: GL2ES2, context: Class<*>, root: String,
-              shaderA: String, shaderB: String, shaderC: String, shaderD: String, shaderE: String,
-              bindAttribLocation: Map<String, Int> = emptyMap()) =
+
+                            shaderA: String, shaderB: String, shaderC: String, shaderD: String,
+
+                            bindAttribLocation: Map<String, Int> = emptyMap()) =
+
+        programOf(gl, context, root, arrayOf(shaderA, shaderB, shaderC, shaderD))
+
+
+@JvmOverloads fun programOf(gl: GL2ES2, context: Class<*>, root: String,
+
+                            shaderA: String, shaderB: String, shaderC: String, shaderD: String, shaderE: String,
+
+                            bindAttribLocation: Map<String, Int> = emptyMap()) =
+
         programOf(gl, context, root, arrayOf(shaderA, shaderB, shaderC, shaderD, shaderE))

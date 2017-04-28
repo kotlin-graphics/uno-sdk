@@ -2,17 +2,16 @@ package uno.gln
 
 import glm.mat3x3.Mat3
 import glm.mat4x4.Mat4
-import glm.set
 import glm.vec2.Vec2
 import glm.vec3.Vec3
 import glm.vec4.Vec4
 import org.lwjgl.opengl.ARBUniformBufferObject.glGetUniformBlockIndex
 import org.lwjgl.opengl.ARBUniformBufferObject.glUniformBlockBinding
-import org.lwjgl.opengl.GL20
 import org.lwjgl.opengl.GL20.*
 import org.lwjgl.opengl.GL31
 import uno.buffer.byteBufferOf
 import uno.buffer.destroy
+import uno.glsl.Program
 
 fun glCreatePrograms(ints: IntArray) = repeat(ints.size) { ints[it] = glCreateProgram() }
 
@@ -47,8 +46,19 @@ inline fun usingProgram(program: Int = 0, block: ProgramUse.() -> Unit) {
     glUseProgram(0)
 }
 
+inline fun usingProgram(program: Program, block: ProgramUse.() -> Unit) {
+    ProgramUse.name = program.name //glUse
+    ProgramUse.block()
+    glUseProgram(0)
+}
+
 inline fun withProgram(program: Int = 0, block: ProgramBase.() -> Unit) {
     ProgramBase.name = program
+    ProgramBase.block()
+}
+
+inline fun withProgram(program: Program, block: ProgramBase.() -> Unit) {
+    ProgramBase.name = program.name
     ProgramBase.block()
 }
 
@@ -141,9 +151,5 @@ object Programs {
 
 
 fun glUseProgram() = glUseProgram(0)
-
-
-
-
 
 fun glDeletePrograms(programs: IntArray) = programs.forEach { glDeleteProgram(it) }
