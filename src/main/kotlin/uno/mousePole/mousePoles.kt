@@ -550,7 +550,7 @@ class ViewPole : ViewProvider {
             KeyEvent.VK_D -> offsetTargetPos(TargetOffsetDir.RIGHT, distance)
             KeyEvent.VK_A -> offsetTargetPos(TargetOffsetDir.LEFT, distance)
             KeyEvent.VK_E -> offsetTargetPos(TargetOffsetDir.UP, distance)
-            KeyEvent.VK_Q -> offsetTargetPos(TargetOffsetDir.FORWARD, distance)
+            KeyEvent.VK_Q -> offsetTargetPos(TargetOffsetDir.DOWN, distance)
         }
     }
 
