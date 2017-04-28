@@ -15,20 +15,24 @@ import glm.mat3x4.Mat3x4
 import glm.mat4x2.Mat4x2
 import glm.mat4x3.Mat4x3
 import glm.mat4x4.Mat4
-import glm.set
 import glm.vec1.Vec1
 import glm.vec1.Vec1bool
 import glm.vec1.Vec1i
 import glm.vec1.Vec1t
-import glm.vec2.*
-import glm.vec3.*
+import glm.vec2.Vec2
+import glm.vec2.Vec2bool
+import glm.vec2.Vec2i
+import glm.vec2.Vec2t
+import glm.vec3.Vec3
+import glm.vec3.Vec3bool
+import glm.vec3.Vec3i
+import glm.vec3.Vec3t
 import glm.vec4.Vec4
 import glm.vec4.Vec4bool
 import glm.vec4.Vec4i
 import glm.vec4.Vec4t
 import org.lwjgl.opengl.GL20
 import org.lwjgl.opengl.GL21
-import org.lwjgl.opengl.GL40
 
 // ----------------------------------------- vec -----------------------------------------------------------------------
 // inferred length and type
@@ -41,16 +45,25 @@ fun glUniform(location: Int, vec1: Vec1) = GL20.glUniform1f(location, vec1.x)
 fun glUniform(location: Int, vec1i: Vec1i) = GL20.glUniform1i(location, vec1i.x)
 fun glUniform(location: Int, vec1bool: Vec1bool) = GL20.glUniform1i(location, vec1bool.x.i)
 
+fun glUniform(location: Int, x: Float, y: Float) = GL20.glUniform2f(location, x, y)
 fun glUniform(location: Int, vec2: Vec2) = GL20.glUniform2f(location, vec2.x, vec2.y)
+fun glUniform(location: Int, x: Int, y: Int) = GL20.glUniform2i(location, x, y)
 fun glUniform(location: Int, vec2i: Vec2i) = GL20.glUniform2i(location, vec2i.x, vec2i.y)
+fun glUniform(location: Int, x: Boolean, y: Boolean) = GL20.glUniform2i(location, x.i, y.i)
 fun glUniform(location: Int, vec2bool: Vec2bool) = GL20.glUniform2i(location, vec2bool.x.i, vec2bool.y.i)
 
+fun glUniform(location: Int, x: Float, y: Float, z: Float) = GL20.glUniform3f(location, x, y, z)
 fun glUniform(location: Int, vec3: Vec3) = GL20.glUniform3f(location, vec3.x, vec3.y, vec3.z)
+fun glUniform(location: Int, x: Int, y: Int, z: Int) = GL20.glUniform3i(location, x, y, z)
 fun glUniform(location: Int, vec3i: Vec3i) = GL20.glUniform3i(location, vec3i.x, vec3i.y, vec3i.z)
+fun glUniform(location: Int, x: Boolean, y: Boolean, z: Boolean) = GL20.glUniform3i(location, x.i, y.i, z.i)
 fun glUniform(location: Int, vec3bool: Vec3bool) = GL20.glUniform3i(location, vec3bool.x.i, vec3bool.y.i, vec3bool.z.i)
 
+fun glUniform(location: Int, x: Float, y: Float, z: Float, w: Float) = GL20.glUniform4f(location, x, y, z, w)
 fun glUniform(location: Int, vec4: Vec4) = GL20.glUniform4f(location, vec4.x, vec4.y, vec4.z, vec4.w)
+fun glUniform(location: Int, x: Int, y: Int, z: Int, w: Int) = GL20.glUniform4i(location, x, y, z, w)
 fun glUniform(location: Int, vec4i: Vec4i) = GL20.glUniform4i(location, vec4i.x, vec4i.y, vec4i.z, vec4i.w)
+fun glUniform(location: Int, x: Boolean, y: Boolean, z: Boolean, w: Boolean) = GL20.glUniform4i(location, x.i, y.i, z.i, w.i)
 fun glUniform(location: Int, vec4bool: Vec4bool) = GL20.glUniform4i(location, vec4bool.x.i, vec4bool.y.i, vec4bool.z.i, vec4bool.w.i)
 
 
