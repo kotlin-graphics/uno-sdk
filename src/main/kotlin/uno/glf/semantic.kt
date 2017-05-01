@@ -24,9 +24,7 @@ object semantic {
 
     object sampler {
         var DIFFUSE = 0
-        var POSITION = 4
-        var TEXCOORD = 5
-        var COLOR = 6
+        var SPECULAR = 1
     }
 
     object image {
