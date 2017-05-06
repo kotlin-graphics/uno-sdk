@@ -1,5 +1,6 @@
 package uno.gln
 
+import glm.mat2x2.Mat2
 import glm.mat3x3.Mat3
 import glm.mat4x4.Mat4
 import glm.vec2.Vec2
@@ -58,33 +59,34 @@ object ProgramUse {
         get() = glGetUniformBlockIndex(name, this)
         set(value) = glUniformBlockBinding(name, glGetUniformBlockIndex(name, this), value)
 
-    var Int.int: Int
-        get() = 0
-        set(value) = GL20.glUniform1i(this, value)
-    var Int.float: Float
-        get() = 0f
-        set(value) = GL20.glUniform1f(this, value)
-    var Int.vec2: Vec2
-        get() = Vec2()
-        set(value) = GL20.glUniform2f(this, value.x, value.y)
-    var Int.vec3: Vec3
-        get() = Vec3()
-        set(value) = GL20.glUniform3f(this, value.x, value.y, value.z)
-    var Int.vec4: Vec4
-        get() = Vec4()
-        set(value) = GL20.glUniform4f(this, value.x, value.y, value.z, value.w)
-    var Int.mat4: Mat4
-        get() = Mat4()
-        set(value) = GL20.glUniformMatrix4fv(this, false, value to mat4Buffer)
-    var Int.mat3: Mat3
-        get() = Mat3()
-        set(value) = GL20.glUniformMatrix3fv(this, false, value to mat3Buffer)
+    var String.unit: Int
+        get() = location
+        set(value) = GL20.glUniform1i(location, value)
 
 
     fun link() = GL20.glLinkProgram(name)
-
+    
+    infix fun Int.to(location: Int) = GL20.glUniform1i(location, this)    
+    infix fun Float.to(location: Int) = GL20.glUniform1f(location, this)
+    
+    infix fun Vec2.to(location: Int) = GL20.glUniform2fv(location, this to vec2Buffer)
+    infix fun Vec3.to(location: Int) = GL20.glUniform3fv(location, this to vec3Buffer)
     infix fun Vec4.to(location: Int) = GL20.glUniform4fv(location, this to vec4Buffer)
+    
+    infix fun Mat2.to(location: Int) = GL20.glUniformMatrix2fv(location, false, this to mat2Buffer)
+    infix fun Mat3.to(location: Int) = GL20.glUniformMatrix3fv(location, false, this to mat3Buffer)
     infix fun Mat4.to(location: Int) = GL20.glUniformMatrix4fv(location, false, this to mat4Buffer)
+    
+    infix fun Int.to(uniform: String) = GL20.glUniform1i(uniform.location, this)    
+    infix fun Float.to(uniform: String) = GL20.glUniform1f(uniform.location, this)
+    
+    infix fun Vec2.to(uniform: String) = GL20.glUniform2fv(uniform.location, this to vec2Buffer)
+    infix fun Vec3.to(uniform: String) = GL20.glUniform3fv(uniform.location, this to vec3Buffer)
+    infix fun Vec4.to(uniform: String) = GL20.glUniform4fv(uniform.location, this to vec4Buffer)
+    
+    infix fun Mat2.to(uniform: String) = GL20.glUniformMatrix2fv(uniform.location, false, this to mat2Buffer)
+    infix fun Mat3.to(uniform: String) = GL20.glUniformMatrix3fv(uniform.location, false, this to mat3Buffer)
+    infix fun Mat4.to(uniform: String) = GL20.glUniformMatrix4fv(uniform.location, false, this to mat4Buffer)
 }
 
 object ProgramBase {
