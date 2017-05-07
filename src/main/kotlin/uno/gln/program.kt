@@ -138,3 +138,4 @@ fun glUseProgram() = GL20.glUseProgram(0)
 
 fun glDeletePrograms(programs: IntArray) = programs.forEach { GL20.glDeleteProgram(it) }
 fun glDeleteProgram(program: Program) = GL20.glDeleteProgram(program.name)
+fun glDeletePrograms(vararg programs: Program) = programs.forEach { GL20.glDeleteProgram(it.name) }
