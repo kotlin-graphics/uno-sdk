@@ -105,6 +105,14 @@ object glf {
                 VertexAttribute(semantic.attr.NORMAL, Vec3.length, GL11.GL_FLOAT, false, size, Vec3.size.L),
                 VertexAttribute(semantic.attr.TEX_COORD, Vec2.length, GL11.GL_FLOAT, false, size, Vec3.size.L * 2))
     }
+
+    object pos3_nor3_col4 : VertexLayout {
+        val size = Vec3.size * 2 + Vec4.size
+        override var attribute = arrayOf(
+                VertexAttribute(semantic.attr.POSITION, Vec3.length, GL11.GL_FLOAT, false, size, 0),
+                VertexAttribute(semantic.attr.NORMAL, Vec3.length, GL11.GL_FLOAT, false, size, Vec3.size.L),
+                VertexAttribute(semantic.attr.COLOR, Vec4.length, GL11.GL_FLOAT, false, size, Vec3.size.L * 2))
+    }
 }
 
 
