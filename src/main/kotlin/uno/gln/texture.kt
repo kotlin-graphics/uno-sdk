@@ -1,6 +1,5 @@
 package uno.gln
 
-import gli.Target
 import gli.Texture2d
 import gli.gl.Format
 import glm.set
@@ -14,39 +13,6 @@ import java.nio.IntBuffer
  * Created by elect on 18/04/17.
  */
 
-fun glTexImage2D(texture: gli.Texture) {
-    val format = gli.gl.translate(texture.format, texture.swizzles)
-    return glTexImage2D(0, format, texture)
-}
-
-
-fun glTexImage2D(format: Format, texture: gli.Texture) = glTexImage2D(0, format, texture)
-fun glTexImage2D(level: Int, format: Format, texture: gli.Texture) =
-        GL11.glTexImage2D(
-                GL_TEXTURE_2D,
-                level,
-                format.internal.i,
-                texture.extent().x, texture.extent().y,
-                0,
-                format.external.i, format.type.i,
-                texture.data())
-
-
-fun glTexImage2D(texture: Texture2d) {
-    val format = gli.gl.translate(texture.format, texture.swizzles)
-    return glTexImage2D(0, format, texture)
-}
-
-fun glTexImage2D(format: Format, texture: Texture2d) = glTexImage2D(0, format, texture)
-fun glTexImage2D(level: Int, format: Format, texture: Texture2d) =
-        GL11.glTexImage2D(
-                GL_TEXTURE_2D,
-                level,
-                format.internal.i,
-                texture[level].extent().x, texture[level].extent().y,
-                0,
-                format.external.i, format.type.i,
-                texture[level].data())
 
 fun glBindTexture(target: Int, texture: IntBuffer) = glBindTexture(target, texture[0])
 
