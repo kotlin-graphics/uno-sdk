@@ -201,8 +201,6 @@ open class Program {
                     ""
                 else {
                     var r = strings[0]
-                    if(r[0] != '/')
-                        r = "/$r"
                     if(!r.endsWith('/'))
                         r = "$r/"
                     r
