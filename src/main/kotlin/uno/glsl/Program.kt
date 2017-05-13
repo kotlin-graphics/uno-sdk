@@ -192,6 +192,50 @@ open class Program {
         }
     }
 
+    constructor(vararg strings: String) {
+
+        name = GL20.glCreateProgram()
+
+        val root =
+                if (strings[0].isShader())
+                    ""
+                else {
+                    var r = strings[0]
+                    if(r[0] != '/')
+                        r = "/$r"
+                    if(!r.endsWith('/'))
+                        r = "$r/"
+                    r
+                }
+
+        val (shaders, uniforms) = strings.drop(if (root.isEmpty()) 0 else 1).partition { it.isShader() }
+
+        val shaderNames = shaders.map { createShader(root + it) }.onEach { GL20.glAttachShader(name, it) }
+
+        GL20.glLinkProgram(name)
+
+        val status = GL20.glGetProgrami(name, GL_LINK_STATUS)
+        if (status == GL2ES2.GL_FALSE) {
+
+            val strInfoLog = GL20.glGetProgramInfoLog(name)
+
+            System.err.println("Linker failure: $strInfoLog")
+        }
+
+        shaderNames.forEach {
+            GL20.glDetachShader(name, it)
+            GL20.glDeleteShader(it)
+        }
+
+        uniforms.forEach {
+            val i = GL20.glGetUniformLocation(name, it)
+            if (i != -1)
+                this.uniforms[it] = i
+            else
+                println("unable to find '$it' uniform location!")
+        }
+    }
+
     operator fun get(s: String): Int = uniforms[s]!!
 
     internal fun String.isShader() = contains(".vert") || contains(".tesc") || contains(".tese") || contains(".geom") || contains(".frag") || contains(".comp")
@@ -232,6 +276,44 @@ open class Program {
         if (shader.startsWith('"') && shader.endsWith('"'))
             shader.substring(1, shader.length - 1)
         val url = context::class.java.getResource("$root/$shader")
+        return File(url.toURI()).readText() + "\n"
+    }
+
+    fun createShader(path: String): Int {
+
+        val shader = GL20.glCreateShader(path.type)
+
+        val url = ClassLoader.getSystemResource(path)
+        val lines = File(url.toURI()).readLines()
+
+        var source = ""
+        lines.forEach {
+            if (it.startsWith("#include "))
+                source += parseInclude(path.substringBeforeLast('/'), it.substring("#include ".length).trim())
+            else
+                source += it
+            source += '\n'
+        }
+
+        GL20.glShaderSource(shader, source)
+
+        GL20.glCompileShader(shader)
+
+        val status = GL20.glGetShaderi(shader, GL_COMPILE_STATUS)
+        if (status == GL_FALSE) {
+
+            val strInfoLog = GL20.glGetShaderInfoLog(shader)
+
+            System.err.println("Compiler failure in ${path.substringAfterLast('/')} shader: $strInfoLog")
+        }
+
+        return shader
+    }
+
+    fun parseInclude(root: String, shader: String): String {
+        if (shader.startsWith('"') && shader.endsWith('"'))
+            shader.substring(1, shader.length - 1)
+        val url = ClassLoader.getSystemResource("$root/$shader")
         return File(url.toURI()).readText() + "\n"
     }
 
