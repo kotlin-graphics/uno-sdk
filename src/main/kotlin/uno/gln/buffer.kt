@@ -17,11 +17,6 @@ import java.nio.*
 
 fun glBufferData(target: Int, size: Int, usage: Int) = nglBufferData(target, size.L, NULL, usage);
 
-fun glMapBufferRange(target: Int, length: Int, access: Int): ByteBuffer =
-        glMapBufferRange(target, 0, length.L, access)
-fun glMapBufferRange(target: Int, offset: Int, length: Int, access: Int): ByteBuffer =
-        glMapBufferRange(target, offset.L, length.L, access)
-
 // ----- Mat4 -----
 fun glBufferData(target: Int, mat: Mat4, usage: Int) = glBufferData(target, mat to mat4Buffer, usage)
 

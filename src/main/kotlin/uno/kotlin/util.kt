@@ -13,3 +13,7 @@ infix fun <T> (() -> Any).shallThrow(exClass: Class<T>) {
     }
     throw Error("No exception")
 }
+
+val String.uri  get() = url.toURI()!!
+val String.url  get() = ClassLoader.getSystemResource(this)!!
+val String.stream  get() = ClassLoader.getSystemResourceAsStream(this)!!
