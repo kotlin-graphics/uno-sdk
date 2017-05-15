@@ -211,6 +211,23 @@ fun glTexImage3D(level: Int, format: gl.Format, texture: Texture2d) =
 // ---------------------------------------------------------------------------------------------------------------------
 
 
+fun glTexImageCube(face: Int, texture: gli.Texture) {
+    val format = gli.gl.translate(texture.format, texture.swizzles)
+    return glTexImageCube(face, 0, format, texture)
+}
+
+fun glTexImageCube(face: Int, format: gl.Format, texture: gli.Texture) = glTexImageCube(face, 0, format, texture)
+fun glTexImageCube(face: Int, level: Int, format: gl.Format, texture: gli.Texture) =
+        GL11.glTexImage2D(
+                GL_TEXTURE_CUBE_MAP_POSITIVE_X + face,
+                level,
+                format.internal.i,
+                texture.extent().x, texture.extent().y,
+                0,
+                format.external.i, format.type.i,
+                texture.data(0, face, level))
+
+
 fun glTexImageCube(face: Int, texture: gli.TextureCube) {
     val format = gli.gl.translate(texture.format, texture.swizzles)
     return glTexImageCube(face, 0, format, texture)
