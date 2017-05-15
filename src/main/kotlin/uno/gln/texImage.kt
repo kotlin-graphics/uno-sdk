@@ -2,6 +2,7 @@ package uno.gln
 
 import com.jogamp.opengl.GL2GL3.GL_TEXTURE_1D
 import gli.Texture2d
+import gli.TextureCube
 import gli.gl
 import glm.vec1.Vec1i
 import glm.vec2.Vec2i
@@ -10,6 +11,7 @@ import org.lwjgl.opengl.GL11
 import org.lwjgl.opengl.GL11.GL_TEXTURE_2D
 import org.lwjgl.opengl.GL12
 import org.lwjgl.opengl.GL12.GL_TEXTURE_3D
+import org.lwjgl.opengl.GL13.GL_TEXTURE_CUBE_MAP_POSITIVE_X
 import org.lwjgl.system.MemoryUtil
 import java.nio.ByteBuffer
 
@@ -138,6 +140,7 @@ fun glTexImage2D(level: Int, format: gl.Format, texture: Texture2d) =
                 0,
                 format.external.i, format.type.i,
                 texture[level].data())
+
 // ---------------------------------------------------------------------------------------------------------------------
 
 fun glTexImage3D(internalFormat:Int, width: Int, height:Int, depth: Int, format: Int, type: Int) =
@@ -205,3 +208,21 @@ fun glTexImage3D(level: Int, format: gl.Format, texture: Texture2d) =
                 format.external.i, format.type.i,
                 texture[level].data())
 
+// ---------------------------------------------------------------------------------------------------------------------
+
+
+fun glTexImageCube(face: Int, texture: gli.TextureCube) {
+    val format = gli.gl.translate(texture.format, texture.swizzles)
+    return glTexImageCube(face, 0, format, texture)
+}
+
+fun glTexImageCube(face: Int, format: gl.Format, texture: TextureCube) = glTexImageCube(face, 0, format, texture)
+fun glTexImageCube(face: Int, level: Int, format: gl.Format, texture: TextureCube) =
+        GL11.glTexImage2D(
+                GL_TEXTURE_CUBE_MAP_POSITIVE_X + face,
+                level,
+                format.internal.i,
+                texture.extent().x, texture.extent().y,
+                0,
+                format.external.i, format.type.i,
+                texture[face].data())
