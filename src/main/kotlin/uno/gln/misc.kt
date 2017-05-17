@@ -17,15 +17,7 @@ import uno.buffer.intBufferBig
  */
 
 
-fun glClearBuffer(buffer: Int, value: Float) = glClearBuffer(buffer, 0, value)
 
-fun glClearBuffer(buffer: Int, drawbuffer: Int, value: Float) {
-    floatBuffer[0] = value
-    glClearBufferfv(buffer, drawbuffer, floatBuffer)
-}
-
-fun glClearBuffer(buffer: Int, value: Vec4) = glClearBuffer(buffer, 0, value)
-fun glClearBuffer(buffer: Int, drawbuffer: Int, value: Vec4) = glClearBufferfv(buffer, drawbuffer, value to mat4Buffer)
 
 fun glViewport(size: Vec2i) = glViewport(0, 0, size.x, size.y)
 

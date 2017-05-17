@@ -1,6 +1,9 @@
 package uno.gln
 
 import glm.f
+import glm.set
+import glm.vec1.Vec1
+import glm.vec4.Vec4
 import org.lwjgl.opengl.GL11
 import org.lwjgl.opengl.GL30
 
@@ -27,3 +30,15 @@ object Clear {
 
     // TODO stencil
 }
+
+fun glClearBuffer(buffer: Int, value: Float) = glClearBuffer(buffer, 0, value)
+
+fun glClearBuffer(buffer: Int, drawbuffer: Int, value: Float) {
+    floatBuffer[0] = value
+    GL30.glClearBufferfv(buffer, drawbuffer, floatBuffer)
+}
+
+fun glClearBuffer(buffer: Int, value: Vec4) = GL30.glClearBufferfv(buffer, 0, value to mat4Buffer)
+
+fun glClearBuffer(buffer: Int, drawbuffer: Int, value: Vec1) = GL30.glClearBufferfv(buffer, drawbuffer, value to floatBuffer)
+fun glClearBuffer(buffer: Int, drawbuffer: Int, value: Vec4) = GL30.glClearBufferfv(buffer, drawbuffer, value to mat4Buffer)

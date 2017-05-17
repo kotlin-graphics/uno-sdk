@@ -7,10 +7,7 @@ import com.jogamp.opengl.GL3
 import com.jogamp.opengl.GLException
 import glm.vec2.Vec2
 import org.lwjgl.opengl.GL11.glGetFloatv
-import uno.buffer.byteBufferBig
-import uno.buffer.floatBufferBig
-import uno.buffer.intBufferBig
-import uno.buffer.longBufferBig
+import uno.gln.vec2Buffer
 
 /**
  * Created by elect on 05/03/17.
@@ -67,12 +64,6 @@ fun checkError(gl: GL, location: String) {
 }
 
 fun glGetVec2(pname: Int): Vec2 {
-    glGetFloatv(pname, vec2)
-    return Vec2(vec2)
+    glGetFloatv(pname, vec2Buffer)
+    return Vec2(vec2Buffer)
 }
-
-private val byte = byteBufferBig(1)
-private val int = intBufferBig(1)
-private val long = longBufferBig(1)
-private val float = floatBufferBig(1)
-private val vec2 = floatBufferBig(2)
