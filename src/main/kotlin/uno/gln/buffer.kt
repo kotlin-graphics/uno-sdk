@@ -182,6 +182,7 @@ object Buffers {
         Buffer.block()
     }
 
+    fun withArray(block: Buffer.() -> Unit) = withArrayAt(0, block)
     fun withArrayAt(bufferIndex: Int, block: Buffer.() -> Unit) {
         Buffer.target = GL_ARRAY_BUFFER
         Buffer.name = buffers[bufferIndex] // bind
@@ -189,6 +190,7 @@ object Buffers {
         GL15.glBindBuffer(GL_ARRAY_BUFFER, 0)
     }
 
+    fun withElement(block: Buffer.() -> Unit) = withElementAt(0, block)
     fun withElementAt(bufferIndex: Int, block: Buffer.() -> Unit) {
         Buffer.target = GL_ELEMENT_ARRAY_BUFFER
         Buffer.name = buffers[bufferIndex] // bind
@@ -196,6 +198,7 @@ object Buffers {
         GL15.glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0)
     }
 
+    fun withUniform(block: Buffer.() -> Unit) = withUniformAt(0, block)
     fun withUniformAt(bufferIndex: Int, block: Buffer.() -> Unit) {
         Buffer.target = GL_UNIFORM_BUFFER
         Buffer.name = buffers[bufferIndex] // bind
