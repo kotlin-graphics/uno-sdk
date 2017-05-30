@@ -38,6 +38,9 @@ val vec2Buffer = floatBufferBig(2)
 val vec3Buffer = floatBufferBig(3)
 val vec4Buffer = floatBufferBig(4)
 
+val vec2iBuffer = intBufferBig(2)
+val vec4iBuffer = intBufferBig(4)
+
 val mat2Buffer = floatBufferBig(2 * 2)
 val mat2x3Buffer = floatBufferBig(2 * 3)
 val mat2x4Buffer = floatBufferBig(2 * 4)

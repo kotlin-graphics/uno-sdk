@@ -6,8 +6,15 @@ import com.jogamp.opengl.GL.*
 import com.jogamp.opengl.GL3
 import com.jogamp.opengl.GLException
 import glm.vec2.Vec2
+import glm.vec2.Vec2i
+import glm.vec4.Vec4
+import glm.vec4.Vec4i
 import org.lwjgl.opengl.GL11.glGetFloatv
+import org.lwjgl.opengl.GL11.glGetIntegerv
 import uno.gln.vec2Buffer
+import uno.gln.vec2iBuffer
+import uno.gln.vec4Buffer
+import uno.gln.vec4iBuffer
 
 /**
  * Created by elect on 05/03/17.
@@ -66,4 +73,19 @@ fun checkError(gl: GL, location: String) {
 fun glGetVec2(pname: Int): Vec2 {
     glGetFloatv(pname, vec2Buffer)
     return Vec2(vec2Buffer)
+}
+
+fun glGetVec2i(pname: Int): Vec2i {
+    glGetIntegerv(pname, vec2iBuffer)
+    return Vec2i(vec2iBuffer)
+}
+
+fun glGetVec4(pname: Int): Vec4 {
+    glGetFloatv(pname, vec4Buffer)
+    return Vec4(vec4Buffer)
+}
+
+fun glGetVec4i(pname: Int): Vec4i {
+    glGetIntegerv(pname, vec4iBuffer)
+    return Vec4i(vec4iBuffer)
 }
