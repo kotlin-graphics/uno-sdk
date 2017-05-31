@@ -13,6 +13,7 @@ buildscript {
 
     repositories {
         mavenCentral()
+        jcenter()
         maven { url "https://dl.bintray.com/kotlin/kotlin-dev" }
         maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
     }
@@ -21,9 +22,16 @@ buildscript {
     }
 }
 
+//kotlin {
+//    experimental {
+//        coroutines 'enable'
+//    }
+//}
+
 dependencies {
 
     compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
+//    compile "org.jetbrains.kotlinx:kotlinx-coroutines-core:0.15"
 
     testCompile("io.kotlintest:kotlintest:2.0.0")
 
@@ -62,6 +70,7 @@ dependencies {
 
 repositories {
     mavenCentral()
+    jcenter()
     maven { url "https://jitpack.io" }
     maven { url "https://dl.bintray.com/kotlin/kotlin-dev" }
     maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }

@@ -3,6 +3,8 @@ package uno
 import io.kotlintest.specs.StringSpec
 import uno.stb.stb
 
+//import uno.stb.stb
+
 class Stb : StringSpec() {
 
     init {
@@ -11,7 +13,8 @@ class Stb : StringSpec() {
 
         "compression" {
 
-            stb.co
+            val res = stb.compress(tc)
+            print("")
         }
     }
 }
