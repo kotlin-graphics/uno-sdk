@@ -4,11 +4,13 @@ import glm.*
 
 object stb {
 
+    /**
+     * --------------------------------------Compression----------------------------------------------------------------
+     */
+
     // simple implementation that just takes the source data in a big block
-    lateinit var out: CharArray
-    var pOut = 0
-//    static FILE      *stb__outfile;
-//    static unsigned int stb__outbytes;
+    lateinit var res: CharArray
+    var out = 0
 
     var window = 0x40000 // 256K
     var runningAdler = 0
@@ -16,17 +18,23 @@ object stb {
     private lateinit var array: CharArray
     private var length = 0
 
-    fun compress(input: CharArray) {
+    val hashSize = 32768
+
+    fun compress(input: String) = compress(
+            (if (input.last() == '\u0000')
+                input
+            else
+                "$input\u0000")
+                    .toCharArray())
+
+    fun compress(input: CharArray): CharArray {
 
         array = input
         length = array.size
 
-        out = CharArray(1 shl 23)
-//        stb__outfile = NULL;
+        res = CharArray(1 shl 23)
 
-        compressInner()
-
-//        return stb__out - out;
+        return compressInner()
     }
 
     fun compressInner(): CharArray {
@@ -46,9 +54,7 @@ object stb {
 
         runningAdler = 1
 
-        val (res, literals) = compressChunk(chash, hashSize - 1)
-
-        assert(res.size == length)
+        val literals = compressChunk(chash, hashSize - 1)
 
         outLiterals(length - literals, literals)
 
@@ -56,11 +62,11 @@ object stb {
 
         out4(runningAdler)
 
-        return res
+        return CharArray(out, { res[it] })
     }
 
     fun out(v: Int) {
-        out[pOut++] = v.c
+        res[out++] = v.uc
     }
 
     fun out2(v: Int) {
@@ -81,10 +87,7 @@ object stb {
         out(v)
     }
 
-    fun compressChunk(
-            chash: IntArray,
-            mask: Int
-    ): Pair<CharArray, Int> {
+    fun compressChunk(chash: IntArray, mask: Int): Int {
 
         val history = 0
         val start = 0
@@ -95,6 +98,14 @@ object stb {
         var q = start
 
         fun SCRAMBLE(h: Int) = (h + (h ushr 16)) and mask
+
+        fun notCrap(best: Int, dist: Int) = (best > 2 && dist <= 0x00100) || (best > 5 && dist <= 0x04000) || (best > 7 && dist <= 0x80000)
+
+        /* note that you can play with the hashing functions all you want without needing to change the decompressor    */
+
+        fun hc(q: Int, h: Int, c: Int) = (h shl 7) + (h ushr 25) + array[q + c]
+        fun hc2(q: Int, h: Int, c: Int, d: Int) = (h shl 14) + (h ushr 18) + (array[q + c] shl 7) + array[q + d]
+        fun hc3(q: Int, c: Int, d: Int, e: Int) = (array[q + c] shl 14) + (array[q + d] shl 7) + array[q + e]
 
         /*  stop short of the end so we don't scan off the end doing the hashing; this means we won't compress the last
             few bytes unless they were part of something longer */
@@ -190,122 +201,65 @@ object stb {
 
         runningAdler = adler32(runningAdler, start, q - start)
 
-        val res = CharArray(q - start, { array[it] })
-        return res to pendingLiterals
+        assert(q - start == length)
+
+        return pendingLiterals
     }
 
-//    class UCharPointer(var data: CharArray, var ptr: Int = 0) {
-//        constructor(charP: UCharPointer) : this(charP.data, charP.ptr)
-//
-//        infix fun set(int: Int) {
-//            data[ptr] = int.c
-//        }
-//
-//        operator fun minus(int: Int) = UCharPointer(data, ptr - int)
-//        fun cmp(int: Int) = UCharPointer(data, ptr - int)
-//    }
-
-
-    fun decompressLength(input: CharArray) = (input[8] shl 24) + (input[9] shl 16) + (input[10] shl 8) + input[11]
-
-    var barrier = 0
-    var barrier2 = 0
-    var barrier3 = 0
-    var barrier4 = 0
-    var dout = 0
-
-//    fun match(data: CharArray) {
-//        // INVERSE of memmove... write each byte before copying the next...
-//        assert(dout + data.size <= barrier)
-//        if (dout + data.size > barrier) {
-//            dout += data.size
-//            return
-//        }
-//        if (data < barrier4) {
-//            stb__dout = stb__barrier + 1; return; }
-//        while (length--) * stb__dout++ = * data ++
-//    }
-
-//    fun decompress(output: CharArray, i: CharArray): Int {
-//
-//        if (in4(0, i) != 0x57bC0000) return 0
-//        if (in4(4, i) != 0) return 0 // error! stream is > 4GB
-//        val olen = decompressLength(i)
-//        var iPtr = 0
-//        var outputPtr = 0
-//        barrier2 = iPtr
-//        barrier3 = iPtr + i.size
-//        barrier = outputPtr + olen
-//        barrier4 = outputPtr
-//        iPtr += 16
-//
-//        dout = outputPtr
-//        while (true) {
-//            var old_i = iPtr
-//            i = stb_decompress_token(i)
-//            if (i == old_i) {
-//                if ( * i == 0x05 && i[1] == 0xfa) {
-//                    IM_ASSERT(stb__dout == output + olen)
-//                    if (stb__dout != output + olen) return 0
-//                    if (stb_adler32(1, output, olen) != (unsigned int) stb__in4 (2))
-//                        return 0
-//                    return olen
-//                } else {
-//                    IM_ASSERT(0) /* NOTREACHED */
-//                    return 0
-//                }
-//            }
-//            IM_ASSERT(stb__dout <= output + olen)
-//            if (stb__dout > output + olen)
-//                return 0
-//        }
-//    }
+    fun matchLen(m1: Int, m2: Int, maxLen: Int): Int {
+        var i = 0
+        while (i < maxLen) {
+            if (array[m1 + i] != array[m2 + i]) return i
+            ++i
+        }
+        return i
+    }
 
     fun adler32(adler32: Int, buffer: Int, bufLen: Int): Int {
-        var buffer_ = buffer
-        var bufLen_ = bufLen.L
+
+        var _buffer = buffer
+        var _bufLen = bufLen.L
         val ADLER_MOD = 65521
         var s1 = adler32 and 0xffff
         var s2 = adler32 ushr 16
         var blockLen = 0L
         var i = 0L
 
-        blockLen = (bufLen_ % 5552).L
-        while (bufLen_ != 0L) {
-            for (i in 0..blockLen - 8 step 8) {
-                s1 += array[buffer_]; s2 += s1
-                s1 += array[buffer_ + 1]; s2 += s1
-                s1 += array[buffer_ + 2]; s2 += s1
-                s1 += array[buffer_ + 3]; s2 += s1
-                s1 += array[buffer_ + 4]; s2 += s1
-                s1 += array[buffer_ + 5]; s2 += s1
-                s1 += array[buffer_ + 6]; s2 += s1
-                s1 += array[buffer_ + 7]; s2 += s1
+        blockLen = (_bufLen % 5552).L
+        while (_bufLen != 0L) {
+            while (i + 7 < blockLen) {
+                s1 += array[_buffer]; s2 += s1
+                s1 += array[_buffer + 1]; s2 += s1
+                s1 += array[_buffer + 2]; s2 += s1
+                s1 += array[_buffer + 3]; s2 += s1
+                s1 += array[_buffer + 4]; s2 += s1
+                s1 += array[_buffer + 5]; s2 += s1
+                s1 += array[_buffer + 6]; s2 += s1
+                s1 += array[_buffer + 7]; s2 += s1
 
-                buffer_ += 8
+                _buffer += 8
+                i += 8
             }
 
-            while (i < blockLen)
-                s1 += array[buffer_++]; s2 += s1
+            while (i < blockLen) {
+                s1 += array[_buffer++]; s2 += s1
+                ++i
+            }
 
             s1 %= ADLER_MOD; s2 %= ADLER_MOD
-            bufLen_ -= blockLen
+            _bufLen -= blockLen
             blockLen = 5552
         }
         return (s2 shl 16) + s1
     }
 
-    fun in2(x: Int, i: CharArray) = (i[x] shl 8) + i[x + 1].i
-    fun in3(x: Int, i: CharArray) = (i[x] shl 16) + in2(x + 1, i)
-    fun in4(x: Int, i: CharArray) = (i[x] shl 24) + in3(x + 1, i)
-
     fun outLiterals(i: Int, numLit: Int) {
-        var in_ = i
-        var numLit_ = numLit
+        var _in = i
+        var _numLit = numLit
         while (numLit > 65536) {
             outLiterals(i, 65536)
-            in_ += 65536
-            numLit_ -= 65536
+            _in += 65536
+            _numLit -= 65536
         }
 
         if (numLit == 0)
@@ -313,46 +267,127 @@ object stb {
         else if (numLit <= 2048) out2(0x000800 + numLit - 1)
         else /*  numlit <= 65536) */ out3(0x070000 + numLit - 1)
 
-        repeat(numLit) { out[pOut] = array[in_] }
-        pOut += numLit
+        System.arraycopy(array, _in, res, out, numLit)
+        out += numLit
     }
 
-    fun notCrap(best: Int, dist: Int) = (best > 2 && dist <= 0x00100) || (best > 5 && dist <= 0x04000) || (best > 7 && dist <= 0x80000)
 
-    val hashSize = 32768
+    /**
+     * --------------------------------------Decompression--------------------------------------------------------------
+     */
 
-    fun matchLen(m1: Int, m2: Int, maxLen: Int): Int {
+    var barrier = 0
+    var barrier2 = 0
+    var barrier3 = 0
+    var barrier4 = 0
+    var dout = 0
+
+    fun decompress(input: CharArray): CharArray {
+
+        array = input
+        val olen = (input[8] shl 24) + (input[9] shl 16) + (input[10] shl 8) + input[11]
+        res = CharArray(olen)
+
         var i = 0
-        for (i in 0 until maxLen)
-            if (array[m1 + i] != array[m2 + i]) return i
-        return i
+        out = 0
+        length = input.size
+
+        if (in4(0, i) != 0x57bC0000) Error()
+        if (in4(4, i) != 0) Error("stream is > 4GB")
+        barrier2 = i
+        barrier3 = i + length
+        barrier = out + olen
+        barrier4 = out
+        i += 16
+
+        dout = out
+        while (true) {
+            val old_i = i
+            i = decompressToken(i)
+            if (i == old_i) {
+                if (array[i].i == 0x05 && array[i + 1].i == 0xfa) {
+                    assert(dout == out + olen)
+                    if (adler32(1, out, olen) != in4(2, i))
+                        Error()
+                    return res
+                } else
+                    Error()
+            }
+            assert(dout <= out + olen)
+        }
     }
 
-    /* note that you can play with the hashing functions all you want without needing to change the decompressor    */
-
-    fun hc(q: Int, h: Int, c: Int) = (h shl 7) + (h ushr 25) + array[q + c]
-    fun hc2(q: Int, h: Int, c: Int, d: Int) = (h shl 14) + (h ushr 18) + (array[q + c] shl 7) + array[q + d]
-    fun hc3(q: Int, c: Int, d: Int, e: Int) = (array[q + c] shl 14) + (array[q + d] shl 7) + array[q + e]
-
-    // TODO move
-    fun decode85(src: String): CharArray {
-
-        fun decode85Byte(c: Char) = (if (c >= '\\') c - 36 else c - 35).i
-
-        var pSrc = 0
-        var dst = CharArray(((src.length + 4) / 5) * 4)
-        var pDst = 0
-
-        while (pSrc < src.length - 1) {
-            val tmp = decode85Byte(src[pSrc]) + 85 * (decode85Byte(src[pSrc + 1]) + 85 * (decode85Byte(src[pSrc + 2]) +
-                    85 * (decode85Byte(src[pSrc + 3]) + 85 * decode85Byte(src[pSrc + 4]))))
-            dst[pDst] = ((tmp ushr 0) and 0xFF).c
-            dst[pDst + 1] = ((tmp ushr 8) and 0xFF).c
-            dst[pDst + 2] = ((tmp ushr 16) and 0xFF).c
-            dst[pDst + 3] = ((tmp ushr 24) and 0xFF).c   // We can't assume little-endianness.
-            pSrc += 5
-            pDst += 4
+    fun decompressToken(i: Int): Int {
+        var _i = i
+        if (array[_i] >= 0x20) { // use fewer if's for cases that expand small
+            if (array[_i] >= 0x80) {
+                match(dout - array[_i + 1] - 1, array[_i + 0].i - 0x80 + 1)
+                _i += 2
+            } else if (array[_i] >= 0x40) {
+                match(dout - (in2(0, _i) - 0x4000 + 1), array[_i + 2].i + 1)
+                _i += 3
+            } else { /* *i >= 0x20 */
+                lit(_i + 1, array[_i].i - 0x20 + 1)
+                _i += 1 + (array[_i] - 0x20 + 1)
+            }
+        } else { // more ifs for cases that expand large, since overhead is amortized
+            if (array[_i] >= 0x18) {
+                match(dout - (in3(0, _i) - 0x180000 + 1), array[_i + 3].i + 1)
+                _i += 4
+            } else if (array[_i] >= 0x10) {
+                match(dout - (in3(0, _i) - 0x100000 + 1), in2(3, _i) + 1)
+                _i += 5
+            } else if (array[_i] >= 0x08) {
+                lit(_i + 2, in2(0, _i) - 0x0800 + 1)
+                _i += 2 + (in2(0, _i) - 0x0800 + 1)
+            } else if (array[_i].i == 0x07) {
+                lit(_i + 3, in2(1, _i) + 1)
+                _i += 3 + (in2(1, _i) + 1)
+            } else if (array[_i].i == 0x06) {
+                match(dout - (in3(1, _i) + 1), array[_i + 4].i + 1)
+                _i += 5
+            } else if (array[_i].i == 0x04) {
+                match(dout - (in3(1, _i) + 1), in2(4, _i) + 1)
+                _i += 6
+            }
         }
-        return dst
+        return _i
+    }
+
+    fun in2(x: Int, i: Int) = (array[i + x] shl 8) + array[i + x + 1].i
+    fun in3(x: Int, i: Int) = (array[i + x] shl 16) + in2(x + 1, i)
+    fun in4(x: Int, i: Int) = (array[i + x] shl 24) + in3(x + 1, i)
+
+    fun match(data: Int, length: Int) {
+        var _data = data
+        var _length = length
+        // INVERSE of memmove... write each byte before copying the next...
+        assert(dout + _length <= barrier)
+        if (dout + _length > barrier) {
+            dout += _length
+            return
+        }
+        if (_data < barrier4) {
+            dout = barrier + 1
+            return
+        }
+        while (_length != 0) {
+            res[dout++] = res[_data++]
+            _length--
+        }
+    }
+
+    fun lit(data: Int, length: Int) {
+        assert(dout + length <= barrier)
+        if (dout + length > barrier) {
+            dout += length
+            return
+        }
+        if (data < barrier2) {
+            dout = barrier + 1
+            return
+        }
+        System.arraycopy(array, data, res, dout, length)
+        dout += length
     }
 }

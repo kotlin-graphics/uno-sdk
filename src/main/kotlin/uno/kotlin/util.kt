@@ -1,5 +1,7 @@
 package uno.kotlin
 
+import java.io.File
+
 /**
  * Created by GBarbieri on 30.03.2017.
  */
@@ -17,3 +19,5 @@ infix fun <T> (() -> Any).shallThrow(exClass: Class<T>) {
 val String.uri  get() = url.toURI()!!
 val String.url  get() = ClassLoader.getSystemResource(this)!!
 val String.stream  get() = ClassLoader.getSystemResourceAsStream(this)!!
+
+val String.file get() = File(uri)
