@@ -114,7 +114,7 @@ open class Program {
         val shaderProgram = ShaderProgram()
 
         val root =
-                if (strings[0].isShader())
+                if (strings[0].isShaderPath())
                     ""
                 else
                     if (strings[0].endsWith('/'))
@@ -122,7 +122,7 @@ open class Program {
                     else
                         strings[0] + '/'
 
-        val (shaders, uniforms) = strings.drop(if (root.isEmpty()) 0 else 1).partition { it.isShader() }
+        val (shaders, uniforms) = strings.drop(if (root.isEmpty()) 0 else 1).partition { it.isShaderPath() }
 
         val shaderCodes = shaders.map { shaderCodeOf(gl, context, root + it) }.onEach { shaderProgram.add(gl, it, System.err) }
 
@@ -148,30 +148,30 @@ open class Program {
 
     // for Learn OpenGL
 
+    /** (root, vertex, fragment) or (vertex, fragment)  */
     constructor(context: Class<*>, vararg strings: String) {
 
         name = GL20.glCreateProgram()
 
         val root =
-                if (strings[0].isShader())
+                if (strings[0].isShaderPath())
                     ""
                 else {
                     var r = strings[0]
-                    if(r[0] != '/')
+                    if (r[0] != '/')
                         r = "/$r"
-                    if(!r.endsWith('/'))
+                    if (!r.endsWith('/'))
                         r = "$r/"
                     r
                 }
 
-        val (shaders, uniforms) = strings.drop(if (root.isEmpty()) 0 else 1).partition { it.isShader() }
+        val (shaders, uniforms) = strings.drop(if (root.isEmpty()) 0 else 1).partition { it.isShaderPath() }
 
         val shaderNames = shaders.map { createShader(context, root + it) }.onEach { GL20.glAttachShader(name, it) }
 
         GL20.glLinkProgram(name)
 
-        val status = GL20.glGetProgrami(name, GL_LINK_STATUS)
-        if (status == GL2ES2.GL_FALSE) {
+        if (GL20.glGetProgrami(name, GL_LINK_STATUS) == GL_FALSE) {
 
             val strInfoLog = GL20.glGetProgramInfoLog(name)
 
@@ -196,8 +196,16 @@ open class Program {
 
         name = GL20.glCreateProgram()
 
+//        var root = ""
+//
+//        if (!strings[0].isShaderPath() && !strings[0].contains("#version")) { // TODO passing directly srcs
+//            root = strings[0]
+//            if (!root.endsWith('/'))
+//                root = "$root/"
+//        }
+
         val root =
-                if (strings[0].isShader())
+                if (strings[0].isShaderPath())
                     ""
                 else {
                     var r = strings[0]
@@ -206,14 +214,13 @@ open class Program {
                     r
                 }
 
-        val (shaders, uniforms) = strings.drop(if (root.isEmpty()) 0 else 1).partition { it.isShader() }
+        val (shaders, uniforms) = strings.drop(if (root.isEmpty()) 0 else 1).partition { it.isShaderPath() }
 
         val shaderNames = shaders.map { createShader(root + it) }.onEach { GL20.glAttachShader(name, it) }
 
         GL20.glLinkProgram(name)
 
-        val status = GL20.glGetProgrami(name, GL_LINK_STATUS)
-        if (status == GL2ES2.GL_FALSE) {
+        if (GL20.glGetProgrami(name, GL_LINK_STATUS) == GL_FALSE) {
 
             val strInfoLog = GL20.glGetProgramInfoLog(name)
 
@@ -236,7 +243,7 @@ open class Program {
 
     operator fun get(s: String): Int = uniforms[s]!!
 
-    internal fun String.isShader() = contains(".vert") || contains(".tesc") || contains(".tese") || contains(".geom") || contains(".frag") || contains(".comp")
+    internal fun String.isShaderPath() = endsWith(".vert") || endsWith(".tesc") || endsWith(".tese") || endsWith(".geom") || endsWith(".frag") || endsWith(".comp")
 
 
     fun createShader(context: Class<*>, path: String): Int {

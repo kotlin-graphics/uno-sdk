@@ -199,6 +199,13 @@ object ObjectTexture2d {
     fun image(level: Int, internalFormat: Int, width: Int, height: Int, format: Int, type: Int, pixels: ByteBuffer) =
             GL11.glTexImage2D(GL_TEXTURE_2D, level, internalFormat, width, height, 0, format, type, pixels)
 
+    // TODO size for others
+    fun image(internalFormat: Int, size: Vec2i, format: Int, type: Int, pixels: ByteBuffer) =
+            GL11.glTexImage2D(GL_TEXTURE_2D, 0, internalFormat, size.x, size.y, 0, format, type, pixels)
+
+    fun image(level: Int, internalFormat: Int, size: Vec2i, format: Int, type: Int, pixels: ByteBuffer) =
+            GL11.glTexImage2D(GL_TEXTURE_2D, level, internalFormat, size.x, size.y, 0, format, type, pixels)
+
     fun storage(internalFormat: Int, size: Vec2i) = storage(1, internalFormat, size)
     fun storage(levels: Int, internalFormat: Int, size: Vec2i) =
             GL42.glTexStorage2D(GL_TEXTURE_2D, levels, internalFormat, size.x, size.y)
