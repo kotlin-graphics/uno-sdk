@@ -4,7 +4,7 @@ import com.jogamp.opengl.GL.GL_STATIC_DRAW
 import com.jogamp.opengl.GL2ES3.GL_UNIFORM_BUFFER
 import com.jogamp.opengl.GL2ES3.GL_UNIFORM_BUFFER_OFFSET_ALIGNMENT
 import com.jogamp.opengl.GL3
-import glm.L
+import glm_.L
 import uno.buffer.byteBufferBig
 import uno.buffer.destroy
 import uno.buffer.intBufferBig

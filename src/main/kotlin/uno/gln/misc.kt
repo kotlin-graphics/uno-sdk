@@ -1,8 +1,8 @@
 package uno.gln
 
-import glm.set
-import glm.vec2.Vec2i
-import glm.vec4.Vec4
+import glm_.set
+import glm_.vec2.Vec2i
+import glm_.vec4.Vec4
 import org.lwjgl.opengl.GL11
 import org.lwjgl.opengl.GL11.glViewport
 import org.lwjgl.opengl.GL30.glBlitFramebuffer

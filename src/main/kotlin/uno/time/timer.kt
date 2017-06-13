@@ -1,6 +1,6 @@
 package uno.time
 
-import glm.glm
+import glm_.glm
 
 /**
  * Created by GBarbieri on 13.03.2017.

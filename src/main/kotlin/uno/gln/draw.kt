@@ -4,8 +4,8 @@ package uno.gln
  * Created by GBarbieri on 20.04.2017.
  */
 
-import glm.BYTES
-import glm.size
+import glm_.BYTES
+import glm_.size
 import org.lwjgl.opengl.*
 import org.lwjgl.opengl.GL11.*
 import org.lwjgl.opengl.GL32.glDrawElementsBaseVertex

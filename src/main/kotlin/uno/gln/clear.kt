@@ -1,9 +1,9 @@
 package uno.gln
 
-import glm.f
-import glm.set
-import glm.vec1.Vec1
-import glm.vec4.Vec4
+import glm_.f
+import glm_.set
+import glm_.vec1.Vec1
+import glm_.vec4.Vec4
 import org.lwjgl.opengl.GL11
 import org.lwjgl.opengl.GL30
 

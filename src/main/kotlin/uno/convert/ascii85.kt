@@ -1,7 +1,7 @@
 package uno.convert
 
-import glm.b
-import glm.i
+import glm_.b
+import glm_.i
 import uno.glm.toBidDec
 import unsigned.toULong
 import java.nio.ByteBuffer

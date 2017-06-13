@@ -1,13 +1,13 @@
 package uno.glf
 
-import glm.L
-import glm.vec2.Vec2
-import glm.vec2.Vec2us
-import glm.vec3.Vec3
-import glm.vec4.Vec4
-import glm.vec4.Vec4ub
+import glm_.L
+import glm_.vec2.Vec2
+import glm_.vec2.Vec2us
+import glm_.vec3.Vec3
+import glm_.vec4.Vec4
+import glm_.vec4.Vec4ub
 import org.lwjgl.opengl.GL11
-import glm.glm
+import glm_.glm
 
 /**
  * Created by GBarbieri on 29.03.2017.

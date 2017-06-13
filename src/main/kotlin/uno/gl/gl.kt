@@ -5,10 +5,10 @@ import com.jogamp.opengl.GL
 import com.jogamp.opengl.GL.*
 import com.jogamp.opengl.GL3
 import com.jogamp.opengl.GLException
-import glm.vec2.Vec2
-import glm.vec2.Vec2i
-import glm.vec4.Vec4
-import glm.vec4.Vec4i
+import glm_.vec2.Vec2
+import glm_.vec2.Vec2i
+import glm_.vec4.Vec4
+import glm_.vec4.Vec4i
 import org.lwjgl.opengl.GL11.glGetFloatv
 import org.lwjgl.opengl.GL11.glGetIntegerv
 import uno.gln.vec2Buffer

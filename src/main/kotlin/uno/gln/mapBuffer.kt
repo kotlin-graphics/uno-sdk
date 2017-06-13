@@ -1,6 +1,6 @@
 package uno.gln
 
-import glm.L
+import glm_.L
 import org.lwjgl.opengl.GL15
 import org.lwjgl.opengl.GL30
 import org.lwjgl.opengl.GL45

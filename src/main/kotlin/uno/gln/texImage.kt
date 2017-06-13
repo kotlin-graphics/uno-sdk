@@ -4,9 +4,9 @@ import com.jogamp.opengl.GL2GL3.GL_TEXTURE_1D
 import gli.Texture2d
 import gli.TextureCube
 import gli.gl
-import glm.vec1.Vec1i
-import glm.vec2.Vec2i
-import glm.vec3.Vec3i
+import glm_.vec1.Vec1i
+import glm_.vec2.Vec2i
+import glm_.vec3.Vec3i
 import org.lwjgl.opengl.GL11
 import org.lwjgl.opengl.GL11.GL_TEXTURE_2D
 import org.lwjgl.opengl.GL12

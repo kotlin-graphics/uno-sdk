@@ -3,12 +3,12 @@
 
 package uno.glm
 
-import glm.glm
-import glm.rad
-import glm.mat4x4.Mat4
-import glm.vec2.Vec2i
-import glm.vec3.Vec3
-import glm.vec4.Vec4
+import glm_.glm
+import glm_.rad
+import glm_.mat4x4.Mat4
+import glm_.vec2.Vec2i
+import glm_.vec3.Vec3
+import glm_.vec4.Vec4
 import java.util.*
 
 /**
