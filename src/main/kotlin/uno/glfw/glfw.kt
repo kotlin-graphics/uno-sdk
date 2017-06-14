@@ -29,7 +29,7 @@ object glfw {
     val videoMode get() = glfwGetVideoMode(primaryMonitor)
 
     var start = System.nanoTime()
-    val time get() = (System.nanoTime() - start) / 1e9f
+    val time get() = (System.nanoTime() - start) / 1e9
 
     fun videoMode(monitor: Long) = glfwGetVideoMode(monitor)
 
