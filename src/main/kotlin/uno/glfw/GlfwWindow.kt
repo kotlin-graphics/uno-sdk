@@ -202,4 +202,6 @@ class GlfwWindow(width: Int, height: Int, title: String) {
 
     fun pressed(key: Int) = glfwGetKey(handle, key) == GLFW_PRESS
     fun released(key: Int) = glfwGetKey(handle, key) == GLFW_PRESS
+
+    fun mouseButton(button: Int) = glfwGetMouseButton(handle, button)
 }
