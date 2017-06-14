@@ -3,6 +3,7 @@ package uno.glfw
 import glm_.bool
 import glm_.f
 import glm_.i
+import glm_.vec2.Vec2d
 import glm_.vec2.Vec2i
 import glm_.vec4.Vec4i
 import org.lwjgl.glfw.Callbacks
@@ -12,6 +13,7 @@ import org.lwjgl.glfw.GLFWFramebufferSizeCallbackI
 import org.lwjgl.glfw.GLFWScrollCallbackI
 import org.lwjgl.system.MemoryUtil
 import uno.buffer.destroyBuffers
+import uno.buffer.doubleBufferBig
 import uno.buffer.intBufferBig
 import uno.glfw.glfw
 
@@ -28,6 +30,8 @@ class GlfwWindow(width: Int, height: Int, title: String) {
     private val y = intBufferBig(1)
     private val z = intBufferBig(1)
     private val w = intBufferBig(1)
+    private val xD = doubleBufferBig(1)
+    private val yD = doubleBufferBig(1)
 
     val handle = glfwCreateWindow(width, height, title, 0L, 0L)
 
@@ -114,7 +118,7 @@ class GlfwWindow(width: Int, height: Int, title: String) {
 
     fun destroy() {
 
-        destroyBuffers(x, y)
+        destroyBuffers(x, y, z, w, xD, yD)
 
         // Free the window callbacks and destroy the window
         Callbacks.glfwFreeCallbacks(handle)
@@ -140,6 +144,14 @@ class GlfwWindow(width: Int, height: Int, title: String) {
         override fun invoke(window: Long, width: Int, height: Int) = framebufferSizeCallback!!.invoke(width, height)
     }
 
+    var cursorPos = Vec2d()
+        get() {
+            glfwGetCursorPos(handle, xD, yD)
+            return field.put(xD[0], yD[0])
+        }
+        set(value) {
+            field put value
+        }
 
     var cursorPosCallback: ((Double, Double) -> Unit)? = null
         set(value) {
