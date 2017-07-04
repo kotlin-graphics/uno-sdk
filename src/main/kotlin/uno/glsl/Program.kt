@@ -24,6 +24,8 @@ open class Program {
     @JvmField val name: Int
     val uniforms = HashMap<String, Int>()
 
+    constructor(gl: GL3, shadersSrc: String) : this(gl, "", shadersSrc, shadersSrc)
+
     constructor(gl: GL3, shadersRoot: String, shadersSrc: String) : this(gl, shadersRoot, shadersSrc, shadersSrc)
 
     constructor(
