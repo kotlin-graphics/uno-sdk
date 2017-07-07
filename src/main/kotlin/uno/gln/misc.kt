@@ -1,12 +1,11 @@
 package uno.gln
 
-import glm_.set
 import glm_.vec2.Vec2i
-import glm_.vec4.Vec4
+import glm_.vec4.Vec4i
 import org.lwjgl.opengl.GL11
+import org.lwjgl.opengl.GL11.glScissor
 import org.lwjgl.opengl.GL11.glViewport
 import org.lwjgl.opengl.GL30.glBlitFramebuffer
-import org.lwjgl.opengl.GL30.glClearBufferfv
 import org.lwjgl.opengl.GL41
 import uno.buffer.doubleBufferBig
 import uno.buffer.floatBufferBig
@@ -20,6 +19,10 @@ import uno.buffer.intBufferBig
 
 
 fun glViewport(size: Vec2i) = glViewport(0, 0, size.x, size.y)
+fun glViewport(viewport: Vec4i) = glViewport(viewport.x, viewport.y, viewport.z, viewport.w)
+
+fun glScissor(size: Vec2i) = glScissor(0, 0, size.x, size.y)
+fun glScissor(scissor: Vec4i) = glScissor(scissor.x, scissor.y, scissor.z, scissor.w)
 
 fun glBlitFramebuffer(size: Vec2i) = glBlitFramebuffer(
         0, 0, size.x, size.y,
