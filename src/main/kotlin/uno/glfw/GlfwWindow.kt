@@ -241,4 +241,9 @@ class GlfwWindow(width: Int, height: Int, title: String) {
     fun released(key: Int) = glfwGetKey(handle, key) == GLFW_PRESS
 
     fun mouseButton(button: Int) = glfwGetMouseButton(handle, button)
+
+
+    inline fun loop(block: () -> Unit) {
+        while (open) block()
+    }
 }
