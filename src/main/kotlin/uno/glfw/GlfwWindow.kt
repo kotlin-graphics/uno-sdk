@@ -180,7 +180,7 @@ class GlfwWindow(width: Int, height: Int, title: String) {
     }
 
 
-    var mouseButtonCallback: ((Long, Int, Int, Int) -> Unit)? = null
+    var mouseButtonCallback: ((Int, Int, Int) -> Unit)? = null
         set(value) {
             if (value == null)
                 glfwSetMouseButtonCallback(handle, null)?.free()
@@ -190,10 +190,10 @@ class GlfwWindow(width: Int, height: Int, title: String) {
     private val mouseButtonListener = MouseButtonListener()
 
     inner class MouseButtonListener : GLFWMouseButtonCallbackI {
-        override fun invoke(window: Long, button: Int, action: Int, mods: Int) = mouseButtonCallback!!.invoke(window, button, action, mods)
+        override fun invoke(window: Long, button: Int, action: Int, mods: Int) = mouseButtonCallback!!.invoke(button, action, mods)
     }
 
-    var keyCallback: ((Long, Int, Int, Int, Int) -> Unit)? = null
+    var keyCallback: ((Int, Int, Int, Int) -> Unit)? = null
         set(value) {
             if (value == null)
                 glfwSetKeyCallback(handle, null)?.free()
@@ -203,10 +203,10 @@ class GlfwWindow(width: Int, height: Int, title: String) {
     private val keyListener = KeyListener()
 
     inner class KeyListener : GLFWKeyCallbackI {
-        override fun invoke(window: Long, key: Int, scancode: Int, action: Int, mods: Int) = keyCallback!!.invoke(window, key, scancode, action, mods)
+        override fun invoke(window: Long, key: Int, scancode: Int, action: Int, mods: Int) = keyCallback!!.invoke(key, scancode, action, mods)
     }
 
-    var charCallback: ((Long, Int) -> Unit)? = null
+    var charCallback: ((Int) -> Unit)? = null
         set(value) {
             if (value == null)
                 glfwSetCharCallback(handle, null)?.free()
@@ -216,7 +216,7 @@ class GlfwWindow(width: Int, height: Int, title: String) {
     private val charListener = CharListener()
 
     inner class CharListener : GLFWCharCallbackI {
-        override fun invoke(window: Long, codepoint: Int) = charCallback!!.invoke(window, codepoint)
+        override fun invoke(window: Long, codepoint: Int) = charCallback!!.invoke(codepoint)
     }
 
 
