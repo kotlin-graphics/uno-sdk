@@ -28,8 +28,8 @@ dependencies {
 
     testCompile 'com.github.elect86:kotlintest:43281b7e1b'
 
-    compile 'com.github.kotlin-graphics:gli:e8880448dc4876a188af37cf25efba7e8f24dbfe'
-    compile 'com.github.kotlin-graphics:glm:427b1bde3f0604b9bcad27c42ef6b395febfcd92'
+    compile 'com.github.kotlin-graphics:gli:bd49d67095e1aad616fa3f6db67265751b3dc04d'
+    compile 'com.github.kotlin-graphics:glm:7a2f491507a96042257ff59fd29961a65e32e748'
 
 
     ext.jogl = "2.3.2"

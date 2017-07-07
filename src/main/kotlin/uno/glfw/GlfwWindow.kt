@@ -6,11 +6,8 @@ import glm_.i
 import glm_.vec2.Vec2d
 import glm_.vec2.Vec2i
 import glm_.vec4.Vec4i
-import org.lwjgl.glfw.Callbacks
+import org.lwjgl.glfw.*
 import org.lwjgl.glfw.GLFW.*
-import org.lwjgl.glfw.GLFWCursorPosCallbackI
-import org.lwjgl.glfw.GLFWFramebufferSizeCallbackI
-import org.lwjgl.glfw.GLFWScrollCallbackI
 import org.lwjgl.system.MemoryUtil
 import uno.buffer.destroyBuffers
 import uno.buffer.doubleBufferBig
@@ -180,6 +177,46 @@ class GlfwWindow(width: Int, height: Int, title: String) {
 
     inner class ScrollListener : GLFWScrollCallbackI {
         override fun invoke(window: Long, xOffset: Double, yOffset: Double) = scrollCallback!!.invoke(xOffset, yOffset)
+    }
+
+
+    var mouseButtonCallback: ((Long, Int, Int, Int) -> Unit)? = null
+        set(value) {
+            if (value == null)
+                glfwSetMouseButtonCallback(handle, null)?.free()
+            else
+                glfwSetMouseButtonCallback(handle, mouseButtonListener)?.free()
+        }
+    private val mouseButtonListener = MouseButtonListener()
+
+    inner class MouseButtonListener : GLFWMouseButtonCallbackI {
+        override fun invoke(window: Long, button: Int, action: Int, mods: Int) = mouseButtonCallback!!.invoke(window, button, action, mods)
+    }
+
+    var keyCallback: ((Long, Int, Int, Int, Int) -> Unit)? = null
+        set(value) {
+            if (value == null)
+                glfwSetKeyCallback(handle, null)?.free()
+            else
+                glfwSetKeyCallback(handle, keyListener)?.free()
+        }
+    private val keyListener = KeyListener()
+
+    inner class KeyListener : GLFWKeyCallbackI {
+        override fun invoke(window: Long, key: Int, scancode: Int, action: Int, mods: Int) = keyCallback!!.invoke(window, key, scancode, action, mods)
+    }
+
+    var charCallback: ((Long, Int) -> Unit)? = null
+        set(value) {
+            if (value == null)
+                glfwSetCharCallback(handle, null)?.free()
+            else
+                glfwSetCharCallback(handle, charListener)?.free()
+        }
+    private val charListener = CharListener()
+
+    inner class CharListener : GLFWCharCallbackI {
+        override fun invoke(window: Long, codepoint: Int) = charCallback!!.invoke(window, codepoint)
     }
 
 
