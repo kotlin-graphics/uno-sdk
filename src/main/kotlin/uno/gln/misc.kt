@@ -1,6 +1,8 @@
 package uno.gln
 
 import glm_.vec2.Vec2i
+import glm_.vec3.Vec3
+import glm_.vec4.Vec4
 import glm_.vec4.Vec4i
 import org.lwjgl.opengl.GL11
 import org.lwjgl.opengl.GL11.glScissor
@@ -16,9 +18,8 @@ import uno.buffer.intBufferBig
  */
 
 
-
-
 fun glViewport(size: Vec2i) = glViewport(0, 0, size.x, size.y)
+
 fun glViewport(viewport: Vec4i) = glViewport(viewport.x, viewport.y, viewport.z, viewport.w)
 
 fun glScissor(size: Vec2i) = glScissor(0, 0, size.x, size.y)
@@ -31,6 +32,8 @@ fun glBlitFramebuffer(size: Vec2i) = glBlitFramebuffer(
 
 
 fun glClearColor() = GL11.glClearColor(0f, 0f, 0f, 1f)
+fun glClearColor(color: Vec3) = GL11.glClearColor(color.x, color.y, color.z, 1f)
+fun glClearColor(color: Vec4) = GL11.glClearColor(color.x, color.y, color.z, color.w)
 fun glClearDepthf() = GL41.glClearDepthf(1f)
 
 
