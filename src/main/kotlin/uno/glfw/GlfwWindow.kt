@@ -186,6 +186,7 @@ class GlfwWindow(width: Int, height: Int, title: String) {
                 glfwSetMouseButtonCallback(handle, null)?.free()
             else
                 glfwSetMouseButtonCallback(handle, mouseButtonListener)?.free()
+            field = value
         }
     private val mouseButtonListener = MouseButtonListener()
 
@@ -199,6 +200,7 @@ class GlfwWindow(width: Int, height: Int, title: String) {
                 glfwSetKeyCallback(handle, null)?.free()
             else
                 glfwSetKeyCallback(handle, keyListener)?.free()
+            field = value
         }
     private val keyListener = KeyListener()
 
@@ -212,6 +214,7 @@ class GlfwWindow(width: Int, height: Int, title: String) {
                 glfwSetCharCallback(handle, null)?.free()
             else
                 glfwSetCharCallback(handle, charListener)?.free()
+            field = value
         }
     private val charListener = CharListener()
 
