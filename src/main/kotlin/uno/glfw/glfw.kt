@@ -41,7 +41,7 @@ object glfw {
 
     fun terminate() {
         glfwTerminate()
-        glfwSetErrorCallback(null).free()
+        glfwSetErrorCallback(null)?.free()
     }
 
     fun pollEvents() = glfwPollEvents()

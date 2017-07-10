@@ -5,6 +5,7 @@ import glm_.vec2.Vec2
 import org.lwjgl.opengl.EXTTextureCompressionLATC.*
 import org.lwjgl.opengl.EXTTextureCompressionS3TC.*
 import org.lwjgl.opengl.EXTTextureFilterAnisotropic.GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT
+import org.lwjgl.opengl.GL
 import org.lwjgl.opengl.GL11.*
 import org.lwjgl.opengl.GL12.*
 import org.lwjgl.opengl.GL13.*
@@ -27,10 +28,36 @@ import org.lwjgl.opengl.NVDeepTexture3D.GL_MAX_DEEP_3D_TEXTURE_WIDTH_HEIGHT_NV
 import uno.buffer.destroy
 import uno.buffer.intBufferBig
 import uno.gl.*
+import uno.glfw.GlfwWindow
+import uno.glfw.glfw
+import java.io.File
+import kotlin.reflect.jvm.kotlinProperty
 
 /**
  * Created by GBarbieri on 10.03.2017.
  */
+
+fun main(args: Array<String>) {
+
+    with(glfw) {
+        init()
+        windowHint {
+            context.version = "4.5"
+            profile = "core"
+        }
+    }
+
+    with(GlfwWindow(1280, 720, "test")) {
+        makeContextCurrent()
+        show()
+    }
+
+    GL.createCapabilities()
+
+    val caps = Caps(Caps.Profile.CORE)
+
+    caps.version.write()
+}
 
 class Caps(profile: Profile) {
 
@@ -41,18 +68,18 @@ class Caps(profile: Profile) {
 
     inner class Version(val profile: Profile) {
 
-        @JvmField val MINOR_VERSION = glGetInteger(GL_MINOR_VERSION)
-        @JvmField val MAJOR_VERSION = glGetInteger(GL_MAJOR_VERSION)
-        //        @JvmField val CONTEXT_FLAGS =
+        @JvmField var MINOR_VERSION = glGetInteger(GL_MINOR_VERSION)
+        val MAJOR_VERSION = glGetInteger(GL_MAJOR_VERSION)
+        //         val CONTEXT_FLAGS =
 //                if (check(4, 3) || glisExtensionAvailable("GL_KHR_debug"))
 //                    glGetInteger(GL_CONTEXT_FLAGS)
 //                else 0
-        @JvmField val NUM_EXTENSIONS = glGetInteger(GL_NUM_EXTENSIONS)
-        @JvmField val RENDERER = glGetString(GL_RENDERER)
-        @JvmField val VENDOR = glGetString(GL_VENDOR)
-        @JvmField val VERSION = glGetString(GL_VERSION)
-        @JvmField val SHADING_LANGUAGE_VERSION = glGetString(GL_SHADING_LANGUAGE_VERSION)
-        @JvmField val NUM_SHADING_LANGUAGE_VERSIONS =
+        val NUM_EXTENSIONS = glGetInteger(GL_NUM_EXTENSIONS)
+        val RENDERER = glGetString(GL_RENDERER)
+        val VENDOR = glGetString(GL_VENDOR)
+        val VERSION = glGetString(GL_VERSION)
+        val SHADING_LANGUAGE_VERSION = glGetString(GL_SHADING_LANGUAGE_VERSION)
+        val NUM_SHADING_LANGUAGE_VERSIONS =
                 if (check(4, 3))
                     glGetInteger(GL_NUM_SHADING_LANGUAGE_VERSIONS)
                 else 0
@@ -60,38 +87,45 @@ class Caps(profile: Profile) {
 
         private val glslVersions by lazy { (0 until NUM_SHADING_LANGUAGE_VERSIONS).map { glGetStringi(GL_SHADING_LANGUAGE_VERSION, it) } }
 
-        @JvmField val glsl100 = has("100")
-        @JvmField val glsl110 = has("110")
-        @JvmField val glsl120 = has("120")
-        @JvmField val glsl130 = has("130")
-        @JvmField val glsl140 = has("140")
-        @JvmField val glsl150Core = has("150 core")
-        @JvmField val glsl150Comp = has("150 compatibility")
-        @JvmField val glsl300ES = has("300 es")
-        @JvmField val glsl330Core = has("330 core")
-        @JvmField val glsl330Comp = has("330 compatibility")
-        @JvmField val glsl400Core = has("400 core")
-        @JvmField val glsl400Comp = has("400 compatibility")
-        @JvmField val glsl410Core = has("410 core")
-        @JvmField val glsl410Comp = has("410 compatibility")
-        @JvmField val glsl420Core = has("420 core")
-        @JvmField val glsl420Comp = has("420 compatibility")
-        @JvmField val glsl430Core = has("430 core")
-        @JvmField val glsl430Comp = has("430 compatibility")
-        @JvmField val glsl440Core = has("440 core")
-        @JvmField val glsl440Comp = has("440 compatibility")
-        @JvmField val glsl450Core = has("450 core")
-        @JvmField val glsl450Comp = has("450 compatibility")
+        val glsl100 = has("100")
+        val glsl110 = has("110")
+        val glsl120 = has("120")
+        val glsl130 = has("130")
+        val glsl140 = has("140")
+        val glsl150Core = has("150 core")
+        val glsl150Comp = has("150 compatibility")
+        val glsl300ES = has("300 es")
+        val glsl330Core = has("330 core")
+        val glsl330Comp = has("330 compatibility")
+        val glsl400Core = has("400 core")
+        val glsl400Comp = has("400 compatibility")
+        val glsl410Core = has("410 core")
+        val glsl410Comp = has("410 compatibility")
+        val glsl420Core = has("420 core")
+        val glsl420Comp = has("420 compatibility")
+        val glsl430Core = has("430 core")
+        val glsl430Comp = has("430 compatibility")
+        val glsl440Core = has("440 core")
+        val glsl440Comp = has("440 compatibility")
+        val glsl450Core = has("450 core")
+        val glsl450Comp = has("450 compatibility")
 
         fun check(majorVersionRequire: Int, minorVersionRequire: Int) =
                 MAJOR_VERSION * 100 + MINOR_VERSION * 10 >= (majorVersionRequire * 100 + minorVersionRequire * 10)
 
         private fun has(s: String) = glslVersions.contains(s)
+
+        fun write(file: File? = null) {
+//            file.printWriter().use { out -> out.pri }
+            this::class.java.fields.forEach {
+                println(it.isAccessible)
+                println(it.getInt(it)) }
+        }
     }
 
     inner class Extensions {
 
-        val list: List<String> by lazy { glGetString(GL_EXTENSIONS).split("\\s+".toRegex()) }
+        val list by lazy { (0..version.NUM_EXTENSIONS).map { glGetStringi(GL_EXTENSIONS, it) } }
 
         @JvmField val ARB_multitexture = has("GL_ARB_multitexture")
         @JvmField val ARB_transpose_matrix = has("GL_ARB_transpose_matrix")
