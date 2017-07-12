@@ -31,7 +31,12 @@ import uno.gl.*
 import uno.glfw.GlfwWindow
 import uno.glfw.glfw
 import java.io.File
-import kotlin.reflect.jvm.kotlinProperty
+import java.io.PrintWriter
+import java.lang.reflect.Field
+import kotlin.properties.Delegates
+import kotlin.reflect.KVisibility
+import kotlin.reflect.full.memberProperties
+import kotlin.reflect.full.starProjectedType
 
 /**
  * Created by GBarbieri on 10.03.2017.
@@ -39,10 +44,14 @@ import kotlin.reflect.jvm.kotlinProperty
 
 fun main(args: Array<String>) {
 
+    var args = args
+    if(false)
+        args = arrayOf("4.5", "D:\\Desktop\\report.txt")
+
     with(glfw) {
         init()
         windowHint {
-            context.version = "4.5"
+            context.version = args[0]
             profile = "core"
         }
     }
@@ -56,7 +65,21 @@ fun main(args: Array<String>) {
 
     val caps = Caps(Caps.Profile.CORE)
 
-    caps.version.write()
+    val report = File(args[1]).printWriter().use {
+        val `_` = "--------------------------------------------------"
+        it.println("$`_`version$`_`")
+        caps.version.write(it)
+        it.println("$`_`extensions$`_`")
+        caps.extensions.write(it)
+        it.println("$`_`debug$`_`")
+        caps.debug.write(it)
+        it.println("$`_`limits$`_`")
+        caps.limits.write(it)
+        it.println("$`_`values$`_`")
+        caps.values.write(it)
+        it.println("$`_`formats$`_`")
+        caps.formats.write(it)
+    }
 }
 
 class Caps(profile: Profile) {
@@ -65,21 +88,23 @@ class Caps(profile: Profile) {
     @JvmField val extensions = Extensions()
     @JvmField val debug = Debug()
     @JvmField val limits = Limits()
+    @JvmField val values = Values()
+    @JvmField val formats = Formats()
 
     inner class Version(val profile: Profile) {
 
-        @JvmField var MINOR_VERSION = glGetInteger(GL_MINOR_VERSION)
-        val MAJOR_VERSION = glGetInteger(GL_MAJOR_VERSION)
+        @JvmField val MINOR_VERSION = glGetInteger(GL_MINOR_VERSION)
+        @JvmField val MAJOR_VERSION = glGetInteger(GL_MAJOR_VERSION)
         //         val CONTEXT_FLAGS =
 //                if (check(4, 3) || glisExtensionAvailable("GL_KHR_debug"))
 //                    glGetInteger(GL_CONTEXT_FLAGS)
 //                else 0
-        val NUM_EXTENSIONS = glGetInteger(GL_NUM_EXTENSIONS)
-        val RENDERER = glGetString(GL_RENDERER)
-        val VENDOR = glGetString(GL_VENDOR)
-        val VERSION = glGetString(GL_VERSION)
-        val SHADING_LANGUAGE_VERSION = glGetString(GL_SHADING_LANGUAGE_VERSION)
-        val NUM_SHADING_LANGUAGE_VERSIONS =
+        @JvmField val NUM_EXTENSIONS = glGetInteger(GL_NUM_EXTENSIONS)
+        @JvmField val RENDERER = glGetString(GL_RENDERER)
+        @JvmField val VENDOR = glGetString(GL_VENDOR)
+        @JvmField val VERSION = glGetString(GL_VERSION)
+        @JvmField val SHADING_LANGUAGE_VERSION = glGetString(GL_SHADING_LANGUAGE_VERSION)
+        @JvmField val NUM_SHADING_LANGUAGE_VERSIONS =
                 if (check(4, 3))
                     glGetInteger(GL_NUM_SHADING_LANGUAGE_VERSIONS)
                 else 0
@@ -87,45 +112,42 @@ class Caps(profile: Profile) {
 
         private val glslVersions by lazy { (0 until NUM_SHADING_LANGUAGE_VERSIONS).map { glGetStringi(GL_SHADING_LANGUAGE_VERSION, it) } }
 
-        val glsl100 = has("100")
-        val glsl110 = has("110")
-        val glsl120 = has("120")
-        val glsl130 = has("130")
-        val glsl140 = has("140")
-        val glsl150Core = has("150 core")
-        val glsl150Comp = has("150 compatibility")
-        val glsl300ES = has("300 es")
-        val glsl330Core = has("330 core")
-        val glsl330Comp = has("330 compatibility")
-        val glsl400Core = has("400 core")
-        val glsl400Comp = has("400 compatibility")
-        val glsl410Core = has("410 core")
-        val glsl410Comp = has("410 compatibility")
-        val glsl420Core = has("420 core")
-        val glsl420Comp = has("420 compatibility")
-        val glsl430Core = has("430 core")
-        val glsl430Comp = has("430 compatibility")
-        val glsl440Core = has("440 core")
-        val glsl440Comp = has("440 compatibility")
-        val glsl450Core = has("450 core")
-        val glsl450Comp = has("450 compatibility")
+        @JvmField val glsl100 = has("100")
+        @JvmField val glsl110 = has("110")
+        @JvmField val glsl120 = has("120")
+        @JvmField val glsl130 = has("130")
+        @JvmField val glsl140 = has("140")
+        @JvmField val glsl150Core = has("150 core")
+        @JvmField val glsl150Comp = has("150 compatibility")
+        @JvmField val glsl300ES = has("300 es")
+        @JvmField val glsl330Core = has("330 core")
+        @JvmField val glsl330Comp = has("330 compatibility")
+        @JvmField val glsl400Core = has("400 core")
+        @JvmField val glsl400Comp = has("400 compatibility")
+        @JvmField val glsl410Core = has("410 core")
+        @JvmField val glsl410Comp = has("410 compatibility")
+        @JvmField val glsl420Core = has("420 core")
+        @JvmField val glsl420Comp = has("420 compatibility")
+        @JvmField val glsl430Core = has("430 core")
+        @JvmField val glsl430Comp = has("430 compatibility")
+        @JvmField val glsl440Core = has("440 core")
+        @JvmField val glsl440Comp = has("440 compatibility")
+        @JvmField val glsl450Core = has("450 core")
+        @JvmField val glsl450Comp = has("450 compatibility")
 
         fun check(majorVersionRequire: Int, minorVersionRequire: Int) =
                 MAJOR_VERSION * 100 + MINOR_VERSION * 10 >= (majorVersionRequire * 100 + minorVersionRequire * 10)
 
         private fun has(s: String) = glslVersions.contains(s)
 
-        fun write(file: File? = null) {
-//            file.printWriter().use { out -> out.pri }
-            this::class.java.fields.forEach {
-                println(it.isAccessible)
-                println(it.getInt(it)) }
+        fun write(w: PrintWriter) = this::class.memberProperties.filter { it.visibility == KVisibility.PUBLIC }.map {
+            w.println("${it.name} = ${it.getter.call(this)}")
         }
     }
 
     inner class Extensions {
 
-        val list by lazy { (0..version.NUM_EXTENSIONS).map { glGetStringi(GL_EXTENSIONS, it) } }
+        private val list by lazy { (0..version.NUM_EXTENSIONS).map { glGetStringi(GL_EXTENSIONS, it) } }
 
         @JvmField val ARB_multitexture = has("GL_ARB_multitexture")
         @JvmField val ARB_transpose_matrix = has("GL_ARB_transpose_matrix")
@@ -336,6 +358,10 @@ class Caps(profile: Profile) {
         @JvmField val INTEL_performance_query = has("GL_INTEL_performance_query")
 
         private fun has(s: String) = list.contains(s)
+
+        fun write(w: PrintWriter) = this::class.memberProperties.filter { it.visibility == KVisibility.PUBLIC }.map {
+            w.println("${it.name} = ${it.getter.call(this)}")
+        }
     }
 
     inner class Debug {
@@ -343,6 +369,10 @@ class Caps(profile: Profile) {
         @JvmField val MAX_DEBUG_GROUP_STACK_DEPTH = glGetInteger(GL_MAX_DEBUG_GROUP_STACK_DEPTH)
         @JvmField val MAX_LABEL_LENGTH = glGetInteger(GL_MAX_LABEL_LENGTH)
         @JvmField val MAX_SERVER_WAIT_TIMEOUT = glGetInteger(GL_MAX_SERVER_WAIT_TIMEOUT)
+
+        fun write(w: PrintWriter) = this::class.memberProperties.filter { it.visibility == KVisibility.PUBLIC }.map {
+            w.println("${it.name} = ${it.getter.call(this)}")
+        }
     }
 
     inner class Limits {
@@ -427,7 +457,7 @@ class Caps(profile: Profile) {
         @JvmField var MAX_DEPTH_TEXTURE_SAMPLES = 0
         @JvmField var MAX_INTEGER_SAMPLES = 0
         @JvmField var MAX_TEXTURE_BUFFER_SIZE = 0
-        val NUM_COMPRESSED_TEXTURE_FORMATS = glGetInteger(GL_NUM_COMPRESSED_TEXTURE_FORMATS)
+        @JvmField val NUM_COMPRESSED_TEXTURE_FORMATS = glGetInteger(GL_NUM_COMPRESSED_TEXTURE_FORMATS)
         @JvmField var MAX_TEXTURE_MAX_ANISOTROPY_EXT = 0
 
         @JvmField var MAX_PATCH_VERTICES = 0
@@ -648,6 +678,10 @@ class Caps(profile: Profile) {
             if (check(4, 3) || extensions.ARB_explicit_uniform_location)
                 MAX_UNIFORM_LOCATIONS = glGetInteger(GL_MAX_UNIFORM_LOCATIONS)
         }
+
+        fun write(w: PrintWriter) = this::class.memberProperties.filter { it.visibility == KVisibility.PUBLIC }.map {
+            w.println("${it.name} = ${it.getter.call(this)}")
+        }
     }
 
     inner class Values {
@@ -753,11 +787,19 @@ class Caps(profile: Profile) {
             if (check(4, 3) || extensions.ARB_texture_buffer_object)
                 TEXTURE_BUFFER_OFFSET_ALIGNMENT = glGetInteger(GL_TEXTURE_BUFFER_OFFSET_ALIGNMENT)
         }
+
+        fun write(w: PrintWriter) = this::class.memberProperties.filter { it.visibility == KVisibility.PUBLIC }.map {
+            if (it.returnType == Vec2::class.starProjectedType) {
+                val v = it.getter.call(this) as Vec2
+                w.println("${it.name} = (${v.x}, ${v.y})")
+            } else
+                w.println("${it.name} = ${it.getter.call(this)}")
+        }
     }
 
     inner class Formats {
 
-        val compressed by lazy {
+        private val compressed by lazy {
             val buffer = intBufferBig(limits.NUM_COMPRESSED_TEXTURE_FORMATS)
             glGetIntegerv(GL_COMPRESSED_TEXTURE_FORMATS, buffer)
             val formats = (0 until buffer.capacity()).map { buffer[it] }
@@ -765,85 +807,89 @@ class Caps(profile: Profile) {
             formats
         }
 
-        val COMPRESSED_RGB_S3TC_DXT1_EXT = has(GL_COMPRESSED_RGB_S3TC_DXT1_EXT)
-        val COMPRESSED_RGBA_S3TC_DXT1_EXT = has(GL_COMPRESSED_RGBA_S3TC_DXT1_EXT)
-        val COMPRESSED_RGBA_S3TC_DXT3_EXT = has(GL_COMPRESSED_RGBA_S3TC_DXT3_EXT)
-        val COMPRESSED_RGBA_S3TC_DXT5_EXT = has(GL_COMPRESSED_RGBA_S3TC_DXT5_EXT)
-        val COMPRESSED_SRGB_S3TC_DXT1_EXT = has(GL_COMPRESSED_SRGB_S3TC_DXT1_EXT)
-        val COMPRESSED_SRGB_ALPHA_S3TC_DXT1_EXT = has(GL_COMPRESSED_SRGB_ALPHA_S3TC_DXT1_EXT)
-        val COMPRESSED_SRGB_ALPHA_S3TC_DXT3_EXT = has(GL_COMPRESSED_SRGB_ALPHA_S3TC_DXT3_EXT)
-        val COMPRESSED_SRGB_ALPHA_S3TC_DXT5_EXT = has(GL_COMPRESSED_SRGB_ALPHA_S3TC_DXT5_EXT)
+        @JvmField val COMPRESSED_RGB_S3TC_DXT1_EXT = has(GL_COMPRESSED_RGB_S3TC_DXT1_EXT)
+        @JvmField val COMPRESSED_RGBA_S3TC_DXT1_EXT = has(GL_COMPRESSED_RGBA_S3TC_DXT1_EXT)
+        @JvmField val COMPRESSED_RGBA_S3TC_DXT3_EXT = has(GL_COMPRESSED_RGBA_S3TC_DXT3_EXT)
+        @JvmField val COMPRESSED_RGBA_S3TC_DXT5_EXT = has(GL_COMPRESSED_RGBA_S3TC_DXT5_EXT)
+        @JvmField val COMPRESSED_SRGB_S3TC_DXT1_EXT = has(GL_COMPRESSED_SRGB_S3TC_DXT1_EXT)
+        @JvmField val COMPRESSED_SRGB_ALPHA_S3TC_DXT1_EXT = has(GL_COMPRESSED_SRGB_ALPHA_S3TC_DXT1_EXT)
+        @JvmField val COMPRESSED_SRGB_ALPHA_S3TC_DXT3_EXT = has(GL_COMPRESSED_SRGB_ALPHA_S3TC_DXT3_EXT)
+        @JvmField val COMPRESSED_SRGB_ALPHA_S3TC_DXT5_EXT = has(GL_COMPRESSED_SRGB_ALPHA_S3TC_DXT5_EXT)
 
-        val COMPRESSED_RED_RGTC1 = has(GL_COMPRESSED_RED_RGTC1)
-        val COMPRESSED_SIGNED_RED_RGTC1 = has(GL_COMPRESSED_SIGNED_RED_RGTC1)
-        val COMPRESSED_RG_RGTC2 = has(GL_COMPRESSED_RG_RGTC2)
-        val COMPRESSED_SIGNED_RG_RGTC2 = has(GL_COMPRESSED_SIGNED_RG_RGTC2)
-        val COMPRESSED_RGBA_BPTC_UNORM = has(GL_COMPRESSED_RGBA_BPTC_UNORM)
-        val COMPRESSED_SRGB_ALPHA_BPTC_UNORM = has(GL_COMPRESSED_SRGB_ALPHA_BPTC_UNORM)
-        val COMPRESSED_RGB_BPTC_SIGNED_FLOAT = has(GL_COMPRESSED_RGB_BPTC_SIGNED_FLOAT)
-        val COMPRESSED_RGB_BPTC_UNSIGNED_FLOAT = has(GL_COMPRESSED_RGB_BPTC_UNSIGNED_FLOAT)
-        val COMPRESSED_R11_EAC = has(GL_COMPRESSED_R11_EAC)
-        val COMPRESSED_SIGNED_R11_EAC = has(GL_COMPRESSED_SIGNED_R11_EAC)
-        val COMPRESSED_RG11_EAC = has(GL_COMPRESSED_RG11_EAC)
-        val COMPRESSED_SIGNED_RG11_EAC = has(GL_COMPRESSED_SIGNED_RG11_EAC)
-        val COMPRESSED_RGB8_ETC2 = has(GL_COMPRESSED_RGB8_ETC2)
-        val COMPRESSED_SRGB8_ETC2 = has(GL_COMPRESSED_SRGB8_ETC2)
-        val COMPRESSED_RGB8_PUNCHTHROUGH_ALPHA1_ETC2 = has(GL_COMPRESSED_RGB8_PUNCHTHROUGH_ALPHA1_ETC2)
-        val COMPRESSED_SRGB8_PUNCHTHROUGH_ALPHA1_ETC2 = has(GL_COMPRESSED_SRGB8_PUNCHTHROUGH_ALPHA1_ETC2)
-        val COMPRESSED_RGBA8_ETC2_EAC = has(GL_COMPRESSED_RGBA8_ETC2_EAC)
-        val COMPRESSED_SRGB8_ALPHA8_ETC2_EAC = has(GL_COMPRESSED_SRGB8_ALPHA8_ETC2_EAC)
+        @JvmField val COMPRESSED_RED_RGTC1 = has(GL_COMPRESSED_RED_RGTC1)
+        @JvmField val COMPRESSED_SIGNED_RED_RGTC1 = has(GL_COMPRESSED_SIGNED_RED_RGTC1)
+        @JvmField val COMPRESSED_RG_RGTC2 = has(GL_COMPRESSED_RG_RGTC2)
+        @JvmField val COMPRESSED_SIGNED_RG_RGTC2 = has(GL_COMPRESSED_SIGNED_RG_RGTC2)
+        @JvmField val COMPRESSED_RGBA_BPTC_UNORM = has(GL_COMPRESSED_RGBA_BPTC_UNORM)
+        @JvmField val COMPRESSED_SRGB_ALPHA_BPTC_UNORM = has(GL_COMPRESSED_SRGB_ALPHA_BPTC_UNORM)
+        @JvmField val COMPRESSED_RGB_BPTC_SIGNED_FLOAT = has(GL_COMPRESSED_RGB_BPTC_SIGNED_FLOAT)
+        @JvmField val COMPRESSED_RGB_BPTC_UNSIGNED_FLOAT = has(GL_COMPRESSED_RGB_BPTC_UNSIGNED_FLOAT)
+        @JvmField val COMPRESSED_R11_EAC = has(GL_COMPRESSED_R11_EAC)
+        @JvmField val COMPRESSED_SIGNED_R11_EAC = has(GL_COMPRESSED_SIGNED_R11_EAC)
+        @JvmField val COMPRESSED_RG11_EAC = has(GL_COMPRESSED_RG11_EAC)
+        @JvmField val COMPRESSED_SIGNED_RG11_EAC = has(GL_COMPRESSED_SIGNED_RG11_EAC)
+        @JvmField val COMPRESSED_RGB8_ETC2 = has(GL_COMPRESSED_RGB8_ETC2)
+        @JvmField val COMPRESSED_SRGB8_ETC2 = has(GL_COMPRESSED_SRGB8_ETC2)
+        @JvmField val COMPRESSED_RGB8_PUNCHTHROUGH_ALPHA1_ETC2 = has(GL_COMPRESSED_RGB8_PUNCHTHROUGH_ALPHA1_ETC2)
+        @JvmField val COMPRESSED_SRGB8_PUNCHTHROUGH_ALPHA1_ETC2 = has(GL_COMPRESSED_SRGB8_PUNCHTHROUGH_ALPHA1_ETC2)
+        @JvmField val COMPRESSED_RGBA8_ETC2_EAC = has(GL_COMPRESSED_RGBA8_ETC2_EAC)
+        @JvmField val COMPRESSED_SRGB8_ALPHA8_ETC2_EAC = has(GL_COMPRESSED_SRGB8_ALPHA8_ETC2_EAC)
 
-        val COMPRESSED_RGBA_ASTC_4x4_KHR = has(GL_COMPRESSED_RGBA_ASTC_4x4_KHR)
-        val COMPRESSED_RGBA_ASTC_5x4_KHR = has(GL_COMPRESSED_RGBA_ASTC_5x4_KHR)
-        val COMPRESSED_RGBA_ASTC_5x5_KHR = has(GL_COMPRESSED_RGBA_ASTC_5x5_KHR)
-        val COMPRESSED_RGBA_ASTC_6x5_KHR = has(GL_COMPRESSED_RGBA_ASTC_6x5_KHR)
-        val COMPRESSED_RGBA_ASTC_6x6_KHR = has(GL_COMPRESSED_RGBA_ASTC_6x6_KHR)
-        val COMPRESSED_RGBA_ASTC_8x5_KHR = has(GL_COMPRESSED_RGBA_ASTC_8x5_KHR)
-        val COMPRESSED_RGBA_ASTC_8x6_KHR = has(GL_COMPRESSED_RGBA_ASTC_8x6_KHR)
-        val COMPRESSED_RGBA_ASTC_8x8_KHR = has(GL_COMPRESSED_RGBA_ASTC_8x8_KHR)
-        val COMPRESSED_RGBA_ASTC_10x5_KHR = has(GL_COMPRESSED_RGBA_ASTC_10x5_KHR)
-        val COMPRESSED_RGBA_ASTC_10x6_KHR = has(GL_COMPRESSED_RGBA_ASTC_10x6_KHR)
-        val COMPRESSED_RGBA_ASTC_10x8_KHR = has(GL_COMPRESSED_RGBA_ASTC_10x8_KHR)
-        val COMPRESSED_RGBA_ASTC_10x10_KHR = has(GL_COMPRESSED_RGBA_ASTC_10x10_KHR)
-        val COMPRESSED_RGBA_ASTC_12x10_KHR = has(GL_COMPRESSED_RGBA_ASTC_12x10_KHR)
-        val COMPRESSED_RGBA_ASTC_12x12_KHR = has(GL_COMPRESSED_RGBA_ASTC_12x12_KHR)
-        val COMPRESSED_SRGB8_ALPHA8_ASTC_4x4_KHR = has(GL_COMPRESSED_SRGB8_ALPHA8_ASTC_4x4_KHR)
-        val COMPRESSED_SRGB8_ALPHA8_ASTC_5x4_KHR = has(GL_COMPRESSED_SRGB8_ALPHA8_ASTC_5x4_KHR)
-        val COMPRESSED_SRGB8_ALPHA8_ASTC_5x5_KHR = has(GL_COMPRESSED_SRGB8_ALPHA8_ASTC_5x5_KHR)
-        val COMPRESSED_SRGB8_ALPHA8_ASTC_6x5_KHR = has(GL_COMPRESSED_SRGB8_ALPHA8_ASTC_6x5_KHR)
-        val COMPRESSED_SRGB8_ALPHA8_ASTC_6x6_KHR = has(GL_COMPRESSED_SRGB8_ALPHA8_ASTC_6x6_KHR)
-        val COMPRESSED_SRGB8_ALPHA8_ASTC_8x5_KHR = has(GL_COMPRESSED_SRGB8_ALPHA8_ASTC_8x5_KHR)
-        val COMPRESSED_SRGB8_ALPHA8_ASTC_8x6_KHR = has(GL_COMPRESSED_SRGB8_ALPHA8_ASTC_8x6_KHR)
-        val COMPRESSED_SRGB8_ALPHA8_ASTC_8x8_KHR = has(GL_COMPRESSED_SRGB8_ALPHA8_ASTC_8x8_KHR)
-        val COMPRESSED_SRGB8_ALPHA8_ASTC_10x5_KHR = has(GL_COMPRESSED_SRGB8_ALPHA8_ASTC_10x5_KHR)
-        val COMPRESSED_SRGB8_ALPHA8_ASTC_10x6_KHR = has(GL_COMPRESSED_SRGB8_ALPHA8_ASTC_10x6_KHR)
-        val COMPRESSED_SRGB8_ALPHA8_ASTC_10x8_KHR = has(GL_COMPRESSED_SRGB8_ALPHA8_ASTC_10x8_KHR)
-        val COMPRESSED_SRGB8_ALPHA8_ASTC_10x10_KHR = has(GL_COMPRESSED_SRGB8_ALPHA8_ASTC_10x10_KHR)
-        val COMPRESSED_SRGB8_ALPHA8_ASTC_12x10_KHR = has(GL_COMPRESSED_SRGB8_ALPHA8_ASTC_12x10_KHR)
-        val COMPRESSED_SRGB8_ALPHA8_ASTC_12x12_KHR = has(GL_COMPRESSED_SRGB8_ALPHA8_ASTC_12x12_KHR)
+        @JvmField val COMPRESSED_RGBA_ASTC_4x4_KHR = has(GL_COMPRESSED_RGBA_ASTC_4x4_KHR)
+        @JvmField val COMPRESSED_RGBA_ASTC_5x4_KHR = has(GL_COMPRESSED_RGBA_ASTC_5x4_KHR)
+        @JvmField val COMPRESSED_RGBA_ASTC_5x5_KHR = has(GL_COMPRESSED_RGBA_ASTC_5x5_KHR)
+        @JvmField val COMPRESSED_RGBA_ASTC_6x5_KHR = has(GL_COMPRESSED_RGBA_ASTC_6x5_KHR)
+        @JvmField val COMPRESSED_RGBA_ASTC_6x6_KHR = has(GL_COMPRESSED_RGBA_ASTC_6x6_KHR)
+        @JvmField val COMPRESSED_RGBA_ASTC_8x5_KHR = has(GL_COMPRESSED_RGBA_ASTC_8x5_KHR)
+        @JvmField val COMPRESSED_RGBA_ASTC_8x6_KHR = has(GL_COMPRESSED_RGBA_ASTC_8x6_KHR)
+        @JvmField val COMPRESSED_RGBA_ASTC_8x8_KHR = has(GL_COMPRESSED_RGBA_ASTC_8x8_KHR)
+        @JvmField val COMPRESSED_RGBA_ASTC_10x5_KHR = has(GL_COMPRESSED_RGBA_ASTC_10x5_KHR)
+        @JvmField val COMPRESSED_RGBA_ASTC_10x6_KHR = has(GL_COMPRESSED_RGBA_ASTC_10x6_KHR)
+        @JvmField val COMPRESSED_RGBA_ASTC_10x8_KHR = has(GL_COMPRESSED_RGBA_ASTC_10x8_KHR)
+        @JvmField val COMPRESSED_RGBA_ASTC_10x10_KHR = has(GL_COMPRESSED_RGBA_ASTC_10x10_KHR)
+        @JvmField val COMPRESSED_RGBA_ASTC_12x10_KHR = has(GL_COMPRESSED_RGBA_ASTC_12x10_KHR)
+        @JvmField val COMPRESSED_RGBA_ASTC_12x12_KHR = has(GL_COMPRESSED_RGBA_ASTC_12x12_KHR)
+        @JvmField val COMPRESSED_SRGB8_ALPHA8_ASTC_4x4_KHR = has(GL_COMPRESSED_SRGB8_ALPHA8_ASTC_4x4_KHR)
+        @JvmField val COMPRESSED_SRGB8_ALPHA8_ASTC_5x4_KHR = has(GL_COMPRESSED_SRGB8_ALPHA8_ASTC_5x4_KHR)
+        @JvmField val COMPRESSED_SRGB8_ALPHA8_ASTC_5x5_KHR = has(GL_COMPRESSED_SRGB8_ALPHA8_ASTC_5x5_KHR)
+        @JvmField val COMPRESSED_SRGB8_ALPHA8_ASTC_6x5_KHR = has(GL_COMPRESSED_SRGB8_ALPHA8_ASTC_6x5_KHR)
+        @JvmField val COMPRESSED_SRGB8_ALPHA8_ASTC_6x6_KHR = has(GL_COMPRESSED_SRGB8_ALPHA8_ASTC_6x6_KHR)
+        @JvmField val COMPRESSED_SRGB8_ALPHA8_ASTC_8x5_KHR = has(GL_COMPRESSED_SRGB8_ALPHA8_ASTC_8x5_KHR)
+        @JvmField val COMPRESSED_SRGB8_ALPHA8_ASTC_8x6_KHR = has(GL_COMPRESSED_SRGB8_ALPHA8_ASTC_8x6_KHR)
+        @JvmField val COMPRESSED_SRGB8_ALPHA8_ASTC_8x8_KHR = has(GL_COMPRESSED_SRGB8_ALPHA8_ASTC_8x8_KHR)
+        @JvmField val COMPRESSED_SRGB8_ALPHA8_ASTC_10x5_KHR = has(GL_COMPRESSED_SRGB8_ALPHA8_ASTC_10x5_KHR)
+        @JvmField val COMPRESSED_SRGB8_ALPHA8_ASTC_10x6_KHR = has(GL_COMPRESSED_SRGB8_ALPHA8_ASTC_10x6_KHR)
+        @JvmField val COMPRESSED_SRGB8_ALPHA8_ASTC_10x8_KHR = has(GL_COMPRESSED_SRGB8_ALPHA8_ASTC_10x8_KHR)
+        @JvmField val COMPRESSED_SRGB8_ALPHA8_ASTC_10x10_KHR = has(GL_COMPRESSED_SRGB8_ALPHA8_ASTC_10x10_KHR)
+        @JvmField val COMPRESSED_SRGB8_ALPHA8_ASTC_12x10_KHR = has(GL_COMPRESSED_SRGB8_ALPHA8_ASTC_12x10_KHR)
+        @JvmField val COMPRESSED_SRGB8_ALPHA8_ASTC_12x12_KHR = has(GL_COMPRESSED_SRGB8_ALPHA8_ASTC_12x12_KHR)
 
-        val COMPRESSED_LUMINANCE_LATC1_EXT = has(GL_COMPRESSED_LUMINANCE_LATC1_EXT)
-        val COMPRESSED_SIGNED_LUMINANCE_LATC1_EXT = has(GL_COMPRESSED_SIGNED_LUMINANCE_LATC1_EXT)
-        val COMPRESSED_LUMINANCE_ALPHA_LATC2_EXT = has(GL_COMPRESSED_LUMINANCE_ALPHA_LATC2_EXT)
-        val COMPRESSED_SIGNED_LUMINANCE_ALPHA_LATC2_EXT = has(GL_COMPRESSED_SIGNED_LUMINANCE_ALPHA_LATC2_EXT)
-        val COMPRESSED_LUMINANCE_ALPHA_3DC_ATI = has(GL_COMPRESSED_LUMINANCE_ALPHA_3DC_ATI)
+        @JvmField val COMPRESSED_LUMINANCE_LATC1_EXT = has(GL_COMPRESSED_LUMINANCE_LATC1_EXT)
+        @JvmField val COMPRESSED_SIGNED_LUMINANCE_LATC1_EXT = has(GL_COMPRESSED_SIGNED_LUMINANCE_LATC1_EXT)
+        @JvmField val COMPRESSED_LUMINANCE_ALPHA_LATC2_EXT = has(GL_COMPRESSED_LUMINANCE_ALPHA_LATC2_EXT)
+        @JvmField val COMPRESSED_SIGNED_LUMINANCE_ALPHA_LATC2_EXT = has(GL_COMPRESSED_SIGNED_LUMINANCE_ALPHA_LATC2_EXT)
+        @JvmField val COMPRESSED_LUMINANCE_ALPHA_3DC_ATI = has(GL_COMPRESSED_LUMINANCE_ALPHA_3DC_ATI)
 
-        val COMPRESSED_RGB_FXT1_3DFX = has(GL_COMPRESSED_RGB_FXT1_3DFX)
-        val COMPRESSED_RGBA_FXT1_3DFX = has(GL_COMPRESSED_RGBA_FXT1_3DFX)
+        @JvmField val COMPRESSED_RGB_FXT1_3DFX = has(GL_COMPRESSED_RGB_FXT1_3DFX)
+        @JvmField val COMPRESSED_RGBA_FXT1_3DFX = has(GL_COMPRESSED_RGBA_FXT1_3DFX)
 
-        val PALETTE4_RGB8_OES = has(GL_PALETTE4_RGB8_OES)
-        val PALETTE4_RGBA8_OES = has(GL_PALETTE4_RGBA8_OES)
-        val PALETTE4_R5_G6_B5_OES = has(GL_PALETTE4_R5_G6_B5_OES)
-        val PALETTE4_RGBA4_OES = has(GL_PALETTE4_RGBA4_OES)
-        val PALETTE4_RGB5_A1_OES = has(GL_PALETTE4_RGB5_A1_OES)
-        val PALETTE8_RGB8_OES = has(GL_PALETTE8_RGB8_OES)
-        val PALETTE8_RGBA8_OES = has(GL_PALETTE8_RGBA8_OES)
-        val PALETTE8_R5_G6_B5_OES = has(GL_PALETTE8_R5_G6_B5_OES)
-        val PALETTE8_RGBA4_OES = has(GL_PALETTE8_RGBA4_OES)
-        val PALETTE8_RGB5_A1_OES = has(GL_PALETTE8_RGB5_A1_OES)
-        val ETC1_RGB8_OES = has(GL_ETC1_RGB8_OES)
+        @JvmField val PALETTE4_RGB8_OES = has(GL_PALETTE4_RGB8_OES)
+        @JvmField val PALETTE4_RGBA8_OES = has(GL_PALETTE4_RGBA8_OES)
+        @JvmField val PALETTE4_R5_G6_B5_OES = has(GL_PALETTE4_R5_G6_B5_OES)
+        @JvmField val PALETTE4_RGBA4_OES = has(GL_PALETTE4_RGBA4_OES)
+        @JvmField val PALETTE4_RGB5_A1_OES = has(GL_PALETTE4_RGB5_A1_OES)
+        @JvmField val PALETTE8_RGB8_OES = has(GL_PALETTE8_RGB8_OES)
+        @JvmField val PALETTE8_RGBA8_OES = has(GL_PALETTE8_RGBA8_OES)
+        @JvmField val PALETTE8_R5_G6_B5_OES = has(GL_PALETTE8_R5_G6_B5_OES)
+        @JvmField val PALETTE8_RGBA4_OES = has(GL_PALETTE8_RGBA4_OES)
+        @JvmField val PALETTE8_RGB5_A1_OES = has(GL_PALETTE8_RGB5_A1_OES)
+        @JvmField val ETC1_RGB8_OES = has(GL_ETC1_RGB8_OES)
 
         private fun has(i: Int) = compressed.contains(i)
+
+        fun write(w: PrintWriter) = this::class.memberProperties.filter { it.visibility == KVisibility.PUBLIC }.map {
+            w.println("${it.name} = ${it.getter.call(this)}")
+        }
     }
 
     fun check(majorVersionRequire: Int, minorVersionRequire: Int) = version.check(majorVersionRequire, minorVersionRequire)
