@@ -59,13 +59,14 @@ class GlfwWindow(width: Int, height: Int, title: String) {
             field.put(value)
         }
 
-    var size: Vec2i
+    var size = Vec2i()
         get() {
             glfwGetWindowSize(handle, x, y)
-            return Vec2i(x[0], y[0])
+            return field.put(x[0], y[0])
         }
         set(value) {
             glfwSetWindowSize(handle, value.x, value.y)
+            field.put(value)
         }
 
     fun sizeLimit(width: IntRange, height: IntRange) = glfwSetWindowSizeLimits(handle, width.start, height.start, width.endInclusive, height.endInclusive)
@@ -76,16 +77,16 @@ class GlfwWindow(width: Int, height: Int, title: String) {
         get() = size.x / size.y.f
         set(value) = glfwSetWindowAspectRatio(handle, (value * 1_000).i, 1_000)
 
-    val framebufferSize: Vec2i
+    val framebufferSize = Vec2i()
         get() {
             glfwGetFramebufferSize(handle, x, y)
-            return Vec2i(x, y)
+            return field.put(x[0], y[0])
         }
 
-    val frameSize: Vec4i
+    val frameSize = Vec4i()
         get() {
             glfwGetWindowFrameSize(handle, x, y, z, w)
-            return Vec4i(x[0], y[0], z[0], w[0])
+            return field.put(x[0], y[0], z[0], w[0])
         }
 
     fun iconify() = glfwIconifyWindow(handle)
