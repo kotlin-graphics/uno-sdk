@@ -788,11 +788,7 @@ class Caps(profile: Profile) {
                 TEXTURE_BUFFER_OFFSET_ALIGNMENT = glGetInteger(GL_TEXTURE_BUFFER_OFFSET_ALIGNMENT)
         }
 
-        fun write(w: PrintWriter) = this::class.memberProperties.filter { it.visibility == KVisibility.PUBLIC }.map {
-            if (it.returnType == Vec2::class.starProjectedType) {
-                val v = it.getter.call(this) as Vec2
-                w.println("${it.name} = (${v.x}, ${v.y})")
-            } else
+        fun write(w: PrintWriter) = this::class.memberProperties.filter { it.visibility == KVisibility.PUBLIC }.forEach {
                 w.println("${it.name} = ${it.getter.call(this)}")
         }
     }
