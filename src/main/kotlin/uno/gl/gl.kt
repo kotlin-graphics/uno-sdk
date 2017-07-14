@@ -9,6 +9,7 @@ import glm_.vec2.Vec2
 import glm_.vec2.Vec2i
 import glm_.vec4.Vec4
 import glm_.vec4.Vec4i
+import org.lwjgl.opengl.GL11
 import org.lwjgl.opengl.GL11.glGetFloatv
 import org.lwjgl.opengl.GL11.glGetIntegerv
 import uno.gln.vec2Buffer
@@ -56,6 +57,23 @@ inline infix fun GLWindow.gl3(crossinline inject: GL3.() -> Unit) {
 fun checkError(gl: GL, location: String) {
 
     val error = gl.glGetError()
+    if (error != GL_NO_ERROR) {
+        val errorString: String
+        when (error) {
+            GL_INVALID_ENUM -> errorString = "GL_INVALID_ENUM"
+            GL_INVALID_VALUE -> errorString = "GL_INVALID_VALUE"
+            GL_INVALID_OPERATION -> errorString = "GL_INVALID_OPERATION"
+            GL_INVALID_FRAMEBUFFER_OPERATION -> errorString = "GL_INVALID_FRAMEBUFFER_OPERATION"
+            GL_OUT_OF_MEMORY -> errorString = "GL_OUT_OF_MEMORY"
+            else -> errorString = "UNKNOWN"
+        }
+        throw GLException("OpenGL Error($errorString): $location")
+    }
+}
+
+fun checkError(location: String) {
+
+    val error = GL11.glGetError()
     if (error != GL_NO_ERROR) {
         val errorString: String
         when (error) {
