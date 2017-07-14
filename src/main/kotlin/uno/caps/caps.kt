@@ -25,6 +25,11 @@ import org.lwjgl.opengl.GL45.GL_MAX_CULL_DISTANCES
 import org.lwjgl.opengl.KHRTextureCompressionASTCLDR.*
 import org.lwjgl.opengl.NVDeepTexture3D.GL_MAX_DEEP_3D_TEXTURE_DEPTH_NV
 import org.lwjgl.opengl.NVDeepTexture3D.GL_MAX_DEEP_3D_TEXTURE_WIDTH_HEIGHT_NV
+import org.lwjgl.opengl.ATITextureCompression3DC.GL_COMPRESSED_LUMINANCE_ALPHA_3DC_ATI
+import org.lwjgl.opengl.EXTTextureSRGB.GL_COMPRESSED_SRGB_S3TC_DXT1_EXT
+import org.lwjgl.opengl.EXTTextureSRGB.GL_COMPRESSED_SRGB_ALPHA_S3TC_DXT1_EXT
+import org.lwjgl.opengl.EXTTextureSRGB.GL_COMPRESSED_SRGB_ALPHA_S3TC_DXT3_EXT
+import org.lwjgl.opengl.EXTTextureSRGB.GL_COMPRESSED_SRGB_ALPHA_S3TC_DXT5_EXT
 import uno.buffer.destroy
 import uno.buffer.intBufferBig
 import uno.gl.*

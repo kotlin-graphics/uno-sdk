@@ -21,14 +21,14 @@ import uno.gln.vec4iBuffer
  */
 
 /* -------------------------- GL_EXT_texture_sRGB -------------------------- */
-val GL_COMPRESSED_SRGB_S3TC_DXT1_EXT = 0x8C4C
-val GL_COMPRESSED_SRGB_ALPHA_S3TC_DXT1_EXT = 0x8C4D
-val GL_COMPRESSED_SRGB_ALPHA_S3TC_DXT3_EXT = 0x8C4E
-val GL_COMPRESSED_SRGB_ALPHA_S3TC_DXT5_EXT = 0x8C4F
-
-/* --------------------- GL_ATI_texture_compression_3dc -------------------- */
-val GL_COMPRESSED_LUMINANCE_ALPHA_3DC_ATI = 0x8837
-
+//val GL_COMPRESSED_SRGB_S3TC_DXT1_EXT = 0x8C4C
+//val GL_COMPRESSED_SRGB_ALPHA_S3TC_DXT1_EXT = 0x8C4D
+//val GL_COMPRESSED_SRGB_ALPHA_S3TC_DXT3_EXT = 0x8C4E
+//val GL_COMPRESSED_SRGB_ALPHA_S3TC_DXT5_EXT = 0x8C4F
+//
+///* --------------------- GL_ATI_texture_compression_3dc -------------------- */
+//val GL_COMPRESSED_LUMINANCE_ALPHA_3DC_ATI = 0x8837
+//
 /* -------------------- GL_3DFX_texture_compression_FXT1 ------------------- */
 val GL_COMPRESSED_RGB_FXT1_3DFX = 0x86B0
 val GL_COMPRESSED_RGBA_FXT1_3DFX = 0x86B1
