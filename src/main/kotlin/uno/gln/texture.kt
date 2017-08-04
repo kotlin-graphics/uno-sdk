@@ -241,12 +241,12 @@ object ObjectTexture2d {
 
     var magFilter = linear
         set(value) {
-            glTexParameteri(name, GL_TEXTURE_MAG_FILTER, value.i)
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, value.i)
             field = value
         }
     var minFilter = nearest_mmLinear
         set(value) {
-            glTexParameteri(name, GL_TEXTURE_MIN_FILTER, value.i)
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, value.i)
             field = value
         }
     //    var maxAnisotropy = 1.0f

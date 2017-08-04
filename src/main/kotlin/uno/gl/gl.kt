@@ -67,7 +67,7 @@ fun checkError(gl: GL, location: String) {
             GL_OUT_OF_MEMORY -> errorString = "GL_OUT_OF_MEMORY"
             else -> errorString = "UNKNOWN"
         }
-        throw GLException("OpenGL Error($errorString): $location")
+        throw Error("OpenGL Error($errorString): $location")
     }
 }
 
@@ -84,7 +84,7 @@ fun checkError(location: String) {
             GL_OUT_OF_MEMORY -> errorString = "GL_OUT_OF_MEMORY"
             else -> errorString = "UNKNOWN"
         }
-        throw GLException("OpenGL Error($errorString): $location")
+        throw Error("OpenGL Error($errorString): $location")
     }
 }
 
