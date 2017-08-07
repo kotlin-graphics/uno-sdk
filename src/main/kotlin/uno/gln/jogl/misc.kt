@@ -4,18 +4,26 @@ import com.jogamp.opengl.GL
 import com.jogamp.opengl.GL2ES3
 import com.jogamp.opengl.GL3
 import glm_.f
+import glm_.vec2.Vec2i
+import glm_.vec4.Vec4i
 import uno.gl.checkError
 import uno.gln.intBuffer
 import uno.gln.mat4Buffer
 
-fun GL3.glDrawArrays(count: Int) = glDrawArrays(GL.GL_TRIANGLES, 0, count)
-fun GL3.glDrawArrays(mode: Int, count: Int) = glDrawArrays(mode, 0, count)
 
-fun GL3.glDrawElements(count: Int, type: Int) = glDrawElements(GL.GL_TRIANGLES, count, type, 0)
-fun GL3.glDrawElements(mode: Int, count: Int, type: Int) = glDrawElements(mode, count, type, 0)
+fun GL3.glViewport(size: Vec2i) = glViewport(0, 0, size.x, size.y)
 
-fun GL3.glDrawElementsBaseVertex(count: Int, type: Int, indices_buffer_offset: Long, basevertex: Int) =
-        glDrawElementsBaseVertex(GL.GL_TRIANGLES, count, type, indices_buffer_offset, basevertex)
+fun GL3.glViewport(viewport: Vec4i) = glViewport(viewport.x, viewport.y, viewport.z, viewport.w)
+
+fun GL3.glScissor(size: Vec2i) = glScissor(0, 0, size.x, size.y)
+fun GL3.glScissor(scissor: Vec4i) = glScissor(scissor.x, scissor.y, scissor.z, scissor.w)
+
+fun GL3.glBlitFramebuffer(size: Vec2i) = glBlitFramebuffer(
+        0, 0, size.x, size.y,
+        0, 0, size.x, size.y,
+        GL.GL_COLOR_BUFFER_BIT, GL.GL_LINEAR)
+
+
 
 fun GL3.glClearBufferf(buffer: Int, f: Float) = when (buffer) {
     GL2ES3.GL_COLOR -> glClearBufferf(buffer, f, f, f, f)
