@@ -12,7 +12,6 @@ import glm_.mat3x4.Mat3x4
 import glm_.mat4x2.Mat4x2
 import glm_.mat4x3.Mat4x3
 import glm_.mat4x4.Mat4
-import glm_.set
 import glm_.vec1.Vec1
 import glm_.vec1.Vec1bool
 import glm_.vec1.Vec1i
@@ -347,15 +346,15 @@ fun GL3.glUniform4i(location: Int, vec4: Vec4bool) = glUniform4i(location, vec4.
 
 // inferred length and type
 
-//fun GL3.glUniform(location: Int, mat2: Mat2) = glUniformMatrix2fv(location, false, mat2 to mat2Buffer)
-//fun GL3.glUniform(location: Int, mat2x3: Mat2x3) = glUniformMatrix2x3fv(location, false, mat2x3 to mat2x3Buffer)
-//fun GL3.glUniform(location: Int, mat2x4: Mat2x4) = GL21.glUniformMatrix2x4fv(location, false, mat2x4 to mat2x4Buffer)
-//fun GL3.glUniform(location: Int, mat3x2: Mat3x2) = GL21.glUniformMatrix3x2fv(location, false, mat3x2 to mat3x2Buffer)
-//fun GL3.glUniform(location: Int, mat3: Mat3) = glUniformMatrix3fv(location, false, mat3 to mat3Buffer)
-//fun GL3.glUniform(location: Int, mat3x4: Mat3x4) = GL21.glUniformMatrix3x4fv(location, false, mat3x4 to mat3x4Buffer)
-//fun GL3.glUniform(location: Int, mat4x2: Mat4x2) = GL21.glUniformMatrix4x2fv(location, false, mat4x2 to mat4x2Buffer)
-//fun GL3.glUniform(location: Int, mat4x3: Mat4x3) = GL21.glUniformMatrix4x3fv(location, false, mat4x3 to mat4x3Buffer)
-//fun GL3.glUniform(location: Int, mat4: Mat4) = glUniformMatrix4fv(location, false, mat4 to mat4Buffer)
+fun GL3.glUniform(location: Int, mat2: Mat2) = glUniformMatrix2fv(location, 1, false, mat2 to mat2Buffer)
+fun GL3.glUniform(location: Int, mat2x3: Mat2x3) = glUniformMatrix2x3fv(location, 1, false, mat2x3 to mat2x3Buffer)
+fun GL3.glUniform(location: Int, mat2x4: Mat2x4) = glUniformMatrix2x4fv(location, 1, false, mat2x4 to mat2x4Buffer)
+fun GL3.glUniform(location: Int, mat3x2: Mat3x2) = glUniformMatrix3x2fv(location, 1, false, mat3x2 to mat3x2Buffer)
+fun GL3.glUniform(location: Int, mat3: Mat3) = glUniformMatrix3fv(location, 1, false, mat3 to mat3Buffer)
+fun GL3.glUniform(location: Int, mat3x4: Mat3x4) = glUniformMatrix3x4fv(location, 1, false, mat3x4 to mat3x4Buffer)
+fun GL3.glUniform(location: Int, mat4x2: Mat4x2) = glUniformMatrix4x2fv(location, 1, false, mat4x2 to mat4x2Buffer)
+fun GL3.glUniform(location: Int, mat4x3: Mat4x3) = glUniformMatrix4x3fv(location, 1, false, mat4x3 to mat4x3Buffer)
+fun GL3.glUniform(location: Int, mat4: Mat4) = glUniformMatrix4fv(location, 1, false, mat4 to mat4Buffer)
 
 // TODO double mat and vectors
 //fun GL3.glUniform(location: Int, mat2: Mat2) = GL40.glUniformMatrix2dv(location, false, mat2 to mat2Buffer)
