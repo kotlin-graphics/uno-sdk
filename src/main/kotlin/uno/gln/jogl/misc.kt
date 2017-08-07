@@ -80,7 +80,7 @@ infix fun GL3.glEnable(cap: Int) = glEnable(cap)
 infix fun GL3.disable(cap: Int) = glDisable(cap)
 
 
-fun GL3.glCheckError(location: String) = checkError(gl, location)
+fun GL3.checkError(location: String) = checkError(gl, location)
 
 
 
