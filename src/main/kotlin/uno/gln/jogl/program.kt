@@ -134,4 +134,5 @@ object ProgramBase {
 }
 
 fun GL3.glUseProgram() = glUseProgram(0)
+fun GL3.glUseProgram(program: Program) = glUseProgram(program.name)
 fun GL3.glDeletePrograms(vararg programs: Int) = programs.forEach { glDeleteProgram(it) }
