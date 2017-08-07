@@ -4,6 +4,7 @@ import com.jogamp.opengl.GL
 import com.jogamp.opengl.GL2ES3
 import com.jogamp.opengl.GL3
 import glm_.f
+import uno.gl.checkError
 import uno.gln.intBuffer
 import uno.gln.mat4Buffer
 
@@ -78,6 +79,8 @@ fun GL3.glGetInteger(pname: Int): Int {
 infix fun GL3.glEnable(cap: Int) = glEnable(cap)
 infix fun GL3.disable(cap: Int) = glDisable(cap)
 
+
+fun GL3.glCheckError(location: String) = checkError(gl, location)
 
 
 
