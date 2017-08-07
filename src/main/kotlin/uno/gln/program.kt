@@ -10,8 +10,6 @@ import org.lwjgl.opengl.ARBUniformBufferObject.glGetUniformBlockIndex
 import org.lwjgl.opengl.ARBUniformBufferObject.glUniformBlockBinding
 import org.lwjgl.opengl.GL20
 import org.lwjgl.opengl.GL31
-import uno.buffer.byteBufferOf
-import uno.buffer.destroy
 import uno.glsl.Program
 
 fun glCreatePrograms(ints: IntArray) = repeat(ints.size) { ints[it] = GL20.glCreateProgram() }
@@ -66,24 +64,24 @@ object ProgramUse {
 
     fun link() = GL20.glLinkProgram(name)
     
-    infix fun Int.to(location: Int) = GL20.glUniform1i(location, this)    
+    infix fun Int.to(location: Int) = GL20.glUniform1i(location, this)
     infix fun Float.to(location: Int) = GL20.glUniform1f(location, this)
-    
+
     infix fun Vec2.to(location: Int) = GL20.glUniform2fv(location, this to vec2Buffer)
     infix fun Vec3.to(location: Int) = GL20.glUniform3fv(location, this to vec3Buffer)
     infix fun Vec4.to(location: Int) = GL20.glUniform4fv(location, this to vec4Buffer)
-    
+
     infix fun Mat2.to(location: Int) = GL20.glUniformMatrix2fv(location, false, this to mat2Buffer)
     infix fun Mat3.to(location: Int) = GL20.glUniformMatrix3fv(location, false, this to mat3Buffer)
     infix fun Mat4.to(location: Int) = GL20.glUniformMatrix4fv(location, false, this to mat4Buffer)
-    
-    infix fun Int.to(uniform: String) = GL20.glUniform1i(uniform.location, this)    
+
+    infix fun Int.to(uniform: String) = GL20.glUniform1i(uniform.location, this)
     infix fun Float.to(uniform: String) = GL20.glUniform1f(uniform.location, this)
-    
+
     infix fun Vec2.to(uniform: String) = GL20.glUniform2fv(uniform.location, this to vec2Buffer)
     infix fun Vec3.to(uniform: String) = GL20.glUniform3fv(uniform.location, this to vec3Buffer)
     infix fun Vec4.to(uniform: String) = GL20.glUniform4fv(uniform.location, this to vec4Buffer)
-    
+
     infix fun Mat2.to(uniform: String) = GL20.glUniformMatrix2fv(uniform.location, false, this to mat2Buffer)
     infix fun Mat3.to(uniform: String) = GL20.glUniformMatrix3fv(uniform.location, false, this to mat3Buffer)
     infix fun Mat4.to(uniform: String) = GL20.glUniformMatrix4fv(uniform.location, false, this to mat4Buffer)

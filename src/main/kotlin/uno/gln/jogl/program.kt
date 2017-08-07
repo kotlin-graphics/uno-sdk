@@ -2,16 +2,16 @@ package uno.gln.jogl
 
 import com.jogamp.opengl.GL2ES2
 import com.jogamp.opengl.GL3
+import glm_.mat2x2.Mat2
 import glm_.mat3x3.Mat3
 import glm_.mat4x4.Mat4
-import glm_.set
 import glm_.vec2.Vec2
 import glm_.vec3.Vec3
 import glm_.vec4.Vec4
 import uno.buffer.byteBufferOf
 import uno.buffer.destroy
-import uno.gln.intBuffer
-import uno.gln.mat4Buffer
+import uno.gln.*
+import uno.glsl.Program
 
 fun GL3.glGetProgram(program: Int, pname: Int): Int {
     glGetProgramiv(program, pname, intBuffer)
@@ -31,6 +31,108 @@ fun GL3.glGetProgramInfoLog(program: Int): String {
     return String(bytes)
 }
 
+inline fun GL3.usingProgram(program: Int = 0, block: ProgramUse.() -> Unit) {
+    ProgramUse.gl = this
+    ProgramUse.name = program //glUse
+    ProgramUse.block()
+    glUseProgram(0)
+}
+
+inline fun GL3.usingProgram(program: Program, block: ProgramUse.() -> Unit) {
+    ProgramUse.gl = this
+    ProgramUse.name = program.name //glUse
+    ProgramUse.block()
+    glUseProgram(0)
+}
+
+inline fun GL3.withProgram(program: Int = 0, block: ProgramBase.() -> Unit) {
+    ProgramBase.gl = this
+    ProgramBase.name = program
+    ProgramBase.block()
+}
+
+inline fun GL3.withProgram(program: Program, block: ProgramBase.() -> Unit) {
+    ProgramBase.gl = this
+    ProgramBase.name = program.name
+    ProgramBase.block()
+}
+
+object ProgramUse {
+
+    lateinit var gl:GL3
+
+    var name = 0
+        set(value) {
+            gl.glUseProgram(value)
+            field = value
+        }
+
+    val String.location: Int
+        get() = gl.glGetUniformLocation(name, this)
+
+    var String.blockIndex
+        get() = gl.glGetUniformBlockIndex(name, this)
+        set(value) = gl.glUniformBlockBinding(name, gl.glGetUniformBlockIndex(name, this), value)
+
+    var String.unit: Int
+        get() = location
+        set(value) = gl.glUniform1i(location, value)
+
+
+    fun link() = gl.glLinkProgram(name)
+
+//    infix fun Int.to(location: Int) = GL20.glUniform1i(location, this)
+//    infix fun Float.to(location: Int) = GL20.glUniform1f(location, this)
+//
+//    infix fun Vec2.to(location: Int) = GL20.glUniform2fv(location, this to vec2Buffer)
+//    infix fun Vec3.to(location: Int) = GL20.glUniform3fv(location, this to vec3Buffer)
+//    infix fun Vec4.to(location: Int) = GL20.glUniform4fv(location, this to vec4Buffer)
+//
+//    infix fun Mat2.to(location: Int) = GL20.glUniformMatrix2fv(location, false, this to mat2Buffer)
+//    infix fun Mat3.to(location: Int) = GL20.glUniformMatrix3fv(location, false, this to mat3Buffer)
+//    infix fun Mat4.to(location: Int) = GL20.glUniformMatrix4fv(location, false, this to mat4Buffer)
+//
+//    infix fun Int.to(uniform: String) = GL20.glUniform1i(uniform.location, this)
+//    infix fun Float.to(uniform: String) = GL20.glUniform1f(uniform.location, this)
+//
+//    infix fun Vec2.to(uniform: String) = GL20.glUniform2fv(uniform.location, this to vec2Buffer)
+//    infix fun Vec3.to(uniform: String) = GL20.glUniform3fv(uniform.location, this to vec3Buffer)
+//    infix fun Vec4.to(uniform: String) = GL20.glUniform4fv(uniform.location, this to vec4Buffer)
+//
+//    infix fun Mat2.to(uniform: String) = GL20.glUniformMatrix2fv(uniform.location, false, this to mat2Buffer)
+//    infix fun Mat3.to(uniform: String) = GL20.glUniformMatrix3fv(uniform.location, false, this to mat3Buffer)
+//    infix fun Mat4.to(uniform: String) = GL20.glUniformMatrix4fv(uniform.location, false, this to mat4Buffer)
+}
+
+object ProgramBase {
+
+    lateinit var gl:GL3
+
+    var name = 0
+
+    var String.location
+        get() = gl.glGetUniformLocation(name, this)
+        set(value) = gl.glBindAttribLocation(name, value, this)
+
+    // read only because no program is used
+    val String.blockIndex
+        get() = gl.glGetUniformBlockIndex(name, this)
+
+    inline fun use(block: ProgramUse.() -> Unit) {
+        ProgramUse.name = name
+        ProgramUse.block()
+        gl.glUseProgram(0)
+    }
+
+    infix fun Int.blockBinding(uniformBlockBinding: Int) = gl.glUniformBlockBinding(name, this, uniformBlockBinding)
+    infix fun Int.getBlockIndex(uniformBlockName: String) = gl.glGetUniformBlockIndex(this, uniformBlockName)
+
+    fun link() = gl.glLinkProgram(name)
+
+    operator fun plusAssign(shader: Int) = gl.glAttachShader(name, shader)
+    infix fun attach(shader: Int) = gl.glAttachShader(name, shader)
+}
+
 inline fun GL3.usingProgram(program: Int = 0, block: ProgramA.(GL3) -> Unit) {
     ProgramA.gl = this
     ProgramA.name = program //glUse
@@ -38,11 +140,11 @@ inline fun GL3.usingProgram(program: Int = 0, block: ProgramA.(GL3) -> Unit) {
     glUseProgram(0)
 }
 
-inline fun GL3.withProgram(program: Int = 0, block: ProgramB.() -> Unit) {
-    ProgramB.gl = this
-    ProgramB.name = program
-    ProgramB.block()
-}
+//inline fun GL3.withProgram(program: Int = 0, block: ProgramB.() -> Unit) {
+//    ProgramB.gl = this
+//    ProgramB.name = program
+//    ProgramB.block()
+//}
 
 object ProgramA {
 
@@ -107,48 +209,4 @@ object ProgramB {
 
 
 fun GL3.glUseProgram() = glUseProgram(0)
-
-
-fun GL3.glUniform2f(location: Int) = glUniform2f(location, 0f, 0f)
-fun GL3.glUniform2f(location: Int, f: Float) = glUniform2f(location, f, f)
-// TODO vec1
-fun GL3.glUniform2f(location: Int, vec2: Vec2) = glUniform2f(location, vec2.x, vec2.y)
-
-fun GL3.glUniform2f(location: Int, vec3: Vec3) = glUniform2f(location, vec3.x, vec3.y)
-fun GL3.glUniform2f(location: Int, vec4: Vec4) = glUniform2f(location, vec4.x, vec4.y)
-
-fun GL3.glUniform3f(location: Int) = glUniform3f(location, 0f, 0f, 0f)
-fun GL3.glUniform3f(location: Int, f: Float) = glUniform3f(location, f, f, f)
-fun GL3.glUniform3f(location: Int, vec2: Vec2) = glUniform3f(location, vec2.x, vec2.y, 0f)
-fun GL3.glUniform3f(location: Int, vec3: Vec3) = glUniform3f(location, vec3.x, vec3.y, vec3.z)
-fun GL3.glUniform3f(location: Int, vec4: Vec4) = glUniform3f(location, vec4.x, vec4.y, vec4.z)
-
-fun GL3.glUniform4f(location: Int) = glUniform4f(location, 0f, 0f, 0f, 1f)
-fun GL3.glUniform4f(location: Int, f: Float) = glUniform4f(location, f, f, f, f)
-fun GL3.glUniform4f(location: Int, vec2: Vec2) = glUniform4f(location, vec2.x, vec2.y, 0f, 1f)
-fun GL3.glUniform4f(location: Int, vec3: Vec3) = glUniform4f(location, vec3.x, vec3.y, vec3.z, 1f)
-fun GL3.glUniform4f(location: Int, vec4: Vec4) = glUniform4f(location, vec4.x, vec4.y, vec4.z, vec4.w)
-
-fun GL3.glUniformMatrix4f(location: Int, value: FloatArray) {
-    for (i in 0..15)
-        mat4Buffer[i] = value[i]
-    glUniformMatrix4fv(location, 1, false, mat4Buffer)
-}
-
-fun GL3.glUniformMatrix4f(location: Int, value: Mat4) = glUniformMatrix4fv(location, 1, false, value to mat4Buffer)
-fun GL3.glUniformMatrix3f(location: Int, value: Mat3) = glUniformMatrix3fv(location, 1, false, value to mat4Buffer)
-fun GL3.glUniformMatrix3f(location: Int, value: Mat4) {
-    mat4Buffer[0] = value[0][0]
-    mat4Buffer[1] = value[0][1]
-    mat4Buffer[2] = value[0][2]
-    mat4Buffer[3] = value[1][0]
-    mat4Buffer[4] = value[1][1]
-    mat4Buffer[5] = value[1][2]
-    mat4Buffer[6] = value[2][0]
-    mat4Buffer[7] = value[2][1]
-    mat4Buffer[8] = value[2][2]
-    glUniformMatrix3fv(location, 1, false, value to mat4Buffer)
-}
-
-
 fun GL3.glDeletePrograms(vararg programs: Int) = programs.forEach { glDeleteProgram(it) }
