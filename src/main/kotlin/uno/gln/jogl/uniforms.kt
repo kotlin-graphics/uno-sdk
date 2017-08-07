@@ -28,7 +28,7 @@ import glm_.vec4.Vec4
 import glm_.vec4.Vec4bool
 import glm_.vec4.Vec4i
 import glm_.vec4.Vec4t
-import uno.gln.*
+import uno.gl.*
 
 // ----------------------------------------- vec -----------------------------------------------------------------------
 // inferred length and type

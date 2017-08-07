@@ -5,7 +5,7 @@ import com.jogamp.opengl.GL3
 import glm_.set
 import uno.buffer.byteBufferOf
 import uno.buffer.destroy
-import uno.gln.intBuffer
+import uno.gl.intBuffer
 
 
 fun GL3.glShaderSource(shader: Int, source: String) {

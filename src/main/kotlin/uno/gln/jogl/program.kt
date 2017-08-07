@@ -2,15 +2,9 @@ package uno.gln.jogl
 
 import com.jogamp.opengl.GL2ES2
 import com.jogamp.opengl.GL3
-import glm_.mat2x2.Mat2
-import glm_.mat3x3.Mat3
-import glm_.mat4x4.Mat4
-import glm_.vec2.Vec2
-import glm_.vec3.Vec3
-import glm_.vec4.Vec4
 import uno.buffer.byteBufferOf
 import uno.buffer.destroy
-import uno.gln.*
+import uno.gl.intBuffer
 import uno.glsl.Program
 
 fun GL3.glGetProgram(program: Int, pname: Int): Int {

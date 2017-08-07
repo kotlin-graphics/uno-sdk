@@ -6,9 +6,9 @@ import com.jogamp.opengl.GL3
 import glm_.L
 import glm_.vec3.Vec3
 import glm_.vec4.Vec4
+import uno.gl.intBuffer
 import uno.glf.VertexAttribute
 import uno.glf.VertexLayout
-import uno.gln.intBuffer
 import java.nio.IntBuffer
 import kotlin.reflect.KClass
 

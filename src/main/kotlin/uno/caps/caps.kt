@@ -2,9 +2,11 @@ package uno.caps
 
 import com.jogamp.opengl.GLES1.GL_ETC1_RGB8_OES
 import glm_.vec2.Vec2
+import org.lwjgl.opengl.ATITextureCompression3DC.GL_COMPRESSED_LUMINANCE_ALPHA_3DC_ATI
 import org.lwjgl.opengl.EXTTextureCompressionLATC.*
 import org.lwjgl.opengl.EXTTextureCompressionS3TC.*
 import org.lwjgl.opengl.EXTTextureFilterAnisotropic.GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT
+import org.lwjgl.opengl.EXTTextureSRGB.*
 import org.lwjgl.opengl.GL
 import org.lwjgl.opengl.GL11.*
 import org.lwjgl.opengl.GL12.*
@@ -25,23 +27,16 @@ import org.lwjgl.opengl.GL45.GL_MAX_CULL_DISTANCES
 import org.lwjgl.opengl.KHRTextureCompressionASTCLDR.*
 import org.lwjgl.opengl.NVDeepTexture3D.GL_MAX_DEEP_3D_TEXTURE_DEPTH_NV
 import org.lwjgl.opengl.NVDeepTexture3D.GL_MAX_DEEP_3D_TEXTURE_WIDTH_HEIGHT_NV
-import org.lwjgl.opengl.ATITextureCompression3DC.GL_COMPRESSED_LUMINANCE_ALPHA_3DC_ATI
-import org.lwjgl.opengl.EXTTextureSRGB.GL_COMPRESSED_SRGB_S3TC_DXT1_EXT
-import org.lwjgl.opengl.EXTTextureSRGB.GL_COMPRESSED_SRGB_ALPHA_S3TC_DXT1_EXT
-import org.lwjgl.opengl.EXTTextureSRGB.GL_COMPRESSED_SRGB_ALPHA_S3TC_DXT3_EXT
-import org.lwjgl.opengl.EXTTextureSRGB.GL_COMPRESSED_SRGB_ALPHA_S3TC_DXT5_EXT
 import uno.buffer.destroy
 import uno.buffer.intBufferBig
 import uno.gl.*
 import uno.glfw.GlfwWindow
 import uno.glfw.glfw
+import uno.gln.glGetVec2
 import java.io.File
 import java.io.PrintWriter
-import java.lang.reflect.Field
-import kotlin.properties.Delegates
 import kotlin.reflect.KVisibility
 import kotlin.reflect.full.memberProperties
-import kotlin.reflect.full.starProjectedType
 
 /**
  * Created by GBarbieri on 10.03.2017.

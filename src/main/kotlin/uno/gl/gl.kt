@@ -1,21 +1,10 @@
 package uno.gl
 
 import com.jogamp.newt.opengl.GLWindow
-import com.jogamp.opengl.GL
-import com.jogamp.opengl.GL.*
 import com.jogamp.opengl.GL3
-import com.jogamp.opengl.GLException
-import glm_.vec2.Vec2
-import glm_.vec2.Vec2i
-import glm_.vec4.Vec4
-import glm_.vec4.Vec4i
-import org.lwjgl.opengl.GL11
-import org.lwjgl.opengl.GL11.glGetFloatv
-import org.lwjgl.opengl.GL11.glGetIntegerv
-import uno.gln.vec2Buffer
-import uno.gln.vec2iBuffer
-import uno.gln.vec4Buffer
-import uno.gln.vec4iBuffer
+import uno.buffer.doubleBufferBig
+import uno.buffer.floatBufferBig
+import uno.buffer.intBufferBig
 
 /**
  * Created by elect on 05/03/17.
@@ -54,56 +43,33 @@ inline infix fun GLWindow.gl3(crossinline inject: GL3.() -> Unit) {
     }
 }
 
-fun checkError(gl: GL, location: String) {
 
-    val error = gl.glGetError()
-    if (error != GL_NO_ERROR) {
-        val errorString: String
-        when (error) {
-            GL_INVALID_ENUM -> errorString = "GL_INVALID_ENUM"
-            GL_INVALID_VALUE -> errorString = "GL_INVALID_VALUE"
-            GL_INVALID_OPERATION -> errorString = "GL_INVALID_OPERATION"
-            GL_INVALID_FRAMEBUFFER_OPERATION -> errorString = "GL_INVALID_FRAMEBUFFER_OPERATION"
-            GL_OUT_OF_MEMORY -> errorString = "GL_OUT_OF_MEMORY"
-            else -> errorString = "UNKNOWN"
-        }
-        throw Error("OpenGL Error($errorString): $location")
-    }
-}
+val floatBuffer = floatBufferBig(1)
+val intBuffer = intBufferBig(1)
 
-fun checkError(location: String) {
+val vec2Buffer = floatBufferBig(2)
+val vec3Buffer = floatBufferBig(3)
+val vec4Buffer = floatBufferBig(4)
 
-    val error = GL11.glGetError()
-    if (error != GL_NO_ERROR) {
-        val errorString: String
-        when (error) {
-            GL_INVALID_ENUM -> errorString = "GL_INVALID_ENUM"
-            GL_INVALID_VALUE -> errorString = "GL_INVALID_VALUE"
-            GL_INVALID_OPERATION -> errorString = "GL_INVALID_OPERATION"
-            GL_INVALID_FRAMEBUFFER_OPERATION -> errorString = "GL_INVALID_FRAMEBUFFER_OPERATION"
-            GL_OUT_OF_MEMORY -> errorString = "GL_OUT_OF_MEMORY"
-            else -> errorString = "UNKNOWN"
-        }
-        throw Error("OpenGL Error($errorString): $location")
-    }
-}
+val vec2iBuffer = intBufferBig(2)
+val vec4iBuffer = intBufferBig(4)
 
-fun glGetVec2(pname: Int): Vec2 {
-    glGetFloatv(pname, vec2Buffer)
-    return Vec2(vec2Buffer)
-}
+val mat2Buffer = floatBufferBig(2 * 2)
+val mat2x3Buffer = floatBufferBig(2 * 3)
+val mat2x4Buffer = floatBufferBig(2 * 4)
+val mat3x2Buffer = floatBufferBig(3 * 2)
+val mat3Buffer = floatBufferBig(3 * 3)
+val mat3x4Buffer = floatBufferBig(3 * 4)
+val mat4x2Buffer = floatBufferBig(4 * 2)
+val mat4x3Buffer = floatBufferBig(4 * 3)
+val mat4Buffer = floatBufferBig(4 * 4)
 
-fun glGetVec2i(pname: Int): Vec2i {
-    glGetIntegerv(pname, vec2iBuffer)
-    return Vec2i(vec2iBuffer)
-}
-
-fun glGetVec4(pname: Int): Vec4 {
-    glGetFloatv(pname, vec4Buffer)
-    return Vec4(vec4Buffer)
-}
-
-fun glGetVec4i(pname: Int): Vec4i {
-    glGetIntegerv(pname, vec4iBuffer)
-    return Vec4i(vec4iBuffer)
-}
+val mat2dBuffer = doubleBufferBig(2 * 2)
+val mat2x3dBuffer = doubleBufferBig(2 * 3)
+val mat2x4dBuffer = doubleBufferBig(2 * 4)
+val mat3x2dBuffer = doubleBufferBig(3 * 2)
+val mat3dBuffer = doubleBufferBig(3 * 3)
+val mat3x4dBuffer = doubleBufferBig(3 * 4)
+val mat4x2dBuffer = doubleBufferBig(4 * 2)
+val mat4x3dBuffer = doubleBufferBig(4 * 3)
+val mat4dBuffer = doubleBufferBig(4 * 4)

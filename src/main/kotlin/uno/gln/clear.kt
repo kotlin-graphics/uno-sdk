@@ -6,6 +6,8 @@ import glm_.vec1.Vec1
 import glm_.vec4.Vec4
 import org.lwjgl.opengl.GL11
 import org.lwjgl.opengl.GL30
+import uno.gl.floatBuffer
+import uno.gl.mat4Buffer
 
 /**
  * Created by GBarbieri on 21.04.2017.

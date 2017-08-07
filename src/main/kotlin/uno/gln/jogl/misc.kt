@@ -4,11 +4,11 @@ import com.jogamp.opengl.GL
 import com.jogamp.opengl.GL2ES3
 import com.jogamp.opengl.GL3
 import glm_.f
+import glm_.vec2.Vec2
 import glm_.vec2.Vec2i
+import glm_.vec4.Vec4
 import glm_.vec4.Vec4i
-import uno.gl.checkError
-import uno.gln.intBuffer
-import uno.gln.mat4Buffer
+import uno.gl.*
 
 
 fun GL3.glViewport(size: Vec2i) = glViewport(0, 0, size.x, size.y)
@@ -93,3 +93,39 @@ fun GL3.checkError(location: String) = checkError(gl, location)
 
 
 
+fun GL3.glGetVec2(pname: Int): Vec2 {
+    glGetFloatv(pname, vec2Buffer)
+    return Vec2(vec2Buffer)
+}
+
+fun GL3.glGetVec2i(pname: Int): Vec2i {
+    glGetIntegerv(pname, vec2iBuffer)
+    return Vec2i(vec2iBuffer)
+}
+
+fun GL3.glGetVec4(pname: Int): Vec4 {
+    glGetFloatv(pname, vec4Buffer)
+    return Vec4(vec4Buffer)
+}
+
+fun GL3.glGetVec4i(pname: Int): Vec4i {
+    glGetIntegerv(pname, vec4iBuffer)
+    return Vec4i(vec4iBuffer)
+}
+
+fun checkError(gl: GL, location: String) {
+
+    val error = gl.glGetError()
+    if (error != GL.GL_NO_ERROR) {
+        val errorString: String
+        when (error) {
+            GL.GL_INVALID_ENUM -> errorString = "GL_INVALID_ENUM"
+            GL.GL_INVALID_VALUE -> errorString = "GL_INVALID_VALUE"
+            GL.GL_INVALID_OPERATION -> errorString = "GL_INVALID_OPERATION"
+            GL.GL_INVALID_FRAMEBUFFER_OPERATION -> errorString = "GL_INVALID_FRAMEBUFFER_OPERATION"
+            GL.GL_OUT_OF_MEMORY -> errorString = "GL_OUT_OF_MEMORY"
+            else -> errorString = "UNKNOWN"
+        }
+        throw Error("OpenGL Error($errorString): $location")
+    }
+}

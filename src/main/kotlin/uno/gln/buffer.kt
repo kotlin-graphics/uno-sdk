@@ -8,6 +8,8 @@ import org.lwjgl.opengl.GL15
 import org.lwjgl.opengl.GL15.*
 import org.lwjgl.opengl.GL30.*
 import org.lwjgl.system.MemoryUtil.NULL
+import uno.gl.intBuffer
+import uno.gl.mat4Buffer
 import java.nio.*
 
 /**

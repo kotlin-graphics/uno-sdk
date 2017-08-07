@@ -8,8 +8,8 @@ import glm_.L
 import glm_.mat4x4.Mat4
 import glm_.set
 import glm_.size
-import uno.gln.intBuffer
-import uno.gln.mat4Buffer
+import uno.gl.intBuffer
+import uno.gl.mat4Buffer
 import java.nio.*
 
 /**

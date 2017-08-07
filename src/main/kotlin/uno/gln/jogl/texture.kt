@@ -7,7 +7,7 @@ import com.jogamp.opengl.GL2GL3.*
 import com.jogamp.opengl.GL3
 import glm_.set
 import glm_.vec2.Vec2i
-import uno.gln.intBuffer
+import uno.gl.intBuffer
 import java.nio.ByteBuffer
 import java.nio.IntBuffer
 

@@ -10,6 +10,7 @@ import org.lwjgl.opengl.ARBUniformBufferObject.glGetUniformBlockIndex
 import org.lwjgl.opengl.ARBUniformBufferObject.glUniformBlockBinding
 import org.lwjgl.opengl.GL20
 import org.lwjgl.opengl.GL31
+import uno.gl.*
 import uno.glsl.Program
 
 fun glCreatePrograms(ints: IntArray) = repeat(ints.size) { ints[it] = GL20.glCreateProgram() }
@@ -63,7 +64,7 @@ object ProgramUse {
 
 
     fun link() = GL20.glLinkProgram(name)
-    
+
     infix fun Int.to(location: Int) = GL20.glUniform1i(location, this)
     infix fun Float.to(location: Int) = GL20.glUniform1f(location, this)
 

@@ -33,6 +33,7 @@ import glm_.vec4.Vec4i
 import glm_.vec4.Vec4t
 import org.lwjgl.opengl.GL20
 import org.lwjgl.opengl.GL21
+import uno.gl.*
 
 // ----------------------------------------- vec -----------------------------------------------------------------------
 // inferred length and type
