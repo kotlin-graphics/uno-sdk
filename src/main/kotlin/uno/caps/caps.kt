@@ -147,7 +147,7 @@ class Caps(profile: Profile) {
 
     inner class Extensions {
 
-        private val list by lazy { (0..version.NUM_EXTENSIONS).map { glGetStringi(GL_EXTENSIONS, it) } }
+        val list by lazy { (0..version.NUM_EXTENSIONS).map { glGetStringi(GL_EXTENSIONS, it) } }
 
         @JvmField val ARB_multitexture = has("GL_ARB_multitexture")
         @JvmField val ARB_transpose_matrix = has("GL_ARB_transpose_matrix")
