@@ -45,7 +45,7 @@ import kotlin.reflect.full.memberProperties
 fun main(args: Array<String>) {
 
     var args = args
-    if(false)
+    if (false)
         args = arrayOf("4.5", "D:\\Desktop\\report.txt")
 
     with(glfw) {
@@ -84,27 +84,41 @@ fun main(args: Array<String>) {
 
 class Caps(profile: Profile) {
 
-    @JvmField val version = Version(profile)
-    @JvmField val extensions = Extensions()
-    @JvmField val debug = Debug()
-    @JvmField val limits = Limits()
-    @JvmField val values = Values()
-    @JvmField val formats = Formats()
+    @JvmField
+    val version = Version(profile)
+    @JvmField
+    val extensions = Extensions()
+    @JvmField
+    val debug = Debug()
+    @JvmField
+    val limits = Limits()
+    @JvmField
+    val values = Values()
+    @JvmField
+    val formats = Formats()
 
     inner class Version(val profile: Profile) {
 
-        @JvmField val MINOR_VERSION = glGetInteger(GL_MINOR_VERSION)
-        @JvmField val MAJOR_VERSION = glGetInteger(GL_MAJOR_VERSION)
+        @JvmField
+        val MINOR_VERSION = glGetInteger(GL_MINOR_VERSION)
+        @JvmField
+        val MAJOR_VERSION = glGetInteger(GL_MAJOR_VERSION)
         //         val CONTEXT_FLAGS =
 //                if (check(4, 3) || glisExtensionAvailable("GL_KHR_debug"))
 //                    glGetInteger(GL_CONTEXT_FLAGS)
 //                else 0
-        @JvmField val NUM_EXTENSIONS = glGetInteger(GL_NUM_EXTENSIONS)
-        @JvmField val RENDERER = glGetString(GL_RENDERER)
-        @JvmField val VENDOR = glGetString(GL_VENDOR)
-        @JvmField val VERSION = glGetString(GL_VERSION)
-        @JvmField val SHADING_LANGUAGE_VERSION = glGetString(GL_SHADING_LANGUAGE_VERSION)
-        @JvmField val NUM_SHADING_LANGUAGE_VERSIONS =
+        @JvmField
+        val NUM_EXTENSIONS = glGetInteger(GL_NUM_EXTENSIONS)
+        @JvmField
+        val RENDERER = glGetString(GL_RENDERER)
+        @JvmField
+        val VENDOR = glGetString(GL_VENDOR)
+        @JvmField
+        val VERSION = glGetString(GL_VERSION)
+        @JvmField
+        val SHADING_LANGUAGE_VERSION = glGetString(GL_SHADING_LANGUAGE_VERSION)
+        @JvmField
+        val NUM_SHADING_LANGUAGE_VERSIONS =
                 if (check(4, 3))
                     glGetInteger(GL_NUM_SHADING_LANGUAGE_VERSIONS)
                 else 0
@@ -112,28 +126,50 @@ class Caps(profile: Profile) {
 
         private val glslVersions by lazy { (0 until NUM_SHADING_LANGUAGE_VERSIONS).map { glGetStringi(GL_SHADING_LANGUAGE_VERSION, it) } }
 
-        @JvmField val glsl100 = has("100")
-        @JvmField val glsl110 = has("110")
-        @JvmField val glsl120 = has("120")
-        @JvmField val glsl130 = has("130")
-        @JvmField val glsl140 = has("140")
-        @JvmField val glsl150Core = has("150 core")
-        @JvmField val glsl150Comp = has("150 compatibility")
-        @JvmField val glsl300ES = has("300 es")
-        @JvmField val glsl330Core = has("330 core")
-        @JvmField val glsl330Comp = has("330 compatibility")
-        @JvmField val glsl400Core = has("400 core")
-        @JvmField val glsl400Comp = has("400 compatibility")
-        @JvmField val glsl410Core = has("410 core")
-        @JvmField val glsl410Comp = has("410 compatibility")
-        @JvmField val glsl420Core = has("420 core")
-        @JvmField val glsl420Comp = has("420 compatibility")
-        @JvmField val glsl430Core = has("430 core")
-        @JvmField val glsl430Comp = has("430 compatibility")
-        @JvmField val glsl440Core = has("440 core")
-        @JvmField val glsl440Comp = has("440 compatibility")
-        @JvmField val glsl450Core = has("450 core")
-        @JvmField val glsl450Comp = has("450 compatibility")
+        @JvmField
+        val glsl100 = has("100")
+        @JvmField
+        val glsl110 = has("110")
+        @JvmField
+        val glsl120 = has("120")
+        @JvmField
+        val glsl130 = has("130")
+        @JvmField
+        val glsl140 = has("140")
+        @JvmField
+        val glsl150Core = has("150 core")
+        @JvmField
+        val glsl150Comp = has("150 compatibility")
+        @JvmField
+        val glsl300ES = has("300 es")
+        @JvmField
+        val glsl330Core = has("330 core")
+        @JvmField
+        val glsl330Comp = has("330 compatibility")
+        @JvmField
+        val glsl400Core = has("400 core")
+        @JvmField
+        val glsl400Comp = has("400 compatibility")
+        @JvmField
+        val glsl410Core = has("410 core")
+        @JvmField
+        val glsl410Comp = has("410 compatibility")
+        @JvmField
+        val glsl420Core = has("420 core")
+        @JvmField
+        val glsl420Comp = has("420 compatibility")
+        @JvmField
+        val glsl430Core = has("430 core")
+        @JvmField
+        val glsl430Comp = has("430 compatibility")
+        @JvmField
+        val glsl440Core = has("440 core")
+        @JvmField
+        val glsl440Comp = has("440 compatibility")
+        @JvmField
+        val glsl450Core = has("450 core")
+        @JvmField
+        val glsl450Comp = has("450 compatibility")
 
         fun check(majorVersionRequire: Int, minorVersionRequire: Int) =
                 MAJOR_VERSION * 100 + MINOR_VERSION * 10 >= (majorVersionRequire * 100 + minorVersionRequire * 10)
@@ -147,215 +183,414 @@ class Caps(profile: Profile) {
 
     inner class Extensions {
 
-        val list by lazy { (0..version.NUM_EXTENSIONS).map { glGetStringi(GL_EXTENSIONS, it) } }
+        val list by lazy { (0 until version.NUM_EXTENSIONS).map { glGetStringi(GL_EXTENSIONS, it) } }
 
-        @JvmField val ARB_multitexture = has("GL_ARB_multitexture")
-        @JvmField val ARB_transpose_matrix = has("GL_ARB_transpose_matrix")
-        @JvmField val ARB_multisample = has("GL_ARB_multisample")
-        @JvmField val ARB_texture_env_add = has("GL_ARB_texture_env_add")
-        @JvmField val ARB_texture_cube_map = has("GL_ARB_texture_cube_map")
-        @JvmField val ARB_texture_compression = has("GL_ARB_texture_compression")
-        @JvmField val ARB_texture_border_clamp = has("GL_ARB_texture_border_clamp")
-        @JvmField val ARB_point_parameters = has("GL_ARB_point_parameters")
-        @JvmField val ARB_vertex_blend = has("GL_ARB_vertex_blend")
-        @JvmField val ARB_matrix_palette = has("GL_ARB_matrix_palette")
-        @JvmField val ARB_texture_env_combine = has("GL_ARB_texture_env_combine")
-        @JvmField val ARB_texture_env_crossbar = has("GL_ARB_texture_env_crossbar")
-        @JvmField val ARB_texture_env_dot3 = has("GL_ARB_texture_env_dot3")
-        @JvmField val ARB_texture_mirrored_repeat = has("GL_ARB_texture_mirrored_repeat")
-        @JvmField val ARB_depth_texture = has("GL_ARB_depth_texture")
-        @JvmField val ARB_shadow = has("GL_ARB_shadow")
-        @JvmField val ARB_shadow_ambient = has("GL_ARB_shadow_ambient")
-        @JvmField val ARB_window_pos = has("GL_ARB_window_pos")
-        @JvmField val ARB_vertex_program = has("GL_ARB_vertex_program")
-        @JvmField val ARB_fragment_program = has("GL_ARB_fragment_program")
-        @JvmField val ARB_vertex_buffer_object = has("GL_ARB_vertex_buffer_object")
-        @JvmField val ARB_occlusion_query = has("GL_ARB_occlusion_query")
-        @JvmField val ARB_shader_objects = has("GL_ARB_shader_objects")
-        @JvmField val ARB_vertex_shader = has("GL_ARB_vertex_shader")
-        @JvmField val ARB_fragment_shader = has("GL_ARB_fragment_shader")
-        @JvmField val ARB_shading_language_100 = has("GL_ARB_shading_language_100")
-        @JvmField val ARB_texture_non_power_of_two = has("GL_ARB_texture_non_power_of_two")
-        @JvmField val ARB_point_sprite = has("GL_ARB_point_sprite")
-        @JvmField val ARB_fragment_program_shadow = has("GL_ARB_fragment_program_shadow")
-        @JvmField val ARB_draw_buffers = has("GL_ARB_draw_buffers")
-        @JvmField val ARB_texture_rectangle = has("GL_ARB_texture_rectangle")
-        @JvmField val ARB_color_buffer_float = has("GL_ARB_color_buffer_float")
-        @JvmField val ARB_half_float_pixel = has("GL_ARB_half_float_pixel")
-        @JvmField val ARB_texture_float = has("GL_ARB_texture_float")
-        @JvmField val ARB_pixel_buffer_object = has("GL_ARB_pixel_buffer_object")
-        @JvmField val ARB_depth_buffer_float = has("GL_ARB_depth_buffer_float")
-        @JvmField val ARB_draw_instanced = has("GL_ARB_draw_instanced")
-        @JvmField val ARB_framebuffer_object = has("GL_ARB_framebuffer_object")
-        @JvmField val ARB_framebuffer_sRGB = has("GL_ARB_framebuffer_sRGB")
-        @JvmField val ARB_geometry_shader4 = has("GL_ARB_geometry_shader4")
-        @JvmField val ARB_half_float_vertex = has("GL_ARB_half_float_vertex")
-        @JvmField val ARB_instanced_arrays = has("GL_ARB_instanced_arrays")
-        @JvmField val ARB_map_buffer_range = has("GL_ARB_map_buffer_range")
-        @JvmField val ARB_texture_buffer_object = has("GL_ARB_texture_buffer_object")
-        @JvmField val ARB_texture_compression_rgtc = has("GL_ARB_texture_compression_rgtc")
-        @JvmField val ARB_texture_rg = has("GL_ARB_texture_rg")
-        @JvmField val ARB_vertex_array_object = has("GL_ARB_vertex_array_object")
-        @JvmField val ARB_uniform_buffer_object = has("GL_ARB_uniform_buffer_object")
-        @JvmField val ARB_compatibility = has("GL_ARB_compatibility")
-        @JvmField val ARB_copy_buffer = has("GL_ARB_copy_buffer")
-        @JvmField val ARB_shader_texture_lod = has("GL_ARB_shader_texture_lod")
-        @JvmField val ARB_depth_clamp = has("GL_ARB_depth_clamp")
-        @JvmField val ARB_draw_elements_base_vertex = has("GL_ARB_draw_elements_base_vertex")
-        @JvmField val ARB_fragment_coord_conventions = has("GL_ARB_fragment_coord_conventions")
-        @JvmField val ARB_provoking_vertex = has("GL_ARB_provoking_vertex")
-        @JvmField val ARB_seamless_cube_map = has("GL_ARB_seamless_cube_map")
-        @JvmField val ARB_sync = has("GL_ARB_sync")
-        @JvmField val ARB_texture_multisample = has("GL_ARB_texture_multisample")
-        @JvmField val ARB_vertex_array_bgra = has("GL_ARB_vertex_array_bgra")
-        @JvmField val ARB_draw_buffers_blend = has("GL_ARB_draw_buffers_blend")
-        @JvmField val ARB_sample_shading = has("GL_ARB_sample_shading")
-        @JvmField val ARB_texture_cube_map_array = has("GL_ARB_texture_cube_map_array")
-        @JvmField val ARB_texture_gather = has("GL_ARB_texture_gather")
-        @JvmField val ARB_texture_query_lod = has("GL_ARB_texture_query_lod")
-        @JvmField val ARB_shading_language_include = has("GL_ARB_shading_language_include")
-        @JvmField val ARB_texture_compression_bptc = has("GL_ARB_texture_compression_bptc")
-        @JvmField val ARB_blend_func_extended = has("GL_ARB_blend_func_extended")
-        @JvmField val ARB_explicit_attrib_location = has("GL_ARB_explicit_attrib_location")
-        @JvmField val ARB_occlusion_query2 = has("GL_ARB_occlusion_query2")
-        @JvmField val ARB_sampler_objects = has("GL_ARB_sampler_objects")
-        @JvmField val ARB_shader_bit_encoding = has("GL_ARB_shader_bit_encoding")
-        @JvmField val ARB_texture_rgb10_a2ui = has("GL_ARB_texture_rgb10_a2ui")
-        @JvmField val ARB_texture_swizzle = has("GL_ARB_texture_swizzle")
-        @JvmField val ARB_timer_query = has("GL_ARB_timer_query")
-        @JvmField val ARB_vertex_type_2_10_10_10_rev = has("GL_ARB_vertex_type_2_10_10_10_rev")
-        @JvmField val ARB_draw_indirect = has("GL_ARB_draw_indirect")
-        @JvmField val ARB_gpu_shader5 = has("GL_ARB_gpu_shader5")
-        @JvmField val ARB_gpu_shader_fp64 = has("GL_ARB_gpu_shader_fp64")
-        @JvmField val ARB_shader_subroutine = has("GL_ARB_shader_subroutine")
-        @JvmField val ARB_tessellation_shader = has("GL_ARB_tessellation_shader")
-        @JvmField val ARB_texture_buffer_object_rgb32 = has("GL_ARB_texture_buffer_object_rgb32")
-        @JvmField val ARB_transform_feedback2 = has("GL_ARB_transform_feedback2")
-        @JvmField val ARB_transform_feedback3 = has("GL_ARB_transform_feedback3")
-        @JvmField val ARB_ES2_compatibility = has("GL_ARB_ES2_compatibility")
-        @JvmField val ARB_get_program_binary = has("GL_ARB_get_program_binary")
-        @JvmField val ARB_separate_shader_objects = has("GL_ARB_separate_shader_objects")
-        @JvmField val ARB_shader_precision = has("GL_ARB_shader_precision")
-        @JvmField val ARB_vertex_attrib_64bit = has("GL_ARB_vertex_attrib_64bit")
-        @JvmField val ARB_viewport_array = has("GL_ARB_viewport_array")
-        @JvmField val ARB_cl_event = has("GL_ARB_cl_event")
-        @JvmField val ARB_debug_output = has("GL_ARB_debug_output")
-        @JvmField val ARB_robustness = has("GL_ARB_robustness")
-        @JvmField val ARB_shader_stencil_export = has("GL_ARB_shader_stencil_export")
-        @JvmField val ARB_base_instance = has("GL_ARB_base_instance")
-        @JvmField val ARB_shading_language_420pack = has("GL_ARB_shading_language_420pack")
-        @JvmField val ARB_transform_feedback_instanced = has("GL_ARB_transform_feedback_instanced")
-        @JvmField val ARB_compressed_texture_pixel_storage = has("GL_ARB_compressed_texture_pixel_storage")
-        @JvmField val ARB_conservative_depth = has("GL_ARB_conservative_depth")
-        @JvmField val ARB_internalformat_query = has("GL_ARB_internalformat_query")
-        @JvmField val ARB_map_buffer_alignment = has("GL_ARB_map_buffer_alignment")
-        @JvmField val ARB_shader_atomic_counters = has("GL_ARB_shader_atomic_counters")
-        @JvmField val ARB_shader_image_load_store = has("GL_ARB_shader_image_load_store")
-        @JvmField val ARB_shading_language_packing = has("GL_ARB_shading_language_packing")
-        @JvmField val ARB_texture_storage = has("GL_ARB_texture_storage")
-        @JvmField val KHR_texture_compression_astc_hdr = has("GL_KHR_texture_compression_astc_hdr")
-        @JvmField val KHR_texture_compression_astc_ldr = has("GL_KHR_texture_compression_astc_ldr")
-        @JvmField val KHR_debug = has("GL_KHR_debug")
-        @JvmField val ARB_arrays_of_arrays = has("GL_ARB_arrays_of_arrays")
-        @JvmField val ARB_clear_buffer_object = has("GL_ARB_clear_buffer_object")
-        @JvmField val ARB_compute_shader = has("GL_ARB_compute_shader")
-        @JvmField val ARB_copy_image = has("GL_ARB_copy_image")
-        @JvmField val ARB_texture_view = has("GL_ARB_texture_view")
-        @JvmField val ARB_vertex_attrib_binding = has("GL_ARB_vertex_attrib_binding")
-        @JvmField val ARB_robustness_isolation = has("GL_ARB_robustness_isolation")
-        @JvmField val ARB_ES3_compatibility = has("GL_ARB_ES3_compatibility")
-        @JvmField val ARB_explicit_uniform_location = has("GL_ARB_explicit_uniform_location")
-        @JvmField val ARB_fragment_layer_viewport = has("GL_ARB_fragment_layer_viewport")
-        @JvmField val ARB_framebuffer_no_attachments = has("GL_ARB_framebuffer_no_attachments")
-        @JvmField val ARB_internalformat_query2 = has("GL_ARB_internalformat_query2")
-        @JvmField val ARB_invalidate_subdata = has("GL_ARB_invalidate_subdata")
-        @JvmField val ARB_multi_draw_indirect = has("GL_ARB_multi_draw_indirect")
-        @JvmField val ARB_program_interface_query = has("GL_ARB_program_interface_query")
-        @JvmField val ARB_robust_buffer_access_behavior = has("GL_ARB_robust_buffer_access_behavior")
-        @JvmField val ARB_shader_image_size = has("GL_ARB_shader_image_size")
-        @JvmField val ARB_shader_storage_buffer_object = has("GL_ARB_shader_storage_buffer_object")
-        @JvmField val ARB_stencil_texturing = has("GL_ARB_stencil_texturing")
-        @JvmField val ARB_texture_buffer_range = has("GL_ARB_texture_buffer_range")
-        @JvmField val ARB_texture_query_levels = has("GL_ARB_texture_query_levels")
-        @JvmField val ARB_texture_storage_multisample = has("GL_ARB_texture_storage_multisample")
-        @JvmField val ARB_buffer_storage = has("GL_ARB_buffer_storage")
-        @JvmField val ARB_clear_texture = has("GL_ARB_clear_texture")
-        @JvmField val ARB_enhanced_layouts = has("GL_ARB_enhanced_layouts")
-        @JvmField val ARB_multi_bind = has("GL_ARB_multi_bind")
-        @JvmField val ARB_query_buffer_object = has("GL_ARB_query_buffer_object")
-        @JvmField val ARB_texture_mirror_clamp_to_edge = has("GL_ARB_texture_mirror_clamp_to_edge")
-        @JvmField val ARB_texture_stencil8 = has("GL_ARB_texture_stencil8")
-        @JvmField val ARB_vertex_type_10f_11f_11f_rev = has("GL_ARB_vertex_type_10f_11f_11f_rev")
-        @JvmField val ARB_bindless_texture = has("GL_ARB_bindless_texture")
-        @JvmField val ARB_compute_valiable_group_size = has("GL_ARB_compute_valiable_group_size")
-        @JvmField val ARB_indirect_parameters = has("GL_ARB_indirect_parameters")
-        @JvmField val ARB_seamless_cubemap_per_texture = has("GL_ARB_seamless_cubemap_per_texture")
-        @JvmField val ARB_shader_draw_parameters = has("GL_ARB_shader_draw_parameters")
-        @JvmField val ARB_shader_group_vote = has("GL_ARB_shader_group_vote")
-        @JvmField val ARB_sparse_texture = has("GL_ARB_sparse_texture")
-        @JvmField val ARB_ES3_1_compatibility = has("GL_ARB_ES3_1_compatibility")
-        @JvmField val ARB_clip_control = has("GL_ARB_clip_control")
-        @JvmField val ARB_conditional_render_inverted = has("GL_ARB_conditional_render")
-        @JvmField val ARB_cull_distance = has("GL_ARB_cull_distance")
-        @JvmField val ARB_derivative_control = has("GL_ARB_derivative_control")
-        @JvmField val ARB_direct_state_access = has("GL_ARB_direct_state_access")
-        @JvmField val ARB_get_texture_sub_image = has("GL_ARB_get_texture_sub_image")
-        @JvmField val ARB_shader_texture_image_samples = has("GL_ARB_shader_texture_image_samples")
-        @JvmField val ARB_texture_barrier = has("GL_ARB_texture_barrier")
-        @JvmField val KHR_context_flush_control = has("GL_KHR_context_flush_control")
-        @JvmField val KHR_robust_buffer_access_behavior = has("GL_KHR_robust_buffer_access_behavior")
-        @JvmField val KHR_robustness = has("GL_KHR_robustness")
-        @JvmField val ARB_pipeline_statistics_query = has("GL_ARB_pipeline_statistics_query")
-        @JvmField val ARB_sparse_buffer = has("GL_ARB_sparse_buffer")
-        @JvmField val ARB_transform_feedback_overflow_query = has("GL_ARB_transform_feedback_overflow_query")
+        @JvmField
+        val ARB_multitexture = has("GL_ARB_multitexture")
+        @JvmField
+        val ARB_transpose_matrix = has("GL_ARB_transpose_matrix")
+        @JvmField
+        val ARB_multisample = has("GL_ARB_multisample")
+        @JvmField
+        val ARB_texture_env_add = has("GL_ARB_texture_env_add")
+        @JvmField
+        val ARB_texture_cube_map = has("GL_ARB_texture_cube_map")
+        @JvmField
+        val ARB_texture_compression = has("GL_ARB_texture_compression")
+        @JvmField
+        val ARB_texture_border_clamp = has("GL_ARB_texture_border_clamp")
+        @JvmField
+        val ARB_point_parameters = has("GL_ARB_point_parameters")
+        @JvmField
+        val ARB_vertex_blend = has("GL_ARB_vertex_blend")
+        @JvmField
+        val ARB_matrix_palette = has("GL_ARB_matrix_palette")
+        @JvmField
+        val ARB_texture_env_combine = has("GL_ARB_texture_env_combine")
+        @JvmField
+        val ARB_texture_env_crossbar = has("GL_ARB_texture_env_crossbar")
+        @JvmField
+        val ARB_texture_env_dot3 = has("GL_ARB_texture_env_dot3")
+        @JvmField
+        val ARB_texture_mirrored_repeat = has("GL_ARB_texture_mirrored_repeat")
+        @JvmField
+        val ARB_depth_texture = has("GL_ARB_depth_texture")
+        @JvmField
+        val ARB_shadow = has("GL_ARB_shadow")
+        @JvmField
+        val ARB_shadow_ambient = has("GL_ARB_shadow_ambient")
+        @JvmField
+        val ARB_window_pos = has("GL_ARB_window_pos")
+        @JvmField
+        val ARB_vertex_program = has("GL_ARB_vertex_program")
+        @JvmField
+        val ARB_fragment_program = has("GL_ARB_fragment_program")
+        @JvmField
+        val ARB_vertex_buffer_object = has("GL_ARB_vertex_buffer_object")
+        @JvmField
+        val ARB_occlusion_query = has("GL_ARB_occlusion_query")
+        @JvmField
+        val ARB_shader_objects = has("GL_ARB_shader_objects")
+        @JvmField
+        val ARB_vertex_shader = has("GL_ARB_vertex_shader")
+        @JvmField
+        val ARB_fragment_shader = has("GL_ARB_fragment_shader")
+        @JvmField
+        val ARB_shading_language_100 = has("GL_ARB_shading_language_100")
+        @JvmField
+        val ARB_texture_non_power_of_two = has("GL_ARB_texture_non_power_of_two")
+        @JvmField
+        val ARB_point_sprite = has("GL_ARB_point_sprite")
+        @JvmField
+        val ARB_fragment_program_shadow = has("GL_ARB_fragment_program_shadow")
+        @JvmField
+        val ARB_draw_buffers = has("GL_ARB_draw_buffers")
+        @JvmField
+        val ARB_texture_rectangle = has("GL_ARB_texture_rectangle")
+        @JvmField
+        val ARB_color_buffer_float = has("GL_ARB_color_buffer_float")
+        @JvmField
+        val ARB_half_float_pixel = has("GL_ARB_half_float_pixel")
+        @JvmField
+        val ARB_texture_float = has("GL_ARB_texture_float")
+        @JvmField
+        val ARB_pixel_buffer_object = has("GL_ARB_pixel_buffer_object")
+        @JvmField
+        val ARB_depth_buffer_float = has("GL_ARB_depth_buffer_float")
+        @JvmField
+        val ARB_draw_instanced = has("GL_ARB_draw_instanced")
+        @JvmField
+        val ARB_framebuffer_object = has("GL_ARB_framebuffer_object")
+        @JvmField
+        val ARB_framebuffer_sRGB = has("GL_ARB_framebuffer_sRGB")
+        @JvmField
+        val ARB_geometry_shader4 = has("GL_ARB_geometry_shader4")
+        @JvmField
+        val ARB_half_float_vertex = has("GL_ARB_half_float_vertex")
+        @JvmField
+        val ARB_instanced_arrays = has("GL_ARB_instanced_arrays")
+        @JvmField
+        val ARB_map_buffer_range = has("GL_ARB_map_buffer_range")
+        @JvmField
+        val ARB_texture_buffer_object = has("GL_ARB_texture_buffer_object")
+        @JvmField
+        val ARB_texture_compression_rgtc = has("GL_ARB_texture_compression_rgtc")
+        @JvmField
+        val ARB_texture_rg = has("GL_ARB_texture_rg")
+        @JvmField
+        val ARB_vertex_array_object = has("GL_ARB_vertex_array_object")
+        @JvmField
+        val ARB_uniform_buffer_object = has("GL_ARB_uniform_buffer_object")
+        @JvmField
+        val ARB_compatibility = has("GL_ARB_compatibility")
+        @JvmField
+        val ARB_copy_buffer = has("GL_ARB_copy_buffer")
+        @JvmField
+        val ARB_shader_texture_lod = has("GL_ARB_shader_texture_lod")
+        @JvmField
+        val ARB_depth_clamp = has("GL_ARB_depth_clamp")
+        @JvmField
+        val ARB_draw_elements_base_vertex = has("GL_ARB_draw_elements_base_vertex")
+        @JvmField
+        val ARB_fragment_coord_conventions = has("GL_ARB_fragment_coord_conventions")
+        @JvmField
+        val ARB_provoking_vertex = has("GL_ARB_provoking_vertex")
+        @JvmField
+        val ARB_seamless_cube_map = has("GL_ARB_seamless_cube_map")
+        @JvmField
+        val ARB_sync = has("GL_ARB_sync")
+        @JvmField
+        val ARB_texture_multisample = has("GL_ARB_texture_multisample")
+        @JvmField
+        val ARB_vertex_array_bgra = has("GL_ARB_vertex_array_bgra")
+        @JvmField
+        val ARB_draw_buffers_blend = has("GL_ARB_draw_buffers_blend")
+        @JvmField
+        val ARB_sample_shading = has("GL_ARB_sample_shading")
+        @JvmField
+        val ARB_texture_cube_map_array = has("GL_ARB_texture_cube_map_array")
+        @JvmField
+        val ARB_texture_gather = has("GL_ARB_texture_gather")
+        @JvmField
+        val ARB_texture_query_lod = has("GL_ARB_texture_query_lod")
+        @JvmField
+        val ARB_shading_language_include = has("GL_ARB_shading_language_include")
+        @JvmField
+        val ARB_texture_compression_bptc = has("GL_ARB_texture_compression_bptc")
+        @JvmField
+        val ARB_blend_func_extended = has("GL_ARB_blend_func_extended")
+        @JvmField
+        val ARB_explicit_attrib_location = has("GL_ARB_explicit_attrib_location")
+        @JvmField
+        val ARB_occlusion_query2 = has("GL_ARB_occlusion_query2")
+        @JvmField
+        val ARB_sampler_objects = has("GL_ARB_sampler_objects")
+        @JvmField
+        val ARB_shader_bit_encoding = has("GL_ARB_shader_bit_encoding")
+        @JvmField
+        val ARB_texture_rgb10_a2ui = has("GL_ARB_texture_rgb10_a2ui")
+        @JvmField
+        val ARB_texture_swizzle = has("GL_ARB_texture_swizzle")
+        @JvmField
+        val ARB_timer_query = has("GL_ARB_timer_query")
+        @JvmField
+        val ARB_vertex_type_2_10_10_10_rev = has("GL_ARB_vertex_type_2_10_10_10_rev")
+        @JvmField
+        val ARB_draw_indirect = has("GL_ARB_draw_indirect")
+        @JvmField
+        val ARB_gpu_shader5 = has("GL_ARB_gpu_shader5")
+        @JvmField
+        val ARB_gpu_shader_fp64 = has("GL_ARB_gpu_shader_fp64")
+        @JvmField
+        val ARB_shader_subroutine = has("GL_ARB_shader_subroutine")
+        @JvmField
+        val ARB_tessellation_shader = has("GL_ARB_tessellation_shader")
+        @JvmField
+        val ARB_texture_buffer_object_rgb32 = has("GL_ARB_texture_buffer_object_rgb32")
+        @JvmField
+        val ARB_transform_feedback2 = has("GL_ARB_transform_feedback2")
+        @JvmField
+        val ARB_transform_feedback3 = has("GL_ARB_transform_feedback3")
+        @JvmField
+        val ARB_ES2_compatibility = has("GL_ARB_ES2_compatibility")
+        @JvmField
+        val ARB_get_program_binary = has("GL_ARB_get_program_binary")
+        @JvmField
+        val ARB_separate_shader_objects = has("GL_ARB_separate_shader_objects")
+        @JvmField
+        val ARB_shader_precision = has("GL_ARB_shader_precision")
+        @JvmField
+        val ARB_vertex_attrib_64bit = has("GL_ARB_vertex_attrib_64bit")
+        @JvmField
+        val ARB_viewport_array = has("GL_ARB_viewport_array")
+        @JvmField
+        val ARB_cl_event = has("GL_ARB_cl_event")
+        @JvmField
+        val ARB_debug_output = has("GL_ARB_debug_output")
+        @JvmField
+        val ARB_robustness = has("GL_ARB_robustness")
+        @JvmField
+        val ARB_shader_stencil_export = has("GL_ARB_shader_stencil_export")
+        @JvmField
+        val ARB_base_instance = has("GL_ARB_base_instance")
+        @JvmField
+        val ARB_shading_language_420pack = has("GL_ARB_shading_language_420pack")
+        @JvmField
+        val ARB_transform_feedback_instanced = has("GL_ARB_transform_feedback_instanced")
+        @JvmField
+        val ARB_compressed_texture_pixel_storage = has("GL_ARB_compressed_texture_pixel_storage")
+        @JvmField
+        val ARB_conservative_depth = has("GL_ARB_conservative_depth")
+        @JvmField
+        val ARB_internalformat_query = has("GL_ARB_internalformat_query")
+        @JvmField
+        val ARB_map_buffer_alignment = has("GL_ARB_map_buffer_alignment")
+        @JvmField
+        val ARB_shader_atomic_counters = has("GL_ARB_shader_atomic_counters")
+        @JvmField
+        val ARB_shader_image_load_store = has("GL_ARB_shader_image_load_store")
+        @JvmField
+        val ARB_shading_language_packing = has("GL_ARB_shading_language_packing")
+        @JvmField
+        val ARB_texture_storage = has("GL_ARB_texture_storage")
+        @JvmField
+        val KHR_texture_compression_astc_hdr = has("GL_KHR_texture_compression_astc_hdr")
+        @JvmField
+        val KHR_texture_compression_astc_ldr = has("GL_KHR_texture_compression_astc_ldr")
+        @JvmField
+        val KHR_debug = has("GL_KHR_debug")
+        @JvmField
+        val ARB_arrays_of_arrays = has("GL_ARB_arrays_of_arrays")
+        @JvmField
+        val ARB_clear_buffer_object = has("GL_ARB_clear_buffer_object")
+        @JvmField
+        val ARB_compute_shader = has("GL_ARB_compute_shader")
+        @JvmField
+        val ARB_copy_image = has("GL_ARB_copy_image")
+        @JvmField
+        val ARB_texture_view = has("GL_ARB_texture_view")
+        @JvmField
+        val ARB_vertex_attrib_binding = has("GL_ARB_vertex_attrib_binding")
+        @JvmField
+        val ARB_robustness_isolation = has("GL_ARB_robustness_isolation")
+        @JvmField
+        val ARB_ES3_compatibility = has("GL_ARB_ES3_compatibility")
+        @JvmField
+        val ARB_explicit_uniform_location = has("GL_ARB_explicit_uniform_location")
+        @JvmField
+        val ARB_fragment_layer_viewport = has("GL_ARB_fragment_layer_viewport")
+        @JvmField
+        val ARB_framebuffer_no_attachments = has("GL_ARB_framebuffer_no_attachments")
+        @JvmField
+        val ARB_internalformat_query2 = has("GL_ARB_internalformat_query2")
+        @JvmField
+        val ARB_invalidate_subdata = has("GL_ARB_invalidate_subdata")
+        @JvmField
+        val ARB_multi_draw_indirect = has("GL_ARB_multi_draw_indirect")
+        @JvmField
+        val ARB_program_interface_query = has("GL_ARB_program_interface_query")
+        @JvmField
+        val ARB_robust_buffer_access_behavior = has("GL_ARB_robust_buffer_access_behavior")
+        @JvmField
+        val ARB_shader_image_size = has("GL_ARB_shader_image_size")
+        @JvmField
+        val ARB_shader_storage_buffer_object = has("GL_ARB_shader_storage_buffer_object")
+        @JvmField
+        val ARB_stencil_texturing = has("GL_ARB_stencil_texturing")
+        @JvmField
+        val ARB_texture_buffer_range = has("GL_ARB_texture_buffer_range")
+        @JvmField
+        val ARB_texture_query_levels = has("GL_ARB_texture_query_levels")
+        @JvmField
+        val ARB_texture_storage_multisample = has("GL_ARB_texture_storage_multisample")
+        @JvmField
+        val ARB_buffer_storage = has("GL_ARB_buffer_storage")
+        @JvmField
+        val ARB_clear_texture = has("GL_ARB_clear_texture")
+        @JvmField
+        val ARB_enhanced_layouts = has("GL_ARB_enhanced_layouts")
+        @JvmField
+        val ARB_multi_bind = has("GL_ARB_multi_bind")
+        @JvmField
+        val ARB_query_buffer_object = has("GL_ARB_query_buffer_object")
+        @JvmField
+        val ARB_texture_mirror_clamp_to_edge = has("GL_ARB_texture_mirror_clamp_to_edge")
+        @JvmField
+        val ARB_texture_stencil8 = has("GL_ARB_texture_stencil8")
+        @JvmField
+        val ARB_vertex_type_10f_11f_11f_rev = has("GL_ARB_vertex_type_10f_11f_11f_rev")
+        @JvmField
+        val ARB_bindless_texture = has("GL_ARB_bindless_texture")
+        @JvmField
+        val ARB_compute_valiable_group_size = has("GL_ARB_compute_valiable_group_size")
+        @JvmField
+        val ARB_indirect_parameters = has("GL_ARB_indirect_parameters")
+        @JvmField
+        val ARB_seamless_cubemap_per_texture = has("GL_ARB_seamless_cubemap_per_texture")
+        @JvmField
+        val ARB_shader_draw_parameters = has("GL_ARB_shader_draw_parameters")
+        @JvmField
+        val ARB_shader_group_vote = has("GL_ARB_shader_group_vote")
+        @JvmField
+        val ARB_sparse_texture = has("GL_ARB_sparse_texture")
+        @JvmField
+        val ARB_ES3_1_compatibility = has("GL_ARB_ES3_1_compatibility")
+        @JvmField
+        val ARB_clip_control = has("GL_ARB_clip_control")
+        @JvmField
+        val ARB_conditional_render_inverted = has("GL_ARB_conditional_render")
+        @JvmField
+        val ARB_cull_distance = has("GL_ARB_cull_distance")
+        @JvmField
+        val ARB_derivative_control = has("GL_ARB_derivative_control")
+        @JvmField
+        val ARB_direct_state_access = has("GL_ARB_direct_state_access")
+        @JvmField
+        val ARB_get_texture_sub_image = has("GL_ARB_get_texture_sub_image")
+        @JvmField
+        val ARB_shader_texture_image_samples = has("GL_ARB_shader_texture_image_samples")
+        @JvmField
+        val ARB_texture_barrier = has("GL_ARB_texture_barrier")
+        @JvmField
+        val KHR_context_flush_control = has("GL_KHR_context_flush_control")
+        @JvmField
+        val KHR_robust_buffer_access_behavior = has("GL_KHR_robust_buffer_access_behavior")
+        @JvmField
+        val KHR_robustness = has("GL_KHR_robustness")
+        @JvmField
+        val ARB_pipeline_statistics_query = has("GL_ARB_pipeline_statistics_query")
+        @JvmField
+        val ARB_sparse_buffer = has("GL_ARB_sparse_buffer")
+        @JvmField
+        val ARB_transform_feedback_overflow_query = has("GL_ARB_transform_feedback_overflow_query")
 
         // EXT
-        @JvmField val EXT_texture_compression_latc = has("GL_EXT_texture_compression_latc")
-        @JvmField val EXT_transform_feedback = has("GL_EXT_transform_feedback")
-        @JvmField val EXT_direct_state_access = has("GL_EXT_direct_state_access")
-        @JvmField val EXT_texture_filter_anisotropic = has("GL_EXT_texture_filter_anisotropic")
-        @JvmField val EXT_texture_compression_s3tc = has("GL_EXT_texture_compression_s3tc")
-        @JvmField val EXT_texture_array = has("GL_EXT_texture_array")
-        @JvmField val EXT_texture_snorm = has("GL_EXT_texture_snorm")
-        @JvmField val EXT_texture_sRGB_decode = has("GL_EXT_texture_sRGB_decode")
-        @JvmField val EXT_framebuffer_multisample_blit_scaled = has("GL_EXT_framebuffer_multisample_blit_scaled")
-        @JvmField val EXT_shader_integer_mix = has("GL_EXT_shader_integer_mix")
-        @JvmField val EXT_shader_image_load_formatted = has("GL_EXT_shader_image_load_formatted")
-        @JvmField val EXT_polygon_offset_clamp = has("GL_EXT_polygon_offset_clamp")
+        @JvmField
+        val EXT_texture_compression_latc = has("GL_EXT_texture_compression_latc")
+        @JvmField
+        val EXT_transform_feedback = has("GL_EXT_transform_feedback")
+        @JvmField
+        val EXT_direct_state_access = has("GL_EXT_direct_state_access")
+        @JvmField
+        val EXT_texture_filter_anisotropic = has("GL_EXT_texture_filter_anisotropic")
+        @JvmField
+        val EXT_texture_compression_s3tc = has("GL_EXT_texture_compression_s3tc")
+        @JvmField
+        val EXT_texture_array = has("GL_EXT_texture_array")
+        @JvmField
+        val EXT_texture_snorm = has("GL_EXT_texture_snorm")
+        @JvmField
+        val EXT_texture_sRGB_decode = has("GL_EXT_texture_sRGB_decode")
+        @JvmField
+        val EXT_framebuffer_multisample_blit_scaled = has("GL_EXT_framebuffer_multisample_blit_scaled")
+        @JvmField
+        val EXT_shader_integer_mix = has("GL_EXT_shader_integer_mix")
+        @JvmField
+        val EXT_shader_image_load_formatted = has("GL_EXT_shader_image_load_formatted")
+        @JvmField
+        val EXT_polygon_offset_clamp = has("GL_EXT_polygon_offset_clamp")
 
         // NV
-        @JvmField val NV_explicit_multisample = has("GL_NV_explicit_multisample")
-        @JvmField val NV_shader_buffer_load = has("GL_NV_shader_buffer_load")
-        @JvmField val NV_vertex_buffer_unified_memory = has("GL_NV_vertex_buffer_unified_memory")
-        @JvmField val NV_shader_buffer_store = has("GL_NV_shader_buffer_store")
-        @JvmField val NV_bindless_multi_draw_indirect = has("GL_NV_bindless_multi_draw_indirect")
-        @JvmField val NV_blend_equation_advanced = has("GL_NV_blend_equation_advanced")
-        @JvmField val NV_deep_texture3D = has("GL_NV_deep_texture3D")
-        @JvmField val NV_shader_thread_group = has("GL_NV_shader_thread_group")
-        @JvmField val NV_shader_thread_shuffle = has("GL_NV_shader_thread_shuffle")
-        @JvmField val NV_shader_atomic_int64 = has("GL_NV_shader_atomic_int64")
-        @JvmField val NV_bindless_multi_draw_indirect_count = has("GL_NV_bindless_multi_draw_indirect_count")
-        @JvmField val NV_uniform_buffer_unified_memory = has("GL_NV_uniform_buffer_unified_memory")
+        @JvmField
+        val NV_explicit_multisample = has("GL_NV_explicit_multisample")
+        @JvmField
+        val NV_shader_buffer_load = has("GL_NV_shader_buffer_load")
+        @JvmField
+        val NV_vertex_buffer_unified_memory = has("GL_NV_vertex_buffer_unified_memory")
+        @JvmField
+        val NV_shader_buffer_store = has("GL_NV_shader_buffer_store")
+        @JvmField
+        val NV_bindless_multi_draw_indirect = has("GL_NV_bindless_multi_draw_indirect")
+        @JvmField
+        val NV_blend_equation_advanced = has("GL_NV_blend_equation_advanced")
+        @JvmField
+        val NV_deep_texture3D = has("GL_NV_deep_texture3D")
+        @JvmField
+        val NV_shader_thread_group = has("GL_NV_shader_thread_group")
+        @JvmField
+        val NV_shader_thread_shuffle = has("GL_NV_shader_thread_shuffle")
+        @JvmField
+        val NV_shader_atomic_int64 = has("GL_NV_shader_atomic_int64")
+        @JvmField
+        val NV_bindless_multi_draw_indirect_count = has("GL_NV_bindless_multi_draw_indirect_count")
+        @JvmField
+        val NV_uniform_buffer_unified_memory = has("GL_NV_uniform_buffer_unified_memory")
 
         // AMD
-        @JvmField val ATI_texture_compression_3dc = has("GL_ATI_texture_compression_3dc")
-        @JvmField val AMD_depth_clamp_separate = has("GL_AMD_depth_clamp_separate")
-        @JvmField val AMD_stencil_operation_extended = has("GL_AMD_stencil_operation_extended")
-        @JvmField val AMD_vertex_shader_viewport_index = has("GL_AMD_vertex_shader_viewport_index")
-        @JvmField val AMD_vertex_shader_layer = has("GL_AMD_vertex_shader_layer")
-        @JvmField val AMD_shader_trinary_minmax = has("GL_AMD_shader_trinary_minmax")
-        @JvmField val AMD_interleaved_elements = has("GL_AMD_interleaved_elements")
-        @JvmField val AMD_shader_atomic_counter_ops = has("GL_AMD_shader_atomic_counter_ops")
-        @JvmField val AMD_occlusion_query_event = has("GL_AMD_occlusion_query_event")
-        @JvmField val AMD_shader_stencil_value_export = has("GL_AMD_shader_stencil_value_export")
-        @JvmField val AMD_transform_feedback4 = has("GL_AMD_transform_feedback4")
-        @JvmField val AMD_gpu_shader_int64 = has("GL_AMD_gpu_shader_int64")
-        @JvmField val AMD_gcn_shader = has("GL_AMD_gcn_shader")
+        @JvmField
+        val ATI_texture_compression_3dc = has("GL_ATI_texture_compression_3dc")
+        @JvmField
+        val AMD_depth_clamp_separate = has("GL_AMD_depth_clamp_separate")
+        @JvmField
+        val AMD_stencil_operation_extended = has("GL_AMD_stencil_operation_extended")
+        @JvmField
+        val AMD_vertex_shader_viewport_index = has("GL_AMD_vertex_shader_viewport_index")
+        @JvmField
+        val AMD_vertex_shader_layer = has("GL_AMD_vertex_shader_layer")
+        @JvmField
+        val AMD_shader_trinary_minmax = has("GL_AMD_shader_trinary_minmax")
+        @JvmField
+        val AMD_interleaved_elements = has("GL_AMD_interleaved_elements")
+        @JvmField
+        val AMD_shader_atomic_counter_ops = has("GL_AMD_shader_atomic_counter_ops")
+        @JvmField
+        val AMD_occlusion_query_event = has("GL_AMD_occlusion_query_event")
+        @JvmField
+        val AMD_shader_stencil_value_export = has("GL_AMD_shader_stencil_value_export")
+        @JvmField
+        val AMD_transform_feedback4 = has("GL_AMD_transform_feedback4")
+        @JvmField
+        val AMD_gpu_shader_int64 = has("GL_AMD_gpu_shader_int64")
+        @JvmField
+        val AMD_gcn_shader = has("GL_AMD_gcn_shader")
 
         // Intel
-        @JvmField val INTEL_map_texture = has("GL_INTEL_map_texture")
-        @JvmField val INTEL_fragment_shader_ordering = has("GL_INTEL_fragment_shader_ordering")
-        @JvmField val INTEL_performance_query = has("GL_INTEL_performance_query")
+        @JvmField
+        val INTEL_map_texture = has("GL_INTEL_map_texture")
+        @JvmField
+        val INTEL_fragment_shader_ordering = has("GL_INTEL_fragment_shader_ordering")
+        @JvmField
+        val INTEL_performance_query = has("GL_INTEL_performance_query")
 
         private fun has(s: String) = list.contains(s)
 
@@ -365,10 +600,14 @@ class Caps(profile: Profile) {
     }
 
     inner class Debug {
-        @JvmField val CONTEXT_FLAGS = glGetInteger(GL_CONTEXT_FLAGS)
-        @JvmField val MAX_DEBUG_GROUP_STACK_DEPTH = glGetInteger(GL_MAX_DEBUG_GROUP_STACK_DEPTH)
-        @JvmField val MAX_LABEL_LENGTH = glGetInteger(GL_MAX_LABEL_LENGTH)
-        @JvmField val MAX_SERVER_WAIT_TIMEOUT = glGetInteger(GL_MAX_SERVER_WAIT_TIMEOUT)
+        @JvmField
+        val CONTEXT_FLAGS = glGetInteger(GL_CONTEXT_FLAGS)
+        @JvmField
+        val MAX_DEBUG_GROUP_STACK_DEPTH = glGetInteger(GL_MAX_DEBUG_GROUP_STACK_DEPTH)
+        @JvmField
+        val MAX_LABEL_LENGTH = glGetInteger(GL_MAX_LABEL_LENGTH)
+        @JvmField
+        val MAX_SERVER_WAIT_TIMEOUT = glGetInteger(GL_MAX_SERVER_WAIT_TIMEOUT)
 
         fun write(w: PrintWriter) = this::class.memberProperties.filter { it.visibility == KVisibility.PUBLIC }.map {
             w.println("${it.name} = ${it.getter.call(this)}")
@@ -377,113 +616,211 @@ class Caps(profile: Profile) {
 
     inner class Limits {
 
-        @JvmField var MAX_COMPUTE_SHADER_STORAGE_BLOCKS = 0
-        @JvmField var MAX_COMPUTE_UNIFORM_BLOCKS = 0
-        @JvmField var MAX_COMPUTE_TEXTURE_IMAGE_UNITS = 0
-        @JvmField var MAX_COMPUTE_IMAGE_UNIFORMS = 0
-        @JvmField var MAX_COMPUTE_UNIFORM_COMPONENTS = 0
-        @JvmField var MAX_COMBINED_COMPUTE_UNIFORM_COMPONENTS = 0
-        @JvmField var MAX_COMPUTE_ATOMIC_COUNTERS = 0
-        @JvmField var MAX_COMPUTE_ATOMIC_COUNTER_BUFFERS = 0
-        @JvmField var MAX_COMPUTE_SHARED_MEMORY_SIZE = 0
-        @JvmField var MAX_COMPUTE_WORK_GROUP_INVOCATIONS = 0
-        @JvmField var MAX_COMPUTE_WORK_GROUP_COUNT = 0
-        @JvmField var MAX_COMPUTE_WORK_GROUP_SIZE = 0
+        @JvmField
+        var MAX_COMPUTE_SHADER_STORAGE_BLOCKS = 0
+        @JvmField
+        var MAX_COMPUTE_UNIFORM_BLOCKS = 0
+        @JvmField
+        var MAX_COMPUTE_TEXTURE_IMAGE_UNITS = 0
+        @JvmField
+        var MAX_COMPUTE_IMAGE_UNIFORMS = 0
+        @JvmField
+        var MAX_COMPUTE_UNIFORM_COMPONENTS = 0
+        @JvmField
+        var MAX_COMBINED_COMPUTE_UNIFORM_COMPONENTS = 0
+        @JvmField
+        var MAX_COMPUTE_ATOMIC_COUNTERS = 0
+        @JvmField
+        var MAX_COMPUTE_ATOMIC_COUNTER_BUFFERS = 0
+        @JvmField
+        var MAX_COMPUTE_SHARED_MEMORY_SIZE = 0
+        @JvmField
+        var MAX_COMPUTE_WORK_GROUP_INVOCATIONS = 0
+        @JvmField
+        var MAX_COMPUTE_WORK_GROUP_COUNT = 0
+        @JvmField
+        var MAX_COMPUTE_WORK_GROUP_SIZE = 0
 
-        @JvmField var MAX_VERTEX_ATOMIC_COUNTERS = 0
-        @JvmField var MAX_VERTEX_SHADER_STORAGE_BLOCKS = 0
-        @JvmField var MAX_VERTEX_ATTRIBS = 0
-        @JvmField var MAX_VERTEX_OUTPUT_COMPONENTS = 0
-        @JvmField var MAX_VERTEX_TEXTURE_IMAGE_UNITS = 0
-        @JvmField var MAX_VERTEX_UNIFORM_COMPONENTS = 0
-        @JvmField var MAX_VERTEX_UNIFORM_VECTORS = 0
-        @JvmField var MAX_VERTEX_UNIFORM_BLOCKS = 0
-        @JvmField var MAX_COMBINED_VERTEX_UNIFORM_COMPONENTS = 0
+        @JvmField
+        var MAX_VERTEX_ATOMIC_COUNTERS = 0
+        @JvmField
+        var MAX_VERTEX_SHADER_STORAGE_BLOCKS = 0
+        @JvmField
+        var MAX_VERTEX_ATTRIBS = 0
+        @JvmField
+        var MAX_VERTEX_OUTPUT_COMPONENTS = 0
+        @JvmField
+        var MAX_VERTEX_TEXTURE_IMAGE_UNITS = 0
+        @JvmField
+        var MAX_VERTEX_UNIFORM_COMPONENTS = 0
+        @JvmField
+        var MAX_VERTEX_UNIFORM_VECTORS = 0
+        @JvmField
+        var MAX_VERTEX_UNIFORM_BLOCKS = 0
+        @JvmField
+        var MAX_COMBINED_VERTEX_UNIFORM_COMPONENTS = 0
 
-        @JvmField var MAX_TESS_CONTROL_ATOMIC_COUNTERS = 0
-        @JvmField var MAX_TESS_CONTROL_SHADER_STORAGE_BLOCKS = 0
-        @JvmField var MAX_TESS_CONTROL_INPUT_COMPONENTS = 0
-        @JvmField var MAX_TESS_CONTROL_OUTPUT_COMPONENTS = 0
-        @JvmField var MAX_TESS_CONTROL_TEXTURE_IMAGE_UNITS = 0
-        @JvmField var MAX_TESS_CONTROL_UNIFORM_BLOCKS = 0
-        @JvmField var MAX_TESS_CONTROL_UNIFORM_COMPONENTS = 0
-        @JvmField var MAX_COMBINED_TESS_CONTROL_UNIFORM_COMPONENTS = 0
+        @JvmField
+        var MAX_TESS_CONTROL_ATOMIC_COUNTERS = 0
+        @JvmField
+        var MAX_TESS_CONTROL_SHADER_STORAGE_BLOCKS = 0
+        @JvmField
+        var MAX_TESS_CONTROL_INPUT_COMPONENTS = 0
+        @JvmField
+        var MAX_TESS_CONTROL_OUTPUT_COMPONENTS = 0
+        @JvmField
+        var MAX_TESS_CONTROL_TEXTURE_IMAGE_UNITS = 0
+        @JvmField
+        var MAX_TESS_CONTROL_UNIFORM_BLOCKS = 0
+        @JvmField
+        var MAX_TESS_CONTROL_UNIFORM_COMPONENTS = 0
+        @JvmField
+        var MAX_COMBINED_TESS_CONTROL_UNIFORM_COMPONENTS = 0
 
-        @JvmField var MAX_TESS_EVALUATION_ATOMIC_COUNTERS = 0
-        @JvmField var MAX_TESS_EVALUATION_SHADER_STORAGE_BLOCKS = 0
-        @JvmField var MAX_TESS_EVALUATION_INPUT_COMPONENTS = 0
-        @JvmField var MAX_TESS_EVALUATION_OUTPUT_COMPONENTS = 0
-        @JvmField var MAX_TESS_EVALUATION_TEXTURE_IMAGE_UNITS = 0
-        @JvmField var MAX_TESS_EVALUATION_UNIFORM_BLOCKS = 0
-        @JvmField var MAX_TESS_EVALUATION_UNIFORM_COMPONENTS = 0
-        @JvmField var MAX_COMBINED_TESS_EVALUATION_UNIFORM_COMPONENTS = 0
+        @JvmField
+        var MAX_TESS_EVALUATION_ATOMIC_COUNTERS = 0
+        @JvmField
+        var MAX_TESS_EVALUATION_SHADER_STORAGE_BLOCKS = 0
+        @JvmField
+        var MAX_TESS_EVALUATION_INPUT_COMPONENTS = 0
+        @JvmField
+        var MAX_TESS_EVALUATION_OUTPUT_COMPONENTS = 0
+        @JvmField
+        var MAX_TESS_EVALUATION_TEXTURE_IMAGE_UNITS = 0
+        @JvmField
+        var MAX_TESS_EVALUATION_UNIFORM_BLOCKS = 0
+        @JvmField
+        var MAX_TESS_EVALUATION_UNIFORM_COMPONENTS = 0
+        @JvmField
+        var MAX_COMBINED_TESS_EVALUATION_UNIFORM_COMPONENTS = 0
 
-        @JvmField var MAX_GEOMETRY_ATOMIC_COUNTERS = 0
-        @JvmField var MAX_GEOMETRY_SHADER_STORAGE_BLOCKS = 0
-        @JvmField var MAX_GEOMETRY_INPUT_COMPONENTS = 0
-        @JvmField var MAX_GEOMETRY_OUTPUT_COMPONENTS = 0
-        @JvmField var MAX_GEOMETRY_TEXTURE_IMAGE_UNITS = 0
-        @JvmField var MAX_GEOMETRY_UNIFORM_BLOCKS = 0
-        @JvmField var MAX_GEOMETRY_UNIFORM_COMPONENTS = 0
-        @JvmField var MAX_COMBINED_GEOMETRY_UNIFORM_COMPONENTS = 0
-        @JvmField var MAX_VERTEX_STREAMS = 0
+        @JvmField
+        var MAX_GEOMETRY_ATOMIC_COUNTERS = 0
+        @JvmField
+        var MAX_GEOMETRY_SHADER_STORAGE_BLOCKS = 0
+        @JvmField
+        var MAX_GEOMETRY_INPUT_COMPONENTS = 0
+        @JvmField
+        var MAX_GEOMETRY_OUTPUT_COMPONENTS = 0
+        @JvmField
+        var MAX_GEOMETRY_TEXTURE_IMAGE_UNITS = 0
+        @JvmField
+        var MAX_GEOMETRY_UNIFORM_BLOCKS = 0
+        @JvmField
+        var MAX_GEOMETRY_UNIFORM_COMPONENTS = 0
+        @JvmField
+        var MAX_COMBINED_GEOMETRY_UNIFORM_COMPONENTS = 0
+        @JvmField
+        var MAX_VERTEX_STREAMS = 0
 
-        @JvmField var MAX_FRAGMENT_ATOMIC_COUNTERS = 0
-        @JvmField var MAX_FRAGMENT_SHADER_STORAGE_BLOCKS = 0
-        @JvmField var MAX_FRAGMENT_INPUT_COMPONENTS = 0
-        @JvmField var MAX_FRAGMENT_UNIFORM_COMPONENTS = 0
-        @JvmField var MAX_FRAGMENT_UNIFORM_VECTORS = 0
-        @JvmField var MAX_FRAGMENT_UNIFORM_BLOCKS = 0
-        @JvmField var MAX_COMBINED_FRAGMENT_UNIFORM_COMPONENTS = 0
-        @JvmField var MAX_DRAW_BUFFERS = 0
-        @JvmField var MAX_DUAL_SOURCE_DRAW_BUFFERS = 0
+        @JvmField
+        var MAX_FRAGMENT_ATOMIC_COUNTERS = 0
+        @JvmField
+        var MAX_FRAGMENT_SHADER_STORAGE_BLOCKS = 0
+        @JvmField
+        var MAX_FRAGMENT_INPUT_COMPONENTS = 0
+        @JvmField
+        var MAX_FRAGMENT_UNIFORM_COMPONENTS = 0
+        @JvmField
+        var MAX_FRAGMENT_UNIFORM_VECTORS = 0
+        @JvmField
+        var MAX_FRAGMENT_UNIFORM_BLOCKS = 0
+        @JvmField
+        var MAX_COMBINED_FRAGMENT_UNIFORM_COMPONENTS = 0
+        @JvmField
+        var MAX_DRAW_BUFFERS = 0
+        @JvmField
+        var MAX_DUAL_SOURCE_DRAW_BUFFERS = 0
 
-        @JvmField var MAX_COLOR_ATTACHMENTS = 0
-        @JvmField var MAX_FRAMEBUFFER_WIDTH = 0
-        @JvmField var MAX_FRAMEBUFFER_HEIGHT = 0
-        @JvmField var MAX_FRAMEBUFFER_LAYERS = 0
-        @JvmField var MAX_FRAMEBUFFER_SAMPLES = 0
-        @JvmField var MAX_SAMPLE_MASK_WORDS = 0
+        @JvmField
+        var MAX_COLOR_ATTACHMENTS = 0
+        @JvmField
+        var MAX_FRAMEBUFFER_WIDTH = 0
+        @JvmField
+        var MAX_FRAMEBUFFER_HEIGHT = 0
+        @JvmField
+        var MAX_FRAMEBUFFER_LAYERS = 0
+        @JvmField
+        var MAX_FRAMEBUFFER_SAMPLES = 0
+        @JvmField
+        var MAX_SAMPLE_MASK_WORDS = 0
 
-        @JvmField var MAX_TRANSFORM_FEEDBACK_BUFFERS = 0
-        @JvmField var MIN_MAP_BUFFER_ALIGNMENT = 0
+        @JvmField
+        var MAX_TRANSFORM_FEEDBACK_BUFFERS = 0
+        @JvmField
+        var MIN_MAP_BUFFER_ALIGNMENT = 0
 
-        @JvmField var MAX_TEXTURE_IMAGE_UNITS = 0
-        @JvmField var MAX_COMBINED_TEXTURE_IMAGE_UNITS = 0
-        @JvmField var MAX_RECTANGLE_TEXTURE_SIZE = 0
-        @JvmField var MAX_DEEP_3D_TEXTURE_WIDTH_HEIGHT_NV = 0
-        @JvmField var MAX_DEEP_3D_TEXTURE_DEPTH_NV = 0
-        @JvmField var MAX_COLOR_TEXTURE_SAMPLES = 0
-        @JvmField var MAX_DEPTH_TEXTURE_SAMPLES = 0
-        @JvmField var MAX_INTEGER_SAMPLES = 0
-        @JvmField var MAX_TEXTURE_BUFFER_SIZE = 0
-        @JvmField val NUM_COMPRESSED_TEXTURE_FORMATS = glGetInteger(GL_NUM_COMPRESSED_TEXTURE_FORMATS)
-        @JvmField var MAX_TEXTURE_MAX_ANISOTROPY_EXT = 0
+        @JvmField
+        var MAX_TEXTURE_IMAGE_UNITS = 0
+        @JvmField
+        var MAX_COMBINED_TEXTURE_IMAGE_UNITS = 0
+        @JvmField
+        var MAX_RECTANGLE_TEXTURE_SIZE = 0
+        @JvmField
+        var MAX_DEEP_3D_TEXTURE_WIDTH_HEIGHT_NV = 0
+        @JvmField
+        var MAX_DEEP_3D_TEXTURE_DEPTH_NV = 0
+        @JvmField
+        var MAX_COLOR_TEXTURE_SAMPLES = 0
+        @JvmField
+        var MAX_DEPTH_TEXTURE_SAMPLES = 0
+        @JvmField
+        var MAX_INTEGER_SAMPLES = 0
+        @JvmField
+        var MAX_TEXTURE_BUFFER_SIZE = 0
+        @JvmField
+        val NUM_COMPRESSED_TEXTURE_FORMATS = glGetInteger(GL_NUM_COMPRESSED_TEXTURE_FORMATS)
+        @JvmField
+        var MAX_TEXTURE_MAX_ANISOTROPY_EXT = 0
 
-        @JvmField var MAX_PATCH_VERTICES = 0
-        @JvmField var MAX_TESS_GEN_LEVEL = 0
-        @JvmField var MAX_SUBROUTINES = 0
-        @JvmField var MAX_SUBROUTINE_UNIFORM_LOCATIONS = 0
-        @JvmField var MAX_COMBINED_ATOMIC_COUNTERS = 0
-        @JvmField var MAX_COMBINED_SHADER_STORAGE_BLOCKS = 0
-        @JvmField var MAX_PROGRAM_TEXEL_OFFSET = 0
-        @JvmField var MIN_PROGRAM_TEXEL_OFFSET = 0
-        @JvmField var MAX_COMBINED_UNIFORM_BLOCKS = 0
-        @JvmField var MAX_UNIFORM_BUFFER_BINDINGS = 0
-        @JvmField var MAX_UNIFORM_BLOCK_SIZE = 0
-        @JvmField var MAX_UNIFORM_LOCATIONS = 0
-        @JvmField var MAX_VARYING_COMPONENTS = 0
-        @JvmField var MAX_VARYING_VECTORS = 0
-        @JvmField var MAX_VARYING_FLOATS = 0
-        @JvmField var MAX_SHADER_STORAGE_BUFFER_BINDINGS = 0
-        @JvmField var MAX_SHADER_STORAGE_BLOCK_SIZE = 0
-        @JvmField var MAX_COMBINED_SHADER_OUTPUT_RESOURCES = 0
-        @JvmField var SHADER_STORAGE_BUFFER_OFFSET_ALIGNMENT = 0
-        @JvmField var UNIFORM_BUFFER_OFFSET_ALIGNMENT = 0
-        @JvmField var NUM_PROGRAM_BINARY_FORMATS = 0
-        @JvmField var PROGRAM_BINARY_FORMATS = 0
-        @JvmField var NUM_SHADER_BINARY_FORMATS = 0
-        @JvmField var SHADER_BINARY_FORMATS = 0 //TODO
+        @JvmField
+        var MAX_PATCH_VERTICES = 0
+        @JvmField
+        var MAX_TESS_GEN_LEVEL = 0
+        @JvmField
+        var MAX_SUBROUTINES = 0
+        @JvmField
+        var MAX_SUBROUTINE_UNIFORM_LOCATIONS = 0
+        @JvmField
+        var MAX_COMBINED_ATOMIC_COUNTERS = 0
+        @JvmField
+        var MAX_COMBINED_SHADER_STORAGE_BLOCKS = 0
+        @JvmField
+        var MAX_PROGRAM_TEXEL_OFFSET = 0
+        @JvmField
+        var MIN_PROGRAM_TEXEL_OFFSET = 0
+        @JvmField
+        var MAX_COMBINED_UNIFORM_BLOCKS = 0
+        @JvmField
+        var MAX_UNIFORM_BUFFER_BINDINGS = 0
+        @JvmField
+        var MAX_UNIFORM_BLOCK_SIZE = 0
+        @JvmField
+        var MAX_UNIFORM_LOCATIONS = 0
+        @JvmField
+        var MAX_VARYING_COMPONENTS = 0
+        @JvmField
+        var MAX_VARYING_VECTORS = 0
+        @JvmField
+        var MAX_VARYING_FLOATS = 0
+        @JvmField
+        var MAX_SHADER_STORAGE_BUFFER_BINDINGS = 0
+        @JvmField
+        var MAX_SHADER_STORAGE_BLOCK_SIZE = 0
+        @JvmField
+        var MAX_COMBINED_SHADER_OUTPUT_RESOURCES = 0
+        @JvmField
+        var SHADER_STORAGE_BUFFER_OFFSET_ALIGNMENT = 0
+        @JvmField
+        var UNIFORM_BUFFER_OFFSET_ALIGNMENT = 0
+        @JvmField
+        var NUM_PROGRAM_BINARY_FORMATS = 0
+        @JvmField
+        var PROGRAM_BINARY_FORMATS = 0
+        @JvmField
+        var NUM_SHADER_BINARY_FORMATS = 0
+        @JvmField
+        var SHADER_BINARY_FORMATS = 0 //TODO
 
         init {
 
@@ -686,45 +1023,77 @@ class Caps(profile: Profile) {
 
     inner class Values {
 
-        @JvmField var SUBPIXEL_BITS = 0
-        @JvmField var MAX_CLIP_DISTANCES = 0
-        @JvmField var MAX_CULL_DISTANCES = 0
-        @JvmField var MAX_COMBINED_CLIP_AND_CULL_DISTANCES = 0
-        @JvmField var MAX_ELEMENT_INDEX = 0L
-        @JvmField var MAX_ELEMENTS_INDICES = 0
-        @JvmField var MAX_ELEMENTS_VERTICES = 0
-        @JvmField var IMPLEMENTATION_COLOR_READ_FORMAT = 0
-        @JvmField var IMPLEMENTATION_COLOR_READ_TYPE = 0
-        @JvmField val PRIMITIVE_RESTART_FOR_PATCHES_SUPPORTED = glGetBoolean(GL_PRIMITIVE_RESTART_FOR_PATCHES_SUPPORTED)
+        @JvmField
+        var SUBPIXEL_BITS = 0
+        @JvmField
+        var MAX_CLIP_DISTANCES = 0
+        @JvmField
+        var MAX_CULL_DISTANCES = 0
+        @JvmField
+        var MAX_COMBINED_CLIP_AND_CULL_DISTANCES = 0
+        @JvmField
+        var MAX_ELEMENT_INDEX = 0L
+        @JvmField
+        var MAX_ELEMENTS_INDICES = 0
+        @JvmField
+        var MAX_ELEMENTS_VERTICES = 0
+        @JvmField
+        var IMPLEMENTATION_COLOR_READ_FORMAT = 0
+        @JvmField
+        var IMPLEMENTATION_COLOR_READ_TYPE = 0
+        @JvmField
+        val PRIMITIVE_RESTART_FOR_PATCHES_SUPPORTED = glGetBoolean(GL_PRIMITIVE_RESTART_FOR_PATCHES_SUPPORTED)
 
-        @JvmField var MAX_3D_TEXTURE_SIZE = 0
-        @JvmField var MAX_TEXTURE_SIZE = 0
-        @JvmField var MAX_ARRAY_TEXTURE_LAYERS = 0
-        @JvmField var MAX_CUBE_MAP_TEXTURE_SIZE = 0
-        @JvmField var MAX_TEXTURE_LOD_BIAS = 0
-        @JvmField val MAX_RENDERBUFFER_SIZE = glGetInteger(GL_MAX_RENDERBUFFER_SIZE)
+        @JvmField
+        var MAX_3D_TEXTURE_SIZE = 0
+        @JvmField
+        var MAX_TEXTURE_SIZE = 0
+        @JvmField
+        var MAX_ARRAY_TEXTURE_LAYERS = 0
+        @JvmField
+        var MAX_CUBE_MAP_TEXTURE_SIZE = 0
+        @JvmField
+        var MAX_TEXTURE_LOD_BIAS = 0
+        @JvmField
+        val MAX_RENDERBUFFER_SIZE = glGetInteger(GL_MAX_RENDERBUFFER_SIZE)
 
-        @JvmField var MAX_VIEWPORT_DIMS = 0f
-        @JvmField var MAX_VIEWPORTS = 0
-        @JvmField var VIEWPORT_SUBPIXEL_BITS = 0
-        @JvmField var VIEWPORT_BOUNDS_RANGE = Vec2()
+        @JvmField
+        var MAX_VIEWPORT_DIMS = 0f
+        @JvmField
+        var MAX_VIEWPORTS = 0
+        @JvmField
+        var VIEWPORT_SUBPIXEL_BITS = 0
+        @JvmField
+        var VIEWPORT_BOUNDS_RANGE = Vec2()
 
-        @JvmField var LAYER_PROVOKING_VERTEX = 0
-        @JvmField var VIEWPORT_INDEX_PROVOKING_VERTEX = 0
+        @JvmField
+        var LAYER_PROVOKING_VERTEX = 0
+        @JvmField
+        var VIEWPORT_INDEX_PROVOKING_VERTEX = 0
 
-        @JvmField var POINT_SIZE_MAX = 0f
-        @JvmField var POINT_SIZE_MIN = 0f
-        @JvmField val POINT_SIZE_RANGE = glGetVec2(GL_POINT_SIZE_RANGE)
-        @JvmField val POINT_SIZE_GRANULARITY = glGetFloat(GL_POINT_SIZE_GRANULARITY)
+        @JvmField
+        var POINT_SIZE_MAX = 0f
+        @JvmField
+        var POINT_SIZE_MIN = 0f
+        @JvmField
+        val POINT_SIZE_RANGE = glGetVec2(GL_POINT_SIZE_RANGE)
+        @JvmField
+        val POINT_SIZE_GRANULARITY = glGetFloat(GL_POINT_SIZE_GRANULARITY)
 
-        @JvmField val ALIASED_LINE_WIDTH_RANGE = glGetVec2(GL_ALIASED_LINE_WIDTH_RANGE)
-        @JvmField val SMOOTH_LINE_WIDTH_RANGE = glGetVec2(GL_SMOOTH_LINE_WIDTH_RANGE)
-        @JvmField val SMOOTH_LINE_WIDTH_GRANULARITY = glGetFloat(GL_SMOOTH_LINE_WIDTH_GRANULARITY)
+        @JvmField
+        val ALIASED_LINE_WIDTH_RANGE = glGetVec2(GL_ALIASED_LINE_WIDTH_RANGE)
+        @JvmField
+        val SMOOTH_LINE_WIDTH_RANGE = glGetVec2(GL_SMOOTH_LINE_WIDTH_RANGE)
+        @JvmField
+        val SMOOTH_LINE_WIDTH_GRANULARITY = glGetFloat(GL_SMOOTH_LINE_WIDTH_GRANULARITY)
 
-        @JvmField var MAX_VERTEX_ATTRIB_RELATIVE_OFFSET = 0
-        @JvmField var MAX_VERTEX_ATTRIB_BINDINGS = 0
+        @JvmField
+        var MAX_VERTEX_ATTRIB_RELATIVE_OFFSET = 0
+        @JvmField
+        var MAX_VERTEX_ATTRIB_BINDINGS = 0
 
-        @JvmField var TEXTURE_BUFFER_OFFSET_ALIGNMENT = 0
+        @JvmField
+        var TEXTURE_BUFFER_OFFSET_ALIGNMENT = 0
 
         init {
 
@@ -789,7 +1158,7 @@ class Caps(profile: Profile) {
         }
 
         fun write(w: PrintWriter) = this::class.memberProperties.filter { it.visibility == KVisibility.PUBLIC }.forEach {
-                w.println("${it.name} = ${it.getter.call(this)}")
+            w.println("${it.name} = ${it.getter.call(this)}")
         }
     }
 
@@ -803,83 +1172,155 @@ class Caps(profile: Profile) {
             formats
         }
 
-        @JvmField val COMPRESSED_RGB_S3TC_DXT1_EXT = has(GL_COMPRESSED_RGB_S3TC_DXT1_EXT)
-        @JvmField val COMPRESSED_RGBA_S3TC_DXT1_EXT = has(GL_COMPRESSED_RGBA_S3TC_DXT1_EXT)
-        @JvmField val COMPRESSED_RGBA_S3TC_DXT3_EXT = has(GL_COMPRESSED_RGBA_S3TC_DXT3_EXT)
-        @JvmField val COMPRESSED_RGBA_S3TC_DXT5_EXT = has(GL_COMPRESSED_RGBA_S3TC_DXT5_EXT)
-        @JvmField val COMPRESSED_SRGB_S3TC_DXT1_EXT = has(GL_COMPRESSED_SRGB_S3TC_DXT1_EXT)
-        @JvmField val COMPRESSED_SRGB_ALPHA_S3TC_DXT1_EXT = has(GL_COMPRESSED_SRGB_ALPHA_S3TC_DXT1_EXT)
-        @JvmField val COMPRESSED_SRGB_ALPHA_S3TC_DXT3_EXT = has(GL_COMPRESSED_SRGB_ALPHA_S3TC_DXT3_EXT)
-        @JvmField val COMPRESSED_SRGB_ALPHA_S3TC_DXT5_EXT = has(GL_COMPRESSED_SRGB_ALPHA_S3TC_DXT5_EXT)
+        @JvmField
+        val COMPRESSED_RGB_S3TC_DXT1_EXT = has(GL_COMPRESSED_RGB_S3TC_DXT1_EXT)
+        @JvmField
+        val COMPRESSED_RGBA_S3TC_DXT1_EXT = has(GL_COMPRESSED_RGBA_S3TC_DXT1_EXT)
+        @JvmField
+        val COMPRESSED_RGBA_S3TC_DXT3_EXT = has(GL_COMPRESSED_RGBA_S3TC_DXT3_EXT)
+        @JvmField
+        val COMPRESSED_RGBA_S3TC_DXT5_EXT = has(GL_COMPRESSED_RGBA_S3TC_DXT5_EXT)
+        @JvmField
+        val COMPRESSED_SRGB_S3TC_DXT1_EXT = has(GL_COMPRESSED_SRGB_S3TC_DXT1_EXT)
+        @JvmField
+        val COMPRESSED_SRGB_ALPHA_S3TC_DXT1_EXT = has(GL_COMPRESSED_SRGB_ALPHA_S3TC_DXT1_EXT)
+        @JvmField
+        val COMPRESSED_SRGB_ALPHA_S3TC_DXT3_EXT = has(GL_COMPRESSED_SRGB_ALPHA_S3TC_DXT3_EXT)
+        @JvmField
+        val COMPRESSED_SRGB_ALPHA_S3TC_DXT5_EXT = has(GL_COMPRESSED_SRGB_ALPHA_S3TC_DXT5_EXT)
 
-        @JvmField val COMPRESSED_RED_RGTC1 = has(GL_COMPRESSED_RED_RGTC1)
-        @JvmField val COMPRESSED_SIGNED_RED_RGTC1 = has(GL_COMPRESSED_SIGNED_RED_RGTC1)
-        @JvmField val COMPRESSED_RG_RGTC2 = has(GL_COMPRESSED_RG_RGTC2)
-        @JvmField val COMPRESSED_SIGNED_RG_RGTC2 = has(GL_COMPRESSED_SIGNED_RG_RGTC2)
-        @JvmField val COMPRESSED_RGBA_BPTC_UNORM = has(GL_COMPRESSED_RGBA_BPTC_UNORM)
-        @JvmField val COMPRESSED_SRGB_ALPHA_BPTC_UNORM = has(GL_COMPRESSED_SRGB_ALPHA_BPTC_UNORM)
-        @JvmField val COMPRESSED_RGB_BPTC_SIGNED_FLOAT = has(GL_COMPRESSED_RGB_BPTC_SIGNED_FLOAT)
-        @JvmField val COMPRESSED_RGB_BPTC_UNSIGNED_FLOAT = has(GL_COMPRESSED_RGB_BPTC_UNSIGNED_FLOAT)
-        @JvmField val COMPRESSED_R11_EAC = has(GL_COMPRESSED_R11_EAC)
-        @JvmField val COMPRESSED_SIGNED_R11_EAC = has(GL_COMPRESSED_SIGNED_R11_EAC)
-        @JvmField val COMPRESSED_RG11_EAC = has(GL_COMPRESSED_RG11_EAC)
-        @JvmField val COMPRESSED_SIGNED_RG11_EAC = has(GL_COMPRESSED_SIGNED_RG11_EAC)
-        @JvmField val COMPRESSED_RGB8_ETC2 = has(GL_COMPRESSED_RGB8_ETC2)
-        @JvmField val COMPRESSED_SRGB8_ETC2 = has(GL_COMPRESSED_SRGB8_ETC2)
-        @JvmField val COMPRESSED_RGB8_PUNCHTHROUGH_ALPHA1_ETC2 = has(GL_COMPRESSED_RGB8_PUNCHTHROUGH_ALPHA1_ETC2)
-        @JvmField val COMPRESSED_SRGB8_PUNCHTHROUGH_ALPHA1_ETC2 = has(GL_COMPRESSED_SRGB8_PUNCHTHROUGH_ALPHA1_ETC2)
-        @JvmField val COMPRESSED_RGBA8_ETC2_EAC = has(GL_COMPRESSED_RGBA8_ETC2_EAC)
-        @JvmField val COMPRESSED_SRGB8_ALPHA8_ETC2_EAC = has(GL_COMPRESSED_SRGB8_ALPHA8_ETC2_EAC)
+        @JvmField
+        val COMPRESSED_RED_RGTC1 = has(GL_COMPRESSED_RED_RGTC1)
+        @JvmField
+        val COMPRESSED_SIGNED_RED_RGTC1 = has(GL_COMPRESSED_SIGNED_RED_RGTC1)
+        @JvmField
+        val COMPRESSED_RG_RGTC2 = has(GL_COMPRESSED_RG_RGTC2)
+        @JvmField
+        val COMPRESSED_SIGNED_RG_RGTC2 = has(GL_COMPRESSED_SIGNED_RG_RGTC2)
+        @JvmField
+        val COMPRESSED_RGBA_BPTC_UNORM = has(GL_COMPRESSED_RGBA_BPTC_UNORM)
+        @JvmField
+        val COMPRESSED_SRGB_ALPHA_BPTC_UNORM = has(GL_COMPRESSED_SRGB_ALPHA_BPTC_UNORM)
+        @JvmField
+        val COMPRESSED_RGB_BPTC_SIGNED_FLOAT = has(GL_COMPRESSED_RGB_BPTC_SIGNED_FLOAT)
+        @JvmField
+        val COMPRESSED_RGB_BPTC_UNSIGNED_FLOAT = has(GL_COMPRESSED_RGB_BPTC_UNSIGNED_FLOAT)
+        @JvmField
+        val COMPRESSED_R11_EAC = has(GL_COMPRESSED_R11_EAC)
+        @JvmField
+        val COMPRESSED_SIGNED_R11_EAC = has(GL_COMPRESSED_SIGNED_R11_EAC)
+        @JvmField
+        val COMPRESSED_RG11_EAC = has(GL_COMPRESSED_RG11_EAC)
+        @JvmField
+        val COMPRESSED_SIGNED_RG11_EAC = has(GL_COMPRESSED_SIGNED_RG11_EAC)
+        @JvmField
+        val COMPRESSED_RGB8_ETC2 = has(GL_COMPRESSED_RGB8_ETC2)
+        @JvmField
+        val COMPRESSED_SRGB8_ETC2 = has(GL_COMPRESSED_SRGB8_ETC2)
+        @JvmField
+        val COMPRESSED_RGB8_PUNCHTHROUGH_ALPHA1_ETC2 = has(GL_COMPRESSED_RGB8_PUNCHTHROUGH_ALPHA1_ETC2)
+        @JvmField
+        val COMPRESSED_SRGB8_PUNCHTHROUGH_ALPHA1_ETC2 = has(GL_COMPRESSED_SRGB8_PUNCHTHROUGH_ALPHA1_ETC2)
+        @JvmField
+        val COMPRESSED_RGBA8_ETC2_EAC = has(GL_COMPRESSED_RGBA8_ETC2_EAC)
+        @JvmField
+        val COMPRESSED_SRGB8_ALPHA8_ETC2_EAC = has(GL_COMPRESSED_SRGB8_ALPHA8_ETC2_EAC)
 
-        @JvmField val COMPRESSED_RGBA_ASTC_4x4_KHR = has(GL_COMPRESSED_RGBA_ASTC_4x4_KHR)
-        @JvmField val COMPRESSED_RGBA_ASTC_5x4_KHR = has(GL_COMPRESSED_RGBA_ASTC_5x4_KHR)
-        @JvmField val COMPRESSED_RGBA_ASTC_5x5_KHR = has(GL_COMPRESSED_RGBA_ASTC_5x5_KHR)
-        @JvmField val COMPRESSED_RGBA_ASTC_6x5_KHR = has(GL_COMPRESSED_RGBA_ASTC_6x5_KHR)
-        @JvmField val COMPRESSED_RGBA_ASTC_6x6_KHR = has(GL_COMPRESSED_RGBA_ASTC_6x6_KHR)
-        @JvmField val COMPRESSED_RGBA_ASTC_8x5_KHR = has(GL_COMPRESSED_RGBA_ASTC_8x5_KHR)
-        @JvmField val COMPRESSED_RGBA_ASTC_8x6_KHR = has(GL_COMPRESSED_RGBA_ASTC_8x6_KHR)
-        @JvmField val COMPRESSED_RGBA_ASTC_8x8_KHR = has(GL_COMPRESSED_RGBA_ASTC_8x8_KHR)
-        @JvmField val COMPRESSED_RGBA_ASTC_10x5_KHR = has(GL_COMPRESSED_RGBA_ASTC_10x5_KHR)
-        @JvmField val COMPRESSED_RGBA_ASTC_10x6_KHR = has(GL_COMPRESSED_RGBA_ASTC_10x6_KHR)
-        @JvmField val COMPRESSED_RGBA_ASTC_10x8_KHR = has(GL_COMPRESSED_RGBA_ASTC_10x8_KHR)
-        @JvmField val COMPRESSED_RGBA_ASTC_10x10_KHR = has(GL_COMPRESSED_RGBA_ASTC_10x10_KHR)
-        @JvmField val COMPRESSED_RGBA_ASTC_12x10_KHR = has(GL_COMPRESSED_RGBA_ASTC_12x10_KHR)
-        @JvmField val COMPRESSED_RGBA_ASTC_12x12_KHR = has(GL_COMPRESSED_RGBA_ASTC_12x12_KHR)
-        @JvmField val COMPRESSED_SRGB8_ALPHA8_ASTC_4x4_KHR = has(GL_COMPRESSED_SRGB8_ALPHA8_ASTC_4x4_KHR)
-        @JvmField val COMPRESSED_SRGB8_ALPHA8_ASTC_5x4_KHR = has(GL_COMPRESSED_SRGB8_ALPHA8_ASTC_5x4_KHR)
-        @JvmField val COMPRESSED_SRGB8_ALPHA8_ASTC_5x5_KHR = has(GL_COMPRESSED_SRGB8_ALPHA8_ASTC_5x5_KHR)
-        @JvmField val COMPRESSED_SRGB8_ALPHA8_ASTC_6x5_KHR = has(GL_COMPRESSED_SRGB8_ALPHA8_ASTC_6x5_KHR)
-        @JvmField val COMPRESSED_SRGB8_ALPHA8_ASTC_6x6_KHR = has(GL_COMPRESSED_SRGB8_ALPHA8_ASTC_6x6_KHR)
-        @JvmField val COMPRESSED_SRGB8_ALPHA8_ASTC_8x5_KHR = has(GL_COMPRESSED_SRGB8_ALPHA8_ASTC_8x5_KHR)
-        @JvmField val COMPRESSED_SRGB8_ALPHA8_ASTC_8x6_KHR = has(GL_COMPRESSED_SRGB8_ALPHA8_ASTC_8x6_KHR)
-        @JvmField val COMPRESSED_SRGB8_ALPHA8_ASTC_8x8_KHR = has(GL_COMPRESSED_SRGB8_ALPHA8_ASTC_8x8_KHR)
-        @JvmField val COMPRESSED_SRGB8_ALPHA8_ASTC_10x5_KHR = has(GL_COMPRESSED_SRGB8_ALPHA8_ASTC_10x5_KHR)
-        @JvmField val COMPRESSED_SRGB8_ALPHA8_ASTC_10x6_KHR = has(GL_COMPRESSED_SRGB8_ALPHA8_ASTC_10x6_KHR)
-        @JvmField val COMPRESSED_SRGB8_ALPHA8_ASTC_10x8_KHR = has(GL_COMPRESSED_SRGB8_ALPHA8_ASTC_10x8_KHR)
-        @JvmField val COMPRESSED_SRGB8_ALPHA8_ASTC_10x10_KHR = has(GL_COMPRESSED_SRGB8_ALPHA8_ASTC_10x10_KHR)
-        @JvmField val COMPRESSED_SRGB8_ALPHA8_ASTC_12x10_KHR = has(GL_COMPRESSED_SRGB8_ALPHA8_ASTC_12x10_KHR)
-        @JvmField val COMPRESSED_SRGB8_ALPHA8_ASTC_12x12_KHR = has(GL_COMPRESSED_SRGB8_ALPHA8_ASTC_12x12_KHR)
+        @JvmField
+        val COMPRESSED_RGBA_ASTC_4x4_KHR = has(GL_COMPRESSED_RGBA_ASTC_4x4_KHR)
+        @JvmField
+        val COMPRESSED_RGBA_ASTC_5x4_KHR = has(GL_COMPRESSED_RGBA_ASTC_5x4_KHR)
+        @JvmField
+        val COMPRESSED_RGBA_ASTC_5x5_KHR = has(GL_COMPRESSED_RGBA_ASTC_5x5_KHR)
+        @JvmField
+        val COMPRESSED_RGBA_ASTC_6x5_KHR = has(GL_COMPRESSED_RGBA_ASTC_6x5_KHR)
+        @JvmField
+        val COMPRESSED_RGBA_ASTC_6x6_KHR = has(GL_COMPRESSED_RGBA_ASTC_6x6_KHR)
+        @JvmField
+        val COMPRESSED_RGBA_ASTC_8x5_KHR = has(GL_COMPRESSED_RGBA_ASTC_8x5_KHR)
+        @JvmField
+        val COMPRESSED_RGBA_ASTC_8x6_KHR = has(GL_COMPRESSED_RGBA_ASTC_8x6_KHR)
+        @JvmField
+        val COMPRESSED_RGBA_ASTC_8x8_KHR = has(GL_COMPRESSED_RGBA_ASTC_8x8_KHR)
+        @JvmField
+        val COMPRESSED_RGBA_ASTC_10x5_KHR = has(GL_COMPRESSED_RGBA_ASTC_10x5_KHR)
+        @JvmField
+        val COMPRESSED_RGBA_ASTC_10x6_KHR = has(GL_COMPRESSED_RGBA_ASTC_10x6_KHR)
+        @JvmField
+        val COMPRESSED_RGBA_ASTC_10x8_KHR = has(GL_COMPRESSED_RGBA_ASTC_10x8_KHR)
+        @JvmField
+        val COMPRESSED_RGBA_ASTC_10x10_KHR = has(GL_COMPRESSED_RGBA_ASTC_10x10_KHR)
+        @JvmField
+        val COMPRESSED_RGBA_ASTC_12x10_KHR = has(GL_COMPRESSED_RGBA_ASTC_12x10_KHR)
+        @JvmField
+        val COMPRESSED_RGBA_ASTC_12x12_KHR = has(GL_COMPRESSED_RGBA_ASTC_12x12_KHR)
+        @JvmField
+        val COMPRESSED_SRGB8_ALPHA8_ASTC_4x4_KHR = has(GL_COMPRESSED_SRGB8_ALPHA8_ASTC_4x4_KHR)
+        @JvmField
+        val COMPRESSED_SRGB8_ALPHA8_ASTC_5x4_KHR = has(GL_COMPRESSED_SRGB8_ALPHA8_ASTC_5x4_KHR)
+        @JvmField
+        val COMPRESSED_SRGB8_ALPHA8_ASTC_5x5_KHR = has(GL_COMPRESSED_SRGB8_ALPHA8_ASTC_5x5_KHR)
+        @JvmField
+        val COMPRESSED_SRGB8_ALPHA8_ASTC_6x5_KHR = has(GL_COMPRESSED_SRGB8_ALPHA8_ASTC_6x5_KHR)
+        @JvmField
+        val COMPRESSED_SRGB8_ALPHA8_ASTC_6x6_KHR = has(GL_COMPRESSED_SRGB8_ALPHA8_ASTC_6x6_KHR)
+        @JvmField
+        val COMPRESSED_SRGB8_ALPHA8_ASTC_8x5_KHR = has(GL_COMPRESSED_SRGB8_ALPHA8_ASTC_8x5_KHR)
+        @JvmField
+        val COMPRESSED_SRGB8_ALPHA8_ASTC_8x6_KHR = has(GL_COMPRESSED_SRGB8_ALPHA8_ASTC_8x6_KHR)
+        @JvmField
+        val COMPRESSED_SRGB8_ALPHA8_ASTC_8x8_KHR = has(GL_COMPRESSED_SRGB8_ALPHA8_ASTC_8x8_KHR)
+        @JvmField
+        val COMPRESSED_SRGB8_ALPHA8_ASTC_10x5_KHR = has(GL_COMPRESSED_SRGB8_ALPHA8_ASTC_10x5_KHR)
+        @JvmField
+        val COMPRESSED_SRGB8_ALPHA8_ASTC_10x6_KHR = has(GL_COMPRESSED_SRGB8_ALPHA8_ASTC_10x6_KHR)
+        @JvmField
+        val COMPRESSED_SRGB8_ALPHA8_ASTC_10x8_KHR = has(GL_COMPRESSED_SRGB8_ALPHA8_ASTC_10x8_KHR)
+        @JvmField
+        val COMPRESSED_SRGB8_ALPHA8_ASTC_10x10_KHR = has(GL_COMPRESSED_SRGB8_ALPHA8_ASTC_10x10_KHR)
+        @JvmField
+        val COMPRESSED_SRGB8_ALPHA8_ASTC_12x10_KHR = has(GL_COMPRESSED_SRGB8_ALPHA8_ASTC_12x10_KHR)
+        @JvmField
+        val COMPRESSED_SRGB8_ALPHA8_ASTC_12x12_KHR = has(GL_COMPRESSED_SRGB8_ALPHA8_ASTC_12x12_KHR)
 
-        @JvmField val COMPRESSED_LUMINANCE_LATC1_EXT = has(GL_COMPRESSED_LUMINANCE_LATC1_EXT)
-        @JvmField val COMPRESSED_SIGNED_LUMINANCE_LATC1_EXT = has(GL_COMPRESSED_SIGNED_LUMINANCE_LATC1_EXT)
-        @JvmField val COMPRESSED_LUMINANCE_ALPHA_LATC2_EXT = has(GL_COMPRESSED_LUMINANCE_ALPHA_LATC2_EXT)
-        @JvmField val COMPRESSED_SIGNED_LUMINANCE_ALPHA_LATC2_EXT = has(GL_COMPRESSED_SIGNED_LUMINANCE_ALPHA_LATC2_EXT)
-        @JvmField val COMPRESSED_LUMINANCE_ALPHA_3DC_ATI = has(GL_COMPRESSED_LUMINANCE_ALPHA_3DC_ATI)
+        @JvmField
+        val COMPRESSED_LUMINANCE_LATC1_EXT = has(GL_COMPRESSED_LUMINANCE_LATC1_EXT)
+        @JvmField
+        val COMPRESSED_SIGNED_LUMINANCE_LATC1_EXT = has(GL_COMPRESSED_SIGNED_LUMINANCE_LATC1_EXT)
+        @JvmField
+        val COMPRESSED_LUMINANCE_ALPHA_LATC2_EXT = has(GL_COMPRESSED_LUMINANCE_ALPHA_LATC2_EXT)
+        @JvmField
+        val COMPRESSED_SIGNED_LUMINANCE_ALPHA_LATC2_EXT = has(GL_COMPRESSED_SIGNED_LUMINANCE_ALPHA_LATC2_EXT)
+        @JvmField
+        val COMPRESSED_LUMINANCE_ALPHA_3DC_ATI = has(GL_COMPRESSED_LUMINANCE_ALPHA_3DC_ATI)
 
-        @JvmField val COMPRESSED_RGB_FXT1_3DFX = has(GL_COMPRESSED_RGB_FXT1_3DFX)
-        @JvmField val COMPRESSED_RGBA_FXT1_3DFX = has(GL_COMPRESSED_RGBA_FXT1_3DFX)
+        @JvmField
+        val COMPRESSED_RGB_FXT1_3DFX = has(GL_COMPRESSED_RGB_FXT1_3DFX)
+        @JvmField
+        val COMPRESSED_RGBA_FXT1_3DFX = has(GL_COMPRESSED_RGBA_FXT1_3DFX)
 
-        @JvmField val PALETTE4_RGB8_OES = has(GL_PALETTE4_RGB8_OES)
-        @JvmField val PALETTE4_RGBA8_OES = has(GL_PALETTE4_RGBA8_OES)
-        @JvmField val PALETTE4_R5_G6_B5_OES = has(GL_PALETTE4_R5_G6_B5_OES)
-        @JvmField val PALETTE4_RGBA4_OES = has(GL_PALETTE4_RGBA4_OES)
-        @JvmField val PALETTE4_RGB5_A1_OES = has(GL_PALETTE4_RGB5_A1_OES)
-        @JvmField val PALETTE8_RGB8_OES = has(GL_PALETTE8_RGB8_OES)
-        @JvmField val PALETTE8_RGBA8_OES = has(GL_PALETTE8_RGBA8_OES)
-        @JvmField val PALETTE8_R5_G6_B5_OES = has(GL_PALETTE8_R5_G6_B5_OES)
-        @JvmField val PALETTE8_RGBA4_OES = has(GL_PALETTE8_RGBA4_OES)
-        @JvmField val PALETTE8_RGB5_A1_OES = has(GL_PALETTE8_RGB5_A1_OES)
-        @JvmField val ETC1_RGB8_OES = has(GL_ETC1_RGB8_OES)
+        @JvmField
+        val PALETTE4_RGB8_OES = has(GL_PALETTE4_RGB8_OES)
+        @JvmField
+        val PALETTE4_RGBA8_OES = has(GL_PALETTE4_RGBA8_OES)
+        @JvmField
+        val PALETTE4_R5_G6_B5_OES = has(GL_PALETTE4_R5_G6_B5_OES)
+        @JvmField
+        val PALETTE4_RGBA4_OES = has(GL_PALETTE4_RGBA4_OES)
+        @JvmField
+        val PALETTE4_RGB5_A1_OES = has(GL_PALETTE4_RGB5_A1_OES)
+        @JvmField
+        val PALETTE8_RGB8_OES = has(GL_PALETTE8_RGB8_OES)
+        @JvmField
+        val PALETTE8_RGBA8_OES = has(GL_PALETTE8_RGBA8_OES)
+        @JvmField
+        val PALETTE8_R5_G6_B5_OES = has(GL_PALETTE8_R5_G6_B5_OES)
+        @JvmField
+        val PALETTE8_RGBA4_OES = has(GL_PALETTE8_RGBA4_OES)
+        @JvmField
+        val PALETTE8_RGB5_A1_OES = has(GL_PALETTE8_RGB5_A1_OES)
+        @JvmField
+        val ETC1_RGB8_OES = has(GL_ETC1_RGB8_OES)
 
         private fun has(i: Int) = compressed.contains(i)
 
