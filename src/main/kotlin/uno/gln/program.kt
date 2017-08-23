@@ -15,6 +15,12 @@ import uno.glsl.Program
 
 fun glCreatePrograms(ints: IntArray) = repeat(ints.size) { ints[it] = GL20.glCreateProgram() }
 
+fun glCreateProgram(block: ProgramBase.() -> Unit):Int{
+    ProgramBase.name = GL20.glCreateProgram()
+    ProgramBase.block()
+    return ProgramBase.name
+}
+
 fun initPrograms(ints: IntArray, block: Programs.() -> Unit) {
     repeat(ints.size) { ints[it] = GL20.glCreateProgram() }
     Programs.names = ints
