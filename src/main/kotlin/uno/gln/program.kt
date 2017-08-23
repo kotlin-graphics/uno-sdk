@@ -119,6 +119,7 @@ object ProgramBase {
 
     operator fun plusAssign(shader: Int) = GL20.glAttachShader(name, shader)
     infix fun attach(shader: Int) = GL20.glAttachShader(name, shader)
+    fun attach(vararg shader: Int) = shader.forEach { GL20.glAttachShader(name, it) }
 }
 
 object Programs {
