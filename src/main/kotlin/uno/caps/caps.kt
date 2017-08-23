@@ -32,6 +32,7 @@ import uno.buffer.intBufferBig
 import uno.gl.*
 import uno.glfw.GlfwWindow
 import uno.glfw.glfw
+import uno.gln.checkError
 import uno.gln.glGetVec2
 import java.io.File
 import java.io.PrintWriter
@@ -45,8 +46,8 @@ import kotlin.reflect.full.memberProperties
 fun main(args: Array<String>) {
 
     var args = args
-    if (false)
-        args = arrayOf("4.5", "D:\\Desktop\\report.txt")
+    if (true)
+        args = arrayOf("4.5", "E:\\Desktop\\report.txt")
 
     with(glfw) {
         init()
@@ -63,7 +64,7 @@ fun main(args: Array<String>) {
 
     GL.createCapabilities()
 
-    val caps = Caps(Caps.Profile.CORE)
+    val caps = Caps(Caps.Profile.ES)
 
     val report = File(args[1]).printWriter().use {
         val `_` = "--------------------------------------------------"
@@ -80,6 +81,7 @@ fun main(args: Array<String>) {
         it.println("$`_`formats$`_`")
         caps.formats.write(it)
     }
+    checkError("caps")
 }
 
 class Caps(profile: Profile) {
