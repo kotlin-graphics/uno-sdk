@@ -9,10 +9,9 @@ import glm_.vec4.Vec4i
 import org.lwjgl.glfw.*
 import org.lwjgl.glfw.GLFW.*
 import org.lwjgl.system.MemoryUtil
-import uno.buffer.destroyBuffers
+import uno.buffer.destroyBuf
 import uno.buffer.doubleBufferBig
 import uno.buffer.intBufferBig
-import uno.glfw.glfw
 
 /**
  * Created by GBarbieri on 24.04.2017.
@@ -116,7 +115,7 @@ class GlfwWindow(width: Int, height: Int, title: String) {
 
     fun destroy() {
 
-        destroyBuffers(x, y, z, w, xD, yD)
+        destroyBuf(x, y, z, w, xD, yD)
 
         // Free the window callbacks and destroy the window
         Callbacks.glfwFreeCallbacks(handle)

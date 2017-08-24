@@ -5,7 +5,7 @@ import com.jogamp.opengl.GL2ES3.GL_UNIFORM_BUFFER
 import com.jogamp.opengl.GL2ES3.GL_UNIFORM_BUFFER_OFFSET_ALIGNMENT
 import com.jogamp.opengl.GL3
 import glm_.L
-import uno.buffer.byteBufferBig
+import uno.buffer.bufferBig
 import uno.buffer.destroy
 import uno.buffer.intBufferBig
 import java.nio.ByteBuffer
@@ -33,7 +33,7 @@ class UniformBlockArray @JvmOverloads constructor(gl: GL3, uboSize: Int, private
 
         val sizeMaterialUniformBuffer = blockOffset * arrayCount
 
-        storage = byteBufferBig(arrayCount * blockOffset)
+        storage = bufferBig(arrayCount * blockOffset)
 
         uniformBufferAlignSize.destroy()
     }

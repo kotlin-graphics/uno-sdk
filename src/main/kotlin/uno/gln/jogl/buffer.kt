@@ -8,8 +8,8 @@ import glm_.L
 import glm_.mat4x4.Mat4
 import glm_.set
 import glm_.size
-import uno.gl.intBuffer
-import uno.gl.mat4Buffer
+import uno.gl.iBuf
+import uno.gl.m4Buf
 import java.nio.*
 
 /**
@@ -19,13 +19,13 @@ import java.nio.*
 fun GL3.glGenBuffers(buffers: IntBuffer) = glGenBuffers(buffers.capacity(), buffers)
 fun GL3.glGenBuffer(buffer: IntBuffer) = glGenBuffers(1, buffer)
 fun GL3.glGenBuffer(): Int {
-    glGenBuffers(1, intBuffer)
-    return intBuffer[0]
+    glGenBuffers(1, iBuf)
+    return iBuf[0]
 }
 
 fun GL3.glDeleteBuffers(buffers: IntBuffer) = glDeleteBuffers(buffers.capacity(), buffers)
 fun GL3.glDeleteBuffer(buffer: IntBuffer) = glDeleteBuffers(1, buffer)
-fun GL3.glDeleteBuffer(buffer: Int) = glDeleteBuffers(1, intBuffer.put(0, buffer))
+fun GL3.glDeleteBuffer(buffer: Int) = glDeleteBuffers(1, iBuf.put(0, buffer))
 
 fun GL3.glBufferData(target: Int, data: ByteBuffer, usage: Int) = glBufferData(target, data.size.L, data, usage)
 fun GL3.glBufferData(target: Int, data: ShortBuffer, usage: Int) = glBufferData(target, data.size.L, data, usage)
@@ -52,11 +52,11 @@ fun GL3.glBufferSubData(target: Int, data: DoubleBuffer) = glBufferSubData(targe
 
 
 // ----- Mat4 -----
-fun GL3.glBufferData(target: Int, mat: Mat4, usage: Int) = glBufferData(target, 16 * Float.BYTES.L, mat to mat4Buffer, usage)
+fun GL3.glBufferData(target: Int, mat: Mat4, usage: Int) = glBufferData(target, 16 * Float.BYTES.L, mat to m4Buf, usage)
 
-fun GL3.glBufferSubData(target: Int, offset: Int, size: Long, mat4: Mat4) = glBufferSubData(target, offset.L, size, mat4 to mat4Buffer)
-fun GL3.glBufferSubData(target: Int, offset: Int, mat: Mat4) = glBufferSubData(target, offset.L, 16 * Float.BYTES.L, mat to mat4Buffer)
-fun GL3.glBufferSubData(target: Int, mat: Mat4) = glBufferSubData(target, 0, 16 * Float.BYTES.L, mat to mat4Buffer)
+fun GL3.glBufferSubData(target: Int, offset: Int, size: Long, mat4: Mat4) = glBufferSubData(target, offset.L, size, mat4 to m4Buf)
+fun GL3.glBufferSubData(target: Int, offset: Int, mat: Mat4) = glBufferSubData(target, offset.L, 16 * Float.BYTES.L, mat to m4Buf)
+fun GL3.glBufferSubData(target: Int, mat: Mat4) = glBufferSubData(target, 0, 16 * Float.BYTES.L, mat to m4Buf)
 
 fun GL3.glBindBuffer(target: Int) = glBindBuffer(target, 0)
 fun GL3.glBindBuffer(target: Int, buffer: IntBuffer) = glBindBuffer(target, buffer[0])
@@ -96,8 +96,8 @@ fun GL3.initBuffers(buffers: IntBuffer, block: Buffers.() -> Unit) {
 fun GL3.initBuffer(target: Int, block: Buffer.() -> Unit): Int {
     Buffer.gl = this
     Buffer.target = target
-    glGenBuffers(1, intBuffer)
-    val name = intBuffer[0]
+    glGenBuffers(1, iBuf)
+    val name = iBuf[0]
     Buffer.name = name // bind
     Buffer.block()
     glBindBuffer(target, 0)
@@ -155,11 +155,11 @@ object Buffer {
 
 
     // ----- Mat4 -----
-    fun data(mat: Mat4, usage: Int) = gl.glBufferData(target, 16 * Float.BYTES.L, mat to mat4Buffer, usage)
+    fun data(mat: Mat4, usage: Int) = gl.glBufferData(target, 16 * Float.BYTES.L, mat to m4Buf, usage)
 
-    fun subData(offset: Int, size: Long, mat4: Mat4) = gl.glBufferSubData(target, offset.L, size, mat4 to mat4Buffer)
-    fun subData(offset: Int, mat: Mat4) = gl.glBufferSubData(target, offset.L, 16 * Float.BYTES.L, mat to mat4Buffer)
-    fun subData(mat: Mat4) = gl.glBufferSubData(target, 0, 16 * Float.BYTES.L, mat to mat4Buffer)
+    fun subData(offset: Int, size: Long, mat4: Mat4) = gl.glBufferSubData(target, offset.L, size, mat4 to m4Buf)
+    fun subData(offset: Int, mat: Mat4) = gl.glBufferSubData(target, offset.L, 16 * Float.BYTES.L, mat to m4Buf)
+    fun subData(mat: Mat4) = gl.glBufferSubData(target, 0, 16 * Float.BYTES.L, mat to m4Buf)
 
 
     fun range(index: Int, offset: Int, size: Int) = gl.glBindBufferRange(target, index, name, offset.L, size.L)
@@ -198,11 +198,11 @@ object Buffers {
 
 
     // ----- Mat4 -----
-    fun data(mat: Mat4, usage: Int) = gl.glBufferData(target, 16 * Float.BYTES.L, mat to mat4Buffer, usage)
+    fun data(mat: Mat4, usage: Int) = gl.glBufferData(target, 16 * Float.BYTES.L, mat to m4Buf, usage)
 
-    fun subData(offset: Int, size: Long, mat4: Mat4) = gl.glBufferSubData(target, offset.L, size, mat4 to mat4Buffer)
-    fun subData(offset: Int, mat: Mat4) = gl.glBufferSubData(target, offset.L, 16 * Float.BYTES.L, mat to mat4Buffer)
-    fun subData(mat: Mat4) = gl.glBufferSubData(target, 0, 16 * Float.BYTES.L, mat to mat4Buffer)
+    fun subData(offset: Int, size: Long, mat4: Mat4) = gl.glBufferSubData(target, offset.L, size, mat4 to m4Buf)
+    fun subData(offset: Int, mat: Mat4) = gl.glBufferSubData(target, offset.L, 16 * Float.BYTES.L, mat to m4Buf)
+    fun subData(mat: Mat4) = gl.glBufferSubData(target, 0, 16 * Float.BYTES.L, mat to m4Buf)
 
 
     fun range(index: Int, offset: Int, size: Int) = gl.glBindBufferRange(target, index, name, offset.L, size.L)

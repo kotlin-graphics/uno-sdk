@@ -7,7 +7,7 @@ import com.jogamp.opengl.GL2GL3.*
 import com.jogamp.opengl.GL3
 import glm_.set
 import glm_.vec2.Vec2i
-import uno.gl.intBuffer
+import uno.gl.iBuf
 import java.nio.ByteBuffer
 import java.nio.IntBuffer
 
@@ -79,8 +79,8 @@ fun GL3.initTexture1d(texture: IntBuffer, block: Texture1d.() -> Unit) {
 }
 
 fun GL3.initTexture1d(block: Texture1d.() -> Unit): Int {
-    glGenTextures(1, intBuffer)
-    val name = intBuffer[0]
+    glGenTextures(1, iBuf)
+    val name = iBuf[0]
     Texture1d.gl = this
     Texture1d.name = name   // bind
     Texture1d.block()
@@ -92,8 +92,8 @@ fun GL3.initTexture2d(texture: IntBuffer, block: Texture2d.() -> Unit) {
 }
 
 fun GL3.initTexture2d(block: Texture2d.() -> Unit): Int {
-    glGenTextures(1, intBuffer)
-    val name = intBuffer[0]
+    glGenTextures(1, iBuf)
+    val name = iBuf[0]
     Texture2d.gl = this
     Texture2d.name = name   // bind
     Texture2d.block()
@@ -105,8 +105,8 @@ fun GL3.initTexture(target: Int, texture: IntBuffer, block: Texture.() -> Unit) 
 }
 
 fun GL3.initTexture(target: Int, block: Texture.() -> Unit): Int {
-    glGenTextures(1, intBuffer)
-    val name = intBuffer[0]
+    glGenTextures(1, iBuf)
+    val name = iBuf[0]
     Texture.gl = this
     Texture.target = target
     Texture.name = name   // bind

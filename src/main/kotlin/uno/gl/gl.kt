@@ -2,6 +2,13 @@ package uno.gl
 
 import com.jogamp.newt.opengl.GLWindow
 import com.jogamp.opengl.GL3
+import glm_.vec2.Vec2
+import glm_.vec2.Vec2i
+import glm_.vec3.Vec3
+import glm_.vec3.Vec3i
+import glm_.vec4.Vec4
+import glm_.vec4.Vec4i
+import org.lwjgl.system.MemoryStack
 import uno.buffer.doubleBufferBig
 import uno.buffer.floatBufferBig
 import uno.buffer.intBufferBig
@@ -44,32 +51,32 @@ inline infix fun GLWindow.gl3(crossinline inject: GL3.() -> Unit) {
 }
 
 
-val floatBuffer = floatBufferBig(1)
-val intBuffer = intBufferBig(1)
+val fBuf get() = MemoryStack.stackGet().callocFloat(1)
+val v2Buf get() = MemoryStack.stackGet().callocFloat(2)
+val v3Buf get() = MemoryStack.stackGet().callocFloat(3)
+val v4Buf get() = MemoryStack.stackGet().callocFloat(4)
 
-val vec2Buffer = floatBufferBig(2)
-val vec3Buffer = floatBufferBig(3)
-val vec4Buffer = floatBufferBig(4)
+val iBuf get() = MemoryStack.stackGet().callocInt(1)
+val v2iBuf get() = MemoryStack.stackGet().callocInt(2)
+val v3iBuf get() = MemoryStack.stackGet().callocInt(3)
+val v4iBuf get() = MemoryStack.stackGet().callocInt(4)
 
-val vec2iBuffer = intBufferBig(2)
-val vec4iBuffer = intBufferBig(4)
+val m2Buf get() = MemoryStack.stackGet().callocFloat(4)
+val m23Buf get() = MemoryStack.stackGet().callocFloat(6)
+val m24Buf get() = MemoryStack.stackGet().callocFloat(8)
+val m32Buf get() = MemoryStack.stackGet().callocFloat(6)
+val m3Buf get() = MemoryStack.stackGet().callocFloat(9)
+val m34Buf get() = MemoryStack.stackGet().callocFloat(12)
+val m42Buf get() = MemoryStack.stackGet().callocFloat(8)
+val m43Buf get() = MemoryStack.stackGet().callocFloat(12)
+val m4Buf get() = MemoryStack.stackGet().callocFloat(16)
 
-val mat2Buffer = floatBufferBig(2 * 2)
-val mat2x3Buffer = floatBufferBig(2 * 3)
-val mat2x4Buffer = floatBufferBig(2 * 4)
-val mat3x2Buffer = floatBufferBig(3 * 2)
-val mat3Buffer = floatBufferBig(3 * 3)
-val mat3x4Buffer = floatBufferBig(3 * 4)
-val mat4x2Buffer = floatBufferBig(4 * 2)
-val mat4x3Buffer = floatBufferBig(4 * 3)
-val mat4Buffer = floatBufferBig(4 * 4)
-
-val mat2dBuffer = doubleBufferBig(2 * 2)
-val mat2x3dBuffer = doubleBufferBig(2 * 3)
-val mat2x4dBuffer = doubleBufferBig(2 * 4)
-val mat3x2dBuffer = doubleBufferBig(3 * 2)
-val mat3dBuffer = doubleBufferBig(3 * 3)
-val mat3x4dBuffer = doubleBufferBig(3 * 4)
-val mat4x2dBuffer = doubleBufferBig(4 * 2)
-val mat4x3dBuffer = doubleBufferBig(4 * 3)
-val mat4dBuffer = doubleBufferBig(4 * 4)
+val m2dBuf get() = MemoryStack.stackGet().callocDouble(4)
+val m23dBuf get() = MemoryStack.stackGet().callocDouble(6)
+val m24dBuf get() = MemoryStack.stackGet().callocDouble(8)
+val m32dBuf get() = MemoryStack.stackGet().callocDouble(6)
+val m3dBuf get() = MemoryStack.stackGet().callocDouble(9)
+val m34dBuf get() = MemoryStack.stackGet().callocDouble(12)
+val m42dBuf get() = MemoryStack.stackGet().callocDouble(8)
+val m43dBuf get() = MemoryStack.stackGet().callocDouble(12)
+val m4dBuf get() = MemoryStack.stackGet().callocDouble(4)

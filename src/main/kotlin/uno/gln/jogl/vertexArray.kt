@@ -6,7 +6,7 @@ import com.jogamp.opengl.GL3
 import glm_.L
 import glm_.vec3.Vec3
 import glm_.vec4.Vec4
-import uno.gl.intBuffer
+import uno.gl.iBuf
 import uno.glf.VertexAttribute
 import uno.glf.VertexLayout
 import java.nio.IntBuffer
@@ -16,8 +16,8 @@ infix fun GL3.glGenVertexArray(vertexArray: IntBuffer) = glGenVertexArrays(1, ve
 infix fun GL3.glGenVertexArrays(vertexArrays: IntBuffer) = glGenVertexArrays(vertexArrays.capacity(), vertexArrays)
 
 fun GL3.glGenVertexArray(): Int {
-    glGenVertexArrays(1, intBuffer)
-    return intBuffer[0]
+    glGenVertexArrays(1, iBuf)
+    return iBuf[0]
 }
 
 
@@ -28,7 +28,7 @@ infix fun GL3.glBindVertexArray(vertexArray: Int) = glBindVertexArray(vertexArra
 
 infix fun GL3.glDeleteVertexArray(vertexArray: IntBuffer) = glDeleteVertexArrays(vertexArray.capacity(), vertexArray)
 infix fun GL3.glDeleteVertexArrays(vertexArrays: IntBuffer) = glDeleteVertexArrays(vertexArrays.capacity(), vertexArrays)
-infix fun GL3.glDeleteVertexArray(vertexArray: Int) = glDeleteVertexArrays(1, intBuffer.put(0, vertexArray))
+infix fun GL3.glDeleteVertexArray(vertexArray: Int) = glDeleteVertexArrays(1, iBuf.put(0, vertexArray))
 
 inline fun GL3.initVertexArray(vertexArray: IntBuffer, block: VertexArray.() -> Unit) {
     glGenVertexArrays(1, vertexArray)

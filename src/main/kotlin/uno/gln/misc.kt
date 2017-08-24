@@ -10,13 +10,10 @@ import org.lwjgl.opengl.GL11.*
 import org.lwjgl.opengl.GL30.GL_INVALID_FRAMEBUFFER_OPERATION
 import org.lwjgl.opengl.GL30.glBlitFramebuffer
 import org.lwjgl.opengl.GL41
-import uno.buffer.doubleBufferBig
-import uno.buffer.floatBufferBig
-import uno.buffer.intBufferBig
-import uno.gl.vec2Buffer
-import uno.gl.vec2iBuffer
-import uno.gl.vec4Buffer
-import uno.gl.vec4iBuffer
+import uno.gl.v2Buf
+import uno.gl.v2iBuf
+import uno.gl.v4Buf
+import uno.gl.v4iBuf
 
 /**
  * Created by elect on 18/04/17.
@@ -43,23 +40,23 @@ fun glClearDepthf() = GL41.glClearDepthf(1f)
 
 
 fun glGetVec2(pname: Int): Vec2 {
-    GL11.glGetFloatv(pname, vec2Buffer)
-    return Vec2(vec2Buffer)
+    GL11.glGetFloatv(pname, v2Buf)
+    return Vec2(v2Buf)
 }
 
 fun glGetVec2i(pname: Int): Vec2i {
-    GL11.glGetIntegerv(pname, vec2iBuffer)
-    return Vec2i(vec2iBuffer)
+    GL11.glGetIntegerv(pname, v2iBuf)
+    return Vec2i(v2iBuf)
 }
 
 fun glGetVec4(pname: Int): Vec4 {
-    GL11.glGetFloatv(pname, vec4Buffer)
-    return Vec4(vec4Buffer)
+    GL11.glGetFloatv(pname, v4Buf)
+    return Vec4(v4Buf)
 }
 
 fun glGetVec4i(pname: Int): Vec4i {
-    GL11.glGetIntegerv(pname, vec4iBuffer)
-    return Vec4i(vec4iBuffer)
+    GL11.glGetIntegerv(pname, v4iBuf)
+    return Vec4i(v4iBuf)
 }
 
 fun checkError(location: String) {

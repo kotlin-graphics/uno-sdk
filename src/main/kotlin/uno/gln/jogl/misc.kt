@@ -27,20 +27,20 @@ fun GL3.glBlitFramebuffer(size: Vec2i) = glBlitFramebuffer(
 
 fun GL3.glClearBufferf(buffer: Int, f: Float) = when (buffer) {
     GL2ES3.GL_COLOR -> glClearBufferf(buffer, f, f, f, f)
-    GL2ES3.GL_DEPTH -> glClearBufferfv(buffer, 0, mat4Buffer.put(0, f))
+    GL2ES3.GL_DEPTH -> glClearBufferfv(buffer, 0, m4Buf.put(0, f))
     else -> throw Error()
 }
 
-fun GL3.glClearBufferf(buffer: Int, r: Float, g: Float, b: Float, a: Float) = glClearBufferfv(buffer, 0, mat4Buffer.put(0, r).put(1, g).put(2, b).put(3, a))
+fun GL3.glClearBufferf(buffer: Int, r: Float, g: Float, b: Float, a: Float) = glClearBufferfv(buffer, 0, m4Buf.put(0, r).put(1, g).put(2, b).put(3, a))
 fun GL3.glClearBufferf(buffer: Int, n: Number) = when (buffer) {
     GL2ES3.GL_COLOR -> glClearBufferf(buffer, n.f, n.f, n.f, n.f)
-    GL2ES3.GL_DEPTH -> glClearBufferfv(buffer, 0, mat4Buffer.put(0, n.f))
+    GL2ES3.GL_DEPTH -> glClearBufferfv(buffer, 0, m4Buf.put(0, n.f))
     else -> throw Error()
 }
 
 fun GL3.glClearBufferf(buffer: Int) = when (buffer) {
-    GL2ES3.GL_COLOR -> glClearBufferfv(buffer, 0, mat4Buffer.put(0, 0f).put(1, 0f).put(2, 0f).put(3, 1f))
-    GL2ES3.GL_DEPTH -> glClearBufferfv(buffer, 0, mat4Buffer.put(0, 1f))
+    GL2ES3.GL_COLOR -> glClearBufferfv(buffer, 0, m4Buf.put(0, 0f).put(1, 0f).put(2, 0f).put(3, 1f))
+    GL2ES3.GL_DEPTH -> glClearBufferfv(buffer, 0, m4Buf.put(0, 1f))
     else -> throw Error()
 }
 
@@ -64,14 +64,14 @@ object Clear {
     fun color() = color(0f, 0f, 0f, 1f)
     fun color(f: Float) = color(f, f, f, f)
     fun color(r: Float, g: Float, b: Float, a: Float) =
-            gl.glClearBufferfv(GL2ES3.GL_COLOR, 0, mat4Buffer.put(0, r).put(1, g).put(2, b).put(3, a))
+            gl.glClearBufferfv(GL2ES3.GL_COLOR, 0, m4Buf.put(0, r).put(1, g).put(2, b).put(3, a))
 
     fun color(n: Number) = color(n, n, n, n)
     fun color(r: Number, g: Number, b: Number, a: Number)
-            = gl.glClearBufferfv(GL2ES3.GL_COLOR, 0, mat4Buffer.put(0, r.f).put(1, g.f).put(2, b.f).put(3, a.f))
+            = gl.glClearBufferfv(GL2ES3.GL_COLOR, 0, m4Buf.put(0, r.f).put(1, g.f).put(2, b.f).put(3, a.f))
 
     fun depth() = depth(1f)
-    fun depth(depth: Float) = gl.glClearBufferfv(GL2ES3.GL_DEPTH, 0, mat4Buffer.put(0, depth))
+    fun depth(depth: Float) = gl.glClearBufferfv(GL2ES3.GL_DEPTH, 0, m4Buf.put(0, depth))
     fun depth(depth: Number) = depth(depth.f)
 }
 
@@ -80,8 +80,8 @@ object Clear {
 
 
 fun GL3.glGetInteger(pname: Int): Int {
-    glGetIntegerv(pname, intBuffer)
-    return intBuffer[0]
+    glGetIntegerv(pname, iBuf)
+    return iBuf[0]
 }
 
 infix fun GL3.glEnable(cap: Int) = glEnable(cap)
@@ -94,23 +94,23 @@ fun GL3.checkError(location: String) = checkError(gl, location)
 
 
 fun GL3.glGetVec2(pname: Int): Vec2 {
-    glGetFloatv(pname, vec2Buffer)
-    return Vec2(vec2Buffer)
+    glGetFloatv(pname, v2Buf)
+    return Vec2(v2Buf)
 }
 
 fun GL3.glGetVec2i(pname: Int): Vec2i {
-    glGetIntegerv(pname, vec2iBuffer)
-    return Vec2i(vec2iBuffer)
+    glGetIntegerv(pname, v2iBuf)
+    return Vec2i(v2iBuf)
 }
 
 fun GL3.glGetVec4(pname: Int): Vec4 {
-    glGetFloatv(pname, vec4Buffer)
-    return Vec4(vec4Buffer)
+    glGetFloatv(pname, v4Buf)
+    return Vec4(v4Buf)
 }
 
 fun GL3.glGetVec4i(pname: Int): Vec4i {
-    glGetIntegerv(pname, vec4iBuffer)
-    return Vec4i(vec4iBuffer)
+    glGetIntegerv(pname, v4iBuf)
+    return Vec4i(v4iBuf)
 }
 
 fun checkError(gl: GL, location: String) {

@@ -8,8 +8,8 @@ import org.lwjgl.opengl.GL15
 import org.lwjgl.opengl.GL15.*
 import org.lwjgl.opengl.GL30.*
 import org.lwjgl.system.MemoryUtil.NULL
-import uno.gl.intBuffer
-import uno.gl.mat4Buffer
+import uno.gl.iBuf
+import uno.gl.m4Buf
 import java.nio.*
 
 /**
@@ -20,10 +20,10 @@ import java.nio.*
 fun glBufferData(target: Int, size: Int, usage: Int) = nglBufferData(target, size.L, NULL, usage);
 
 // ----- Mat4 -----
-fun glBufferData(target: Int, mat: Mat4, usage: Int) = glBufferData(target, mat to mat4Buffer, usage)
+fun glBufferData(target: Int, mat: Mat4, usage: Int) = glBufferData(target, mat to m4Buf, usage)
 
-fun glBufferSubData(target: Int, offset: Int, mat4: Mat4) = glBufferSubData(target, offset.L, mat4 to mat4Buffer)
-fun glBufferSubData(target: Int, mat: Mat4) = glBufferSubData(target, 0, mat to mat4Buffer)
+fun glBufferSubData(target: Int, offset: Int, mat4: Mat4) = glBufferSubData(target, offset.L, mat4 to m4Buf)
+fun glBufferSubData(target: Int, mat: Mat4) = glBufferSubData(target, 0, mat to m4Buf)
 
 fun glBindBuffer(target: Int) = glBindBuffer(target, 0)
 fun glBindBuffer(target: Int, buffer: IntBuffer) = glBindBuffer(target, buffer[0])
@@ -61,8 +61,8 @@ fun initBuffers(buffers: IntBuffer, block: Buffers.() -> Unit) {
 
 fun initBuffer(target: Int, block: Buffer.() -> Unit): Int {
     Buffer.target = target
-    glGenBuffers(intBuffer)
-    val name = intBuffer[0]
+    glGenBuffers(iBuf)
+    val name = iBuf[0]
     Buffer.name = name // bind
     Buffer.block()
     glBindBuffer(target, 0)
@@ -121,10 +121,10 @@ object Buffer {
 
 
     // ----- Mat4 -----
-    fun data(mat: Mat4, usage: Int) = glBufferData(target, mat to mat4Buffer, usage)
+    fun data(mat: Mat4, usage: Int) = glBufferData(target, mat to m4Buf, usage)
 
-    fun subData(offset: Int, mat: Mat4) = glBufferSubData(target, offset.L, mat to mat4Buffer)
-    fun subData(mat: Mat4) = glBufferSubData(target, 0, mat to mat4Buffer)
+    fun subData(offset: Int, mat: Mat4) = glBufferSubData(target, offset.L, mat to m4Buf)
+    fun subData(mat: Mat4) = glBufferSubData(target, 0, mat to m4Buf)
 
 
     fun bindRange(index: Int, offset: Int, size: Int) = glBindBufferRange(target, index, name, offset.L, size.L)
@@ -168,10 +168,10 @@ object Buffers {
 
 
     // ----- Mat4 -----
-    fun data(mat: Mat4, usage: Int) = glBufferData(target, mat to mat4Buffer, usage)
+    fun data(mat: Mat4, usage: Int) = glBufferData(target, mat to m4Buf, usage)
 
-    fun subData(offset: Int, mat: Mat4) = glBufferSubData(target, offset.L, mat to mat4Buffer)
-    fun subData(mat: Mat4) = glBufferSubData(target, 0, mat to mat4Buffer)
+    fun subData(offset: Int, mat: Mat4) = glBufferSubData(target, offset.L, mat to m4Buf)
+    fun subData(mat: Mat4) = glBufferSubData(target, 0, mat to m4Buf)
 
 
     fun range(index: Int, offset: Int, size: Int) = glBindBufferRange(target, index, name, offset.L, size.L)
