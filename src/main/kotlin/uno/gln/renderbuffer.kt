@@ -1,13 +1,9 @@
 package uno.gln
 
 import glm_.vec2.Vec2i
-import org.lwjgl.opengl.GL11
 import org.lwjgl.opengl.GL30
 import org.lwjgl.opengl.GL30.*
 import java.nio.IntBuffer
-import org.lwjgl.system.MemoryStack.stackPush
-import org.lwjgl.system.MemoryStack
-import java.nio.ByteBuffer
 
 
 /**
