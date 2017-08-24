@@ -1,11 +1,11 @@
 package uno.gln
 
-import gli.Texture2d
-import gli.gl.Format
 import glm_.set
 import glm_.vec2.Vec2i
 import org.lwjgl.opengl.*
 import org.lwjgl.opengl.GL11.*
+import org.lwjgl.system.MemoryUtil
+import org.lwjgl.system.Pointer
 import java.nio.ByteBuffer
 import java.nio.IntBuffer
 
@@ -28,9 +28,9 @@ inline fun withTexture1d(texture: Int, block: Texture1d.() -> Unit) {
     glBindTexture(GL_TEXTURE_1D, 0)
 }
 
-inline fun withTexture2d(texture: Int, block: ObjectTexture2d.() -> Unit) {
+inline fun withTexture2d(texture: Int, block: Texture2d.() -> Unit) {
     glBindTexture(GL_TEXTURE_2D, texture)
-    ObjectTexture2d.block()
+    Texture2d.block()
     glBindTexture(GL_TEXTURE_2D, 0)
 }
 
@@ -50,14 +50,14 @@ inline fun withTexture1d(unit: Int, texture: Int, sampler: IntBuffer, block: Tex
     GL33.glBindSampler(0, sampler[0])
 }
 
-inline fun withTexture2d(unit: Int, texture: Int, sampler: IntBuffer, block: ObjectTexture2d.() -> Unit) =
+inline fun withTexture2d(unit: Int, texture: Int, sampler: IntBuffer, block: Texture2d.() -> Unit) =
         withTexture2d(unit, texture, sampler[0], block)
 
-inline fun withTexture2d(unit: Int, texture: Int, sampler: Int, block: ObjectTexture2d.() -> Unit) {
+inline fun withTexture2d(unit: Int, texture: Int, sampler: Int, block: Texture2d.() -> Unit) {
     GL13.glActiveTexture(GL13.GL_TEXTURE0 + unit)
-    ObjectTexture2d.name = texture  // bind
+    Texture2d.name = texture  // bind
     GL33.glBindSampler(unit, sampler)
-    ObjectTexture2d.block()
+    Texture2d.block()
     glBindTexture(GL_TEXTURE_2D, 0)
     GL33.glBindSampler(0, sampler)
 }
@@ -83,14 +83,14 @@ fun initTexture1d(block: Texture1d.() -> Unit): Int {
     return name
 }
 
-fun initTexture2d(texture: IntBuffer, block: ObjectTexture2d.() -> Unit) {
+fun initTexture2d(texture: IntBuffer, block: Texture2d.() -> Unit) {
     texture[0] = initTexture2d(block)
 }
 
-fun initTexture2d(block: ObjectTexture2d.() -> Unit): Int {
+fun initTexture2d(block: Texture2d.() -> Unit): Int {
     val name = glGenTextures()
-    ObjectTexture2d.name = name   // bind
-    ObjectTexture2d.block()
+    Texture2d.name = name   // bind
+    Texture2d.block()
     return name
 }
 
@@ -185,13 +185,19 @@ object Texture1d {
         }
 }
 
-object ObjectTexture2d {
+object Texture2d {
 
     var name = 0
         set(value) {
             glBindTexture(GL_TEXTURE_2D, value)
             field = name
         }
+
+    fun image(internalFormat: Int, width: Int, height: Int, format: Int, type: Int) =
+            GL11.glTexImage2D(GL_TEXTURE_2D, 0, internalFormat, width, height, 0, format, type, MemoryUtil.NULL)
+
+    fun image(level: Int, internalFormat: Int, width: Int, height: Int, format: Int, type: Int) =
+            GL11.glTexImage2D(GL_TEXTURE_2D, level, internalFormat, width, height, 0, format, type, MemoryUtil.NULL)
 
     fun image(internalFormat: Int, width: Int, height: Int, format: Int, type: Int, pixels: ByteBuffer) =
             GL11.glTexImage2D(GL_TEXTURE_2D, 0, internalFormat, width, height, 0, format, type, pixels)
@@ -200,6 +206,12 @@ object ObjectTexture2d {
             GL11.glTexImage2D(GL_TEXTURE_2D, level, internalFormat, width, height, 0, format, type, pixels)
 
     // TODO size for others
+    fun image(internalFormat: Int, size: Vec2i, format: Int, type: Int) =
+            GL11.glTexImage2D(GL_TEXTURE_2D, 0, internalFormat, size.x, size.y, 0, format, type, MemoryUtil.NULL)
+
+    fun image(level: Int, internalFormat: Int, size: Vec2i, format: Int, type: Int) =
+            GL11.glTexImage2D(GL_TEXTURE_2D, level, internalFormat, size.x, size.y, 0, format, type, MemoryUtil.NULL)
+
     fun image(internalFormat: Int, size: Vec2i, format: Int, type: Int, pixels: ByteBuffer) =
             GL11.glTexImage2D(GL_TEXTURE_2D, 0, internalFormat, size.x, size.y, 0, format, type, pixels)
 
@@ -289,9 +301,9 @@ object Textures {
         Texture1d.block()
     }
 
-    fun at2d(index: Int, block: ObjectTexture2d.() -> Unit) {
-        ObjectTexture2d.name = names[index] // bind
-        ObjectTexture2d.block()
+    fun at2d(index: Int, block: Texture2d.() -> Unit) {
+        Texture2d.name = names[index] // bind
+        Texture2d.block()
     }
 }
 
@@ -302,8 +314,8 @@ object Textures2d {
     fun image(level: Int, internalFormat: Int, width: Int, height: Int, format: Int, type: Int, pixels: ByteBuffer) =
             GL11.glTexImage2D(GL_TEXTURE_2D, level, internalFormat, width, height, 0, format, type, pixels)
 
-    fun at(index: Int, block: ObjectTexture2d.() -> Unit) {
-        ObjectTexture2d.name = names[index] // bind
-        ObjectTexture2d.block()
+    fun at(index: Int, block: Texture2d.() -> Unit) {
+        Texture2d.name = names[index] // bind
+        Texture2d.block()
     }
 }
