@@ -4,6 +4,7 @@ import glm_.vec2.Vec2i
 import org.lwjgl.opengl.GL11
 import org.lwjgl.opengl.GL30
 import org.lwjgl.opengl.GL30.*
+import org.lwjgl.opengl.GL32
 import java.nio.IntBuffer
 
 /**
@@ -45,8 +46,30 @@ object Framebuffer {
             field = value
         }
 
+    fun texture(attachment: Int, texture: Int, level: Int = 0) = GL32.glFramebufferTexture(GL_FRAMEBUFFER, attachment, texture, level)
+
     fun texture2D(target: Int, attachment: Int, texture: Int, level: Int = 0) =
             GL30.glFramebufferTexture2D(target, attachment, GL11.GL_TEXTURE_2D, texture, level)
+
+    fun renderbuffer(attachment: Int, renderbuffer: Int) = GL30.glFramebufferRenderbuffer(GL_FRAMEBUFFER, attachment, GL_RENDERBUFFER, renderbuffer)
+
+    val complete: Boolean
+        get() {
+            val status = glCheckFramebufferStatus(GL_FRAMEBUFFER)
+            val error = when (status) {
+                GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT -> "GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT"
+                GL_FRAMEBUFFER_INCOMPLETE_MISSING_ATTACHMENT -> "GL_FRAMEBUFFER_INCOMPLETE_MISSING_ATTACHMENT"
+                GL_FRAMEBUFFER_INCOMPLETE_DRAW_BUFFER -> "GL_FRAMEBUFFER_INCOMPLETE_DRAW_BUFFER"
+                GL_FRAMEBUFFER_INCOMPLETE_READ_BUFFER -> "GL_FRAMEBUFFER_INCOMPLETE_READ_BUFFER"
+                GL_FRAMEBUFFER_UNSUPPORTED -> "GL_FRAMEBUFFER_UNSUPPORTED"
+                GL_FRAMEBUFFER_INCOMPLETE_MULTISAMPLE -> "GL_FRAMEBUFFER_INCOMPLETE_MULTISAMPLE"
+                GL32.GL_FRAMEBUFFER_INCOMPLETE_LAYER_TARGETS -> "GL_FRAMEBUFFER_INCOMPLETE_LAYER_TARGETS"
+                GL_FRAMEBUFFER_UNDEFINED -> "GL_FRAMEBUFFER_UNDEFINED" // TODO there is enum
+                else -> "$status"
+            }
+            println("OpenGL Error($error)")
+            return status == GL_FRAMEBUFFER_COMPLETE
+        }
 
     val Int.colorEncoding
         get() = glGetFramebufferAttachmentParameteri(GL_FRAMEBUFFER, this, GL_FRAMEBUFFER_ATTACHMENT_COLOR_ENCODING)
