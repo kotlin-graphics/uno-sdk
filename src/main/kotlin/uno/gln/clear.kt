@@ -37,6 +37,8 @@ fun glClearBuffer(buffer: Int, value: Float) = glClearBuffer(buffer, 0, value)
 
 fun glClearBuffer(buffer: Int, drawbuffer: Int, value: Float) = GL30.glClearBufferfv(buffer, drawbuffer, fBuf.put(0, value))
 
+fun glClearDepthBuffer(value: Float) = GL30.glClearBufferfv(GL11.GL_DEPTH, 0, fBuf.put(0, value))
+
 fun glClearBuffer(buffer: Int, value: Vec4) = GL30.glClearBufferfv(buffer, 0, value to m4Buf)
 
 fun glClearBuffer(buffer: Int, drawbuffer: Int, value: Vec1) = GL30.glClearBufferfv(buffer, drawbuffer, value to fBuf)
