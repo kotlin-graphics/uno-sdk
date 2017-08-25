@@ -15,9 +15,7 @@ import java.nio.IntBuffer
 
 fun glBindTexture(target: Int, texture: IntBuffer) = glBindTexture(target, texture[0])
 
-
 fun glTexStorage2D(target: Int, internalFormat: Int, size: Vec2i) = GL42.glTexStorage2D(target, 1, internalFormat, size.x, size.y)
-
 
 fun glBindTexture(target: Int) = glBindTexture(target, 0)
 
@@ -59,6 +57,13 @@ inline fun withTexture2d(unit: Int, texture: Int, sampler: Int, block: Texture2d
     Texture2d.block()
     glBindTexture(GL_TEXTURE_2D, 0)
     GL33.glBindSampler(0, sampler)
+}
+
+inline fun withTexture2d(unit: Int, texture: Int, block: Texture2d.() -> Unit) {
+    GL13.glActiveTexture(GL13.GL_TEXTURE0 + unit)
+    Texture2d.name = texture  // bind
+    Texture2d.block()
+    glBindTexture(GL_TEXTURE_2D, 0)
 }
 
 inline fun withTexture(unit: Int, target: Int, texture: Int, sampler: Int, block: Texture.() -> Unit) {
