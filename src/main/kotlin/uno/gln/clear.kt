@@ -35,10 +35,7 @@ object Clear {
 
 fun glClearBuffer(buffer: Int, value: Float) = glClearBuffer(buffer, 0, value)
 
-fun glClearBuffer(buffer: Int, drawbuffer: Int, value: Float) {
-    fBuf[0] = value
-    GL30.glClearBufferfv(buffer, drawbuffer, fBuf)
-}
+fun glClearBuffer(buffer: Int, drawbuffer: Int, value: Float) = GL30.glClearBufferfv(buffer, drawbuffer, fBuf.put(0, value))
 
 fun glClearBuffer(buffer: Int, value: Vec4) = GL30.glClearBufferfv(buffer, 0, value to m4Buf)
 
