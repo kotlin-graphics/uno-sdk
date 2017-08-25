@@ -85,7 +85,7 @@ object Framebuffers {
 
     lateinit var names: IntBuffer
 
-    fun at(index: Int, block: Framebuffer.() -> Unit) {
+    inline fun at(index: Int, block: Framebuffer.() -> Unit) {
         Framebuffer.name = names[index] // bind
         Framebuffer.block()
     }
