@@ -37,6 +37,12 @@ inline fun initFramebuffer(framebuffer: IntBuffer, block: Framebuffer.() -> Unit
     glBindFramebuffer(GL_FRAMEBUFFER, 0)
 }
 
+inline fun initFramebuffers(framebuffer: IntBuffer, block: Framebuffers.() -> Unit) {
+    glGenFramebuffers(framebuffer)
+    Framebuffers.names = framebuffer
+    Framebuffers.block()
+}
+
 
 object Framebuffer {
 
@@ -73,4 +79,15 @@ object Framebuffer {
 
     val Int.colorEncoding
         get() = glGetFramebufferAttachmentParameteri(GL_FRAMEBUFFER, this, GL_FRAMEBUFFER_ATTACHMENT_COLOR_ENCODING)
+}
+
+object Framebuffers {
+
+    lateinit var names: IntBuffer
+
+    fun at(index: Int, block: Framebuffer.() -> Unit) {
+        Framebuffer.name = names[index] // bind
+        Framebuffer.block()
+    }
+
 }
