@@ -272,12 +272,12 @@ object Texture2d {
 //        }
     var wrapS = repeat
         set(value) {
-            glTexParameteri(name, GL_TEXTURE_WRAP_S, value.i)
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, value.i)
             field = value
         }
     var wrapT = repeat
         set(value) {
-            glTexParameteri(name, GL_TEXTURE_WRAP_T, value.i)
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, value.i)
             field = value
         }
 

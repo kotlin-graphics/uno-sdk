@@ -7,6 +7,7 @@ import com.jogamp.opengl.GL2GL3.*
 import com.jogamp.opengl.GL3
 import glm_.set
 import glm_.vec2.Vec2i
+import org.lwjgl.opengl.GL11
 import uno.gl.iBuf
 import java.nio.ByteBuffer
 import java.nio.IntBuffer
@@ -269,12 +270,12 @@ object Texture2d {
 //        }
     var wrapS = repeat
         set(value) {
-            gl.glTexParameteri(name, GL_TEXTURE_WRAP_S, value.i)
+            gl.glTexParameteri(GL11.GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, value.i)
             field = value
         }
     var wrapT = repeat
         set(value) {
-            gl.glTexParameteri(name, GL_TEXTURE_WRAP_T, value.i)
+            gl.glTexParameteri(GL11.GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, value.i)
             field = value
         }
 
