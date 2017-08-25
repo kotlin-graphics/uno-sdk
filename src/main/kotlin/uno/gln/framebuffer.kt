@@ -24,6 +24,7 @@ fun glFramebufferRenderbuffer(target: Int, attachment: Int, renderbuffertarget: 
 
 fun glBindFramebuffer(target: Int, framebuffer: IntBuffer) = glBindFramebuffer(target, framebuffer[0])
 fun glBindFramebuffer(target: Int) = glBindFramebuffer(target, 0)
+fun glBindFramebuffer() = glBindFramebuffer(GL_FRAMEBUFFER, 0)
 
 
 fun glFramebufferTexture2D(target: Int, attachment: Int, textarget: Int, texture: Int) =
