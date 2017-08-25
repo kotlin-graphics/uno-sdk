@@ -14,7 +14,7 @@ fun glRenderbufferStorage(internalFormat: Int, width: Int, height: Int) = GL30.g
 fun glRenderbufferStorage(internalFormat: Int, size: Vec2i) = GL30.glRenderbufferStorage(GL_RENDERBUFFER, internalFormat, size.x, size.y)
 fun glRenderbufferStorage(target:Int, internalFormat: Int, size: Vec2i) = GL30.glRenderbufferStorage(target, internalFormat, size.x, size.y)
 
-fun glGenRenderbuffers(renderbuffers: IntBuffer, block: RenderBuffers.() -> Unit) {
+inline fun initRenderbuffers(renderbuffers: IntBuffer, block: RenderBuffers.() -> Unit) {
     glGenRenderbuffers(renderbuffers)
 //    RenderBuffers.target = GL_RENDERBUFFER TODO?
     RenderBuffers.names = renderbuffers
@@ -26,7 +26,7 @@ object RenderBuffers {
 //    var target = 0
     lateinit var names: IntBuffer
 
-    fun at(index: Int, block: RenderBuffer.() -> Unit) {
+    inline fun at(index: Int, block: RenderBuffer.() -> Unit) {
         RenderBuffer.name = names[index] // bind
         RenderBuffer.block()
     }

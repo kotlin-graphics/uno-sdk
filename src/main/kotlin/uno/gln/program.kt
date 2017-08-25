@@ -15,13 +15,13 @@ import uno.glsl.Program
 
 fun glCreatePrograms(ints: IntArray) = repeat(ints.size) { ints[it] = GL20.glCreateProgram() }
 
-fun glCreateProgram(block: ProgramBase.() -> Unit):Int{
+inline fun glCreateProgram(block: ProgramBase.() -> Unit):Int{
     ProgramBase.name = GL20.glCreateProgram()
     ProgramBase.block()
     return ProgramBase.name
 }
 
-fun initPrograms(ints: IntArray, block: Programs.() -> Unit) {
+inline fun initPrograms(ints: IntArray, block: Programs.() -> Unit) {
     repeat(ints.size) { ints[it] = GL20.glCreateProgram() }
     Programs.names = ints
     Programs.block()
@@ -126,12 +126,12 @@ object Programs {
 
     lateinit var names: IntArray
 
-    fun with(index: Int, block: ProgramBase.() -> Unit) {
+    inline fun with(index: Int, block: ProgramBase.() -> Unit) {
         ProgramBase.name = names[index]
         ProgramBase.block()
     }
 
-    fun using(index: Int, block: ProgramUse.() -> Unit) {
+    inline fun using(index: Int, block: ProgramUse.() -> Unit) {
         ProgramUse.name = names[index]  // bind
         ProgramUse.block()
         GL20.glUseProgram(0)

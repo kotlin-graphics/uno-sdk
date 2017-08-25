@@ -30,7 +30,7 @@ fun glFramebufferTexture2D(target: Int, attachment: Int, textarget: Int, texture
         GL30.glFramebufferTexture2D(target, attachment, textarget, texture, 0)
 
 
-fun initFramebuffer(framebuffer: IntBuffer, block: Framebuffer.() -> Unit) {
+inline fun initFramebuffer(framebuffer: IntBuffer, block: Framebuffer.() -> Unit) {
     glGenFramebuffers(framebuffer)
     Framebuffer.name = framebuffer[0]   // bind
     Framebuffer.block()

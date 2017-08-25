@@ -5,7 +5,6 @@ import glm_.vec2.Vec2i
 import org.lwjgl.opengl.*
 import org.lwjgl.opengl.GL11.*
 import org.lwjgl.system.MemoryUtil
-import org.lwjgl.system.Pointer
 import java.nio.ByteBuffer
 import java.nio.IntBuffer
 
@@ -72,33 +71,33 @@ inline fun withTexture(unit: Int, target: Int, texture: Int, sampler: Int, block
     GL33.glBindSampler(0, sampler)
 }
 
-fun initTexture1d(texture: IntBuffer, block: Texture1d.() -> Unit) {
+inline fun initTexture1d(texture: IntBuffer, block: Texture1d.() -> Unit) {
     texture[0] = initTexture1d(block)
 }
 
-fun initTexture1d(block: Texture1d.() -> Unit): Int {
+inline fun initTexture1d(block: Texture1d.() -> Unit): Int {
     val name = glGenTextures()
     Texture1d.name = name   // bind
     Texture1d.block()
     return name
 }
 
-fun initTexture2d(texture: IntBuffer, block: Texture2d.() -> Unit) {
+inline fun initTexture2d(texture: IntBuffer, block: Texture2d.() -> Unit) {
     texture[0] = initTexture2d(block)
 }
 
-fun initTexture2d(block: Texture2d.() -> Unit): Int {
+inline fun initTexture2d(block: Texture2d.() -> Unit): Int {
     val name = glGenTextures()
     Texture2d.name = name   // bind
     Texture2d.block()
     return name
 }
 
-fun initTexture(target: Int, texture: IntBuffer, block: Texture.() -> Unit) {
+inline fun initTexture(target: Int, texture: IntBuffer, block: Texture.() -> Unit) {
     texture[0] = initTexture(target, block)
 }
 
-fun initTexture(target: Int, block: Texture.() -> Unit): Int {
+inline fun initTexture(target: Int, block: Texture.() -> Unit): Int {
     val name = glGenTextures()
     Texture.target = target
     Texture.name = name   // bind
@@ -107,13 +106,13 @@ fun initTexture(target: Int, block: Texture.() -> Unit): Int {
 }
 
 
-fun initTextures2d(textures: IntBuffer, block: Textures2d.() -> Unit) {
+inline fun initTextures2d(textures: IntBuffer, block: Textures2d.() -> Unit) {
     glGenTextures(textures)
     Textures2d.names = textures
     Textures2d.block()
 }
 
-fun initTextures(target: Int, textures: IntBuffer, block: Textures.() -> Unit) {
+inline fun initTextures(target: Int, textures: IntBuffer, block: Textures.() -> Unit) {
     glGenTextures(textures)
     Textures.target = target
     Textures.names = textures
@@ -296,12 +295,12 @@ object Textures {
     fun image(level: Int, internalFormat: Int, width: Int, height: Int, format: Int, type: Int, pixels: ByteBuffer) =
             GL11.glTexImage2D(target, level, internalFormat, width, height, 0, format, type, pixels)
 
-    fun at1d(index: Int, block: Texture1d.() -> Unit) {
+    inline fun at1d(index: Int, block: Texture1d.() -> Unit) {
         Texture1d.name = names[index] // bind
         Texture1d.block()
     }
 
-    fun at2d(index: Int, block: Texture2d.() -> Unit) {
+    inline fun at2d(index: Int, block: Texture2d.() -> Unit) {
         Texture2d.name = names[index] // bind
         Texture2d.block()
     }
@@ -314,7 +313,7 @@ object Textures2d {
     fun image(level: Int, internalFormat: Int, width: Int, height: Int, format: Int, type: Int, pixels: ByteBuffer) =
             GL11.glTexImage2D(GL_TEXTURE_2D, level, internalFormat, width, height, 0, format, type, pixels)
 
-    fun at(index: Int, block: Texture2d.() -> Unit) {
+    inline fun at(index: Int, block: Texture2d.() -> Unit) {
         Texture2d.name = names[index] // bind
         Texture2d.block()
     }

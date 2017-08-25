@@ -8,7 +8,7 @@ import org.lwjgl.opengl.GL11
  * Created by GBarbieri on 21.04.2017.
  */
 
-fun depth(block: ObjectDepth.() -> Unit) = ObjectDepth.block()
+inline fun depth(block: ObjectDepth.() -> Unit) = ObjectDepth.block()
 
 object ObjectDepth {
 

@@ -73,7 +73,7 @@ object VertexArrays {
 
     lateinit var names: IntBuffer
 
-    fun at(index: Int, block: VertexArray.() -> Unit) {
+    inline fun at(index: Int, block: VertexArray.() -> Unit) {
         VertexArray.name = names[index]   // bind
         VertexArray.block()
     }
