@@ -44,6 +44,15 @@ inline fun initFramebuffers(framebuffer: IntBuffer, block: Framebuffers.() -> Un
     Framebuffers.block()
 }
 
+inline fun withFramebuffer(framebuffer: Int, block: Framebuffer.() -> Unit) {
+    Framebuffer.name = framebuffer
+    Framebuffer.block()
+}
+
+inline fun withFramebuffer(block: Framebuffer.() -> Unit) {
+    Framebuffer.name = 0
+    Framebuffer.block()
+}
 
 object Framebuffer {
 
