@@ -10,6 +10,13 @@ import java.nio.IntBuffer
  * Created by elect on 13/05/17.
  */
 
+fun glRenderbufferStorageMultisample(target: Int, samples: Int, internalformat: Int, size: Vec2i) =
+        GL30.glRenderbufferStorageMultisample(target, samples, internalformat, size.x, size.y)
+
+fun glBindRenderbuffer(target: Int) = GL30.glBindRenderbuffer(target, 0)
+fun glBindRenderbuffer(target: Int, buffer: IntBuffer) = GL30.glBindRenderbuffer(target, buffer[0])
+
+
 fun glRenderbufferStorage(internalFormat: Int, width: Int, height: Int) = GL30.glRenderbufferStorage(GL_RENDERBUFFER, internalFormat, width, height)
 fun glRenderbufferStorage(internalFormat: Int, size: Vec2i) = GL30.glRenderbufferStorage(GL_RENDERBUFFER, internalFormat, size.x, size.y)
 fun glRenderbufferStorage(target:Int, internalFormat: Int, size: Vec2i) = GL30.glRenderbufferStorage(target, internalFormat, size.x, size.y)
