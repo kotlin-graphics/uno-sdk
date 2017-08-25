@@ -59,21 +59,23 @@ fun glGetVec4i(pname: Int): Vec4i {
     return Vec4i(v4iBuf)
 }
 
-fun checkError(location: String) {
+fun checkError(location: String, throwError: Boolean = true): Boolean {
 
-    val error = GL11.glGetError()
+    val error = glGetError()
     if (error != GL_NO_ERROR) {
-        val errorString: String
-        when (error) {
-            GL_INVALID_ENUM -> errorString = "GL_INVALID_ENUM"
-            GL_INVALID_VALUE -> errorString = "GL_INVALID_VALUE"
-            GL_INVALID_OPERATION -> errorString = "GL_INVALID_OPERATION"
-            GL_INVALID_FRAMEBUFFER_OPERATION -> errorString = "GL_INVALID_FRAMEBUFFER_OPERATION"
-            GL_OUT_OF_MEMORY -> errorString = "GL_OUT_OF_MEMORY"
-            else -> errorString = "UNKNOWN"
+        val errorString = when (error) {
+            GL_INVALID_ENUM -> "GL_INVALID_ENUM"
+            GL_INVALID_VALUE -> "GL_INVALID_VALUE"
+            GL_INVALID_OPERATION -> "GL_INVALID_OPERATION"
+            GL_INVALID_FRAMEBUFFER_OPERATION -> "GL_INVALID_FRAMEBUFFER_OPERATION"
+            GL_OUT_OF_MEMORY -> "GL_OUT_OF_MEMORY"
+            GL_STACK_UNDERFLOW -> "GL_STACK_UNDERFLOW"
+            GL_STACK_OVERFLOW -> "GL_STACK_OVERFLOW"
+            else -> throw IllegalStateException()
         }
-        throw Error("OpenGL Error($errorString): $location")
+        return if (throwError) throw Error("OpenGL Error ($errorString) at $location") else false
     }
+    return true
 }
 
 
