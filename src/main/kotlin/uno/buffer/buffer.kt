@@ -1,6 +1,7 @@
 package uno.buffer
 
 import glm_.BYTES
+import glm_.L
 import glm_.b
 import glm_.set
 import org.lwjgl.system.MemoryUtil
@@ -157,7 +158,14 @@ fun doubleBufferBig(size: Int): DoubleBuffer = MemoryUtil.memAllocDouble(size)
 
 fun bufferBig(size: Int): ByteBuffer = MemoryUtil.memAlloc(size)
 fun shortBufferBig(size: Int): ShortBuffer = MemoryUtil.memAllocShort(size)
-fun intBufferBig(size: Int): IntBuffer = MemoryUtil.memAllocInt(size)
+@Synchronized
+fun intBufferBig(size: Int): IntBuffer {
+    val address = MemoryUtil.nmemAlloc(size.L shl 2)
+    println("address $address")
+    return MemoryUtil.memIntBuffer(address, size)
+//    MemoryUtil.memAllocInt(size)
+}
+
 fun longBufferBig(size: Int): LongBuffer = MemoryUtil.memAllocLong(size)
 
 
@@ -209,7 +217,7 @@ fun DoubleBuffer.destroy() = MemoryUtil.memFree(this)
 fun CharBuffer.destroy() = MemoryUtil.memFree(this)
 
 fun destroyBuf(vararg buffers: Buffer) {
-    for(i in 0 until buffers.size)
+    for (i in 0 until buffers.size)
         MemoryUtil.memFree(buffers[i])
 }
 
