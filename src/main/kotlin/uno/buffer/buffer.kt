@@ -159,12 +159,7 @@ fun doubleBufferBig(size: Int): DoubleBuffer = MemoryUtil.memAllocDouble(size)
 fun bufferBig(size: Int): ByteBuffer = MemoryUtil.memAlloc(size)
 fun shortBufferBig(size: Int): ShortBuffer = MemoryUtil.memAllocShort(size)
 @Synchronized
-fun intBufferBig(size: Int): IntBuffer {
-    val address = MemoryUtil.nmemAlloc(size.L shl 2)
-    println("address $address")
-    return MemoryUtil.memIntBuffer(address, size)
-//    MemoryUtil.memAllocInt(size)
-}
+fun intBufferBig(size: Int): IntBuffer = MemoryUtil.memAllocInt(size)
 
 fun longBufferBig(size: Int): LongBuffer = MemoryUtil.memAllocLong(size)
 
