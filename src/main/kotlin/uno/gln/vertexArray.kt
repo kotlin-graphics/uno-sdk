@@ -22,6 +22,7 @@ fun glBindVertexArray() = glBindVertexArray(0)
 
 
 inline fun initVertexArrays(vertexArrays: IntBuffer, block: VertexArrays.() -> Unit) {
+    glGenVertexArrays(vertexArrays)
     VertexArrays.names = vertexArrays
     VertexArrays.block()
     glBindVertexArray(0)
