@@ -243,13 +243,18 @@ object Texture2d {
             field = value
         }
 
-    val linear = Filer.linear
-    val nearest = Filer.nearest
+    fun levels(base: Int = 0, max: Int = 1_000) {
+        glTexParameteri(GL_TEXTURE_2D, GL12.GL_TEXTURE_BASE_LEVEL, base)
+        glTexParameteri(GL_TEXTURE_2D, GL12.GL_TEXTURE_MAX_LEVEL, max)
+    }
 
-    val nearest_mmNearest = Filer.nearest_mmNearest
-    val linear_mmNearest = Filer.linear_mmNearest
-    val nearest_mmLinear = Filer.nearest_mmLinear
-    val linear_mmLinear = Filer.linear_mmLinear
+    val linear = Filter.linear
+    val nearest = Filter.nearest
+
+    val nearest_mmNearest = Filter.nearest_mmNearest
+    val linear_mmNearest = Filter.linear_mmNearest
+    val nearest_mmLinear = Filter.nearest_mmLinear
+    val linear_mmLinear = Filter.linear_mmLinear
 
     val clampToEdge = Wrap.clampToEdge
     val mirroredRepeat = Wrap.mirroredRepeat
@@ -265,6 +270,12 @@ object Texture2d {
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, value.i)
             field = value
         }
+
+    fun filter(min: Filter = nearest_mmLinear, mag: Filter = linear) {
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, min.i)
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, mag.i)
+    }
+
     //    var maxAnisotropy = 1.0f
 //        set(value) {
 //            glTexParameteri(name, EXTTextureFilterAnisotropic.GL_TEXTURE_MAX_ANISOTROPY_EXT, value)
@@ -281,12 +292,17 @@ object Texture2d {
             field = value
         }
 
-    enum class Filer(val i: Int) {nearest(GL_NEAREST), linear(GL_LINEAR),
+    fun wrap(s: Wrap = repeat, t: Wrap = repeat) {
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, s.i)
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, t.i)
+    }
+
+    enum class Filter(val i: Int) { nearest(GL_NEAREST), linear(GL_LINEAR),
         nearest_mmNearest(GL_NEAREST_MIPMAP_NEAREST), linear_mmNearest(GL_LINEAR_MIPMAP_NEAREST),
         nearest_mmLinear(GL_NEAREST_MIPMAP_LINEAR), linear_mmLinear(GL_LINEAR_MIPMAP_LINEAR)
     }
 
-    enum class Wrap(val i: Int) {clampToEdge(GL12.GL_CLAMP_TO_EDGE), mirroredRepeat(GL14.GL_MIRRORED_REPEAT), repeat(GL_REPEAT) }
+    enum class Wrap(val i: Int) { clampToEdge(GL12.GL_CLAMP_TO_EDGE), mirroredRepeat(GL14.GL_MIRRORED_REPEAT), repeat(GL_REPEAT) }
 }
 
 object Textures {

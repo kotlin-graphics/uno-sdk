@@ -203,7 +203,7 @@ fun doubleBuffersBig(sizeA: Int, sizeB: Int, sizeC: Int, sizeD: Int) = Quadruple
 fun doubleBuffersBig(sizeA: Int, sizeB: Int, sizeC: Int, sizeD: Int, sizeE: Int) = Quintuple(doubleBufferBig(sizeA), doubleBufferBig(sizeB), doubleBufferBig(sizeC), doubleBufferBig(sizeD), doubleBufferBig(sizeE))
 
 
-fun ByteBuffer.destroy() = MemoryUtil.memFree(this)
+fun ByteBuffer.destroy() = MemoryUtil.memFree(this) // TODO rename?
 fun ShortBuffer.destroy() = MemoryUtil.memFree(this)
 fun IntBuffer.destroy() = MemoryUtil.memFree(this)
 fun LongBuffer.destroy() = MemoryUtil.memFree(this)
