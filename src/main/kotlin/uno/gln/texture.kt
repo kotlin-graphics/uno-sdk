@@ -317,9 +317,9 @@ object Texture2d {
     val always = CompareMode.always
     val never = CompareMode.never
 
-    var compareFunc = lessEqual
+    var compareFunc = rToTexture
         set(value) = glTexParameteri(GL_TEXTURE_2D, GL14.GL_TEXTURE_COMPARE_FUNC, value.i)
-    var compareMode = rToTexture
+    var compareMode = lessEqual
         set(value) = glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_COMPARE_MODE, value.i)
 
     fun compare(func: CompareFunc, mode: CompareMode) {
