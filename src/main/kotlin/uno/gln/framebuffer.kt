@@ -18,7 +18,7 @@ fun glFramebufferRenderbuffer(target: Int, attachment: Int, renderbuffertarget: 
 
 
 fun glBindFramebuffer(target: Int, framebuffer: IntBuffer) = glBindFramebuffer(target, framebuffer[0])
-fun glBindFramebuffer(framebuffer: Int) = glBindFramebuffer(GL_FRAMEBUFFER, 0)
+fun glBindFramebuffer(framebuffer: Int) = glBindFramebuffer(GL_FRAMEBUFFER, framebuffer)
 fun glBindFramebuffer() = glBindFramebuffer(GL_FRAMEBUFFER, 0)
 
 
