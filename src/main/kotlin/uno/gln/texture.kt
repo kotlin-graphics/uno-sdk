@@ -306,16 +306,16 @@ object Texture2d {
     enum class Wrap(val i: Int) { clampToEdge(GL12.GL_CLAMP_TO_EDGE), mirroredRepeat(GL14.GL_MIRRORED_REPEAT), repeat(GL_REPEAT) }
 
 
-    val rToTexture = CompareFunc.rToTexture
-    val none = CompareFunc.none
-    val lessEqual = CompareMode.lessEqual
-    val greaterEqual = CompareMode.greaterEqual
-    val less = CompareMode.less
-    val greater = CompareMode.greater
-    val equal = CompareMode.equal
-    val notEqual = CompareMode.notEqual
-    val always = CompareMode.always
-    val never = CompareMode.never
+    val rToTexture = CompareMode.rToTexture
+    val none = CompareMode.none
+    val lessEqual = CompareFunc.lessEqual
+    val greaterEqual = CompareFunc.greaterEqual
+    val less = CompareFunc.less
+    val greater = CompareFunc.greater
+    val equal = CompareFunc.equal
+    val notEqual = CompareFunc.notEqual
+    val always = CompareFunc.always
+    val never = CompareFunc.never
 
     var compareFunc = rToTexture
         set(value) = glTexParameteri(GL_TEXTURE_2D, GL14.GL_TEXTURE_COMPARE_FUNC, value.i)
@@ -327,8 +327,8 @@ object Texture2d {
         glTexParameteri(GL_TEXTURE_2D, GL14.GL_TEXTURE_COMPARE_MODE, mode.i)
     }
 
-    enum class CompareFunc(val i: Int) { rToTexture(GL14.GL_COMPARE_R_TO_TEXTURE), none(GL_NONE) }
-    enum class CompareMode(val i: Int) { lessEqual(GL_LEQUAL), greaterEqual(GL_GEQUAL), less(GL_LESS),
+    enum class CompareMode(val i: Int) { rToTexture(GL14.GL_COMPARE_R_TO_TEXTURE), none(GL_NONE) }
+    enum class CompareFunc(val i: Int) { lessEqual(GL_LEQUAL), greaterEqual(GL_GEQUAL), less(GL_LESS),
         greater(GL_GREATER), equal(GL_EQUAL), notEqual(GL_NOTEQUAL), always(GL_ALWAYS), never(GL_NEVER)
     }
 }
