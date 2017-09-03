@@ -159,7 +159,7 @@ fun longBufferOf(vararg numbers: Number): LongBuffer {
 
 fun bufferOf(vertices: Collection<*>): ByteBuffer {
     val res: ByteBuffer
-    when(vertices.elementAt(0)) {
+    when (vertices.elementAt(0)) {
         Vec2 -> {
             res = bufferBig(Vec2.size * vertices.size)
             for (i in 0 until vertices.size) (vertices as Collection<Vec2>).elementAt(i).to(res, i * Vec2.size)
@@ -182,9 +182,16 @@ fun bufferOf(vertices: Collection<*>): ByteBuffer {
     return res
 }
 
+fun bufferOf(vararg vertices: Vertex.pos3_col4ub): ByteBuffer {
+    val res = bufferBig(glf.pos3_col4ub.stride * vertices.size)
+    for (i in 0 until vertices.size)
+        vertices[i].to(res, i * glf.pos3_col4ub.stride)
+    return res
+}
+
 fun bufferOf(vertices: Array<*>): ByteBuffer {
     val res: ByteBuffer
-    when(vertices.elementAt(0)) {
+    when (vertices.elementAt(0)) {
         Vec2 -> {
             res = bufferBig(Vec2.size * vertices.size)
             for (i in 0 until vertices.size) (vertices as Array<Vec2>)[i].to(res, i * Vec2.size)
@@ -209,7 +216,7 @@ fun bufferOf(vertices: Array<*>): ByteBuffer {
 
 fun floatBufferOf(vertices: Collection<*>): FloatBuffer {
     val res: FloatBuffer
-    when(vertices.elementAt(0)) {
+    when (vertices.elementAt(0)) {
         Vec2 -> {
             res = floatBufferBig(Vec2.length * vertices.size)
             for (i in 0 until vertices.size) (vertices as Collection<Vec2>).elementAt(i).to(res, i * Vec2.length)
