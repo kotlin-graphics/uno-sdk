@@ -7,6 +7,7 @@ import glm_.vec2.Vec2
 import glm_.vec3.Vec3
 import glm_.vec4.Vec4
 import org.lwjgl.system.MemoryUtil
+import uno.glf.Vertex
 import uno.glf.glf
 import uno.kotlin.Quadruple
 import uno.kotlin.Quintuple
@@ -170,10 +171,10 @@ fun bufferOf(vertices: Collection<*>): ByteBuffer {
             res = bufferBig(Vec4.size * vertices.size)
             for (i in 0 until vertices.size) (vertices as Collection<Vec4>).elementAt(i).to(res, i * Vec4.size)
         }
-        glf.pos3_col4ub -> {
+        Vertex.pos3_col4ub::class -> {
             res = bufferBig(glf.pos3_col4ub.stride * vertices.size)
             for (i in 0 until vertices.size)
-                (vertices as Collection<glf.pos3_col4ub>).elementAt(i).to(res, i * glf.pos3_col4ub.stride)
+                (vertices as Collection<Vertex.pos3_col4ub>).elementAt(i).to(res, i * glf.pos3_col4ub.stride)
         }
         else -> throw Error()
     }
