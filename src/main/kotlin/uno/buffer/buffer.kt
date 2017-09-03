@@ -1,7 +1,6 @@
 package uno.buffer
 
 import glm_.BYTES
-import glm_.L
 import glm_.b
 import glm_.set
 import org.lwjgl.system.MemoryUtil
@@ -153,15 +152,13 @@ fun longBufferOf(vararg numbers: Number): LongBuffer {
 }
 
 
-fun floatBufferBig(size: Int): FloatBuffer = MemoryUtil.memAllocFloat(size)
-fun doubleBufferBig(size: Int): DoubleBuffer = MemoryUtil.memAllocDouble(size)
+fun floatBufferBig(capacity: Int): FloatBuffer = MemoryUtil.memAllocFloat(capacity)
+fun doubleBufferBig(capacity: Int): DoubleBuffer = MemoryUtil.memAllocDouble(capacity)
 
-fun bufferBig(size: Int): ByteBuffer = MemoryUtil.memAlloc(size)
-fun shortBufferBig(size: Int): ShortBuffer = MemoryUtil.memAllocShort(size)
-@Synchronized
-fun intBufferBig(size: Int): IntBuffer = MemoryUtil.memAllocInt(size)
-
-fun longBufferBig(size: Int): LongBuffer = MemoryUtil.memAllocLong(size)
+fun bufferBig(capacity: Int): ByteBuffer = MemoryUtil.memAlloc(capacity)
+fun shortBufferBig(capacity: Int): ShortBuffer = MemoryUtil.memAllocShort(capacity)
+fun intBufferBig(capacity: Int): IntBuffer = MemoryUtil.memAllocInt(capacity)
+fun longBufferBig(capacity: Int): LongBuffer = MemoryUtil.memAllocLong(capacity)
 
 
 // i.e: clear color buffer
