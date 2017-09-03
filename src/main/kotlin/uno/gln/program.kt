@@ -62,7 +62,7 @@ object ProgramUse {
 
     var String.blockIndex
         get() = glGetUniformBlockIndex(name, this)
-        set(value) = glUniformBlockBinding(name, glGetUniformBlockIndex(name, this), value)
+        set(value) = glUniformBlockBinding(name, blockIndex, value)
 
     var String.unit: Int
         get() = location
