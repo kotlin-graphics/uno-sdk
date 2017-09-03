@@ -3,6 +3,9 @@ package uno.buffer
 import glm_.BYTES
 import glm_.b
 import glm_.set
+import glm_.vec2.Vec2
+import glm_.vec3.Vec3
+import glm_.vec4.Vec4
 import org.lwjgl.system.MemoryUtil
 import uno.kotlin.Quadruple
 import uno.kotlin.Quintuple
@@ -148,6 +151,46 @@ fun longBufferOf(vararg longs: Long): LongBuffer {
 fun longBufferOf(vararg numbers: Number): LongBuffer {
     val res = MemoryUtil.memAllocLong(numbers.size)
     for (i in 0 until numbers.size) res.put(i, numbers[i].toLong())
+    return res
+}
+
+fun bufferOf(vertices: Collection<*>): ByteBuffer {
+    val res: ByteBuffer
+    when(vertices.elementAt(0)) {
+        Vec2 -> {
+            res = bufferBig(Vec2.size * vertices.size)
+            for (i in 0 until vertices.size) (vertices as Collection<Vec2>).elementAt(i).to(res, i * Vec2.size)
+        }
+        Vec3 -> {
+            res = bufferBig(Vec3.size * vertices.size)
+            for (i in 0 until vertices.size) (vertices as Collection<Vec3>).elementAt(i).to(res, i * Vec3.size)
+        }
+        Vec4 -> {
+            res = bufferBig(Vec4.size * vertices.size)
+            for (i in 0 until vertices.size) (vertices as Collection<Vec4>).elementAt(i).to(res, i * Vec4.size)
+        }
+        else -> throw Error()
+    }
+    return res
+}
+
+fun floatBufferOf(vertices: Collection<*>): FloatBuffer {
+    val res: FloatBuffer
+    when(vertices.elementAt(0)) {
+        Vec2 -> {
+            res = floatBufferBig(Vec2.length * vertices.size)
+            for (i in 0 until vertices.size) (vertices as Collection<Vec2>).elementAt(i).to(res, i * Vec2.length)
+        }
+        Vec3 -> {
+            res = floatBufferBig(Vec3.length * vertices.size)
+            for (i in 0 until vertices.size) (vertices as Collection<Vec3>).elementAt(i).to(res, i * Vec3.length)
+        }
+        Vec4 -> {
+            res = floatBufferBig(Vec4.length * vertices.size)
+            for (i in 0 until vertices.size) (vertices as Collection<Vec4>).elementAt(i).to(res, i * Vec4.length)
+        }
+        else -> throw Error()
+    }
     return res
 }
 
