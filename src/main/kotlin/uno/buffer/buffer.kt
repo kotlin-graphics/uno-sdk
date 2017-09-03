@@ -6,6 +6,7 @@ import glm_.set
 import glm_.vec2.Vec2
 import glm_.vec3.Vec3
 import glm_.vec4.Vec4
+import glm_.vec4.Vec4ub
 import org.lwjgl.system.MemoryUtil
 import uno.glf.Vertex
 import uno.glf.glf
@@ -175,6 +176,31 @@ fun bufferOf(vertices: Collection<*>): ByteBuffer {
             res = bufferBig(glf.pos3_col4ub.stride * vertices.size)
             for (i in 0 until vertices.size)
                 (vertices as Collection<Vertex.pos3_col4ub>).elementAt(i).to(res, i * glf.pos3_col4ub.stride)
+        }
+        else -> throw Error()
+    }
+    return res
+}
+
+fun bufferOf(vertices: Array<*>): ByteBuffer {
+    val res: ByteBuffer
+    when(vertices.elementAt(0)) {
+        Vec2 -> {
+            res = bufferBig(Vec2.size * vertices.size)
+            for (i in 0 until vertices.size) (vertices as Array<Vec2>)[i].to(res, i * Vec2.size)
+        }
+        Vec3 -> {
+            res = bufferBig(Vec3.size * vertices.size)
+            for (i in 0 until vertices.size) (vertices as Array<Vec3>)[i].to(res, i * Vec3.size)
+        }
+        Vec4 -> {
+            res = bufferBig(Vec4.size * vertices.size)
+            for (i in 0 until vertices.size) (vertices as Array<Vec4>)[i].to(res, i * Vec4.size)
+        }
+        Vertex.pos3_col4ub::class -> {
+            res = bufferBig(glf.pos3_col4ub.stride * vertices.size)
+            for (i in 0 until vertices.size)
+                (vertices as Array<Vertex.pos3_col4ub>)[i].to(res, i * glf.pos3_col4ub.stride)
         }
         else -> throw Error()
     }
