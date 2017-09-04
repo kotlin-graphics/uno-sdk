@@ -46,6 +46,7 @@ object RenderBuffers {
     inline fun at(index: Int, block: RenderBuffer.() -> Unit) {
         RenderBuffer.name = names[index] // bind
         RenderBuffer.block()
+        RenderBuffer.name = 0   // unbind
     }
 }
 
