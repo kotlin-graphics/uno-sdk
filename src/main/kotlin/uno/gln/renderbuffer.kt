@@ -33,8 +33,9 @@ inline fun initRenderbuffer(renderbuffers: IntBuffer, block: RenderBuffer.() -> 
     RenderBuffer.block()
 }
 
-inline fun withRenderbuffer(renderbuffers: IntBuffer, block: RenderBuffer.() -> Unit) {
-    RenderBuffer.name = renderbuffers[0]
+inline fun withRenderbuffer(renderbuffers: IntBuffer, block: RenderBuffer.() -> Unit)  = withRenderbuffer(renderbuffers[0], block)
+inline fun withRenderbuffer(renderbuffers: Int, block: RenderBuffer.() -> Unit) {
+    RenderBuffer.name = renderbuffers
     RenderBuffer.block()
 }
 
