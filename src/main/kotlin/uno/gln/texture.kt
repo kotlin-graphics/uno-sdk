@@ -332,10 +332,10 @@ object Texture2d {
         greater(GL_GREATER), equal(GL_EQUAL), notEqual(GL_NOTEQUAL), always(GL_ALWAYS), never(GL_NEVER)
     }
 
-    val r = Swizzle.r
-    val g = Swizzle.g
-    val b = Swizzle.b
-    val a = Swizzle.a
+    val red = Swizzle.r
+    val green = Swizzle.g
+    val blue = Swizzle.b
+    val alpha = Swizzle.a
 
     fun swizzle(r: Swizzle, g: Swizzle, b: Swizzle, a:Swizzle) {
         glTexParameteri(GL_TEXTURE_2D, GL33.GL_TEXTURE_SWIZZLE_R, r.i)
