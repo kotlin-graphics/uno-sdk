@@ -33,6 +33,11 @@ inline fun initRenderbuffer(renderbuffers: IntBuffer, block: RenderBuffer.() -> 
     RenderBuffer.block()
 }
 
+inline fun withRenderbuffer(renderbuffers: IntBuffer, block: RenderBuffer.() -> Unit) {
+    RenderBuffer.name = renderbuffers[0]
+    RenderBuffer.block()
+}
+
 object RenderBuffers {
 
     var target = GL_RENDERBUFFER
