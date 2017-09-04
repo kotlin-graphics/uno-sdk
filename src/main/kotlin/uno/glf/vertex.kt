@@ -134,6 +134,7 @@ object glf {
     }
 
 }
+
 object Vertex { // TODO
 
     class pos2 : VertexLayout {
@@ -176,12 +177,7 @@ object Vertex { // TODO
     }
 
 
-    class pos2_tc2 : VertexLayout {
-        val stride = Vec2.size * 2
-        override var attribute = arrayOf(
-                VertexAttribute(semantic.attr.POSITION, Vec2.length, GL_FLOAT, false, stride, 0),
-                VertexAttribute(semantic.attr.TEX_COORD, Vec2.length, GL_FLOAT, false, stride, Vec2.size.L))
-    }
+    class pos2_tc2(val p: Vec2, val t: Vec2)
 
     class pos2_tc2_col4b : VertexLayout {
         val stride = Vec2.size * 2 + Vec4b.size
@@ -205,14 +201,7 @@ object Vertex { // TODO
                 VertexAttribute(semantic.attr.TEX_COORD, Vec2.length, GL_FLOAT, false, stride, Vec3.size.L))
     }
 
-    class pos3_col4ub(var p: Vec3, var c: Vec4ub) {
-        infix fun to(buffer: ByteBuffer) = to(buffer, buffer.position())
-        fun to(buffer: ByteBuffer, index: Int): ByteBuffer {
-            p.to(buffer, index)
-            c.to(buffer, index + Vec3.size)
-            return buffer
-        }
-    }
+    class pos3_col4ub(var p: Vec3, var c: Vec4ub)
 
     class pos2_tc3 : VertexLayout {
         val stride = Vec2.size + Vec3.size
@@ -250,6 +239,8 @@ object Vertex { // TODO
                 VertexAttribute(semantic.attr.NORMAL, Vec3.length, GL_FLOAT, false, stride, Vec3.size.L),
                 VertexAttribute(semantic.attr.COLOR, Vec4.length, GL_FLOAT, false, stride, Vec3.size.L * 2))
     }
+
+    abstract class Base
 }
 
 

@@ -108,20 +108,24 @@ fun bufferOf(vertices: Collection<*>): ByteBuffer {
             res = bufferBig(Vec4.size * vertices.size)
             for (i in 0 until vertices.size) (vertices.elementAt(i) as Vec4).to(res, i * Vec4.size)
         }
+        is Vertex.pos2_tc2 -> {
+            res = bufferBig(glf.pos2_tc2.stride * vertices.size)
+            for (i in 0 until vertices.size) {
+                val v = vertices.elementAt(i) as Vertex.pos2_tc2
+                v.p.to(res, i * glf.pos2_tc2.stride)
+                v.t.to(res, i * glf.pos2_tc2.stride + Vec2.size)
+            }
+        }
         is Vertex.pos3_col4ub -> {
             res = bufferBig(glf.pos3_col4ub.stride * vertices.size)
-            for (i in 0 until vertices.size)
-                (vertices.elementAt(i) as Vertex.pos3_col4ub).to(res, i * glf.pos3_col4ub.stride)
+            for (i in 0 until vertices.size) {
+                val v = vertices.elementAt(i) as Vertex.pos3_col4ub
+                v.p.to(res, i * glf.pos2_tc2.stride)
+                v.c.to(res, i * glf.pos2_tc2.stride + Vec3.size)
+            }
         }
         else -> throw Error()
     }
-    return res
-}
-
-fun bufferOf(vararg vertices: Vertex.pos3_col4ub): ByteBuffer {
-    val res = bufferBig(glf.pos3_col4ub.stride * vertices.size)
-    for (i in 0 until vertices.size)
-        vertices[i].to(res, i * glf.pos3_col4ub.stride)
     return res
 }
 
@@ -140,10 +144,21 @@ fun bufferOf(vertices: Array<*>): ByteBuffer {
             res = bufferBig(Vec4.size * vertices.size)
             for (i in 0 until vertices.size) (vertices[i] as Vec4).to(res, i * Vec4.size)
         }
+        is Vertex.pos2_tc2 -> {
+            res = bufferBig(glf.pos2_tc2.stride * vertices.size)
+            for (i in 0 until vertices.size) {
+                val v = vertices.elementAt(i) as Vertex.pos2_tc2
+                v.p.to(res, i * glf.pos2_tc2.stride)
+                v.t.to(res, i * glf.pos2_tc2.stride + Vec2.size)
+            }
+        }
         is Vertex.pos3_col4ub -> {
             res = bufferBig(glf.pos3_col4ub.stride * vertices.size)
-            for (i in 0 until vertices.size)
-                (vertices[i] as Vertex.pos3_col4ub).to(res, i * glf.pos3_col4ub.stride)
+            for (i in 0 until vertices.size) {
+                val v = vertices.elementAt(i) as Vertex.pos3_col4ub
+                v.p.to(res, i * glf.pos2_tc2.stride)
+                v.c.to(res, i * glf.pos2_tc2.stride + Vec3.size)
+            }
         }
         else -> throw Error()
     }
