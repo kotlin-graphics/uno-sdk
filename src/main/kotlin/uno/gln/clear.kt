@@ -6,6 +6,7 @@ import glm_.vec1.Vec1
 import glm_.vec4.Vec4
 import org.lwjgl.opengl.GL11
 import org.lwjgl.opengl.GL30
+import uno.buffer.put
 import uno.gl.fBuf
 import uno.gl.m4Buf
 import uno.gl.v4Buf
@@ -41,6 +42,7 @@ fun glClearBuffer(buffer: Int, drawbuffer: Int, value: Float) = GL30.glClearBuff
 fun glClearDepthBuffer(value: Float = 1f) = GL30.glClearBufferfv(GL11.GL_DEPTH, 0, fBuf.put(0, value))
 fun glClearColorBuffer(drawbuffer: Int, value: Vec4 = Vec4(0f, 0f, 0f, 1f)) = GL30.glClearBufferfv(GL11.GL_COLOR, drawbuffer, value to v4Buf)
 fun glClearColorBuffer(value: Vec4 = Vec4(0f, 0f, 0f, 1f)) = GL30.glClearBufferfv(GL11.GL_COLOR, 0, value to v4Buf)
+fun glClearColorBuffer(red: Float, green: Float, blue: Float, alpha: Float) = GL30.glClearBufferfv(GL11.GL_COLOR, 0, v4Buf.put(red, green, blue, alpha))
 
 fun glClearBuffer(buffer: Int, value: Vec4) = GL30.glClearBufferfv(buffer, 0, value to m4Buf)
 
