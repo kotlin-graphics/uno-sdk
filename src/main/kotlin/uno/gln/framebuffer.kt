@@ -62,6 +62,9 @@ object Framebuffer {
     fun texture2D(target: Int, attachment: Int, texture: Int, level: Int = 0) =
             GL30.glFramebufferTexture2D(target, attachment, GL11.GL_TEXTURE_2D, texture, level)
 
+    fun texture2D(attachment: Int, texture: Int, level: Int = 0) =
+            GL30.glFramebufferTexture2D(GL_FRAMEBUFFER, attachment, GL11.GL_TEXTURE_2D, texture, level)
+
     fun renderbuffer(attachment: Int, renderbuffer: Int) = GL30.glFramebufferRenderbuffer(GL_FRAMEBUFFER, attachment, GL_RENDERBUFFER, renderbuffer)
 
     val complete: Boolean
