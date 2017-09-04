@@ -331,6 +331,20 @@ object Texture2d {
     enum class CompareFunc(val i: Int) { lessEqual(GL_LEQUAL), greaterEqual(GL_GEQUAL), less(GL_LESS),
         greater(GL_GREATER), equal(GL_EQUAL), notEqual(GL_NOTEQUAL), always(GL_ALWAYS), never(GL_NEVER)
     }
+
+    val r = Swizzle.r
+    val g = Swizzle.g
+    val b = Swizzle.b
+    val a = Swizzle.a
+
+    fun swizzle(r: Swizzle, g: Swizzle, b: Swizzle, a:Swizzle) {
+        glTexParameteri(GL_TEXTURE_2D, GL33.GL_TEXTURE_SWIZZLE_R, r.i)
+        glTexParameteri(GL_TEXTURE_2D, GL33.GL_TEXTURE_SWIZZLE_G, g.i)
+        glTexParameteri(GL_TEXTURE_2D, GL33.GL_TEXTURE_SWIZZLE_B, b.i)
+        glTexParameteri(GL_TEXTURE_2D, GL33.GL_TEXTURE_SWIZZLE_A, a.i)
+    }
+
+    enum class Swizzle(val i: Int) { r(GL33.GL_TEXTURE_SWIZZLE_R), g(GL33.GL_TEXTURE_SWIZZLE_G), b(GL33.GL_TEXTURE_SWIZZLE_B), a(GL33.GL_TEXTURE_SWIZZLE_A) }
 }
 
 object Textures {
