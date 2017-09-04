@@ -9,13 +9,12 @@ import glm_.vec4.Vec4
 import org.lwjgl.opengl.ARBUniformBufferObject.glGetUniformBlockIndex
 import org.lwjgl.opengl.ARBUniformBufferObject.glUniformBlockBinding
 import org.lwjgl.opengl.GL20
-import org.lwjgl.opengl.GL31
 import uno.gl.*
 import uno.glsl.Program
 
 fun glCreatePrograms(ints: IntArray) = repeat(ints.size) { ints[it] = GL20.glCreateProgram() }
 
-inline fun glCreateProgram(block: ProgramBase.() -> Unit):Int{
+inline fun glCreateProgram(block: ProgramBase.() -> Unit): Int {
     ProgramBase.name = GL20.glCreateProgram()
     ProgramBase.block()
     return ProgramBase.name
@@ -57,7 +56,7 @@ object ProgramUse {
             field = value
         }
 
-    val String.location: Int
+    val String.uniform: Int
         get() = GL20.glGetUniformLocation(name, this)
 
     var String.blockIndex
@@ -65,8 +64,8 @@ object ProgramUse {
         set(value) = glUniformBlockBinding(name, blockIndex, value)
 
     var String.unit: Int
-        get() = location
-        set(value) = GL20.glUniform1i(location, value)
+        get() = uniform
+        set(value) = GL20.glUniform1i(uniform, value)
 
 
     fun link() = GL20.glLinkProgram(name)
@@ -82,38 +81,41 @@ object ProgramUse {
     infix fun Mat3.to(location: Int) = GL20.glUniformMatrix3fv(location, false, this to m3Buf)
     infix fun Mat4.to(location: Int) = GL20.glUniformMatrix4fv(location, false, this to m4Buf)
 
-    infix fun Int.to(uniform: String) = GL20.glUniform1i(uniform.location, this)
-    infix fun Float.to(uniform: String) = GL20.glUniform1f(uniform.location, this)
+    infix fun Int.to(uniform: String) = GL20.glUniform1i(uniform.uniform, this)
+    infix fun Float.to(uniform: String) = GL20.glUniform1f(uniform.uniform, this)
 
-    infix fun Vec2.to(uniform: String) = GL20.glUniform2fv(uniform.location, this to v2Buf)
-    infix fun Vec3.to(uniform: String) = GL20.glUniform3fv(uniform.location, this to v3Buf)
-    infix fun Vec4.to(uniform: String) = GL20.glUniform4fv(uniform.location, this to v4Buf)
+    infix fun Vec2.to(uniform: String) = GL20.glUniform2fv(uniform.uniform, this to v2Buf)
+    infix fun Vec3.to(uniform: String) = GL20.glUniform3fv(uniform.uniform, this to v3Buf)
+    infix fun Vec4.to(uniform: String) = GL20.glUniform4fv(uniform.uniform, this to v4Buf)
 
-    infix fun Mat2.to(uniform: String) = GL20.glUniformMatrix2fv(uniform.location, false, this to m2Buf)
-    infix fun Mat3.to(uniform: String) = GL20.glUniformMatrix3fv(uniform.location, false, this to m3Buf)
-    infix fun Mat4.to(uniform: String) = GL20.glUniformMatrix4fv(uniform.location, false, this to m4Buf)
+    infix fun Mat2.to(uniform: String) = GL20.glUniformMatrix2fv(uniform.uniform, false, this to m2Buf)
+    infix fun Mat3.to(uniform: String) = GL20.glUniformMatrix3fv(uniform.uniform, false, this to m3Buf)
+    infix fun Mat4.to(uniform: String) = GL20.glUniformMatrix4fv(uniform.uniform, false, this to m4Buf)
 }
 
 object ProgramBase {
 
     var name = 0
 
-    var String.location
+    val String.uniform
         get() = GL20.glGetUniformLocation(name, this)
+
+    var String.attrib
+        get() = GL20.glGetAttribLocation(name, this)
         set(value) = GL20.glBindAttribLocation(name, value, this)
 
-    // read only because no program is used
-    val String.blockIndex
+    var String.blockIndex
         get() = glGetUniformBlockIndex(name, this)
+        set(value) = glUniformBlockBinding(name, blockIndex, value)
+
+    // only get, no program use
+    val String.unit get() = uniform
 
     inline fun use(block: ProgramUse.() -> Unit) {
         ProgramUse.name = name
         ProgramUse.block()
         GL20.glUseProgram(0)
     }
-
-    infix fun Int.blockBinding(uniformBlockBinding: Int) = glUniformBlockBinding(name, this, uniformBlockBinding)
-    infix fun Int.getBlockIndex(uniformBlockName: String) = GL31.glGetUniformBlockIndex(this, uniformBlockName)
 
     fun link() = GL20.glLinkProgram(name)
 
