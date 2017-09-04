@@ -19,13 +19,14 @@ fun glBindRenderbuffer(target: Int, buffer: IntBuffer) = GL30.glBindRenderbuffer
 
 fun glRenderbufferStorage(internalFormat: Int, width: Int, height: Int) = GL30.glRenderbufferStorage(GL_RENDERBUFFER, internalFormat, width, height)
 fun glRenderbufferStorage(internalFormat: Int, size: Vec2i) = GL30.glRenderbufferStorage(GL_RENDERBUFFER, internalFormat, size.x, size.y)
-fun glRenderbufferStorage(target:Int, internalFormat: Int, size: Vec2i) = GL30.glRenderbufferStorage(target, internalFormat, size.x, size.y)
+fun glRenderbufferStorage(target: Int, internalFormat: Int, size: Vec2i) = GL30.glRenderbufferStorage(target, internalFormat, size.x, size.y)
 
 inline fun initRenderbuffers(renderbuffers: IntBuffer, block: RenderBuffers.() -> Unit) {
     glGenRenderbuffers(renderbuffers)
     RenderBuffers.names = renderbuffers
     RenderBuffers.block()
 }
+
 inline fun initRenderbuffer(renderbuffers: IntBuffer, block: RenderBuffer.() -> Unit) {
     glGenRenderbuffers(renderbuffers)
     RenderBuffer.name = renderbuffers[0]
@@ -55,4 +56,8 @@ object RenderBuffer {
     fun storage(internalFormat: Int, width: Int, height: Int) = glRenderbufferStorage(GL_RENDERBUFFER, internalFormat, width, height)
     fun storage(internalFormat: Int, size: Vec2i) = glRenderbufferStorage(GL_RENDERBUFFER, internalFormat, size.x, size.y)
     fun storageMultisample(samples: Int, internalFormat: Int, size: Vec2i) = GL30.glRenderbufferStorageMultisample(target, samples, internalFormat, size.x, size.y)
+
+    val size get() = Vec2i(GL30.glGetRenderbufferParameteri(GL_RENDERBUFFER, GL_RENDERBUFFER_WIDTH), GL30.glGetRenderbufferParameteri(GL_RENDERBUFFER, GL_RENDERBUFFER_HEIGHT))
+    val samples get() = GL30.glGetRenderbufferParameteri(GL_RENDERBUFFER, GL_RENDERBUFFER_SAMPLES)
+    val format get() = GL30.glGetRenderbufferParameteri(GL_RENDERBUFFER, GL_RENDERBUFFER_INTERNAL_FORMAT)
 }
