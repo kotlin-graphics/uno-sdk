@@ -123,7 +123,7 @@ fun bufferOf(vertices: Collection<*>): ByteBuffer {
     return res
 }
 
-fun bufferOf(vertices: Array<Any>): ByteBuffer {
+fun bufferOf(vararg vertices: Any): ByteBuffer {
     val res: ByteBuffer
     when (vertices.elementAt(0)) {
         is Vec2 -> {
