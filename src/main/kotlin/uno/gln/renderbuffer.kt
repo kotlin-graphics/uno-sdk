@@ -10,8 +10,8 @@ import java.nio.IntBuffer
  * Created by elect on 13/05/17.
  */
 
-fun glRenderbufferStorageMultisample(target: Int, samples: Int, internalformat: Int, size: Vec2i) =
-        GL30.glRenderbufferStorageMultisample(target, samples, internalformat, size.x, size.y)
+fun glRenderbufferStorageMultisample(target: Int, samples: Int, internalFormat: Int, size: Vec2i) =
+        GL30.glRenderbufferStorageMultisample(target, samples, internalFormat, size.x, size.y)
 
 fun glBindRenderbuffer(target: Int) = GL30.glBindRenderbuffer(target, 0)
 fun glBindRenderbuffer(target: Int, buffer: IntBuffer) = GL30.glBindRenderbuffer(target, buffer[0])
@@ -23,14 +23,18 @@ fun glRenderbufferStorage(target:Int, internalFormat: Int, size: Vec2i) = GL30.g
 
 inline fun initRenderbuffers(renderbuffers: IntBuffer, block: RenderBuffers.() -> Unit) {
     glGenRenderbuffers(renderbuffers)
-//    RenderBuffers.target = GL_RENDERBUFFER TODO?
     RenderBuffers.names = renderbuffers
     RenderBuffers.block()
+}
+inline fun initRenderbuffer(renderbuffers: IntBuffer, block: RenderBuffer.() -> Unit) {
+    glGenRenderbuffers(renderbuffers)
+    RenderBuffer.name = renderbuffers[0]
+    RenderBuffer.block()
 }
 
 object RenderBuffers {
 
-//    var target = 0
+    var target = GL_RENDERBUFFER
     lateinit var names: IntBuffer
 
     inline fun at(index: Int, block: RenderBuffer.() -> Unit) {
@@ -41,7 +45,7 @@ object RenderBuffers {
 
 object RenderBuffer {
 
-    var target = 0
+    var target = GL_RENDERBUFFER
     var name = 0
         set(value) {
             glBindRenderbuffer(GL_RENDERBUFFER, value)
@@ -50,4 +54,5 @@ object RenderBuffer {
 
     fun storage(internalFormat: Int, width: Int, height: Int) = glRenderbufferStorage(GL_RENDERBUFFER, internalFormat, width, height)
     fun storage(internalFormat: Int, size: Vec2i) = glRenderbufferStorage(GL_RENDERBUFFER, internalFormat, size.x, size.y)
+    fun storageMultisample(samples: Int, internalFormat: Int, size: Vec2i) = GL30.glRenderbufferStorageMultisample(target, samples, internalFormat, size.x, size.y)
 }
