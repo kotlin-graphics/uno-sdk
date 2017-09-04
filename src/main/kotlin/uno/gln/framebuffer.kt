@@ -86,8 +86,13 @@ object Framebuffer {
             } else true
         }
 
-    val Int.colorEncoding
-        get() = glGetFramebufferAttachmentParameteri(GL_FRAMEBUFFER, this, GL_FRAMEBUFFER_ATTACHMENT_COLOR_ENCODING)
+    fun getParameter(attachment: Int, pName: Int) = glGetFramebufferAttachmentParameteri(GL_FRAMEBUFFER, attachment, pName)
+
+    fun getDepthParameter(pName: Int) = glGetFramebufferAttachmentParameteri(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, pName)
+    fun getStencilParameter(pName: Int) = glGetFramebufferAttachmentParameteri(GL_FRAMEBUFFER, GL_STENCIL_ATTACHMENT, pName)
+    fun getDepthStencilParameter(pName: Int) = glGetFramebufferAttachmentParameteri(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, pName)
+
+    fun getColorEncoding(index: Int = 0) = glGetFramebufferAttachmentParameteri(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0 + index, GL_FRAMEBUFFER_ATTACHMENT_COLOR_ENCODING)
 }
 
 object Framebuffers {
