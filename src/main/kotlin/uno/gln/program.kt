@@ -9,6 +9,7 @@ import glm_.vec4.Vec4
 import org.lwjgl.opengl.ARBUniformBufferObject.glGetUniformBlockIndex
 import org.lwjgl.opengl.ARBUniformBufferObject.glUniformBlockBinding
 import org.lwjgl.opengl.GL20
+import org.lwjgl.opengl.GL30
 import uno.gl.*
 import uno.glsl.Program
 
@@ -63,6 +64,10 @@ object ProgramUse {
         get() = glGetUniformBlockIndex(name, this)
         set(value) = glUniformBlockBinding(name, blockIndex, value)
 
+    var String.fragData
+        get() = -1
+        set(value) = GL30.glBindFragDataLocation(ProgramBase.name, value, this)
+
     var String.unit: Int
         get() = uniform
         set(value) = GL20.glUniform1i(uniform, value)
@@ -107,6 +112,10 @@ object ProgramBase {
     var String.blockIndex
         get() = glGetUniformBlockIndex(name, this)
         set(value) = glUniformBlockBinding(name, blockIndex, value)
+
+    var String.fragData
+        get() = -1
+        set(value) = GL30.glBindFragDataLocation(name, value, this)
 
     // only get, no program use
     val String.unit get() = uniform
