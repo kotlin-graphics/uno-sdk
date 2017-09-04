@@ -51,6 +51,12 @@ fun bufferOf(vararg floats: Float): ByteBuffer {
     return res
 }
 
+fun bufferOf(vararg vectors: Vec2): ByteBuffer {
+    val res = MemoryUtil.memAlloc(vectors.size * Vec2.size)
+    for (i in 0 until vectors.size) vectors[i].to(res, i * Vec2.size)
+    return res
+}
+
 fun shortBufferOf(vararg shorts: Short): ShortBuffer {
     val res = MemoryUtil.memAllocShort(shorts.size)
     for (i in 0 until shorts.size) res.put(i, shorts[i])
