@@ -344,7 +344,7 @@ object Texture2d {
         glTexParameteri(GL_TEXTURE_2D, GL33.GL_TEXTURE_SWIZZLE_A, a.i)
     }
 
-    enum class Swizzle(val i: Int) { r(GL33.GL_TEXTURE_SWIZZLE_R), g(GL33.GL_TEXTURE_SWIZZLE_G), b(GL33.GL_TEXTURE_SWIZZLE_B), a(GL33.GL_TEXTURE_SWIZZLE_A) }
+    enum class Swizzle(val i: Int) { r(GL_RED), g(GL_GREEN), b(GL_BLUE), a(GL_ALPHA) }
 }
 
 object Textures {
