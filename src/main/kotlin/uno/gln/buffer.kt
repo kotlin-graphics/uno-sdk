@@ -6,6 +6,7 @@ import glm_.set
 import org.lwjgl.opengl.ARBUniformBufferObject.GL_UNIFORM_BUFFER
 import org.lwjgl.opengl.GL15
 import org.lwjgl.opengl.GL15.*
+import org.lwjgl.opengl.GL30
 import org.lwjgl.opengl.GL30.*
 import org.lwjgl.system.MemoryUtil.NULL
 import uno.gl.iBuf
@@ -207,4 +208,36 @@ object Buffers {
         Buffer.block()
         GL15.glBindBuffer(GL_UNIFORM_BUFFER, 0)
     }
+}
+
+inline fun mappingUniformBufferRange(buffer: Int, length: Int, access: Int, block: MappedBuffer.() -> Unit) {
+    MappedBuffer.target = GL_UNIFORM_BUFFER
+    MappedBuffer.name = buffer    // bind
+    MappedBuffer.mapRange(length, access)
+    MappedBuffer.block()
+    glUnmapBuffer(GL_UNIFORM_BUFFER)
+    GL15.glBindBuffer(GL_UNIFORM_BUFFER, 0)
+}
+
+object MappedBuffer {
+
+    var target = 0
+    var name = 0
+        set(value) {
+            glBindBuffer(target, value)
+            field = value
+        }
+
+    fun mapRange(length: Int, access: Int) {
+        _pointer = GL30.glMapBufferRange(target, 0L, length.L, access)
+    }
+
+    private lateinit var _pointer: ByteBuffer
+
+    var pointer: Any
+        get() = 0
+        set(value) {
+            if (value is Mat4) value to _pointer
+        }
+
 }
