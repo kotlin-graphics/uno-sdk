@@ -162,7 +162,6 @@ object windowHint {
 
     var forwardComp = true
         set(value) {
-            println("forwardComp")
             glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, value.i)
             field = value
         }
