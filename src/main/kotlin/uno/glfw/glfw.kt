@@ -3,6 +3,7 @@ package uno.glfw
 import glm_.vec2.Vec2i
 import org.lwjgl.glfw.GLFW.*
 import org.lwjgl.glfw.GLFWErrorCallback
+import org.lwjgl.system.Platform
 
 /**
  * Created by elect on 22/04/17.
@@ -17,9 +18,8 @@ object glfw {
             throw IllegalStateException("Unable to initialize GLFW")
 
         /* This window hint is required to use OpenGL 3.1+ on macOS */
-        windowHint {
-            forwardComp = true
-        }
+        if (Platform.get() == Platform.MACOSX)
+            windowHint.forwardComp = true
     }
 
     fun windowHint(block: windowHint.() -> Unit) = windowHint.block()
