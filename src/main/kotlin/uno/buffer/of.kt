@@ -96,15 +96,15 @@ fun longBufferOf(vararg numbers: Number): LongBuffer {
 fun bufferOf(vertices: Collection<*>): ByteBuffer {
     val res: ByteBuffer
     when (vertices.elementAt(0)) {
-        Vec2 -> {
+        Vec2::class -> {
             res = bufferBig(Vec2.size * vertices.size)
             for (i in 0 until vertices.size) (vertices as Collection<Vec2>).elementAt(i).to(res, i * Vec2.size)
         }
-        Vec3 -> {
+        Vec3::class -> {
             res = bufferBig(Vec3.size * vertices.size)
             for (i in 0 until vertices.size) (vertices as Collection<Vec3>).elementAt(i).to(res, i * Vec3.size)
         }
-        Vec4 -> {
+        Vec4::class -> {
             res = bufferBig(Vec4.size * vertices.size)
             for (i in 0 until vertices.size) (vertices as Collection<Vec4>).elementAt(i).to(res, i * Vec4.size)
         }
