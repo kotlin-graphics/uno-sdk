@@ -96,22 +96,22 @@ fun longBufferOf(vararg numbers: Number): LongBuffer {
 fun bufferOf(vertices: Collection<*>): ByteBuffer {
     val res: ByteBuffer
     when (vertices.elementAt(0)) {
-        Vec2::class -> {
+        is Vec2 -> {
             res = bufferBig(Vec2.size * vertices.size)
-            for (i in 0 until vertices.size) (vertices as Collection<Vec2>).elementAt(i).to(res, i * Vec2.size)
+            for (i in 0 until vertices.size) (vertices.elementAt(i) as Vec2).to(res, i * Vec2.size)
         }
-        Vec3::class -> {
+        is Vec3 -> {
             res = bufferBig(Vec3.size * vertices.size)
-            for (i in 0 until vertices.size) (vertices as Collection<Vec3>).elementAt(i).to(res, i * Vec3.size)
+            for (i in 0 until vertices.size) (vertices.elementAt(i) as Vec3).to(res, i * Vec3.size)
         }
-        Vec4::class -> {
+        is Vec4 -> {
             res = bufferBig(Vec4.size * vertices.size)
-            for (i in 0 until vertices.size) (vertices as Collection<Vec4>).elementAt(i).to(res, i * Vec4.size)
+            for (i in 0 until vertices.size) (vertices.elementAt(i) as Vec4).to(res, i * Vec4.size)
         }
-        Vertex.pos3_col4ub::class -> {
+        is Vertex.pos3_col4ub -> {
             res = bufferBig(glf.pos3_col4ub.stride * vertices.size)
             for (i in 0 until vertices.size)
-                (vertices as Collection<Vertex.pos3_col4ub>).elementAt(i).to(res, i * glf.pos3_col4ub.stride)
+                (vertices.elementAt(i) as Vertex.pos3_col4ub).to(res, i * glf.pos3_col4ub.stride)
         }
         else -> throw Error()
     }
@@ -128,22 +128,22 @@ fun bufferOf(vararg vertices: Vertex.pos3_col4ub): ByteBuffer {
 fun bufferOf(vertices: Array<*>): ByteBuffer {
     val res: ByteBuffer
     when (vertices.elementAt(0)) {
-        Vec2 -> {
+        is Vec2 -> {
             res = bufferBig(Vec2.size * vertices.size)
-            for (i in 0 until vertices.size) (vertices as Array<Vec2>)[i].to(res, i * Vec2.size)
+            for (i in 0 until vertices.size) (vertices[i] as Vec2).to(res, i * Vec2.size)
         }
-        Vec3 -> {
+        is Vec3 -> {
             res = bufferBig(Vec3.size * vertices.size)
-            for (i in 0 until vertices.size) (vertices as Array<Vec3>)[i].to(res, i * Vec3.size)
+            for (i in 0 until vertices.size) (vertices[i] as Vec3).to(res, i * Vec3.size)
         }
-        Vec4 -> {
+        is Vec4 -> {
             res = bufferBig(Vec4.size * vertices.size)
-            for (i in 0 until vertices.size) (vertices as Array<Vec4>)[i].to(res, i * Vec4.size)
+            for (i in 0 until vertices.size) (vertices[i] as Vec4).to(res, i * Vec4.size)
         }
-        Vertex.pos3_col4ub::class -> {
+        is Vertex.pos3_col4ub -> {
             res = bufferBig(glf.pos3_col4ub.stride * vertices.size)
             for (i in 0 until vertices.size)
-                (vertices as Array<Vertex.pos3_col4ub>)[i].to(res, i * glf.pos3_col4ub.stride)
+                (vertices[i] as Vertex.pos3_col4ub).to(res, i * glf.pos3_col4ub.stride)
         }
         else -> throw Error()
     }
@@ -153,17 +153,17 @@ fun bufferOf(vertices: Array<*>): ByteBuffer {
 fun floatBufferOf(vertices: Collection<*>): FloatBuffer {
     val res: FloatBuffer
     when (vertices.elementAt(0)) {
-        Vec2 -> {
+        is Vec2 -> {
             res = floatBufferBig(Vec2.length * vertices.size)
-            for (i in 0 until vertices.size) (vertices as Collection<Vec2>).elementAt(i).to(res, i * Vec2.length)
+            for (i in 0 until vertices.size) (vertices.elementAt(i) as Vec2).to(res, i * Vec2.length)
         }
-        Vec3 -> {
+        is Vec3 -> {
             res = floatBufferBig(Vec3.length * vertices.size)
-            for (i in 0 until vertices.size) (vertices as Collection<Vec3>).elementAt(i).to(res, i * Vec3.length)
+            for (i in 0 until vertices.size) (vertices.elementAt(i) as Vec3).to(res, i * Vec3.length)
         }
-        Vec4 -> {
+        is Vec4 -> {
             res = floatBufferBig(Vec4.length * vertices.size)
-            for (i in 0 until vertices.size) (vertices as Collection<Vec4>).elementAt(i).to(res, i * Vec4.length)
+            for (i in 0 until vertices.size) (vertices.elementAt(i) as Vec4).to(res, i * Vec4.length)
         }
         else -> throw Error()
     }
