@@ -150,6 +150,7 @@ object Programs {
 }
 
 
+fun glUseProgram(program: IntArray) = GL20.glUseProgram(program[0])
 fun glUseProgram(program: Program) = GL20.glUseProgram(program.name)
 fun glUseProgram() = GL20.glUseProgram(0)
 
