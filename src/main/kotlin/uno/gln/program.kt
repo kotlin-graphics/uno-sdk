@@ -27,6 +27,12 @@ inline fun initPrograms(ints: IntArray, block: Programs.() -> Unit) {
     Programs.block()
 }
 
+inline fun usingProgram(program: IntArray, block: ProgramUse.() -> Unit) {
+    ProgramUse.name = program[0] //glUse
+    ProgramUse.block()
+    GL20.glUseProgram(0)
+}
+
 inline fun usingProgram(program: Int = 0, block: ProgramUse.() -> Unit) {
     ProgramUse.name = program //glUse
     ProgramUse.block()
