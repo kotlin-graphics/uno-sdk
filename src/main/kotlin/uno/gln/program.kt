@@ -51,6 +51,7 @@ inline fun usingProgram(program: Program, block: ProgramUse.() -> Unit) {
     GL20.glUseProgram(0)
 }
 
+inline fun withProgram(program: IntArray, block: ProgramBase.() -> Unit) = withProgram(program[0], block)
 inline fun withProgram(program: Int = 0, block: ProgramBase.() -> Unit) {
     ProgramBase.name = program
     ProgramBase.block()
