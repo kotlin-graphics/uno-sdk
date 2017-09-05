@@ -60,6 +60,7 @@ inline fun withTexture2d(unit: Int, texture: Int, sampler: Int, block: Texture2d
     GL33.glBindSampler(0, sampler)
 }
 
+inline fun withTexture2d(unit: Int, texture: IntBuffer, block: Texture2d.() -> Unit)  = withTexture2d(unit, texture[0], block)
 inline fun withTexture2d(unit: Int, texture: Int, block: Texture2d.() -> Unit) {
     GL13.glActiveTexture(GL13.GL_TEXTURE0 + unit)
     Texture2d.name = texture  // bind
