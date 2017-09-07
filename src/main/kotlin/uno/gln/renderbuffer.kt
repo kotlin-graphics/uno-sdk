@@ -44,6 +44,7 @@ object RenderBuffers {
     var target = GL_RENDERBUFFER
     lateinit var names: IntBuffer
 
+    inline fun at(index: Enum<*>, block: RenderBuffer.() -> Unit) = at(index.ordinal, block)
     inline fun at(index: Int, block: RenderBuffer.() -> Unit) {
         RenderBuffer.name = names[index] // bind
         RenderBuffer.block()

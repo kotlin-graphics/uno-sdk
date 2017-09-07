@@ -150,11 +150,13 @@ object Programs {
 
     lateinit var names: IntArray
 
+    inline fun with(index: Enum<*>, block: ProgramBase.() -> Unit) = with(index.ordinal, block)
     inline fun with(index: Int, block: ProgramBase.() -> Unit) {
         ProgramBase.name = names[index]
         ProgramBase.block()
     }
 
+    inline fun using(index: Enum<*>, block: ProgramUse.() -> Unit) = using(index.ordinal, block)
     inline fun using(index: Int, block: ProgramUse.() -> Unit) {
         ProgramUse.name = names[index]  // bind
         ProgramUse.block()

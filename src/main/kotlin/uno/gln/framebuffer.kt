@@ -100,6 +100,7 @@ object Framebuffers {
 
     lateinit var names: IntBuffer
 
+    inline fun at(index: Enum<*>, block: Framebuffer.() -> Unit) = at(index.ordinal, block)
     inline fun at(index: Int, block: Framebuffer.() -> Unit) {
         Framebuffer.name = names[index] // bind
         Framebuffer.block()

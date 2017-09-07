@@ -74,6 +74,7 @@ object VertexArrays {
 
     lateinit var names: IntBuffer
 
+    inline fun at(index: Enum<*>, block: VertexArray.() -> Unit) = at(index.ordinal, block)
     inline fun at(index: Int, block: VertexArray.() -> Unit) {
         VertexArray.name = names[index]   // bind
         VertexArray.block()

@@ -359,11 +359,13 @@ object Textures {
     fun image(level: Int, internalFormat: Int, width: Int, height: Int, format: Int, type: Int, pixels: ByteBuffer) =
             GL11.glTexImage2D(target, level, internalFormat, width, height, 0, format, type, pixels)
 
+    inline fun at1d(index: Enum<*>, block: Texture1d.() -> Unit) = at1d(index.ordinal, block)
     inline fun at1d(index: Int, block: Texture1d.() -> Unit) {
         Texture1d.name = names[index] // bind
         Texture1d.block()
     }
 
+    inline fun at2d(index: Enum<*>, block: Texture2d.() -> Unit) = at2d(index.ordinal, block)
     inline fun at2d(index: Int, block: Texture2d.() -> Unit) {
         Texture2d.name = names[index] // bind
         Texture2d.block()

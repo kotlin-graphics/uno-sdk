@@ -34,17 +34,11 @@ fun glBindBufferRange(target: Int, index: Int, buffer: IntBuffer, offset: Int, s
 
 fun glBindBufferBase(target: Int, index: Int) = glBindBufferBase(target, index, 0)
 
-inline fun initArrayBuffer(buffer: IntBuffer, block: Buffer.() -> Unit) {
-    buffer[0] = initBuffer(GL_ARRAY_BUFFER, block)
-}
+inline fun initArrayBuffer(buffer: IntBuffer, block: Buffer.() -> Unit) = buffer.set(0, initBuffer(GL_ARRAY_BUFFER, block))
 
-inline fun initElementBuffer(buffer: IntBuffer, block: Buffer.() -> Unit) {
-    buffer[0] = initBuffer(GL_ELEMENT_ARRAY_BUFFER, block)
-}
+inline fun initElementBuffer(buffer: IntBuffer, block: Buffer.() -> Unit) = buffer.set(0, initBuffer(GL_ELEMENT_ARRAY_BUFFER, block))
 
-inline fun initUniformBuffer(buffer: IntBuffer, block: Buffer.() -> Unit) {
-    buffer[0] = initBuffer(GL_UNIFORM_BUFFER, block)
-}
+inline fun initUniformBuffer(buffer: IntBuffer, block: Buffer.() -> Unit) = buffer.set(0, initBuffer(GL_UNIFORM_BUFFER, block))
 
 inline fun initUniformBuffers(buffers: IntBuffer, block: Buffers.() -> Unit) {
     Buffers.target = GL_UNIFORM_BUFFER
@@ -179,13 +173,15 @@ object Buffers {
     fun base(index: Int) = glBindBufferBase(target, index, 0)
 
 
+    inline fun at(bufferIndex: Enum<*>, block: Buffer.() -> Unit) = at(bufferIndex.ordinal, block)
     inline fun at(bufferIndex: Int, block: Buffer.() -> Unit) {
         Buffer.target = target
         Buffer.name = buffers[bufferIndex] // bind
         Buffer.block()
     }
 
-    inline fun withArray(block: Buffer.() -> Unit) = withArrayAt(0, block)
+//    inline fun withArray(block: Buffer.() -> Unit) = withArrayAt(0, block)
+    inline fun withArrayAt(bufferIndex: Enum<*>, block: Buffer.() -> Unit) = withArrayAt(bufferIndex.ordinal, block)
     inline fun withArrayAt(bufferIndex: Int, block: Buffer.() -> Unit) {
         Buffer.target = GL_ARRAY_BUFFER
         Buffer.name = buffers[bufferIndex] // bind
@@ -193,7 +189,8 @@ object Buffers {
         GL15.glBindBuffer(GL_ARRAY_BUFFER, 0)
     }
 
-    inline fun withElement(block: Buffer.() -> Unit) = withElementAt(0, block)
+//    inline fun withElement(block: Buffer.() -> Unit) = withElementAt(0, block)
+    inline fun withElementAt(bufferIndex: Enum<*>, block: Buffer.() -> Unit) = withElementAt(bufferIndex.ordinal, block)
     inline fun withElementAt(bufferIndex: Int, block: Buffer.() -> Unit) {
         Buffer.target = GL_ELEMENT_ARRAY_BUFFER
         Buffer.name = buffers[bufferIndex] // bind
@@ -201,7 +198,8 @@ object Buffers {
         GL15.glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0)
     }
 
-    inline fun withUniform(block: Buffer.() -> Unit) = withUniformAt(0, block)
+//    inline fun withUniform(block: Buffer.() -> Unit) = withUniformAt(0, block)
+    inline fun withUniformAt(bufferIndex: Enum<*>, block: Buffer.() -> Unit) = withUniformAt(bufferIndex.ordinal, block)
     inline fun withUniformAt(bufferIndex: Int, block: Buffer.() -> Unit) {
         Buffer.target = GL_UNIFORM_BUFFER
         Buffer.name = buffers[bufferIndex] // bind
