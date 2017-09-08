@@ -11,7 +11,6 @@ import java.nio.*
  * Created by elect on 05/03/17.
  */
 
-
 fun floatBufferBig(capacity: Int): FloatBuffer = MemoryUtil.memAllocFloat(capacity)
 
 fun doubleBufferBig(capacity: Int): DoubleBuffer = MemoryUtil.memAllocDouble(capacity)
@@ -21,6 +20,8 @@ fun shortBufferBig(capacity: Int): ShortBuffer = MemoryUtil.memAllocShort(capaci
 fun intBufferBig(capacity: Int): IntBuffer = MemoryUtil.memAllocInt(capacity)
 fun longBufferBig(capacity: Int): LongBuffer = MemoryUtil.memAllocLong(capacity)
 
+/** for opengl  */
+inline fun <reified T : Enum<T>> intBufferBig() = intBufferBig(enumValues<T>().size)
 
 // i.e: clear color buffer
 fun FloatBuffer.put(vararg floats: Float): FloatBuffer {
