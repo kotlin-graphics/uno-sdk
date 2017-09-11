@@ -82,6 +82,7 @@ object VertexArrays {
 }
 
 
+inline fun withVertexLayout(array: Enum<*>, element: Enum<*>, format: VertexLayout, block: () -> Unit) = withVertexLayout(array.ordinal, element.ordinal, format, block)
 inline fun withVertexLayout(array: Int, element: Int, format: VertexLayout, block: () -> Unit) {
     glBindBuffer(GL_ARRAY_BUFFER, array)
     for (attr in format.attribute) {
