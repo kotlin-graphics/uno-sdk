@@ -9,7 +9,7 @@ import org.lwjgl.opengl.GL15.*
 import org.lwjgl.opengl.GL30
 import org.lwjgl.opengl.GL30.*
 import org.lwjgl.system.MemoryUtil.NULL
-import uno.buffer.intBufferBig
+import org.lwjgl.system.MemoryUtil.memAddress
 import uno.gl.iBuf
 import uno.gl.m4Buf
 import java.nio.*
@@ -22,42 +22,33 @@ import kotlin.properties.Delegates
 var bufferName: IntBuffer by Delegates.notNull<IntBuffer>()
 
 
-fun glBufferData(target: Int, size: Int, usage: Int) = nglBufferData(target, size.L, NULL, usage);
+inline fun glBufferData(target: Int, size: Int, usage: Int) = nglBufferData(target, size.L, NULL, usage)
 
-// ----- Mat4 -----
-fun glBufferData(target: Int, mat: Mat4, usage: Int) = glBufferData(target, mat to m4Buf, usage)
 
-fun glBufferSubData(target: Int, offset: Int, mat4: Mat4) = glBufferSubData(target, offset.L, mat4 to m4Buf)
-fun glBufferSubData(target: Int, mat: Mat4) = glBufferSubData(target, 0, mat to m4Buf)
+// ----- Mat4 ----- TODO others
 
-fun glBindBuffer(target: Int) = glBindBuffer(target, 0)
-fun glBindBuffer(target: Int, buffer: IntBuffer) = glBindBuffer(target, buffer[0])
+inline fun glBufferData(target: Int, mat: Mat4, usage: Int) = nglBufferData(target, Mat4.size.L, memAddress(mat to m4Buf), usage)
+inline fun glBufferSubData(target: Int, offset: Int, mat: Mat4) = nglBufferSubData(target, offset.L, Mat4.size.L, memAddress(mat to m4Buf))
+inline fun glBufferSubData(target: Int, mat: Mat4) = nglBufferSubData(target, 0L, Mat4.size.L, memAddress(mat to m4Buf))
 
-fun glBindBufferRange(target: Int, index: Int, buffer: IntBuffer, offset: Int, size: Int) =
-        glBindBufferRange(target, index, buffer[0], offset.L, size.L)
+
+inline fun glBindBuffer(target: Int) = glBindBuffer(target, 0)
+inline fun glBindBuffer(target: Int, buffer: IntBuffer) = glBindBuffer(target, buffer[0])
+inline fun glBindBuffer(target: Int, buffer: Enum<*>) = glBindBuffer(target, bufferName[buffer])
+
+
+inline fun glBindBufferRange(target: Int, index: Int, buffer: IntBuffer, offset: Int, size: Int) = glBindBufferRange(target, index, buffer[0], offset.L, size.L)
+inline fun glBindBufferRange(target: Int, index: Int, buffer: Enum<*>, offset: Int, size: Int) = glBindBufferRange(target, index, bufferName[buffer], offset.L, size.L)
 
 fun glBindBufferBase(target: Int, index: Int) = glBindBufferBase(target, index, 0)
 
+
 inline fun initArrayBuffer(buffer: IntBuffer, block: Buffer.() -> Unit) = buffer.set(0, initBuffer(GL_ARRAY_BUFFER, block))
-
+inline fun initArrayBuffer(buffer: Enum<*>, block: Buffer.() -> Unit) = bufferName.set(buffer.ordinal, initBuffer(GL_ARRAY_BUFFER, block))
 inline fun initElementBuffer(buffer: IntBuffer, block: Buffer.() -> Unit) = buffer.set(0, initBuffer(GL_ELEMENT_ARRAY_BUFFER, block))
-
+inline fun initElementBuffer(buffer: Enum<*>, block: Buffer.() -> Unit) = bufferName.set(buffer.ordinal, initBuffer(GL_ELEMENT_ARRAY_BUFFER, block))
 inline fun initUniformBuffer(buffer: IntBuffer, block: Buffer.() -> Unit) = buffer.set(0, initBuffer(GL_UNIFORM_BUFFER, block))
-
-inline fun initUniformBuffers(buffers: IntBuffer, block: Buffers.() -> Unit) {
-    Buffers.target = GL_UNIFORM_BUFFER
-    glGenBuffers(buffers)
-    Buffers.buffers = buffers
-    Buffers.block()
-    glBindBuffer(GL_UNIFORM_BUFFER, 0)
-}
-
-inline fun initBuffers(buffers: IntBuffer, block: Buffers.() -> Unit) {
-    glGenBuffers(buffers)
-    Buffers.buffers = buffers
-    Buffers.block()
-}
-
+inline fun initUniformBuffer(buffer: Enum<*>, block: Buffer.() -> Unit) = bufferName.set(buffer.ordinal, initBuffer(GL_UNIFORM_BUFFER, block))
 inline fun initBuffer(target: Int, block: Buffer.() -> Unit): Int {
     Buffer.target = target
     glGenBuffers(iBuf)
@@ -68,7 +59,22 @@ inline fun initBuffer(target: Int, block: Buffer.() -> Unit): Int {
     return name
 }
 
+inline fun initBuffers(buffers: IntBuffer, block: Buffers.() -> Unit) {
+    glGenBuffers(buffers)
+    Buffers.buffers = buffers
+    Buffers.block()
+}
+
+inline fun initUniformBuffers(buffers: IntBuffer, block: Buffers.() -> Unit) {
+    Buffers.target = GL_UNIFORM_BUFFER
+    glGenBuffers(buffers)
+    Buffers.buffers = buffers
+    Buffers.block()
+    glBindBuffer(GL_UNIFORM_BUFFER, 0)
+}
+
 inline fun withBuffer(target: Int, buffer: IntBuffer, block: Buffer.() -> Unit) = withBuffer(target, buffer[0], block)
+inline fun withBuffer(target: Int, buffer: Enum<*>, block: Buffer.() -> Unit) = withBuffer(target, bufferName[buffer], block)
 inline fun withBuffer(target: Int, buffer: Int, block: Buffer.() -> Unit) {
     Buffer.target = target
     Buffer.name = buffer   // bind
@@ -184,8 +190,9 @@ object Buffers {
         Buffer.block()
     }
 
-//    inline fun withArray(block: Buffer.() -> Unit) = withArrayAt(0, block)
+    //    inline fun withArray(block: Buffer.() -> Unit) = withArrayAt(0, block)
     inline fun withArrayAt(bufferIndex: Enum<*>, block: Buffer.() -> Unit) = withArrayAt(bufferIndex.ordinal, block)
+
     inline fun withArrayAt(bufferIndex: Int, block: Buffer.() -> Unit) {
         Buffer.target = GL_ARRAY_BUFFER
         Buffer.name = buffers[bufferIndex] // bind
@@ -193,8 +200,9 @@ object Buffers {
         GL15.glBindBuffer(GL_ARRAY_BUFFER, 0)
     }
 
-//    inline fun withElement(block: Buffer.() -> Unit) = withElementAt(0, block)
+    //    inline fun withElement(block: Buffer.() -> Unit) = withElementAt(0, block)
     inline fun withElementAt(bufferIndex: Enum<*>, block: Buffer.() -> Unit) = withElementAt(bufferIndex.ordinal, block)
+
     inline fun withElementAt(bufferIndex: Int, block: Buffer.() -> Unit) {
         Buffer.target = GL_ELEMENT_ARRAY_BUFFER
         Buffer.name = buffers[bufferIndex] // bind
@@ -202,8 +210,9 @@ object Buffers {
         GL15.glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0)
     }
 
-//    inline fun withUniform(block: Buffer.() -> Unit) = withUniformAt(0, block)
+    //    inline fun withUniform(block: Buffer.() -> Unit) = withUniformAt(0, block)
     inline fun withUniformAt(bufferIndex: Enum<*>, block: Buffer.() -> Unit) = withUniformAt(bufferIndex.ordinal, block)
+
     inline fun withUniformAt(bufferIndex: Int, block: Buffer.() -> Unit) {
         Buffer.target = GL_UNIFORM_BUFFER
         Buffer.name = buffers[bufferIndex] // bind
@@ -212,6 +221,9 @@ object Buffers {
     }
 }
 
+
+inline fun mappingUniformBufferRange(buffer: Enum<*>, length: Int, access: Int, block: MappedBuffer.() -> Unit) = mappingUniformBufferRange(bufferName[buffer], length, access, block)
+inline fun mappingUniformBufferRange(buffer: IntBuffer, length: Int, access: Int, block: MappedBuffer.() -> Unit) = mappingUniformBufferRange(buffer[0], length, access, block)
 inline fun mappingUniformBufferRange(buffer: Int, length: Int, access: Int, block: MappedBuffer.() -> Unit) {
     MappedBuffer.target = GL_UNIFORM_BUFFER
     MappedBuffer.name = buffer    // bind
@@ -236,10 +248,8 @@ object MappedBuffer {
 
     private lateinit var _pointer: ByteBuffer
 
-    var pointer: Any
-        get() = 0
+    var pointer: Any = NULL
         set(value) {
             if (value is Mat4) value to _pointer
         }
-
 }

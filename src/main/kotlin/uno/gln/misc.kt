@@ -14,6 +14,7 @@ import uno.gl.v2Buf
 import uno.gl.v2iBuf
 import uno.gl.v4Buf
 import uno.gl.v4iBuf
+import java.nio.IntBuffer
 
 /**
  * Created by elect on 18/04/17.
@@ -79,3 +80,7 @@ fun checkError(location: String, throwError: Boolean = true): Boolean {
 }
 
 
+operator fun IntBuffer.get(e: Enum<*>) = get(e.ordinal)
+operator fun IntArray.get(e: Enum<*>) = get(e.ordinal)
+operator fun IntArray.set(e: Enum<*>, int: Int) = set(e.ordinal, int)
+inline fun <reified T : Enum<T>> intArrayBig() = IntArray(enumValues<T>().size)
