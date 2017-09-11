@@ -9,13 +9,17 @@ import org.lwjgl.opengl.GL15.*
 import org.lwjgl.opengl.GL30
 import org.lwjgl.opengl.GL30.*
 import org.lwjgl.system.MemoryUtil.NULL
+import uno.buffer.intBufferBig
 import uno.gl.iBuf
 import uno.gl.m4Buf
 import java.nio.*
+import kotlin.properties.Delegates
 
 /**
  * Created by elect on 18/04/17.
  */
+
+var bufferName: IntBuffer by Delegates.notNull<IntBuffer>()
 
 
 fun glBufferData(target: Int, size: Int, usage: Int) = nglBufferData(target, size.L, NULL, usage);
