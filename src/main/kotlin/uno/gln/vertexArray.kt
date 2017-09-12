@@ -47,6 +47,8 @@ object VertexArray {
     var name = 0
         set(value) = glBindVertexArray(value)
 
+    fun array(array: Enum<*>, format: VertexLayout) = array(bufferName[array], format)
+    fun array(array: IntBuffer, format: VertexLayout) = array(array[0], format)
     fun array(array: Int, format: VertexLayout) {
         glBindBuffer(GL15.GL_ARRAY_BUFFER, array)
         for (attr in format.attribute) {
@@ -56,6 +58,8 @@ object VertexArray {
         glBindBuffer(GL15.GL_ARRAY_BUFFER, 0)
     }
 
+    fun array(array: Enum<*>, format: VertexLayout, vararg offset: Int) = array(bufferName[array], format, *offset) // TODO check, slow operator
+    fun array(array: IntBuffer, format: VertexLayout, vararg offset: Int) = array(array[0], format, *offset) // TODO check, slow operator
     fun array(array: Int, format: VertexLayout, vararg offset: Int) {
         glBindBuffer(GL15.GL_ARRAY_BUFFER, array)
         for (i in format.attribute.indices) {
@@ -67,6 +71,7 @@ object VertexArray {
     }
 
     fun element(element: Int) = glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, element)
+    fun element(element: Enum<*>) = glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, bufferName[element])
     fun element(element: IntBuffer) = glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, element[0])
 }
 
