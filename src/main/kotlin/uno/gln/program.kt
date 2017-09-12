@@ -16,52 +16,36 @@ import kotlin.properties.Delegates
 
 var programName: IntArray by Delegates.notNull()
 
-fun glCreatePrograms(programs: IntArray) = repeat(programs.size) { programs[it] = GL20.glCreateProgram() }
+inline fun glCreatePrograms(programs: IntArray) = repeat(programs.size) { programs[it] = GL20.glCreateProgram() }
 
+inline fun initProgram(program: IntArray, block: ProgramBase.() -> Unit) = program.set(0, initProgram(block))
 inline fun initProgram(block: ProgramBase.() -> Unit): Int {
     ProgramBase.name = GL20.glCreateProgram()
     ProgramBase.block()
     return ProgramBase.name
 }
 
-inline fun initProgram(program: IntArray, block: ProgramBase.() -> Unit) {
-    ProgramBase.name = GL20.glCreateProgram()
-    program[0] = ProgramBase.name
-    ProgramBase.block()
-}
-
-inline fun initPrograms(ints: IntArray, block: Programs.() -> Unit) {
-    repeat(ints.size) { ints[it] = GL20.glCreateProgram() }
-    Programs.names = ints
+inline fun initPrograms(block: Programs.() -> Unit) = initPrograms(programName, block)
+inline fun initPrograms(programs: IntArray, block: Programs.() -> Unit) {
+    glCreatePrograms(programs)
+    Programs.names = programs
     Programs.block()
 }
 
-inline fun usingProgram(program: IntArray, block: ProgramUse.() -> Unit) {
-    ProgramUse.name = program[0] //glUse
-    ProgramUse.block()
-    GL20.glUseProgram(0)
-}
-
-inline fun usingProgram(program: Int = 0, block: ProgramUse.() -> Unit) {
+inline fun usingProgram(program: Program, block: ProgramUse.() -> Unit) = usingProgram(program.name, block)
+inline fun usingProgram(program: Enum<*>, block: ProgramUse.() -> Unit) = usingProgram(programName[program], block)
+inline fun usingProgram(program: IntArray, block: ProgramUse.() -> Unit) = usingProgram(program[0], block)
+inline fun usingProgram(program: Int, block: ProgramUse.() -> Unit) {
     ProgramUse.name = program //glUse
     ProgramUse.block()
-    GL20.glUseProgram(0)
+    glUseProgram()
 }
 
-inline fun usingProgram(program: Program, block: ProgramUse.() -> Unit) {
-    ProgramUse.name = program.name //glUse
-    ProgramUse.block()
-    GL20.glUseProgram(0)
-}
-
+inline fun withProgram(program: Program, block: ProgramBase.() -> Unit) = withProgram(program.name, block)
+inline fun withProgram(program: Enum<*>, block: ProgramBase.() -> Unit) = withProgram(programName[program], block)
 inline fun withProgram(program: IntArray, block: ProgramBase.() -> Unit) = withProgram(program[0], block)
-inline fun withProgram(program: Int = 0, block: ProgramBase.() -> Unit) {
+inline fun withProgram(program: Int, block: ProgramBase.() -> Unit) {
     ProgramBase.name = program
-    ProgramBase.block()
-}
-
-inline fun withProgram(program: Program, block: ProgramBase.() -> Unit) {
-    ProgramBase.name = program.name
     ProgramBase.block()
 }
 
@@ -73,8 +57,7 @@ object ProgramUse {
             field = value
         }
 
-    val String.uniform: Int
-        get() = GL20.glGetUniformLocation(name, this)
+    val String.uniform get() = GL20.glGetUniformLocation(name, this)
 
     var String.blockIndex
         get() = glGetUniformBlockIndex(name, this)
@@ -84,7 +67,7 @@ object ProgramUse {
         get() = -1
         set(value) = GL30.glBindFragDataLocation(ProgramBase.name, value, this)
 
-    var String.unit: Int
+    var String.unit
         get() = uniform
         set(value) = GL20.glUniform1i(uniform, value)
 
@@ -118,8 +101,7 @@ object ProgramBase {
 
     var name = 0
 
-    val String.uniform
-        get() = GL20.glGetUniformLocation(name, this)
+    val String.uniform get() = GL20.glGetUniformLocation(name, this)
 
     var String.attrib
         get() = GL20.glGetAttribLocation(name, this)
@@ -142,11 +124,11 @@ object ProgramBase {
         GL20.glUseProgram(0)
     }
 
-    fun link() = GL20.glLinkProgram(name)
+    inline fun link() = GL20.glLinkProgram(name)
 
     operator fun plusAssign(shader: Int) = GL20.glAttachShader(name, shader)
     infix fun attach(shader: Int) = GL20.glAttachShader(name, shader)
-    fun attach(vararg shader: Int) = shader.forEach { GL20.glAttachShader(name, it) }
+    inline fun attach(vararg shader: Int) = shader.forEach { GL20.glAttachShader(name, it) }
 }
 
 object Programs {
@@ -168,10 +150,12 @@ object Programs {
 }
 
 
-fun glUseProgram(program: IntArray) = GL20.glUseProgram(program[0])
-fun glUseProgram(program: Program) = GL20.glUseProgram(program.name)
-fun glUseProgram() = GL20.glUseProgram(0)
+inline fun glUseProgram(program: Enum<*>) = GL20.glUseProgram(programName[program])
+inline fun glUseProgram(program: IntArray) = GL20.glUseProgram(program[0])
+inline fun glUseProgram(program: Program) = GL20.glUseProgram(program.name)
+inline fun glUseProgram() = GL20.glUseProgram(0)
 
-fun glDeletePrograms(programs: IntArray) = programs.forEach { GL20.glDeleteProgram(it) }
-fun glDeleteProgram(program: Program) = GL20.glDeleteProgram(program.name)
-fun glDeletePrograms(vararg programs: Program) = programs.forEach { GL20.glDeleteProgram(it.name) }
+inline fun glDeletePrograms(programs: Enum<*>) = GL20.glDeleteProgram(programName[programs])
+inline fun glDeletePrograms(programs: IntArray) = programs.forEach { GL20.glDeleteProgram(it) }
+inline fun glDeleteProgram(program: Program) = GL20.glDeleteProgram(program.name)
+inline fun glDeletePrograms(vararg programs: Program) = programs.forEach { GL20.glDeleteProgram(it.name) }
