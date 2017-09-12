@@ -60,8 +60,8 @@ inline fun withTexture1d(unit: Int, texture: Int, sampler: IntBuffer, block: Tex
 }
 
 // TODO sampler enum
-inline fun withTexture2d(unit: Int, texture: Int, sampler: IntBuffer, block: Texture2d.() -> Unit) = withTexture2d(unit, texture, sampler[0], block)
 
+inline fun withTexture2d(unit: Int, texture: Int, sampler: IntBuffer, block: Texture2d.() -> Unit) = withTexture2d(unit, texture, sampler[0], block)
 inline fun withTexture2d(unit: Int, texture: Int, sampler: Int, block: Texture2d.() -> Unit) {
     GL13.glActiveTexture(GL13.GL_TEXTURE0 + unit)
     Texture2d.name = texture  // bind
@@ -71,6 +71,7 @@ inline fun withTexture2d(unit: Int, texture: Int, sampler: Int, block: Texture2d
     GL33.glBindSampler(0, sampler)
 }
 
+inline fun withTexture2d(unit: Int, texture: Enum<*>, block: Texture2d.() -> Unit) = withTexture2d(unit, textureName[texture], block)
 inline fun withTexture2d(unit: Int, texture: IntBuffer, block: Texture2d.() -> Unit) = withTexture2d(unit, texture[0], block)
 inline fun withTexture2d(unit: Int, texture: Int, block: Texture2d.() -> Unit) {
     GL13.glActiveTexture(GL13.GL_TEXTURE0 + unit)
@@ -79,6 +80,7 @@ inline fun withTexture2d(unit: Int, texture: Int, block: Texture2d.() -> Unit) {
     GL11.glBindTexture(GL11.GL_TEXTURE_2D, 0)
 }
 
+inline fun withTexture(unit: Int, target: Int, texture: Enum<*>, sampler: Int, block: Texture.() -> Unit) = withTexture(unit, target, textureName[texture], sampler, block)
 inline fun withTexture(unit: Int, target: Int, texture: Int, sampler: Int, block: Texture.() -> Unit) {
     Texture.target = target
     GL13.glActiveTexture(GL13.GL_TEXTURE0 + unit)
