@@ -13,7 +13,7 @@ import kotlin.properties.Delegates
  * Created by elect on 18/04/17.
  */
 
-var textureName: IntBuffer by Delegates.notNull<IntBuffer>()
+var textureName: IntBuffer by Delegates.notNull()
 
 
 inline fun glBindTexture(target: Int, texture: Enum<*>) = GL11.glBindTexture(target, textureName[texture])

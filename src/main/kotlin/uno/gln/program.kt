@@ -12,8 +12,11 @@ import org.lwjgl.opengl.GL20
 import org.lwjgl.opengl.GL30
 import uno.gl.*
 import uno.glsl.Program
+import kotlin.properties.Delegates
 
-fun glCreatePrograms(ints: IntArray) = repeat(ints.size) { ints[it] = GL20.glCreateProgram() }
+var programName: IntArray by Delegates.notNull()
+
+fun glCreatePrograms(programs: IntArray) = repeat(programs.size) { programs[it] = GL20.glCreateProgram() }
 
 inline fun initProgram(block: ProgramBase.() -> Unit): Int {
     ProgramBase.name = GL20.glCreateProgram()

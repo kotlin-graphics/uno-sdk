@@ -17,7 +17,7 @@ import kotlin.properties.Delegates
  * Created by elect on 18/04/17.
  */
 
-var bufferName: IntBuffer by Delegates.notNull<IntBuffer>()
+var bufferName: IntBuffer by Delegates.notNull()
 
 
 inline fun glBufferData(target: Int, size: Int, usage: Int) = GL15.nglBufferData(target, size.L, NULL, usage)
