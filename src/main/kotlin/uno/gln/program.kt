@@ -18,6 +18,7 @@ var programName: IntArray by Delegates.notNull()
 
 inline fun glCreatePrograms(programs: IntArray) = repeat(programs.size) { programs[it] = GL20.glCreateProgram() }
 
+inline fun initProgram(program: Enum<*>, block: ProgramBase.() -> Unit) = programName.set(program.ordinal, initProgram(block))
 inline fun initProgram(program: IntArray, block: ProgramBase.() -> Unit) = program.set(0, initProgram(block))
 inline fun initProgram(block: ProgramBase.() -> Unit): Int {
     ProgramBase.name = GL20.glCreateProgram()
