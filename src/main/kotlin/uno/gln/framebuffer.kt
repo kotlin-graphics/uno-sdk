@@ -58,6 +58,7 @@ object Framebuffer {
             field = value
         }
 
+    fun texture(attachment: Int, texture: Enum<*>, level: Int = 0) = GL32.glFramebufferTexture(GL_FRAMEBUFFER, attachment, textureName[texture], level)
     fun texture(attachment: Int, texture: Int, level: Int = 0) = GL32.glFramebufferTexture(GL_FRAMEBUFFER, attachment, texture, level)
 
     fun texture2D(target: Int, attachment: Int, texture: Int, level: Int = 0) =
