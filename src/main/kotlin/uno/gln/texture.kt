@@ -121,12 +121,14 @@ inline fun initTexture(target: Int, block: Texture.() -> Unit): Int {
 }
 
 
+inline fun initTextures2d(block: Textures2d.() -> Unit) = initTextures2d(textureName, block)
 inline fun initTextures2d(textures: IntBuffer, block: Textures2d.() -> Unit) {
     GL11.glGenTextures(textures)
     Textures2d.names = textures
     Textures2d.block()
 }
 
+inline fun initTextures(target: Int, block: Textures.() -> Unit) = initTextures(target, textureName, block)
 inline fun initTextures(target: Int, textures: IntBuffer, block: Textures.() -> Unit) {
     GL11.glGenTextures(textures)
     Textures.target = target
