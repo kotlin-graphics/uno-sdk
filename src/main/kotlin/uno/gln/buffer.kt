@@ -79,10 +79,13 @@ inline fun withBuffer(target: Int, buffer: Int, block: Buffer.() -> Unit) {
     GL15.glBindBuffer(target, 0)
 }
 
+inline fun withArrayBuffer(buffer: Enum<*>, block: Buffer.() -> Unit) = withBuffer(GL15.GL_ARRAY_BUFFER, bufferName[buffer], block)
 inline fun withArrayBuffer(buffer: IntBuffer, block: Buffer.() -> Unit) = withBuffer(GL15.GL_ARRAY_BUFFER, buffer[0], block)
 inline fun withArrayBuffer(buffer: Int, block: Buffer.() -> Unit) = withBuffer(GL15.GL_ARRAY_BUFFER, buffer, block)
+inline fun withElementBuffer(buffer: Enum<*>, block: Buffer.() -> Unit) = withBuffer(GL15.GL_ELEMENT_ARRAY_BUFFER, bufferName[buffer], block)
 inline fun withElementBuffer(buffer: IntBuffer, block: Buffer.() -> Unit) = withBuffer(GL15.GL_ELEMENT_ARRAY_BUFFER, buffer[0], block)
 inline fun withElementBuffer(buffer: Int, block: Buffer.() -> Unit) = withBuffer(GL15.GL_ELEMENT_ARRAY_BUFFER, buffer, block)
+inline fun withUniformBuffer(buffer: Enum<*>, block: Buffer.() -> Unit) = withBuffer(GL31.GL_UNIFORM_BUFFER, bufferName[buffer], block)
 inline fun withUniformBuffer(buffer: IntBuffer, block: Buffer.() -> Unit) = withBuffer(GL31.GL_UNIFORM_BUFFER, buffer[0], block)
 inline fun withUniformBuffer(buffer: Int, block: Buffer.() -> Unit) = withBuffer(GL31.GL_UNIFORM_BUFFER, buffer, block)
 
