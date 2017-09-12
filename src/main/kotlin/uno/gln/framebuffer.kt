@@ -1,6 +1,5 @@
 package uno.gln
 
-import glm_.vec2.Vec2i
 import org.lwjgl.opengl.GL11
 import org.lwjgl.opengl.GL30
 import org.lwjgl.opengl.GL30.*
@@ -61,11 +60,11 @@ object Framebuffer {
     fun texture(attachment: Int, texture: Enum<*>, level: Int = 0) = GL32.glFramebufferTexture(GL_FRAMEBUFFER, attachment, textureName[texture], level)
     fun texture(attachment: Int, texture: Int, level: Int = 0) = GL32.glFramebufferTexture(GL_FRAMEBUFFER, attachment, texture, level)
 
-    fun texture2D(target: Int, attachment: Int, texture: Int, level: Int = 0) =
-            GL30.glFramebufferTexture2D(target, attachment, GL11.GL_TEXTURE_2D, texture, level)
+    fun texture2D(target: Int, attachment: Int, texture: Enum<*>, level: Int = 0) = GL30.glFramebufferTexture2D(target, attachment, GL11.GL_TEXTURE_2D, textureName[texture], level)
+    fun texture2D(target: Int, attachment: Int, texture: Int, level: Int = 0) = GL30.glFramebufferTexture2D(target, attachment, GL11.GL_TEXTURE_2D, texture, level)
 
-    fun texture2D(attachment: Int, texture: Int, level: Int = 0) =
-            GL30.glFramebufferTexture2D(GL_FRAMEBUFFER, attachment, GL11.GL_TEXTURE_2D, texture, level)
+    fun texture2D(attachment: Int, texture: Enum<*>, level: Int = 0) = GL30.glFramebufferTexture2D(GL_FRAMEBUFFER, attachment, GL11.GL_TEXTURE_2D, textureName[texture], level)
+    fun texture2D(attachment: Int, texture: Int, level: Int = 0) = GL30.glFramebufferTexture2D(GL_FRAMEBUFFER, attachment, GL11.GL_TEXTURE_2D, texture, level)
 
     fun renderbuffer(attachment: Int, renderbuffer: Int) = GL30.glFramebufferRenderbuffer(GL_FRAMEBUFFER, attachment, GL_RENDERBUFFER, renderbuffer)
 
