@@ -98,11 +98,11 @@ object Buffer {
             field = value
         }
 
-    fun data(data: ByteBuffer, usage: Int) = glBufferData(target, data, usage)
-    fun data(data: ShortBuffer, usage: Int) = glBufferData(target, data, usage)
-    fun data(data: IntBuffer, usage: Int) = glBufferData(target, data, usage)
-    //fun data(data: LongBuffer, usage: Int) = glBufferData(target, data, usage)
-    fun data(data: FloatBuffer, usage: Int) = glBufferData(target, data, usage)
+    inline fun data(data: ByteBuffer, usage: Int) = glBufferData(target, data, usage)
+    inline fun data(data: ShortBuffer, usage: Int) = glBufferData(target, data, usage)
+    inline fun data(data: IntBuffer, usage: Int) = glBufferData(target, data, usage)
+//    inline fun data(data: LongBuffer, usage: Int) = glBufferData(target, data, usage)
+    inline fun data(data: FloatBuffer, usage: Int) = glBufferData(target, data, usage)
 
     fun data(data: DoubleBuffer, usage: Int) = glBufferData(target, data, usage)
 
