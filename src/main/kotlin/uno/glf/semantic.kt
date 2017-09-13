@@ -20,7 +20,8 @@ object semantic {
         var PER_FRAME = 5
         var PER_PASS = 6
         var PER_SCENE = 7
-        var LIGHT = 8
+        var PER_DRAW = 8
+        var LIGHT = 9
     }
 
     object sampler {
