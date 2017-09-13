@@ -243,13 +243,13 @@ object MappedBuffer {
         }
 
     fun mapRange(length: Int, access: Int) {
-        _pointer = GL30.glMapBufferRange(target, 0L, length.L, access)
+        buffer = GL30.glMapBufferRange(target, 0L, length.L, access)
     }
 
-    private lateinit var _pointer: ByteBuffer
+    lateinit var buffer: ByteBuffer
 
     var pointer: Any = NULL
         set(value) {
-            if (value is Mat4) value to _pointer
+            if (value is Mat4) value to buffer
         }
 }
