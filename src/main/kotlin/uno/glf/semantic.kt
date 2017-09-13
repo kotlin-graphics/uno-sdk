@@ -16,10 +16,11 @@ object semantic {
         var TRANSFORM0 = 1
         var TRANSFORM1 = 2
         var INDIRECTION = 3
-        var CONSTANT = 0
-        var PER_FRAME = 1
-        var PER_PASS = 2
-        var LIGHT = 3
+        var CONSTANT = 4
+        var PER_FRAME = 5
+        var PER_PASS = 6
+        var PER_SCENE = 7
+        var LIGHT = 8
     }
 
     object sampler {
