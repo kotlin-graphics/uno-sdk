@@ -232,13 +232,7 @@ object Vertex { // TODO
                 VertexAttribute(semantic.attr.TEX_COORD, Vec2.length, GL_FLOAT, false, stride, Vec3.size.L * 2))
     }
 
-    class pos3_nor3_col4 : VertexLayout {
-        val stride = Vec3.size * 2 + Vec4.size
-        override var attribute = arrayOf(
-                VertexAttribute(semantic.attr.POSITION, Vec3.length, GL_FLOAT, false, stride, 0),
-                VertexAttribute(semantic.attr.NORMAL, Vec3.length, GL_FLOAT, false, stride, Vec3.size.L),
-                VertexAttribute(semantic.attr.COLOR, Vec4.length, GL_FLOAT, false, stride, Vec3.size.L * 2))
-    }
+    class pos3_nor3_col4 (var p: Vec3, var n: Vec3, var c: Vec4)
 
     abstract class Base
 }
