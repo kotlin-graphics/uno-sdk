@@ -150,8 +150,17 @@ fun bufferOf(vararg vertices: Any): ByteBuffer {
             res = bufferBig(glf.pos3_col4ub.stride * vertices.size)
             for (i in 0 until vertices.size) {
                 val v = vertices.elementAt(i) as Vertex.pos3_col4ub
-                v.p.to(res, i * glf.pos2_tc2.stride)
-                v.c.to(res, i * glf.pos2_tc2.stride + Vec3.size)
+                v.p.to(res, i * glf.pos3_col4ub.stride)
+                v.c.to(res, i * glf.pos3_col4ub.stride + Vec3.size)
+            }
+        }
+        is Vertex.pos3_nor3_col4 -> {
+            res = bufferBig(glf.pos3_nor3_col4.stride * vertices.size)
+            for (i in 0 until vertices.size) {
+                val v = vertices.elementAt(i) as Vertex.pos3_nor3_col4
+                v.p.to(res, i * glf.pos3_nor3_col4.stride)
+                v.n.to(res, i * glf.pos3_nor3_col4.stride + Vec3.size)
+                v.c.to(res, i * glf.pos3_nor3_col4.stride + Vec3.size * 2)
             }
         }
         else -> throw Error()
