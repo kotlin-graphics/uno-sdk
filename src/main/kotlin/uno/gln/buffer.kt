@@ -20,6 +20,9 @@ import kotlin.properties.Delegates
 var bufferName: IntBuffer by Delegates.notNull()
 
 
+inline fun glArrayBufferData(size: Int, usage: Int) = GL15.nglBufferData(GL15.GL_ARRAY_BUFFER, size.L, NULL, usage)
+inline fun glElementBufferData(size: Int, usage: Int) = GL15.nglBufferData(GL15.GL_ELEMENT_ARRAY_BUFFER, size.L, NULL, usage)
+inline fun glUniformBufferData(size: Int, usage: Int) = GL15.nglBufferData(GL31.GL_UNIFORM_BUFFER, size.L, NULL, usage)
 inline fun glBufferData(target: Int, size: Int, usage: Int) = GL15.nglBufferData(target, size.L, NULL, usage)
 
 
@@ -239,7 +242,8 @@ object Buffers {
 
 inline fun mappingUniformBufferRange(buffer: Enum<*>, length: Int, access: Int, block: MappedBuffer.() -> Unit) = mappingUniformBufferRange(bufferName[buffer], length, access, block)
 inline fun mappingUniformBufferRange(buffer: IntBuffer, length: Int, access: Int, block: MappedBuffer.() -> Unit) = mappingUniformBufferRange(buffer[0], length, access, block)
-inline fun mappingUniformBufferRange(buffer: Int, length: Int, access: Int, block: MappedBuffer.() -> Unit) {
+inline fun mappingUniformBufferRange(buffer: Int, length: Int, access: Int, block: MappedBuffer.() -> Unit) = mappingBufferRange(GL31.GL_UNIFORM_BUFFER, buffer, length, access, block)
+inline fun mappingBufferRange(target: Int, buffer: Int, length: Int, access: Int, block: MappedBuffer.() -> Unit) {
     MappedBuffer.target = GL31.GL_UNIFORM_BUFFER
     MappedBuffer.name = buffer    // bind
     MappedBuffer.mapRange(length, access)
@@ -250,10 +254,16 @@ inline fun mappingUniformBufferRange(buffer: Int, length: Int, access: Int, bloc
 
 inline fun glFlushMappedArrayBufferRange(length: Int) = glFlushMappedBufferRange(GL15.GL_ARRAY_BUFFER, 0, length)
 inline fun glFlushMappedArrayBufferRange(offset: Int, length: Int) = glFlushMappedBufferRange(GL15.GL_ARRAY_BUFFER, offset, length)
+inline fun glFlushMappedElementBufferRange(length: Int) = glFlushMappedBufferRange(GL15.GL_ELEMENT_ARRAY_BUFFER, 0, length)
+inline fun glFlushMappedElementBufferRange(offset: Int, length: Int) = glFlushMappedBufferRange(GL15.GL_ELEMENT_ARRAY_BUFFER, offset, length)
 inline fun glFlushMappedUniformBufferRange(length: Int) = glFlushMappedBufferRange(GL31.GL_UNIFORM_BUFFER, 0, length)
 inline fun glFlushMappedUniformBufferRange(offset: Int, length: Int) = glFlushMappedBufferRange(GL31.GL_UNIFORM_BUFFER, offset, length)
 inline fun glFlushMappedBufferRange(target: Int, length: Int) = glFlushMappedBufferRange(target, 0, length)
 inline fun glFlushMappedBufferRange(target: Int, offset: Int, length: Int) = GL30.glFlushMappedBufferRange(target, offset.L, length.L)
+
+inline fun glUnmapArrayBuffer() = GL15.glUnmapBuffer(GL15.GL_ARRAY_BUFFER)
+inline fun glUnmapElementBuffer() = GL15.glUnmapBuffer(GL15.GL_ELEMENT_ARRAY_BUFFER)
+inline fun glUnmapUniformBuffer() = GL15.glUnmapBuffer(GL31.GL_UNIFORM_BUFFER)
 
 object MappedBuffer {
 
