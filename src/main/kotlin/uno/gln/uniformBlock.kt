@@ -28,7 +28,7 @@ object UniformBlock {
     inline val name: String
         get() {
             GL31.nglGetActiveUniformBlockName(programName, blockIndex, buf.capacity(), MemoryUtil.memAddress(iBuf), MemoryUtil.memAddress(buf))
-            val bytes = ByteArray(iBuf[0] - 1)
+            val bytes = ByteArray(iBuf[0], { buf[it] })
             return String(bytes)
         }
     inline val binding get() = GL31.nglGetActiveUniformBlockiv(programName, blockIndex, GL31.GL_UNIFORM_BLOCK_BINDING, MemoryUtil.memAddress(iBuf)).run { iBuf[0] }
