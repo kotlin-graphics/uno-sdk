@@ -156,55 +156,16 @@ object Buffer {
 
     inline fun mapRange(length: Int, access: Int) = mapRange(0, length, access)
     inline fun mapRange(offset: Int, length: Int, access: Int): ByteBuffer = GL30.glMapBufferRange(target, offset.L, length.L, access)
+
+    inline fun flushRange(length: Int) = flushRange(0, length)
+    inline fun flushRange(offset: Int, length: Int) = GL30.glFlushMappedBufferRange(target, offset.L, length.L)
+    inline fun unmap() = GL15.glUnmapBuffer(target)
 }
 
 object Buffers {
 
     lateinit var buffers: IntBuffer
     var target = 0
-    var name = 0
-
-    inline fun data(data: ByteBuffer, usage: Int) = GL15.nglBufferData(target, data.remaining().L, memAddress(data, data.position()), usage)
-    inline fun data(data: ShortBuffer, usage: Int) = GL15.nglBufferData(target, (data.remaining() shl 1).L, memAddress(data, data.position()), usage)
-    inline fun data(data: IntBuffer, usage: Int) = GL15.nglBufferData(target, (data.remaining() shl 2).L, memAddress(data, data.position()), usage)
-    inline fun data(data: LongBuffer, usage: Int) = GL15.nglBufferData(target, (data.remaining() shl 3).L, memAddress(data, data.position()), usage)
-    inline fun data(data: FloatBuffer, usage: Int) = GL15.nglBufferData(target, (data.remaining() shl 2).L, memAddress(data, data.position()), usage)
-    inline fun data(data: DoubleBuffer, usage: Int) = GL15.nglBufferData(target, (data.remaining() shl 3).L, memAddress(data, data.position()), usage)
-
-    inline fun data(size: Int, usage: Int) = GL15.nglBufferData(target, size.L, NULL, usage)
-
-    inline fun subData(offset: Int, data: ByteBuffer) = GL15.nglBufferSubData(target, offset.L, data.remaining().L, memAddress(data, data.position()))
-    inline fun subData(offset: Int, data: ShortBuffer) = GL15.nglBufferSubData(target, offset.L, (data.remaining() shl 1).L, memAddress(data, data.position()))
-    inline fun subData(offset: Int, data: IntBuffer) = GL15.nglBufferSubData(target, offset.L, (data.remaining() shl 2).L, memAddress(data, data.position()))
-    inline fun subData(offset: Int, data: LongBuffer) = GL15.nglBufferSubData(target, offset.L, (data.remaining() shl 3).L, memAddress(data, data.position()))
-    inline fun subData(offset: Int, data: FloatBuffer) = GL15.nglBufferSubData(target, offset.L, (data.remaining() shl 2).L, memAddress(data, data.position()))
-    inline fun subData(offset: Int, data: DoubleBuffer) = GL15.nglBufferSubData(target, offset.L, (data.remaining() shl 3).L, memAddress(data, data.position()))
-
-    inline fun subData(data: ByteBuffer) = GL15.nglBufferSubData(target, 0L, data.remaining().L, memAddress(data, data.position()))
-    inline fun subData(data: ShortBuffer) = GL15.nglBufferSubData(target, 0L, (data.remaining() shl 1).L, memAddress(data, data.position()))
-    inline fun subData(data: IntBuffer) = GL15.nglBufferSubData(target, 0L, (data.remaining() shl 2).L, memAddress(data, data.position()))
-    inline fun subData(data: LongBuffer) = GL15.nglBufferSubData(target, 0L, (data.remaining() shl 3).L, memAddress(data, data.position()))
-    inline fun subData(data: FloatBuffer) = GL15.nglBufferSubData(target, 0L, (data.remaining() shl 2).L, memAddress(data, data.position()))
-    inline fun subData(data: DoubleBuffer) = GL15.nglBufferSubData(target, 0L, (data.remaining() shl 3).L, memAddress(data, data.position()))
-
-
-    // ----- Mat4 -----
-    fun data(mat: Mat4, usage: Int) = GL15.nglBufferData(target, Mat4.size.L, memAddress(mat to m4Buf, 0), usage)
-
-    inline fun subData(offset: Int, mat: Mat4) = GL15.nglBufferSubData(target, offset.L, Mat4.size.L, memAddress(mat to m4Buf, 0))
-    inline fun subData(mat: Mat4) = GL15.nglBufferSubData(target, 0L, Mat4.size.L, memAddress(mat to m4Buf, 0))
-
-
-    inline fun bindRange(index: Int, offset: Int, size: Int) = GL30.glBindBufferRange(target, index, name, offset.L, size.L)
-
-    inline fun bindBase(index: Int) = GL30.glBindBufferBase(target, index, 0)
-
-    inline fun mapRange(length: Int, access: Int) = mapRange(0, length, access)
-    inline fun mapRange(offset: Int, length: Int, access: Int): ByteBuffer = GL30.glMapBufferRange(target, offset.L, length.L, access)
-    inline fun flushRange(length: Int) = flushRange(0, length)
-    inline fun flushRange(offset: Int, length: Int) = GL30.glFlushMappedBufferRange(target, offset.L, length.L)
-    inline fun unmap() = GL15.glUnmapBuffer(target)
-
 
     inline fun at(bufferIndex: Enum<*>, block: Buffer.() -> Unit) = at(bufferIndex.ordinal, block)
     inline fun at(bufferIndex: Int, block: Buffer.() -> Unit) {
