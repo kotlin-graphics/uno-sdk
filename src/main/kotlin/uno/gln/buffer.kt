@@ -35,6 +35,7 @@ inline fun glBindBuffer(target: Int, buffer: IntBuffer) = GL15.glBindBuffer(targ
 inline fun glBindBuffer(target: Int, buffer: Enum<*>) = GL15.glBindBuffer(target, bufferName[buffer])
 
 
+inline fun glBindUniformBufferRange(index: Int, buffer: Enum<*>, offset: Int, size: Int) = glBindBufferRange(GL31.GL_UNIFORM_BUFFER, index, buffer, offset, size)
 inline fun glBindUniformBufferRange(index: Int, buffer: IntBuffer, offset: Int, size: Int) = glBindBufferRange(GL31.GL_UNIFORM_BUFFER, index, buffer, offset, size)
 
 inline fun glBindBufferRange(target: Int, index: Int, buffer: IntBuffer, offset: Int, size: Int) = GL30.glBindBufferRange(target, index, buffer[0], offset.L, size.L)
