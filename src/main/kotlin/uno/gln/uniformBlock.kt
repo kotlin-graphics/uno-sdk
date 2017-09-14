@@ -10,6 +10,8 @@ import org.lwjgl.system.MemoryUtil
 import uno.gl.buf
 import uno.gl.iBuf
 
+inline fun glUniformBlockBinding(program: IntArray, uniformBlockIndex: Int, uniformBlockBinding: Int) = GL31.glUniformBlockBinding(program[0], uniformBlockIndex, uniformBlockBinding)
+
 inline fun withUniformBlock(program: Enum<*>, uniformBlockIndex: Int, block: UniformBlock.() -> Unit) = withUniformBlock(programName[program], uniformBlockIndex, block)
 inline fun withUniformBlock(program: IntArray, uniformBlockIndex: Int, block: UniformBlock.() -> Unit) = withUniformBlock(program[0], uniformBlockIndex, block)
 inline fun withUniformBlock(program: Int, uniformBlockIndex: Int, block: UniformBlock.() -> Unit) {
