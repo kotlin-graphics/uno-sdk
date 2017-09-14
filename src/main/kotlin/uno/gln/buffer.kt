@@ -1,13 +1,17 @@
 package uno.gln
 
+import glm_.BYTES
 import glm_.L
 import glm_.mat4x4.Mat4
 import glm_.set
+import glm_.vec4.Vec4
 import org.lwjgl.opengl.GL15
 import org.lwjgl.opengl.GL30
 import org.lwjgl.opengl.GL31
 import org.lwjgl.system.MemoryUtil.NULL
 import org.lwjgl.system.MemoryUtil.memAddress
+import uno.gl.buf
+import uno.gl.bufAd
 import uno.gl.iBuf
 import uno.gl.m4Buf
 import java.nio.*
@@ -125,6 +129,11 @@ object Buffer {
     inline fun data(data: LongBuffer, usage: Int = 0) = GL15.nglBufferData(target, (data.remaining() shl 3).L, memAddress(data, data.position()), usage)
     inline fun data(data: FloatBuffer, usage: Int = 0) = GL15.nglBufferData(target, (data.remaining() shl 2).L, memAddress(data, data.position()), usage)
     inline fun data(data: DoubleBuffer, usage: Int = 0) = GL15.nglBufferData(target, (data.remaining() shl 3).L, memAddress(data, data.position()), usage)
+
+    inline fun data(size: Int, data: Vec4, usage: Int = 0) {
+        buf.putFloat(0, data.x).putFloat(Float.BYTES, data.y).putFloat(Float.BYTES * 2, data.z).putFloat(Float.BYTES * 3, data.w)
+        GL15.nglBufferData(target, size.L, bufAd, usage)
+    }
 
     inline fun data(size: Int, usage: Int = 0) = GL15.nglBufferData(target, size.L, NULL, usage)
 
