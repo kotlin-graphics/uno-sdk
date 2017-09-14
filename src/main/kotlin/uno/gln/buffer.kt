@@ -248,6 +248,13 @@ inline fun mappingUniformBufferRange(buffer: Int, length: Int, access: Int, bloc
     GL15.glBindBuffer(GL31.GL_UNIFORM_BUFFER, 0)
 }
 
+inline fun glFlushMappedArrayBufferRange(length: Int) = glFlushMappedBufferRange(GL15.GL_ARRAY_BUFFER, 0, length)
+inline fun glFlushMappedArrayBufferRange(offset: Int, length: Int) = glFlushMappedBufferRange(GL15.GL_ARRAY_BUFFER, offset, length)
+inline fun glFlushMappedUniformBufferRange(length: Int) = glFlushMappedBufferRange(GL31.GL_UNIFORM_BUFFER, 0, length)
+inline fun glFlushMappedUniformBufferRange(offset: Int, length: Int) = glFlushMappedBufferRange(GL31.GL_UNIFORM_BUFFER, offset, length)
+inline fun glFlushMappedBufferRange(target: Int, length: Int) = glFlushMappedBufferRange(target, 0, length)
+inline fun glFlushMappedBufferRange(target: Int, offset: Int, length: Int) = GL30.glFlushMappedBufferRange(target, offset.L, length.L)
+
 object MappedBuffer {
 
     var target = 0
