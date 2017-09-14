@@ -2,6 +2,7 @@ package uno.gl
 
 import com.jogamp.newt.opengl.GLWindow
 import com.jogamp.opengl.GL3
+import glm_.mat4x4.Mat4d
 import glm_.vec2.Vec2
 import glm_.vec2.Vec2i
 import glm_.vec3.Vec3
@@ -9,6 +10,8 @@ import glm_.vec3.Vec3i
 import glm_.vec4.Vec4
 import glm_.vec4.Vec4i
 import org.lwjgl.system.MemoryStack
+import org.lwjgl.system.MemoryUtil.memAddress
+import uno.buffer.bufferBig
 import uno.buffer.doubleBufferBig
 import uno.buffer.floatBufferBig
 import uno.buffer.intBufferBig
@@ -80,3 +83,40 @@ val m34dBuf = doubleBufferBig(12)
 val m42dBuf = doubleBufferBig(8)
 val m43dBuf = doubleBufferBig(12)
 val m4dBuf = doubleBufferBig(4)
+
+
+val fBufAd = memAddress(fBuf)
+val v2BufAd = memAddress(v2Buf)
+val v3BufAd = memAddress(v3Buf)
+val v4BufAd = memAddress(v4Buf)
+
+val iBufAd = memAddress(iBuf)
+val v2iBufAd = memAddress(v2iBuf)
+val v3iBufAd = memAddress(v3iBuf)
+val v4iBufAd = memAddress(v4iBuf)
+
+val m2BufAd = memAddress(m2Buf)
+val m23BufAd = memAddress(m23Buf)
+val m24BufAd = memAddress(m24Buf)
+val m32BufAd = memAddress(m32Buf)
+val m3BufAd = memAddress(m3Buf)
+val m34BufAd = memAddress(m34Buf)
+val m42BufAd = memAddress(m42Buf)
+val m43BufAd = memAddress(m43Buf)
+val m4BufAd = memAddress(m4Buf)
+
+val m2dBufAd = memAddress(m2dBuf)
+val m23dBufAd = memAddress(m23dBuf)
+val m24dBufAd = memAddress(m24dBuf)
+val m32dBufAd = memAddress(m32dBuf)
+val m3dBufAd = memAddress(m3dBuf)
+val m34dBufAd = memAddress(m34dBuf)
+val m42dBufAd = memAddress(m42dBuf)
+val m43dBufAd = memAddress(m43dBuf)
+val m4dBufAd = memAddress(m4dBuf)
+
+
+val buf = bufferBig(256)
+val bufAd = memAddress(buf)
+
+

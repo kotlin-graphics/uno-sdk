@@ -1,15 +1,18 @@
 package uno.gln
 
+import glm_.BYTES
+import glm_.bool
+import glm_.glm
 import glm_.mat2x2.Mat2
 import glm_.mat3x3.Mat3
 import glm_.mat4x4.Mat4
 import glm_.vec2.Vec2
 import glm_.vec3.Vec3
 import glm_.vec4.Vec4
+import org.lwjgl.opengl.*
 import org.lwjgl.opengl.ARBUniformBufferObject.glGetUniformBlockIndex
 import org.lwjgl.opengl.ARBUniformBufferObject.glUniformBlockBinding
-import org.lwjgl.opengl.GL20
-import org.lwjgl.opengl.GL30
+import org.lwjgl.system.MemoryUtil.memAddress
 import uno.gl.*
 import uno.glsl.Program
 import kotlin.properties.Delegates
@@ -127,8 +130,8 @@ object ProgramBase {
 
     inline fun link() = GL20.glLinkProgram(name)
 
-    operator fun plusAssign(shader: Int) = GL20.glAttachShader(name, shader)
-    infix fun attach(shader: Int) = GL20.glAttachShader(name, shader)
+    inline operator fun plusAssign(shader: Int) = GL20.glAttachShader(name, shader)
+    inline infix fun attach(shader: Int) = GL20.glAttachShader(name, shader)
     inline fun attach(vararg shader: Int) = shader.forEach { GL20.glAttachShader(name, it) }
 }
 
