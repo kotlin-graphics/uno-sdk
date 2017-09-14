@@ -203,6 +203,7 @@ object Buffers {
     inline fun mapRange(offset: Int, length: Int, access: Int): ByteBuffer = GL30.glMapBufferRange(target, offset.L, length.L, access)
     inline fun flushRange(length: Int) = flushRange(0, length)
     inline fun flushRange(offset: Int, length: Int) = GL30.glFlushMappedBufferRange(target, offset.L, length.L)
+    inline fun unmap() = GL15.glUnmapBuffer(target)
 
 
     inline fun at(bufferIndex: Enum<*>, block: Buffer.() -> Unit) = at(bufferIndex.ordinal, block)
