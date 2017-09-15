@@ -4,6 +4,7 @@ import glm_.BYTES
 import glm_.vec2.Vec2
 import glm_.vec3.Vec3
 import glm_.vec4.Vec4
+import glm_.vec4.Vec4b
 import org.lwjgl.system.MemoryUtil
 import uno.glf.Vertex
 import uno.glf.glf
@@ -137,6 +138,10 @@ fun bufferOf(vararg vertices: Any): ByteBuffer {
         is Vec4 -> {
             res = bufferBig(Vec4.size * vertices.size)
             for (i in 0 until vertices.size) (vertices[i] as Vec4).to(res, i * Vec4.size)
+        }
+        is Vec4b -> {
+            res = bufferBig(Vec4b.size * vertices.size)
+            for (i in 0 until vertices.size) (vertices[i] as Vec4b).to(res, i * Vec4b.size)
         }
         is Vertex.pos2_tc2 -> {
             res = bufferBig(glf.pos2_tc2.stride * vertices.size)
