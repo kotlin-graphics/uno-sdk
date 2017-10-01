@@ -1,10 +1,14 @@
 package uno.gln
 
 import com.jogamp.opengl.GL2ES2.GL_TEXTURE_COMPARE_MODE
+import gli.gl
 import glm_.vec2.Vec2i
+import glm_.vec3.Vec3i
 import org.lwjgl.opengl.*
 import org.lwjgl.system.MemoryUtil.NULL
 import org.lwjgl.system.MemoryUtil.memAddress
+import uno.gl.buf
+import uno.gl.bufAd
 import java.nio.ByteBuffer
 import java.nio.IntBuffer
 import kotlin.properties.Delegates
@@ -18,10 +22,23 @@ var textureName: IntBuffer by Delegates.notNull()
 
 inline fun glBindTexture(target: Int, texture: Enum<*>) = GL11.glBindTexture(target, textureName[texture])
 inline fun glBindTexture(target: Int, texture: IntBuffer) = GL11.glBindTexture(target, texture[0])
+inline fun glBindTexture(target: gli.gl.Target, texture: IntBuffer) = GL11.glBindTexture(target.i, texture[0])
+inline fun glBindTexture(target: Int) = GL11.glBindTexture(target, 0)
+
+inline fun glTexParameteri(target: gli.gl.Target, pName: Int, param: Int) = GL11.glTexParameteri(target.i, pName, param)
+inline fun glTexParameteriv(target: gli.gl.Target, pName: Int, param: gli.gl.Swizzles) {
+    buf.putInt(0, param[0].i).putInt(1, param[1].i).putInt(2, param[2].i).putInt(3, param[3].i)
+    GL11.nglTexParameteriv(target.i, pName, bufAd)
+}
 
 inline fun glTexStorage2D(target: Int, internalFormat: Int, size: Vec2i) = GL42.glTexStorage2D(target, 1, internalFormat, size.x, size.y)
+inline fun glTexStorage2D(target: gli.gl.Target, internalFormat: Int, size: Vec2i) = GL42.glTexStorage2D(target.i, 1, internalFormat, size.x, size.y)
+inline fun glTexStorage2D(target: gli.gl.Target, internalFormat: gli.gl.InternalFormat, size: Vec3i) = glTexStorage2D(target, 1, internalFormat, size.x, size.y)
+inline fun glTexStorage2D(target: gli.gl.Target, levels: Int, internalFormat: gli.gl.InternalFormat, size: Vec3i) = glTexStorage2D(target, levels, internalFormat, size.x, size.y)
+inline fun glTexStorage2D(target: gli.gl.Target, levels: Int, internalFormat: gli.gl.InternalFormat, width: Int, height: Int) = GL42.glTexStorage2D(target.i, levels, internalFormat.i, width, height)
 
-inline fun glBindTexture(target: Int) = GL11.glBindTexture(target, 0)
+inline fun glCompressedTexSubImage2D(target: gli.gl.Target, level: Int, xOffset: Int, yOffset: Int, extent: Vec3i, format: gli.gl.InternalFormat, data: ByteBuffer) = glCompressedTexSubImage2D(target, level, xOffset, yOffset, extent.x, extent.y, format, data)
+inline fun glCompressedTexSubImage2D(target: gli.gl.Target, level: Int, xOffset: Int, yOffset: Int, width: Int, height: Int, format: gli.gl.InternalFormat, data: ByteBuffer) = GL13.glCompressedTexSubImage2D(target.i, level, xOffset, yOffset, width, height, format.i, data)
 
 inline fun withTexture1d(texture: Enum<*>, block: Texture1d.() -> Unit) = withTexture1d(textureName[texture], block)
 inline fun withTexture1d(texture: IntBuffer, block: Texture1d.() -> Unit) = withTexture1d(texture[0], block)

@@ -930,7 +930,7 @@ class IntBufferIterator(private val intBuffer: IntBuffer) : Iterator<Int> {
 
     private var position = intBuffer.position()
 
-    override fun next() = intBuffer.get(position++)
+    override fun next() = intBuffer[position++]
     override fun hasNext() = position < intBuffer.capacity
 }
 

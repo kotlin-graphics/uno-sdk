@@ -9,7 +9,7 @@ group = 'com.github.kotlin-graphics'
 
 buildscript {
 
-    ext.kotlinVersion = '1.2-M2'
+    ext.kotlinVersion = '1.2.0-beta-31'
 
     repositories {
         mavenCentral()
@@ -67,9 +67,9 @@ dependencies {
 repositories {
     mavenCentral()
     jcenter()
-    maven { url "https://jitpack.io" }
     maven { url "https://dl.bintray.com/kotlin/kotlin-dev" }
     maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
+    maven { url "https://jitpack.io" }
 }
 
 task packageSources(type: Jar, dependsOn: 'classes') {
