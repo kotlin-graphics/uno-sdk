@@ -5,9 +5,9 @@ import glm_.vec2.Vec2
 import glm_.vec3.Vec3
 import glm_.vec4.Vec4
 import glm_.vec4.Vec4b
+import gln.glf.Vertex
+import gln.glf.glf
 import org.lwjgl.system.MemoryUtil
-import uno.glf.Vertex
-import uno.glf.glf
 import java.nio.*
 
 fun floatBufferOf(vararg floats: Float): FloatBuffer {

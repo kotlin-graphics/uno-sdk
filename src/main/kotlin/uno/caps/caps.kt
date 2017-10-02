@@ -2,6 +2,8 @@ package uno.caps
 
 import com.jogamp.opengl.GLES1.GL_ETC1_RGB8_OES
 import glm_.vec2.Vec2
+import gln.checkError
+import gln.glGetVec2
 import org.lwjgl.opengl.ATITextureCompression3DC.GL_COMPRESSED_LUMINANCE_ALPHA_3DC_ATI
 import org.lwjgl.opengl.EXTTextureCompressionLATC.*
 import org.lwjgl.opengl.EXTTextureCompressionS3TC.*
@@ -32,8 +34,6 @@ import uno.buffer.intBufferBig
 import uno.gl.*
 import uno.glfw.GlfwWindow
 import uno.glfw.glfw
-import uno.gln.checkError
-import uno.gln.glGetVec2
 import java.io.File
 import java.io.PrintWriter
 import kotlin.reflect.KVisibility
