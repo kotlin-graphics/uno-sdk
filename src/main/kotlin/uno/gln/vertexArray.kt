@@ -62,7 +62,7 @@ object VertexArray {
     inline fun array(array: IntBuffer, format: VertexLayout) = array(array[0], format)
     inline fun array(array: Int, format: VertexLayout) {
         glBindBuffer(GL15.GL_ARRAY_BUFFER, array)
-        for (attr in format.attribute) {
+        for (attr in format.attributes) {
             GL20.glEnableVertexAttribArray(attr.index)
             GL20.glVertexAttribPointer(attr.index, attr.size, attr.type, attr.normalized, attr.interleavedStride, attr.pointer)
         }
@@ -73,8 +73,8 @@ object VertexArray {
     inline fun array(array: IntBuffer, format: VertexLayout, vararg offset: Int) = array(array[0], format, *offset) // TODO check, slow operator
     inline fun array(array: Int, format: VertexLayout, vararg offset: Int) {
         glBindBuffer(GL15.GL_ARRAY_BUFFER, array)
-        for (i in format.attribute.indices) {
-            val attr = format.attribute[i]
+        for (i in format.attributes.indices) {
+            val attr = format.attributes[i]
             GL20.glEnableVertexAttribArray(attr.index)
             GL20.glVertexAttribPointer(attr.index, attr.size, attr.type, attr.normalized, 0, offset[i].L)
         }
@@ -101,14 +101,14 @@ object VertexArrays {
 inline fun withVertexLayout(array: Enum<*>, element: Enum<*>, format: VertexLayout, block: () -> Unit) = withVertexLayout(bufferName[array], bufferName[element], format, block)
 inline fun withVertexLayout(array: Int, element: Int, format: VertexLayout, block: () -> Unit) {
     glBindBuffer(GL_ARRAY_BUFFER, array)
-    for (attr in format.attribute) {
+    for (attr in format.attributes) {
         GL20.glEnableVertexAttribArray(attr.index)
         GL20.glVertexAttribPointer(attr.index, attr.size, attr.type, attr.normalized, attr.interleavedStride, attr.pointer)
     }
     glBindBuffer(GL_ARRAY_BUFFER, 0)
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, element)
     block()
-    for (attr in format.attribute)
+    for (attr in format.attributes)
         GL20.glDisableVertexAttribArray(attr.index)
 }
 
@@ -116,27 +116,27 @@ inline fun withVertexLayout(array: Enum<*>, format: VertexLayout, block: () -> U
 inline fun withVertexLayout(array: IntBuffer, format: VertexLayout, block: () -> Unit) = withVertexLayout(array[0], format, block)
 inline fun withVertexLayout(array: Int, format: VertexLayout, block: () -> Unit) {
     glBindBuffer(GL_ARRAY_BUFFER, array)
-    for (attr in format.attribute) {
+    for (attr in format.attributes) {
         GL20.glEnableVertexAttribArray(attr.index)
         GL20.glVertexAttribPointer(attr.index, attr.size, attr.type, attr.normalized, attr.interleavedStride, attr.pointer)
     }
     glBindBuffer(GL_ARRAY_BUFFER, 0)
     block()
-    for (attr in format.attribute) GL20.glDisableVertexAttribArray(attr.index)
+    for (attr in format.attributes) GL20.glDisableVertexAttribArray(attr.index)
 }
 
 
 /** For un-interleaved, that is not-interleaved */
 inline fun withVertexLayout(buffer: IntBuffer, format: VertexLayout, vararg offset: Int, block: () -> Unit) {
     glBindBuffer(GL_ARRAY_BUFFER, buffer[0])
-    for (i in format.attribute.indices) {
-        val attr = format.attribute[i]
+    for (i in format.attributes.indices) {
+        val attr = format.attributes[i]
         GL20.glEnableVertexAttribArray(attr.index)
         GL20.glVertexAttribPointer(attr.index, attr.size, attr.type, attr.normalized, 0, offset[i].L)
     }
     glBindBuffer(GL_ARRAY_BUFFER, 0)
     block()
-    for (attr in format.attribute)
+    for (attr in format.attributes)
         GL20.glDisableVertexAttribArray(attr.index)
 }
 

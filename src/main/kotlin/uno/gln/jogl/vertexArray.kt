@@ -48,7 +48,7 @@ object VertexArray {
 
     fun GL3.array(array: Int, format: VertexLayout) {
         glBindBuffer(GL2ES2.GL_ARRAY_BUFFER, array)
-        for (attr in format.attribute) {
+        for (attr in format.attributes) {
             glEnableVertexAttribArray(attr.index)
             glVertexAttribPointer(attr.index, attr.size, attr.type, attr.normalized, attr.interleavedStride, attr.pointer)
         }
@@ -57,8 +57,8 @@ object VertexArray {
 
     fun GL3.array(array: Int, format: VertexLayout, vararg offset: Int) {
         glBindBuffer(GL2ES2.GL_ARRAY_BUFFER, array)
-        for (i in format.attribute.indices) {
-            val attr = format.attribute[i]
+        for (i in format.attributes.indices) {
+            val attr = format.attributes[i]
             glEnableVertexAttribArray(attr.index)
             glVertexAttribPointer(attr.index, attr.size, attr.type, attr.normalized, 0, offset[i].L)
         }
@@ -72,13 +72,13 @@ object VertexArray {
 
 inline fun GL3.withVertexLayout(buffer: IntBuffer, format: VertexLayout, block: () -> Unit) {
     glBindBuffer(GL2ES2.GL_ARRAY_BUFFER, buffer[0])
-    for (attr in format.attribute) {
+    for (attr in format.attributes) {
         glEnableVertexAttribArray(attr.index)
         glVertexAttribPointer(attr.index, attr.size, attr.type, attr.normalized, attr.interleavedStride, attr.pointer)
     }
     glBindBuffer(GL2ES2.GL_ARRAY_BUFFER, 0)
     block()
-    for (attr in format.attribute)
+    for (attr in format.attributes)
         glDisableVertexAttribArray(attr.index)
 }
 
@@ -86,14 +86,14 @@ inline fun GL3.withVertexLayout(buffer: IntBuffer, format: VertexLayout, block: 
 /** For un-interleaved, that is not-interleaved */
 inline fun GL3.withVertexLayout(buffer: IntBuffer, format: VertexLayout, vararg offset: Int, block: () -> Unit) {
     glBindBuffer(GL2ES2.GL_ARRAY_BUFFER, buffer[0])
-    for (i in format.attribute.indices) {
-        val attr = format.attribute[i]
+    for (i in format.attributes.indices) {
+        val attr = format.attributes[i]
         glEnableVertexAttribArray(attr.index)
         glVertexAttribPointer(attr.index, attr.size, attr.type, attr.normalized, 0, offset[i].L)
     }
     glBindBuffer(GL2ES2.GL_ARRAY_BUFFER, 0)
     block()
-    for (attr in format.attribute)
+    for (attr in format.attributes)
         glDisableVertexAttribArray(attr.index)
 }
 

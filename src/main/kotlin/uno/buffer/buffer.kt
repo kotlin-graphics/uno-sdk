@@ -1,7 +1,5 @@
 package uno.buffer
 
-import glm_.b
-import glm_.set
 import org.lwjgl.system.MemoryUtil
 import uno.kotlin.Quadruple
 import uno.kotlin.Quintuple

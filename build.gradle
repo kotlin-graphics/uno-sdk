@@ -19,8 +19,11 @@ buildscript {
     }
     dependencies {
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion"
+        classpath 'com.github.jengelman.gradle.plugins:shadow:2.0.1'
     }
 }
+
+apply plugin: 'com.github.johnrengelman.shadow'
 
 dependencies {
 
@@ -28,7 +31,7 @@ dependencies {
 
     testCompile 'com.github.elect86:kotlintest:43281b7e1b'
 
-    compile 'com.github.kotlin-graphics:gli:ff7b193e6d709f3be9d7aa99d11ea634ab35cefe'
+    compile 'com.github.kotlin-graphics:gli:fd8adb6fa3face65d71c0a7c5468f26a701f38b8'
 
     compile "org.jetbrains.kotlin:kotlin-reflect:$kotlinVersion"
 
