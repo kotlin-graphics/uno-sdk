@@ -30,6 +30,8 @@ val Char.isPrintable: Boolean get() = with(Character.UnicodeBlock.of(this)) {
             this != Character.UnicodeBlock.SPECIALS
 }
 
+fun Char.parseInt() = java.lang.Character.getNumericValue(this)
+
 fun main(args: Array<String>) {
     println('2'.isPrintable)
 }

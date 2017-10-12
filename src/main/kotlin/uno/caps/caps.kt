@@ -34,8 +34,10 @@ import uno.buffer.intBufferBig
 import uno.gl.*
 import uno.glfw.GlfwWindow
 import uno.glfw.glfw
+import uno.kotlin.parseInt
 import java.io.File
 import java.io.PrintWriter
+import java.nio.file.Paths
 import kotlin.reflect.KVisibility
 import kotlin.reflect.full.memberProperties
 
@@ -43,30 +45,56 @@ import kotlin.reflect.full.memberProperties
  * Created by GBarbieri on 10.03.2017.
  */
 
-val debug = true
-
 fun main(args: Array<String>) {
 
-    var args = args
-    if (debug)
-        args = arrayOf("4.6", "E:\\Desktop\\report.txt")
+    val debug = false
+    val defaultVersion = "4.6"
+    val defaultPath = Paths.get("").toAbsolutePath().normalize().toString()
+    val defaultFilename =  "report.txt"
+
+    val version: String
+    val path: String
+    when {
+        debug -> {
+            version = defaultVersion
+            path = defaultPath + defaultFilename
+        }
+        else -> {
+            version = args.getOrNull(0)?.takeIf { it.matches(Regex("[0-9].[0-9]")) } ?: defaultVersion
+            path = defaultPath + "\\" + (args.getOrNull(1)?.takeIf { it.isNotEmpty() } ?: defaultFilename)
+        }
+    }
 
     with(glfw) {
         init()
         windowHint {
-            context.version = args[0]
+            context.version = version
             profile = "core"
         }
     }
 
-    fun createWindow() = try {
+    fun createWindow(): GlfwWindow = try {
         GlfwWindow(1280, 720, "test")
     } catch (exc: RuntimeException) {
-        val version = glfw.windowHint { context.version }
-
+        with(glfw) {
+            init()
+            windowHint {
+                val s = context.version
+                var major = s[0].parseInt()
+                var minor = s[2].parseInt()
+                var version = major * 10 + minor
+                version--
+//                println("new version $version")
+                major = version / 10
+                minor = version % 10
+                context.version = "$major.$minor"
+            }
+        }
+        createWindow()
     }
 
-    with(GlfwWindow(1280, 720, "test")) {
+    with(createWindow()) {
+        println("highest OpenGL version found ${glfw.windowHint { context.version }}")
         makeContextCurrent()
         show()
     }
@@ -75,22 +103,25 @@ fun main(args: Array<String>) {
 
     val caps = Caps(Caps.Profile.ES)
 
-    val report = File(args[1]).printWriter().use {
-        val `_` = "--------------------------------------------------"
-        it.println("$`_`version$`_`")
+    println("writing report to $path")
+    File(path).printWriter().use {
+        val `-` = "--------------------------------------------------"
+        it.println("$`-`version$`-`")
         caps.version.write(it)
-        it.println("$`_`extensions$`_`")
+        it.println("$`-`extensions$`-`")
         caps.extensions.write(it)
-        it.println("$`_`debug$`_`")
+        it.println("$`-`debug$`-`")
         caps.debug.write(it)
-        it.println("$`_`limits$`_`")
+        it.println("$`-`limits$`-`")
         caps.limits.write(it)
-        it.println("$`_`values$`_`")
+        it.println("$`-`values$`-`")
         caps.values.write(it)
-        it.println("$`_`formats$`_`")
+        it.println("$`-`formats$`-`")
         caps.formats.write(it)
     }
     checkError("caps")
+
+    glfw.terminate()
 }
 
 class Caps(profile: Profile) {
