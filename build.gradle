@@ -5,7 +5,13 @@ apply plugin: 'kotlin'
 
 // jitpack
 apply plugin: 'maven'
+
+apply plugin: 'application'
+apply plugin: 'com.github.johnrengelman.shadow'
+
 group = 'com.github.kotlin-graphics'
+
+mainClassName = 'uno.caps.CapsKt'
 
 buildscript {
 
@@ -23,15 +29,13 @@ buildscript {
     }
 }
 
-apply plugin: 'com.github.johnrengelman.shadow'
-
 dependencies {
 
     compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
 
     testCompile 'com.github.elect86:kotlintest:43281b7e1b'
 
-    compile 'com.github.kotlin-graphics:gln:b311a83a99be28eefb690e5f91780b46746a9611'
+    compile 'com.github.kotlin-graphics:gln:a9950ec125f8018de46a5bb12d6bc4b69409ca7c'
 
     compile "org.jetbrains.kotlin:kotlin-reflect:$kotlinVersion"
 

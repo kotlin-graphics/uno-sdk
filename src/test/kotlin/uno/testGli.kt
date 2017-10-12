@@ -2,8 +2,6 @@ package uno
 
 import gli_.gl
 import gli_.gli
-import gln.texture.glCompressedTexSubImage2D
-import gln.texture.glTexStorage2D
 import gln.texture.initTexture2d
 import io.kotlintest.specs.StringSpec
 import org.lwjgl.opengl.GL11.*
@@ -21,7 +19,7 @@ class testGli : StringSpec() {
         fun createTexture(filename: String): Int {
 
             val texture = gli.load(filename)
-            if(texture.empty())
+            if (texture.empty())
                 return 0
 
             gli.gl.profile = gl.Profile.GL33
@@ -39,7 +37,7 @@ class testGli : StringSpec() {
             glTexParameteriv(target.i, GL_TEXTURE_SWIZZLE_RGBA, swizzles)
             var extent = texture.extent()
             glTexStorage2D(target.i, texture.levels(), format.internal.i, extent.x, extent.y)
-            for(level in 0 until texture.levels()) {
+            for (level in 0 until texture.levels()) {
                 extent = texture.extent(level)
                 glCompressedTexSubImage2D(
                         target.i, level, 0, 0, extent.x, extent.y,
@@ -52,7 +50,7 @@ class testGli : StringSpec() {
     fun createTexture(filename: String): Int {
 
         val texture = gli.load(filename)
-        if(texture.empty())
+        if (texture.empty())
             return 0
 
         gli.gl.profile = gl.Profile.GL33
@@ -62,7 +60,10 @@ class testGli : StringSpec() {
         return initTexture2d {
             levels = 0 until texture.levels()
             swizzles = format.swizzles
-            storage(target, texture.levels(), format.internal, texture.extent())
+            storage(texture.levels(), format.internal, texture.extent())
+            levels.forEach {
+                compressedSubImage(it, texture.extent(it), format.internal, texture.data(0, 0, it))
+            }
         }
     }
 }

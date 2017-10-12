@@ -22,7 +22,7 @@ object glfw {
             windowHint.forwardComp = true
     }
 
-    fun windowHint(block: windowHint.() -> Unit) = windowHint.block()
+    fun <T> windowHint(block: windowHint.() -> T) = windowHint.block()
 
     val primaryMonitor get() = glfwGetPrimaryMonitor()
 

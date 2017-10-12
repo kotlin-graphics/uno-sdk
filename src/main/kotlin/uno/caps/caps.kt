@@ -43,11 +43,13 @@ import kotlin.reflect.full.memberProperties
  * Created by GBarbieri on 10.03.2017.
  */
 
+val debug = true
+
 fun main(args: Array<String>) {
 
     var args = args
-    if (true)
-        args = arrayOf("4.5", "E:\\Desktop\\report.txt")
+    if (debug)
+        args = arrayOf("4.6", "E:\\Desktop\\report.txt")
 
     with(glfw) {
         init()
@@ -55,6 +57,13 @@ fun main(args: Array<String>) {
             context.version = args[0]
             profile = "core"
         }
+    }
+
+    fun createWindow() = try {
+        GlfwWindow(1280, 720, "test")
+    } catch (exc: RuntimeException) {
+        val version = glfw.windowHint { context.version }
+
     }
 
     with(GlfwWindow(1280, 720, "test")) {
