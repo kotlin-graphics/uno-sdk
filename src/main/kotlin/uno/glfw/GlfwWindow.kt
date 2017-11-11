@@ -53,20 +53,14 @@ class GlfwWindow(width: Int, height: Int, title: String) {
             glfwGetWindowPos(handle, x, y)
             return field.put(x[0], y[0])
         }
-        set(value) {
-            glfwSetWindowPos(handle, value.x, value.y)
-            field.put(value)
-        }
+        set(value) = glfwSetWindowPos(handle, value.x, value.y)
 
     var size = Vec2i()
         get() {
             glfwGetWindowSize(handle, x, y)
             return field.put(x[0], y[0])
         }
-        set(value) {
-            glfwSetWindowSize(handle, value.x, value.y)
-            field.put(value)
-        }
+        set(value) = glfwSetWindowSize(handle, value.x, value.y)
 
     fun sizeLimit(width: IntRange, height: IntRange) = glfwSetWindowSizeLimits(handle, width.start, height.start, width.endInclusive, height.endInclusive)
 
@@ -146,9 +140,7 @@ class GlfwWindow(width: Int, height: Int, title: String) {
             glfwGetCursorPos(handle, xD, yD)
             return field.put(xD[0], yD[0])
         }
-        set(value) {
-            field put value
-        }
+        set(value) = glfwSetCursorPos(handle, value.x, value.y)
 
     var cursorPosCallback: ((Double, Double) -> Unit)? = null
         set(value) {
@@ -237,7 +229,7 @@ class GlfwWindow(width: Int, height: Int, title: String) {
             else -> throw Error()
         })
 
-    enum class Cursor {Normal, Hidden, Disabled }
+    enum class Cursor { Normal, Hidden, Disabled }
 
 
     fun pressed(key: Int) = glfwGetKey(handle, key) == GLFW_PRESS
