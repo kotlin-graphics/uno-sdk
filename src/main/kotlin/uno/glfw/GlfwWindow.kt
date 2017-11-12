@@ -17,10 +17,13 @@ import uno.buffer.intBufferBig
  * Created by GBarbieri on 24.04.2017.
  */
 
-class GlfwWindow(width: Int, height: Int, title: String) {
+class GlfwWindow(val handle: Long) {
 
     constructor(windowSize: Vec2i, title: String) : this(windowSize.x, windowSize.y, title)
     constructor(x: Int, title: String) : this(x, x, title)
+    constructor(width: Int, height: Int, title: String) : this(glfwCreateWindow(width, height, title, 0L, 0L)) {
+        this.title = title
+    }
 
     private val x = intBufferBig(1)
     private val y = intBufferBig(1)
@@ -28,8 +31,6 @@ class GlfwWindow(width: Int, height: Int, title: String) {
     private val w = intBufferBig(1)
     private val xD = doubleBufferBig(1)
     private val yD = doubleBufferBig(1)
-
-    val handle = glfwCreateWindow(width, height, title, 0L, 0L)
 
     init {
         if (handle == MemoryUtil.NULL) {
@@ -43,7 +44,7 @@ class GlfwWindow(width: Int, height: Int, title: String) {
         set(value) = glfwSetWindowShouldClose(handle, value)
     val open get() = !close
 
-    var title = title
+    var title = ""
         set(value) = glfwSetWindowTitle(handle, value)
 
     // TODO icon
