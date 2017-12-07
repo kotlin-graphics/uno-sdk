@@ -539,7 +539,7 @@ class ViewPole : ViewProvider {
         val invOrient = orientation.conjugate(quat_M)
         val worldOffset = invOrient.times(cameraoffset, vec3_B)
 
-        currView.targetPos plus_ worldOffset
+        currView.targetPos plusAssign worldOffset
     }
 
     fun keyPressed(event: KeyEvent) {
