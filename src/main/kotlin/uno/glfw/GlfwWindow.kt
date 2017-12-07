@@ -17,10 +17,13 @@ import uno.buffer.intBufferBig
  * Created by GBarbieri on 24.04.2017.
  */
 
-class GlfwWindow(width: Int, height: Int, title: String) {
+class GlfwWindow(val handle: Long) {
 
     constructor(windowSize: Vec2i, title: String) : this(windowSize.x, windowSize.y, title)
     constructor(x: Int, title: String) : this(x, x, title)
+    constructor(width: Int, height: Int, title: String) : this(glfwCreateWindow(width, height, title, 0L, 0L)) {
+        this.title = title
+    }
 
     private val x = intBufferBig(1)
     private val y = intBufferBig(1)
@@ -28,8 +31,6 @@ class GlfwWindow(width: Int, height: Int, title: String) {
     private val w = intBufferBig(1)
     private val xD = doubleBufferBig(1)
     private val yD = doubleBufferBig(1)
-
-    val handle = glfwCreateWindow(width, height, title, 0L, 0L)
 
     init {
         if (handle == MemoryUtil.NULL) {
@@ -43,7 +44,7 @@ class GlfwWindow(width: Int, height: Int, title: String) {
         set(value) = glfwSetWindowShouldClose(handle, value)
     val open get() = !close
 
-    var title = title
+    var title = ""
         set(value) = glfwSetWindowTitle(handle, value)
 
     // TODO icon
@@ -53,20 +54,14 @@ class GlfwWindow(width: Int, height: Int, title: String) {
             glfwGetWindowPos(handle, x, y)
             return field.put(x[0], y[0])
         }
-        set(value) {
-            glfwSetWindowPos(handle, value.x, value.y)
-            field.put(value)
-        }
+        set(value) = glfwSetWindowPos(handle, value.x, value.y)
 
     var size = Vec2i()
         get() {
             glfwGetWindowSize(handle, x, y)
             return field.put(x[0], y[0])
         }
-        set(value) {
-            glfwSetWindowSize(handle, value.x, value.y)
-            field.put(value)
-        }
+        set(value) = glfwSetWindowSize(handle, value.x, value.y)
 
     fun sizeLimit(width: IntRange, height: IntRange) = glfwSetWindowSizeLimits(handle, width.start, height.start, width.endInclusive, height.endInclusive)
 
@@ -146,9 +141,7 @@ class GlfwWindow(width: Int, height: Int, title: String) {
             glfwGetCursorPos(handle, xD, yD)
             return field.put(xD[0], yD[0])
         }
-        set(value) {
-            field put value
-        }
+        set(value) = glfwSetCursorPos(handle, value.x, value.y)
 
     var cursorPosCallback: ((Double, Double) -> Unit)? = null
         set(value) {
@@ -237,7 +230,7 @@ class GlfwWindow(width: Int, height: Int, title: String) {
             else -> throw Error()
         })
 
-    enum class Cursor {Normal, Hidden, Disabled }
+    enum class Cursor { Normal, Hidden, Disabled }
 
 
     fun pressed(key: Int) = glfwGetKey(handle, key) == GLFW_PRESS
