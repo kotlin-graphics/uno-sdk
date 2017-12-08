@@ -225,7 +225,7 @@ object stb {
         var blockLen = 0L
         var i = 0L
 
-        blockLen = (_bufLen % 5552).L
+        blockLen = _bufLen % 5552
         while (_bufLen != 0L) {
             while (i + 7 < blockLen) {
                 s1 += array[_buffer]; s2 += s1
