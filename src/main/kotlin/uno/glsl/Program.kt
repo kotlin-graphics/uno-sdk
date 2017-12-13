@@ -15,6 +15,8 @@ import com.jogamp.opengl.util.glsl.ShaderProgram
 import org.lwjgl.opengl.GL20
 import java.io.File
 
+inline fun glUseProgram(program: Program) = GL20.glUseProgram(program.name) // TODO move
+
 /**
 
  * @author GBarbieri
