@@ -12,11 +12,18 @@ import com.jogamp.opengl.GL2ES2.*
 import com.jogamp.opengl.GL3
 import com.jogamp.opengl.util.glsl.ShaderCode
 import com.jogamp.opengl.util.glsl.ShaderProgram
+import gln.program.ProgramUse
+import gln.program.glUseProgram
 import org.lwjgl.opengl.GL20
 import java.io.File
 
 inline fun glUseProgram(program: Program) = GL20.glUseProgram(program.name) // TODO move
 inline fun glDeleteProgram(program: Program) = GL20.glDeleteProgram(program.name) // TODO move
+inline fun usingProgram(program: Program, block: ProgramUse.() -> Unit) {
+    ProgramUse.name = program.name //glUse
+    ProgramUse.block()
+    glUseProgram()
+}
 
 /**
 
