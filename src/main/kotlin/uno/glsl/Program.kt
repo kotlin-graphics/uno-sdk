@@ -19,6 +19,7 @@ import java.io.File
 
 inline fun glUseProgram(program: Program) = GL20.glUseProgram(program.name) // TODO move
 inline fun glDeleteProgram(program: Program) = GL20.glDeleteProgram(program.name) // TODO move
+inline fun glDeletePrograms(vararg programs: Program) = programs.forEach { GL20.glDeleteProgram(it.name) }
 inline fun usingProgram(program: Program, block: ProgramUse.() -> Unit) {
     ProgramUse.name = program.name //glUse
     ProgramUse.block()
