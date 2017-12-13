@@ -1,5 +1,11 @@
 # unofficial-opengl-SDK
 
+[![Build Status](https://travis-ci.org/kotlin-graphics/uno-sdk.svg?branch=master)](https://travis-ci.org/kotlin-graphics/uno-sdk) 
+[![license](https://img.shields.io/badge/License-MIT-orange.svg)](https://github.com/kotlin-graphics/uno-sdk/blob/master/LICENSE) 
+![](https://reposs.herokuapp.com/?path=kotlin-graphics/uno-sdk&color=yellow) 
+[![Release](https://jitpack.io/v/kotlin-graphics/uno-sdk.svg)](https://jitpack.io/#kotlin-graphics/uno-sdk) 
+[![Slack Status](http://slack.kotlinlang.org/badge.svg)](http://slack.kotlinlang.org/)
+
 Modules:
 
 - buffer
