@@ -16,6 +16,7 @@ import org.lwjgl.opengl.GL20
 import java.io.File
 
 inline fun glUseProgram(program: Program) = GL20.glUseProgram(program.name) // TODO move
+inline fun glDeleteProgram(program: Program) = GL20.glDeleteProgram(program.name) // TODO move
 
 /**
 
