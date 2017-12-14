@@ -78,4 +78,9 @@ fun ByteBuffer.use(block: (ByteBuffer) -> Unit) {
     destroy()
 }
 
-fun withBufferBig(size: Int, block: (ByteBuffer) -> Unit) = bufferBig(size).use(block)
+fun withBufferBig(size: Int, block: ByteBuffer.() -> Unit) {
+    with(bufferBig(size)) {
+        block()
+        destroy()
+    }
+}
