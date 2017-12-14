@@ -1,5 +1,8 @@
 package uno.buffer
 
+
+import glm_.BYTES
+import glm_.set
 import org.lwjgl.system.MemoryUtil
 import uno.kotlin.Quadruple
 import uno.kotlin.Quintuple
@@ -78,8 +81,35 @@ fun ByteBuffer.use(block: (ByteBuffer) -> Unit) {
     destroy()
 }
 
-fun withBufferBig(size: Int, block: ByteBuffer.() -> Unit) {
-    with(bufferBig(size)) {
+@Suppress("UNCHECKED_CAST")
+fun withBuffer(list: List<*>, block: ByteBuffer.() -> Unit) {
+    when (list.elementAt(0)) {
+        is Byte -> bufferBig(list.size).apply {
+            val l = list as List<Byte>
+            for (i in l.indices) set(i, l[i])
+        }
+        is Short -> bufferBig(list.size * Short.BYTES).apply {
+            val l = list as List<Short>
+            for (i in l.indices) putShort(i * Short.BYTES, l[i])
+        }
+        is Int -> bufferBig(list.size * Int.BYTES).apply {
+            val l = list as List<Int>
+            for (i in l.indices) putInt(i * Int.BYTES, l[i])
+        }
+        is Long -> bufferBig(list.size * Long.BYTES).apply {
+            val l = list as List<Long>
+            for (i in l.indices) putLong(i * Long.BYTES, l[i])
+        }
+        is Float -> bufferBig(list.size * Float.BYTES).apply {
+            val l = list as List<Float>
+            for (i in l.indices) putFloat(i * Float.BYTES, l[i])
+        }
+        is Double -> bufferBig(list.size * Double.BYTES).apply {
+            val l = list as List<Double>
+            for (i in l.indices) putDouble(i * Double.BYTES, l[i])
+        }
+        else -> throw Error("unsupported type")
+    }.run {
         block()
         destroy()
     }
