@@ -34,7 +34,7 @@ dependencies {
 
     testCompile 'io.kotlintest:kotlintest:2.0.7'
 
-    compile 'com.github.kotlin-graphics:gln:d02dd73e6fcf21b37e8a49966fe15f55bf7d876d'
+    compile 'com.github.kotlin-graphics:gln:f1eadeff51794004bea0c01546d146053d4e9c6d'
 
     compile "org.jetbrains.kotlin:kotlin-reflect:$kotlinVersion"
 
