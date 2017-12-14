@@ -73,7 +73,9 @@ fun destroyBuf(vararg buffers: Buffer) {
         MemoryUtil.memFree(buffers[i])
 }
 
-fun ByteBuffer.use(block: () -> Unit) {
-    block()
+fun ByteBuffer.use(block: (ByteBuffer) -> Unit) {
+    block(this)
     destroy()
 }
+
+fun withBufferBig(size: Int, block: (ByteBuffer) -> Unit) = bufferBig(size).use(block)
