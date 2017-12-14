@@ -72,3 +72,8 @@ fun destroyBuf(vararg buffers: Buffer) {
     for (i in 0 until buffers.size)
         MemoryUtil.memFree(buffers[i])
 }
+
+fun ByteBuffer.use(block: () -> Unit) {
+    block()
+    destroy()
+}
