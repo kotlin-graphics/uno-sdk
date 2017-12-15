@@ -12,10 +12,10 @@ import glm_.vec3.Vec3
  * Created by elect on 17/03/17.
  */
 
-abstract class ViewProvider {
+interface ViewProvider {
 
     /** Computes the camera matrix. */
-    abstract fun calcMatrix(res: Mat4): Mat4
+    fun calcMatrix(res: Mat4): Mat4
 
     fun calcMatrix() = calcMatrix(Mat4())
 }
