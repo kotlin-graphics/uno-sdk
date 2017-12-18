@@ -1,9 +1,6 @@
 package uno.kotlin.buffers
 
-import glm_.BYTES
-import glm_.bool
-import glm_.set
-import glm_.size
+import glm_.*
 import org.lwjgl.system.MemoryUtil
 import org.lwjgl.system.MemoryUtil.*
 import uno.buffer.destroy
@@ -783,13 +780,13 @@ fun IntBuffer.asList(): List<Int> {
 
 inline fun IntBuffer.copyOf(): IntBuffer {
     val dst = memAllocInt(capacity)
-    memCopy(memAddress(this), memAddress(dst), size)
+    memCopy(memAddress(this), memAddress(dst), size.L)
     return dst
 }
 
 inline fun IntBuffer.copyOf(newSize: Int): IntBuffer {
     val dst = memAllocInt(newSize)
-    memCopy(memAddress(this), memAddress(dst), newSize)
+    memCopy(memAddress(this), memAddress(dst), newSize.L)
     return dst
 }
 
@@ -800,7 +797,7 @@ inline fun IntBuffer.copyOf(newSize: Int): IntBuffer {
 inline fun IntBuffer.copyOfRange(fromIndex: Int, toIndex: Int): IntBuffer {
     val count = toIndex - fromIndex
     val dst = memAllocInt(count)
-    memCopy(memAddress(this), memAddress(dst), count * Int.BYTES)
+    memCopy(memAddress(this), memAddress(dst), count.L * Int.BYTES)
     return dst
 }
 

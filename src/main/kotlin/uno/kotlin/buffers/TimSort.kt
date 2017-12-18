@@ -1,6 +1,7 @@
 package uno.kotlin.buffers
 
 import glm_.BYTES
+import glm_.L
 import glm_.b
 import glm_.detail.Random.int
 import glm_.set
@@ -229,7 +230,7 @@ object TimSort {
                     a[left + 1] = a[left]
                 }
                 1 -> a[left + 1] = a[left]
-                else -> MemoryUtil.memCopy(MemoryUtil.memAddress(a, left), MemoryUtil.memAddress(a, left + 1), n * Int.BYTES)
+                else -> MemoryUtil.memCopy(MemoryUtil.memAddress(a, left), MemoryUtil.memAddress(a, left + 1), n.L * Int.BYTES)
             }
             a[left] = pivot
             start++
@@ -563,16 +564,16 @@ object TimSort {
         var cursor1 = tmpBase // Indexes into tmp array
         var cursor2 = base2   // Indexes int a
         var dest = base1      // Indexes int a
-        MemoryUtil.memCopy(MemoryUtil.memAddress(a, base1), MemoryUtil.memAddress(tmp, cursor1), len1 * Int.BYTES)
+        MemoryUtil.memCopy(MemoryUtil.memAddress(a, base1), MemoryUtil.memAddress(tmp, cursor1), len1.L * Int.BYTES)
 
         // Move first element of second run and deal with degenerate cases
         a[dest++] = a[cursor2++]
         if (--len2 == 0) {
-            MemoryUtil.memCopy(MemoryUtil.memAddress(tmp, cursor1), MemoryUtil.memAddress(a, dest), len1 * Int.BYTES)
+            MemoryUtil.memCopy(MemoryUtil.memAddress(tmp, cursor1), MemoryUtil.memAddress(a, dest), len1.L * Int.BYTES)
             return
         }
         if (len1 == 1) {
-            MemoryUtil.memCopy(MemoryUtil.memAddress(a, cursor2), MemoryUtil.memAddress(a, dest), len2 * Int.BYTES)
+            MemoryUtil.memCopy(MemoryUtil.memAddress(a, cursor2), MemoryUtil.memAddress(a, dest), len2.L * Int.BYTES)
             a[dest + len2] = tmp[cursor1] // Last elt of run 1 to end of merge
             return
         }
@@ -607,7 +608,7 @@ object TimSort {
                 assert(len1 > 1 && len2 > 0)
                 count1 = gallopRight(a[cursor2], tmp, cursor1, len1, 0, c)
                 if (count1 != 0) {
-                    MemoryUtil.memCopy(MemoryUtil.memAddress(tmp, cursor1), MemoryUtil.memAddress(a, dest), count1 * Int.BYTES)
+                    MemoryUtil.memCopy(MemoryUtil.memAddress(tmp, cursor1), MemoryUtil.memAddress(a, dest), count1.L * Int.BYTES)
                     dest += count1
                     cursor1 += count1
                     len1 -= count1
@@ -620,7 +621,7 @@ object TimSort {
 
                 count2 = gallopLeft(tmp[cursor1], a, cursor2, len2, 0, c)
                 if (count2 != 0) {
-                    MemoryUtil.memCopy(MemoryUtil.memAddress(a, cursor2), MemoryUtil.memAddress(a, dest), count2 * Int.BYTES)
+                    MemoryUtil.memCopy(MemoryUtil.memAddress(a, cursor2), MemoryUtil.memAddress(a, dest), count2.L * Int.BYTES)
                     dest += count2
                     cursor2 += count2
                     len2 -= count2
@@ -641,14 +642,14 @@ object TimSort {
         when (len1) {
             1 -> {
                 assert(len2 > 0)
-                MemoryUtil.memCopy(MemoryUtil.memAddress(a, cursor2), MemoryUtil.memAddress(a, dest), len2 * Int.BYTES)
+                MemoryUtil.memCopy(MemoryUtil.memAddress(a, cursor2), MemoryUtil.memAddress(a, dest), len2.L * Int.BYTES)
                 a[dest + len2] = tmp[cursor1] //  Last elt of run 1 to end of merge
             }
             0 -> throw IllegalArgumentException("Comparison method violates its general contract!")
             else -> {
                 assert(len2 == 0)
                 assert(len1 > 1)
-                MemoryUtil.memCopy(MemoryUtil.memAddress(tmp, cursor1), MemoryUtil.memAddress(a, dest), len1 * Int.BYTES)
+                MemoryUtil.memCopy(MemoryUtil.memAddress(tmp, cursor1), MemoryUtil.memAddress(a, dest), len1.L * Int.BYTES)
             }
         }
     }
@@ -671,7 +672,7 @@ object TimSort {
         val a = this.a // For performance
         val tmp = ensureCapacity(len2)
         val tmpBase = this.tmpBase
-        MemoryUtil.memCopy(MemoryUtil.memAddress(a, base2), MemoryUtil.memAddress(tmp, tmpBase), len2 * Int.BYTES)
+        MemoryUtil.memCopy(MemoryUtil.memAddress(a, base2), MemoryUtil.memAddress(tmp, tmpBase), len2.L * Int.BYTES)
 
         var cursor1 = base1 + len1 - 1  // Indexes into a
         var cursor2 = tmpBase + len2 - 1 // Indexes into tmp array
@@ -680,13 +681,13 @@ object TimSort {
         // Move last element of first run and deal with degenerate cases
         a[dest--] = a[cursor1--]
         if (--len1 == 0) {
-            MemoryUtil.memCopy(MemoryUtil.memAddress(tmp, tmpBase), MemoryUtil.memAddress(a, dest - (len2 - 1)), len2 * Int.BYTES)
+            MemoryUtil.memCopy(MemoryUtil.memAddress(tmp, tmpBase), MemoryUtil.memAddress(a, dest - (len2 - 1)), len2.L * Int.BYTES)
             return
         }
         if (len2 == 1) {
             dest -= len1
             cursor1 -= len1
-            MemoryUtil.memCopy(MemoryUtil.memAddress(a, cursor1 + 1), MemoryUtil.memAddress(a, dest + 1), len1 * Int.BYTES)
+            MemoryUtil.memCopy(MemoryUtil.memAddress(a, cursor1 + 1), MemoryUtil.memAddress(a, dest + 1), len1.L * Int.BYTES)
             a[dest] = tmp[cursor2]
             return
         }
@@ -724,7 +725,7 @@ object TimSort {
                     dest -= count1
                     cursor1 -= count1
                     len1 -= count1
-                    MemoryUtil.memCopy(MemoryUtil.memAddress(a, cursor1 + 1), MemoryUtil.memAddress(a, dest + 1), count1 * Int.BYTES)
+                    MemoryUtil.memCopy(MemoryUtil.memAddress(a, cursor1 + 1), MemoryUtil.memAddress(a, dest + 1), count1.L * Int.BYTES)
                     if (len1 == 0)
                         break@outer
                 }
@@ -737,7 +738,7 @@ object TimSort {
                     dest -= count2
                     cursor2 -= count2
                     len2 -= count2
-                    MemoryUtil.memCopy(MemoryUtil.memAddress(tmp, cursor2 + 1), MemoryUtil.memAddress(a, dest + 1), count2 * Int.BYTES)
+                    MemoryUtil.memCopy(MemoryUtil.memAddress(tmp, cursor2 + 1), MemoryUtil.memAddress(a, dest + 1), count2.L * Int.BYTES)
                     if (len2 <= 1)  // len2 == 1 || len2 == 0
                         break@outer
                 }
@@ -756,14 +757,14 @@ object TimSort {
             assert(len1 > 0)
             dest -= len1
             cursor1 -= len1
-            MemoryUtil.memCopy(MemoryUtil.memAddress(a, cursor1 + 1), MemoryUtil.memAddress(a, dest + 1), len1 * Int.BYTES)
+            MemoryUtil.memCopy(MemoryUtil.memAddress(a, cursor1 + 1), MemoryUtil.memAddress(a, dest + 1), len1.L * Int.BYTES)
             a[dest] = tmp[cursor2]  // Move first elt of run2 to front of merge
         } else if (len2 == 0) {
             throw IllegalArgumentException("Comparison method violates its general contract!")
         } else {
             assert(len1 == 0)
             assert(len2 > 0)
-            MemoryUtil.memCopy(MemoryUtil.memAddress(tmp, tmpBase), MemoryUtil.memAddress(a, dest - (len2 - 1)), len2 * Int.BYTES)
+            MemoryUtil.memCopy(MemoryUtil.memAddress(tmp, tmpBase), MemoryUtil.memAddress(a, dest - (len2 - 1)), len2.L * Int.BYTES)
         }
     }
 
