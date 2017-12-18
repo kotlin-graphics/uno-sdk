@@ -121,7 +121,17 @@ class GlfwWindow(val handle: Long) {
     fun swapBuffers() = glfwSwapBuffers(handle)
 
 
-    var framebufferSizeCallback: ((Int, Int) -> Unit)? = null
+    var framebufferSizeCallback: ((Vec2i) -> Unit)? = null
+        set(value) {
+            if (value == null)
+                glfwSetFramebufferSizeCallback(handle, null)?.free()
+            else
+                glfwSetFramebufferSizeCallback(handle, framebufferSizeListener_)?.free()
+            field = value
+        }
+    private val framebufferSizeListener_ = GLFWFramebufferSizeCallbackI { _, width, height -> framebufferSizeCallback!!.invoke(Vec2i(width, height)) }
+
+    var framebufferSizeCallBack: ((Int, Int) -> Unit)? = null
         set(value) {
             if (value == null)
                 glfwSetFramebufferSizeCallback(handle, null)?.free()
@@ -129,12 +139,8 @@ class GlfwWindow(val handle: Long) {
                 glfwSetFramebufferSizeCallback(handle, framebufferSizeListener)?.free()
             field = value
         }
+    private val framebufferSizeListener = GLFWFramebufferSizeCallbackI { _, width, height -> framebufferSizeCallBack!!.invoke(width, height) }
 
-    private val framebufferSizeListener = FramebufferSizeListener()
-
-    inner class FramebufferSizeListener : GLFWFramebufferSizeCallbackI {
-        override fun invoke(window: Long, width: Int, height: Int) = framebufferSizeCallback!!.invoke(width, height)
-    }
 
     var cursorPos = Vec2d()
         get() {
@@ -143,22 +149,29 @@ class GlfwWindow(val handle: Long) {
         }
         set(value) = glfwSetCursorPos(handle, value.x, value.y)
 
-    var cursorPosCallback: ((Double, Double) -> Unit)? = null
+
+    var cursorPosCallback: ((Vec2d) -> Unit)? = null
+    set(value) {
+        if (value == null)
+            glfwSetCursorPosCallback(handle, null)?.free()
+        else
+            glfwSetCursorPosCallback(handle, cursorPosListener)?.free()
+        field = value
+    }
+    private val cursorPosListener = GLFWCursorPosCallbackI { _, xPos, yPos -> cursorPosCallback!!.invoke(Vec2d(xPos, yPos)) }
+
+    var cursorPosCallBack: ((Double, Double) -> Unit)? = null
         set(value) {
             if (value == null)
                 glfwSetCursorPosCallback(handle, null)?.free()
             else
-                glfwSetCursorPosCallback(handle, cursorPosListener)?.free()
+                glfwSetCursorPosCallback(handle, cursorPosListener_)?.free()
             field = value
         }
-    private val cursorPosListener = CursorPosListener()
-
-    inner class CursorPosListener : GLFWCursorPosCallbackI {
-        override fun invoke(window: Long, xPos: Double, yPos: Double) = cursorPosCallback!!.invoke(xPos, yPos)
-    }
+    private val cursorPosListener_ = GLFWCursorPosCallbackI { _, xPos, yPos -> cursorPosCallBack!!.invoke(xPos, yPos) }
 
 
-    var scrollCallback: ((Double, Double) -> Unit)? = null
+    var scrollCallback: ((Vec2d) -> Unit)? = null
         set(value) {
             if (value == null)
                 glfwSetScrollCallback(handle, null)?.free()
@@ -166,11 +179,17 @@ class GlfwWindow(val handle: Long) {
                 glfwSetScrollCallback(handle, scrollListener)?.free()
             field = value
         }
-    private val scrollListener = ScrollListener()
+    private val scrollListener = GLFWScrollCallbackI { _, xOffset, yOffset -> scrollCallback!!.invoke(Vec2d(xOffset, yOffset)) }
 
-    inner class ScrollListener : GLFWScrollCallbackI {
-        override fun invoke(window: Long, xOffset: Double, yOffset: Double) = scrollCallback!!.invoke(xOffset, yOffset)
-    }
+    var scrollCallBack: ((Double, Double) -> Unit)? = null
+        set(value) {
+            if (value == null)
+                glfwSetScrollCallback(handle, null)?.free()
+            else
+                glfwSetScrollCallback(handle, scrollListener_)?.free()
+            field = value
+        }
+    private val scrollListener_ = GLFWScrollCallbackI { _, xOffset, yOffset -> scrollCallBack!!.invoke(xOffset, yOffset) }
 
 
     var mouseButtonCallback: ((Int, Int, Int) -> Unit)? = null
@@ -181,11 +200,8 @@ class GlfwWindow(val handle: Long) {
                 glfwSetMouseButtonCallback(handle, mouseButtonListener)?.free()
             field = value
         }
-    private val mouseButtonListener = MouseButtonListener()
+    private val mouseButtonListener = GLFWMouseButtonCallbackI { _, button, action, mods -> mouseButtonCallback!!.invoke(button, action, mods) }
 
-    inner class MouseButtonListener : GLFWMouseButtonCallbackI {
-        override fun invoke(window: Long, button: Int, action: Int, mods: Int) = mouseButtonCallback!!.invoke(button, action, mods)
-    }
 
     var keyCallback: ((Int, Int, Int, Int) -> Unit)? = null
         set(value) {
@@ -195,11 +211,8 @@ class GlfwWindow(val handle: Long) {
                 glfwSetKeyCallback(handle, keyListener)?.free()
             field = value
         }
-    private val keyListener = KeyListener()
+    private val keyListener = GLFWKeyCallbackI { _, key, scancode, action, mods -> keyCallback!!.invoke(key, scancode, action, mods) }
 
-    inner class KeyListener : GLFWKeyCallbackI {
-        override fun invoke(window: Long, key: Int, scancode: Int, action: Int, mods: Int) = keyCallback!!.invoke(key, scancode, action, mods)
-    }
 
     var charCallback: ((Int) -> Unit)? = null
         set(value) {
@@ -209,11 +222,7 @@ class GlfwWindow(val handle: Long) {
                 glfwSetCharCallback(handle, charListener)?.free()
             field = value
         }
-    private val charListener = CharListener()
-
-    inner class CharListener : GLFWCharCallbackI {
-        override fun invoke(window: Long, codepoint: Int) = charCallback!!.invoke(codepoint)
-    }
+    private val charListener = GLFWCharCallbackI { _, codepoint -> charCallback!!.invoke(codepoint) }
 
 
     var cursor: Cursor
