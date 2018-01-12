@@ -1,6 +1,8 @@
 package uno.glfw
 
 import glm_.bool
+import glm_.f
+import glm_.i
 import glm_.vec2.Vec2d
 import glm_.vec2.Vec2i
 import glm_.vec4.Vec4i
@@ -64,6 +66,10 @@ class GlfwWindow(val handle: Long) {
         }
         set(value) = glfwSetWindowSize(handle, value.x, value.y)
 
+    var aspect
+        get() = size.x / size.y.f
+        set(value) = glfwSetWindowAspectRatio(handle, (value * 1_000).i, 1_000)
+
     var aspectRatio = Vec2i()
         get() = field.put(size.x, size.y)
         set(value) = glfwSetWindowAspectRatio(handle, value.x, value.y)
@@ -117,18 +123,25 @@ class GlfwWindow(val handle: Long) {
     fun swapBuffers() = glfwSwapBuffers(handle)
 
     fun setFramebufferSizeCallback(callbackFunc: (Vec2i) -> Unit) {
-        val callback = GLFWFramebufferSizeCallbackI { _, width, height -> callbackFunc!!.invoke(Vec2i(width, height))}
+        val callback = GLFWFramebufferSizeCallbackI { _, width, height -> callbackFunc(Vec2i(width, height)) }
         setFramebufferSizeCallback(callback)
     }
 
     fun setFramebufferSizeCallback(callbackFunc: (Int, Int) -> Unit) {
-        val callback = GLFWFramebufferSizeCallbackI { _, width, height -> callbackFunc!!.invoke(width, height) }
+        val callback = GLFWFramebufferSizeCallbackI { _, width, height -> callbackFunc(width, height) }
         setFramebufferSizeCallback(callback)
     }
+
+    var framebufferSizeCB: ((Vec2i) -> Unit)? = null
+        set(value) {
+            setFramebufferSizeCallback(value?.let { GLFWFramebufferSizeCallbackI { _, width, height -> it(Vec2i(width, height)) } })
+            field = value
+        }
 
     fun setFramebufferSizeCallback(callback: GLFWFramebufferSizeCallbackI?) {
         glfwSetFramebufferSizeCallback(handle, callback)?.free()
     }
+
 
     var cursorPos = Vec2d()
         get() {
@@ -137,60 +150,96 @@ class GlfwWindow(val handle: Long) {
         }
         set(value) = glfwSetCursorPos(handle, value.x, value.y)
 
+
     fun setCursorPosCallback(callbackFunc: (Vec2d) -> Unit) {
-        val callback = GLFWCursorPosCallbackI { _, xPos, yPos -> callbackFunc!!.invoke(Vec2d(xPos, yPos)) }
+        val callback = GLFWCursorPosCallbackI { _, xPos, yPos -> callbackFunc(Vec2d(xPos, yPos)) }
         setCursorPosCallback(callback)
     }
 
     fun setCursorPosCallback(callbackFunc: (Double, Double) -> Unit) {
-        val callback = GLFWCursorPosCallbackI { _, xPos, yPos -> callbackFunc!!.invoke(xPos, yPos) }
+        val callback = GLFWCursorPosCallbackI { _, xPos, yPos -> callbackFunc(xPos, yPos) }
         setCursorPosCallback(callback)
     }
+
+    var cursorPosCB: ((Vec2d) -> Unit)? = null
+        set(value) {
+            setCursorPosCallback(value?.let { GLFWCursorPosCallbackI { _, xPos, yPos -> it(Vec2d(xPos, yPos)) } })
+            field = value
+        }
 
     fun setCursorPosCallback(callback: GLFWCursorPosCallbackI?) {
         glfwSetCursorPosCallback(handle, callback)?.free()
     }
 
+
     fun setScrollCallback(callbackFunc: (Vec2d) -> Unit) {
-        val callback = GLFWScrollCallbackI { _, xOffset, yOffset -> callbackFunc!!.invoke(Vec2d(xOffset, yOffset)) }
+        val callback = GLFWScrollCallbackI { _, xOffset, yOffset -> callbackFunc(Vec2d(xOffset, yOffset)) }
         setScrollCallback(callback)
     }
 
     fun setScrollCallback(callbackFunc: (Double, Double) -> Unit) {
-        val callback = GLFWScrollCallbackI { _, xOffset, yOffset -> callbackFunc!!.invoke(xOffset, yOffset) }
+        val callback = GLFWScrollCallbackI { _, xOffset, yOffset -> callbackFunc(xOffset, yOffset) }
         setScrollCallback(callback)
     }
+
+    var scrollCB: ((Vec2d) -> Unit)? = null
+        set(value) {
+            setScrollCallback(value?.let { GLFWScrollCallbackI { _, xOffset, yOffset -> it(Vec2d(xOffset, yOffset)) } })
+            field = value
+        }
 
     fun setScrollCallback(callback: GLFWScrollCallbackI?) {
         glfwSetScrollCallback(handle, callback)?.free()
     }
 
+
     fun setMouseButtonCallback(callbackFunc: (Int, Int, Int) -> Unit) {
-        val callback = GLFWMouseButtonCallbackI { _, button, action, mods -> callbackFunc!!.invoke(button, action, mods) }
+        val callback = GLFWMouseButtonCallbackI { _, button, action, mods -> callbackFunc(button, action, mods) }
         setMouseButtonCallback(callback)
     }
+
+    var mouseButtonCB: ((Int, Int, Int) -> Unit)? = null
+        set(value) {
+            setMouseButtonCallback(value?.let { GLFWMouseButtonCallbackI { _, button, action, mods -> it(button, action, mods) } })
+            field = value
+        }
 
     fun setMouseButtonCallback(callback: GLFWMouseButtonCallbackI?) {
         glfwSetMouseButtonCallback(handle, callback)?.free()
     }
 
+
     fun setKeyCallback(callbackFunc: (Int, Int, Int, Int) -> Unit) {
-        val callback = GLFWKeyCallbackI { _, key, scancode, action, mods -> callbackFunc!!.invoke(key, scancode, action, mods) }
+        val callback = GLFWKeyCallbackI { _, key, scancode, action, mods -> callbackFunc(key, scancode, action, mods) }
         setKeyCallback(callback)
     }
+
+    var keyCB: ((Int, Int, Int, Int) -> Unit)? = null
+        set(value) {
+            setKeyCallback(value?.let { GLFWKeyCallbackI { _, key, scancode, action, mods -> it(key, scancode, action, mods) } })
+            field = value
+        }
 
     fun setKeyCallback(callback: GLFWKeyCallbackI?) {
         glfwSetKeyCallback(handle, callback)?.free()
     }
 
+
     fun setCharCallback(callbackFunc: (Int) -> Unit) {
-        val callback = GLFWCharCallbackI { _, codepoint -> callbackFunc!!.invoke(codepoint) }
+        val callback = GLFWCharCallbackI { _, codepoint -> callbackFunc(codepoint) }
         setCharCallback(callback)
     }
+
+    var charCB: ((Int) -> Unit)? = null
+        set(value) {
+            setCharCallback(value?.let { GLFWCharCallbackI { _, codepoint -> it(codepoint) } })
+            field = value
+        }
 
     fun setCharCallback(callback: GLFWCharCallbackI?) {
         glfwSetCharCallback(handle, callback)?.free()
     }
+
 
     var cursor: Cursor
         get() = when (glfwGetInputMode(handle, GLFW_CURSOR)) {

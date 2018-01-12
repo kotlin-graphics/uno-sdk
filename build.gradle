@@ -12,7 +12,7 @@ group = 'com.github.kotlin-graphics'
 
 buildscript {
 
-    ext.kotlinVersion = '1.2.20-eap-11'
+    ext.kotlinVersion = '1.2.20-eap-33'
 
     repositories {
         mavenCentral()
@@ -34,7 +34,7 @@ dependencies {
 
     testCompile 'io.kotlintest:kotlintest:2.0.7'
 
-    compile 'com.github.kotlin-graphics:gln:6c9ed187c035b70f886d847e0e1af2a45afe7dd4'
+    compile 'com.github.kotlin-graphics:gln:2e35e65a3ec887ebd5d4e8f9b14c39f2da03c149'
 
     compile "org.jetbrains.kotlin:kotlin-reflect:$kotlinVersion"
 
@@ -78,9 +78,17 @@ repositories {
     maven { url "https://jitpack.io" }
 }
 
-task packageSources(type: Jar, dependsOn: 'classes') {
-    from sourceSets.main.allSource
+task sourcesJar(type: Jar, dependsOn: classes) {
     classifier = 'sources'
+    from sourceSets.main.allSource
 }
 
-artifacts { archives packageSources }
+task javadocJar(type: Jar, dependsOn: javadoc) {
+    classifier = 'javadoc'
+    from javadoc.destinationDir
+}
+
+artifacts {
+    archives sourcesJar
+    archives javadocJar
+}
