@@ -109,7 +109,9 @@ constructor(
         res put 1f
         res.set(3, po.position, 1f)
 
-        return res times_ po.orientation.toMat4()
+        res *= po.orientation to mat4[3]
+
+        return res
     }
 
     /** Retrieves the current position and orientation of the object.   */
@@ -182,7 +184,7 @@ constructor(
                 RotateMode.DUAL_AXIS -> {
 
                     val rot = calcRotationQuat(Axis.Y, glm.radians(diff.x * rotateScale), quat[0])
-                    calcRotationQuat(Axis.X, glm.radians(diff.y * rotateScale), quat[1]).times(rot, rot).normalize_()
+                    calcRotationQuat(Axis.X, glm.radians(diff.y * rotateScale), quat[1]).times(rot, rot).normalizeAssign()
                     rotateView(rot)
                 }
 
@@ -212,7 +214,7 @@ constructor(
         val fromInitial_ = if (isDragging) fromInitial else false
 
         val orient = if (fromInitial_) startDragOrient else po.orientation
-        po.orientation = rot.times(orient, quat[2]).normalize_()
+        po.orientation = rot.times(orient, quat[2]).normalizeAssign()
     }
 
     fun rotateLocal(rot: Quat, fromInitial: Boolean = false) {
@@ -220,7 +222,7 @@ constructor(
         val fromInitial_ = if (isDragging) fromInitial else false
 
         val orient = if (fromInitial_) startDragOrient else po.orientation
-        po.orientation = orient.times(rot, quat[3]).normalize_()
+        po.orientation = orient.times(rot, quat[3]).normalizeAssign()
     }
 
     fun rotateView(rot: Quat, fromInitial: Boolean = false) {
@@ -233,7 +235,7 @@ constructor(
             val invViewQuat = viewQuat.conjugate(quat[5])
             val orient = if (fromInitial_) startDragOrient else po.orientation
 
-            (rot.times(orient, po.orientation)).normalize_()
+            (rot.times(orient, po.orientation)).normalizeAssign()
 
         } else
             rotateWorld(rot, fromInitial_)
@@ -344,14 +346,15 @@ constructor(
 
         /* In this space, we are facing in the correct direction. Which means that the camera point is directly behind
          * us by the radius number of units.    */
-        res.translate_(0f, 0f, -currView.radius)
+        res.translateAssign(0f, 0f, -currView.radius)
 
         //Rotate the world to look in the right direction..
-        val fullRotation = glm.angleAxis(currView.degSpinRotation, 0f, 0f, 1f, quat[6]) times_ currView.orient
-        res times_ (fullRotation to mat4[1])
+        val fullRotation = glm.angleAxis(currView.degSpinRotation, 0f, 0f, 1f, quat[6])
+        fullRotation *= currView.orient
+        res *= (fullRotation to mat4[1])
 
         // Translate the world by the negation of the lookat point, placing the origin at the lookat point.
-        res.translate_(-currView.targetPos.x, -currView.targetPos.y, -currView.targetPos.z)
+        res.translateAssign(-currView.targetPos.x, -currView.targetPos.y, -currView.targetPos.z)
 
         return res
     }
@@ -560,7 +563,7 @@ constructor(
     val lastPos = Vec2i()
 }
 
-private val mat4 = Array(2, { Mat4() })
+private val mat4 = Array(4, { Mat4() })
 private val vec2i = Array(2, { Vec2i() })
 private val vec3 = Array(2, { Vec3() })
 private val quat = Array(13, { Quat() })

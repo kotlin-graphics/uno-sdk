@@ -23,21 +23,21 @@ class Test : StringSpec() {
 
         "test" {
 
-            val parthenonWidth = 14.0f
-            val parthenonLength = 20.0f
-            val parthenonColumnHeight = 5.0f
-            val parthenonBaseHeight = 1.0f
-            val parthenonTopHeight = 2.0f
+            val parthenonWidth = 14f
+            val parthenonLength = 20f
+            val parthenonColumnHeight = 5f
+            val parthenonBaseHeight = 1f
+            val parthenonTopHeight = 2f
 
             val stack = MatrixStack()
 
 
             val a = stack
-                    .translate(20.0f, 0.0f, -10.0f)
+                    .translate(20f, 0f, -10f)
                     .translate(
-                            0.0f,
-                            parthenonColumnHeight + parthenonBaseHeight + parthenonTopHeight / 2.0f,
-                            parthenonLength / 2.0f)
+                            0f,
+                            parthenonColumnHeight + parthenonBaseHeight + parthenonTopHeight / 2f,
+                            parthenonLength / 2f)
                     .rotateX(-135f)
                     .top()
 //                    .rotateY(45f)
@@ -45,12 +45,12 @@ class Test : StringSpec() {
             val top = stack.top()
 
             val b = Mat4()
-                    .translate_(20.0f, 0.0f, -10.0f)
-                    .translate_(
-                            0.0f,
-                            parthenonColumnHeight + parthenonBaseHeight + parthenonTopHeight / 2.0f,
-                            parthenonLength / 2.0f)
-                    .rotate(-135f.rad, 1f, 0f, 0f)
+                    .translateAssign(20f, 0f, -10f)
+                    .translateAssign(
+                            0f,
+                            parthenonColumnHeight + parthenonBaseHeight + parthenonTopHeight / 2f,
+                            parthenonLength / 2f)
+                    .rotate((-135f).rad, 1f, 0f, 0f)
 
 //            for(i in 0 until 16){
 //                println("a "+a[i])
@@ -104,15 +104,11 @@ class App : GLEventListener {
     }
 
     override fun reshape(drawable: GLAutoDrawable, x: Int, y: Int, width: Int, height: Int) {
-
         animator.remove(window)
         window.destroy()
     }
 
-    override fun display(drawable: GLAutoDrawable) {
-    }
+    override fun display(drawable: GLAutoDrawable) {}
 
-    override fun dispose(drawable: GLAutoDrawable) {
-        System.exit(0)
-    }
+    override fun dispose(drawable: GLAutoDrawable) = System.exit(0)
 }

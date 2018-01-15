@@ -78,7 +78,7 @@ class MatrixStack(
     fun rotate(axis: Vec3, angDegCCW: Float) = rotate(axis.x, axis.y, axis.z, angDegCCW)
 
     fun rotate(axisX: Float, axisY: Float, axisZ: Float, angDegCCW: Float): MatrixStack {
-        currMat.rotate_(angDegCCW.rad, axisX, axisY, axisZ)
+        currMat.rotateAssign(angDegCCW.rad, axisX, axisY, axisZ)
         return this
     }
 
@@ -108,7 +108,7 @@ class MatrixStack(
         theMat[0].z = axis.x * axis.z * invCos - axis.y * sin
         theMat[1].z = axis.y * axis.z * invCos + axis.x * sin
         theMat[2].z = axis.z * axis.z + (1 - axis.z * axis.z) * cos
-        currMat.times_(theMat)
+        currMat timesAssign theMat
 
         return this
     }
@@ -133,7 +133,7 @@ class MatrixStack(
 
     /** Applies a scale matrix, with the given values as the axis scales    */
     fun scale(scaleX: Float, scaleY: Float, scaleZ: Float): MatrixStack {
-        currMat.scale_(scaleX, scaleY, scaleZ)
+        currMat.scaleAssign(scaleX, scaleY, scaleZ)
         return this
     }
 
@@ -154,7 +154,7 @@ class MatrixStack(
 
     /** Applies a uniform scale matrix  */
     fun translate(x: Float, y: Float, z: Float): MatrixStack {
-        currMat.translate_(x, y, z)
+        currMat.translateAssign(x, y, z)
         return this
     }
 
@@ -194,7 +194,7 @@ class MatrixStack(
      * @param zFar The farthest camera-space distance from the camera that can be seen. The projection will be clipped
      * against this value. It must be larger than zNear.     */
     fun perspective(degFOV: Float, aspectRatio: Float, zNear: Float, zFar: Float): MatrixStack {
-        currMat.times_(glm.perspective(glm.radians(degFOV), aspectRatio, zNear, zFar))
+        currMat.timesAssign(glm.perspective(glm.radians(degFOV), aspectRatio, zNear, zFar))
         return this
     }
 
@@ -207,7 +207,7 @@ class MatrixStack(
      * @param zNear The front camera-space position in the Z axis that will be captured within the projection.
      * @param zFar The rear camera-space position in the Z axis that will be captured within the projection.     */
     @JvmOverloads fun orthographic(left: Float, right: Float, bottom: Float, top: Float, zNear: Float = -1f, zFar: Float = 1f): MatrixStack {
-        currMat.times_(glm.ortho(left, right, bottom, top, zNear, zFar))
+        currMat.timesAssign(glm.ortho(left, right, bottom, top, zNear, zFar))
         return this
     }
 
@@ -232,7 +232,7 @@ class MatrixStack(
 
 
     infix fun applyMatrix(theMatrix: Mat4): MatrixStack {
-        currMat.times_(theMatrix)
+        currMat.timesAssign(theMatrix)
         return this
     }
 
