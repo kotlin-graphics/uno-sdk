@@ -2,7 +2,6 @@ package uno.glfw
 
 import glm_.bool
 import glm_.f
-import glm_.i
 import glm_.vec2.Vec2d
 import glm_.vec2.Vec2i
 import glm_.vec4.Vec4i
@@ -24,13 +23,6 @@ class GlfwWindow(val handle: Long) {
     constructor(width: Int, height: Int, title: String) : this(glfwCreateWindow(width, height, title, 0L, 0L)) {
         this.title = title
     }
-
-    private val x = intBufferBig(1)
-    private val y = intBufferBig(1)
-    private val z = intBufferBig(1)
-    private val w = intBufferBig(1)
-    private val xD = doubleBufferBig(1)
-    private val yD = doubleBufferBig(1)
 
     init {
         if (handle == MemoryUtil.NULL) {
@@ -66,9 +58,8 @@ class GlfwWindow(val handle: Long) {
         }
         set(value) = glfwSetWindowSize(handle, value.x, value.y)
 
-    var aspect
-        get() = size.x / size.y.f
-        set(value) = glfwSetWindowAspectRatio(handle, (value * 1_000).i, 1_000)
+    val aspect get() = size.x / size.y.f
+//        set(value) = glfwSetWindowAspectRatio(handle, (value * 1_000).i, 1_000)
 
     var aspectRatio = Vec2i()
         get() = field.put(size.x, size.y)
@@ -122,7 +113,7 @@ class GlfwWindow(val handle: Long) {
 
     fun swapBuffers() = glfwSwapBuffers(handle)
 
-    fun setFramebufferSizeCallback(callbackFunc: (Vec2i) -> Unit) {
+    /*fun setFramebufferSizeCallback(callbackFunc: (Vec2i) -> Unit) {
         val callback = GLFWFramebufferSizeCallbackI { _, width, height -> callbackFunc(Vec2i(width, height)) }
         setFramebufferSizeCallback(callback)
     }
@@ -141,6 +132,13 @@ class GlfwWindow(val handle: Long) {
     fun setFramebufferSizeCallback(callback: GLFWFramebufferSizeCallbackI?) {
         glfwSetFramebufferSizeCallback(handle, callback)?.free()
     }
+    */
+
+    var framebufferSizeCallback: ((Vec2i) -> Unit)? = null
+        set(value) {
+            glfwSetFramebufferSizeCallback(handle, value?.let { GLFWFramebufferSizeCallbackI { _, width, height -> it(Vec2i(width, height)) } })?.free()
+            field = value
+        }
 
 
     var cursorPos = Vec2d()
@@ -151,7 +149,7 @@ class GlfwWindow(val handle: Long) {
         set(value) = glfwSetCursorPos(handle, value.x, value.y)
 
 
-    fun setCursorPosCallback(callbackFunc: (Vec2d) -> Unit) {
+    /*fun setCursorPosCallback(callbackFunc: (Vec2d) -> Unit) {
         val callback = GLFWCursorPosCallbackI { _, xPos, yPos -> callbackFunc(Vec2d(xPos, yPos)) }
         setCursorPosCallback(callback)
     }
@@ -169,10 +167,16 @@ class GlfwWindow(val handle: Long) {
 
     fun setCursorPosCallback(callback: GLFWCursorPosCallbackI?) {
         glfwSetCursorPosCallback(handle, callback)?.free()
-    }
+    }*/
+
+    var cursorPosCallback: ((Vec2d) -> Unit)? = null
+        set(value) {
+            glfwSetCursorPosCallback(handle, value?.let { GLFWCursorPosCallbackI { _, xPos, yPos -> it(Vec2d(xPos, yPos)) } })?.free()
+            field = value
+        }
 
 
-    fun setScrollCallback(callbackFunc: (Vec2d) -> Unit) {
+    /*fun setScrollCallback(callbackFunc: (Vec2d) -> Unit) {
         val callback = GLFWScrollCallbackI { _, xOffset, yOffset -> callbackFunc(Vec2d(xOffset, yOffset)) }
         setScrollCallback(callback)
     }
@@ -190,10 +194,16 @@ class GlfwWindow(val handle: Long) {
 
     fun setScrollCallback(callback: GLFWScrollCallbackI?) {
         glfwSetScrollCallback(handle, callback)?.free()
-    }
+    }*/
+
+    var scrollCallback: ((Vec2d) -> Unit)? = null
+        set(value) {
+            glfwSetScrollCallback(handle, value?.let { GLFWScrollCallbackI { _, xOffset, yOffset -> it(Vec2d(xOffset, yOffset)) } })?.free()
+            field = value
+        }
 
 
-    fun setMouseButtonCallback(callbackFunc: (Int, Int, Int) -> Unit) {
+    /*fun setMouseButtonCallback(callbackFunc: (Int, Int, Int) -> Unit) {
         val callback = GLFWMouseButtonCallbackI { _, button, action, mods -> callbackFunc(button, action, mods) }
         setMouseButtonCallback(callback)
     }
@@ -206,10 +216,16 @@ class GlfwWindow(val handle: Long) {
 
     fun setMouseButtonCallback(callback: GLFWMouseButtonCallbackI?) {
         glfwSetMouseButtonCallback(handle, callback)?.free()
-    }
+    }*/
+
+    var mouseButtonCallback: ((Int, Int, Int) -> Unit)? = null
+        set(value) {
+            glfwSetMouseButtonCallback(handle, value?.let { GLFWMouseButtonCallbackI { _, button, action, mods -> it(button, action, mods) } })?.free()
+            field = value
+        }
 
 
-    fun setKeyCallback(callbackFunc: (Int, Int, Int, Int) -> Unit) {
+    /*fun setKeyCallback(callbackFunc: (Int, Int, Int, Int) -> Unit) {
         val callback = GLFWKeyCallbackI { _, key, scancode, action, mods -> callbackFunc(key, scancode, action, mods) }
         setKeyCallback(callback)
     }
@@ -222,10 +238,16 @@ class GlfwWindow(val handle: Long) {
 
     fun setKeyCallback(callback: GLFWKeyCallbackI?) {
         glfwSetKeyCallback(handle, callback)?.free()
-    }
+    }*/
+
+    var keyCallback: ((Int, Int, Int, Int) -> Unit)? = null
+        set(value) {
+            glfwSetKeyCallback(handle, value?.let { GLFWKeyCallbackI { _, key, scancode, action, mods -> it(key, scancode, action, mods) } })?.free()
+            field = value
+        }
 
 
-    fun setCharCallback(callbackFunc: (Int) -> Unit) {
+    /*fun setCharCallback(callbackFunc: (Int) -> Unit) {
         val callback = GLFWCharCallbackI { _, codepoint -> callbackFunc(codepoint) }
         setCharCallback(callback)
     }
@@ -238,7 +260,13 @@ class GlfwWindow(val handle: Long) {
 
     fun setCharCallback(callback: GLFWCharCallbackI?) {
         glfwSetCharCallback(handle, callback)?.free()
-    }
+    }*/
+
+    var charCallback: ((Int) -> Unit)? = null
+        set(value) {
+            glfwSetCharCallback(handle, value?.let { GLFWCharCallbackI { _, codepoint -> it(codepoint) } })?.free()
+            field = value
+        }
 
 
     var cursor: Cursor
@@ -265,4 +293,11 @@ class GlfwWindow(val handle: Long) {
     inline fun loop(block: () -> Unit) {
         while (isOpen) block()
     }
+
+    private val x = intBufferBig(1)
+    private val y = intBufferBig(1)
+    private val z = intBufferBig(1)
+    private val w = intBufferBig(1)
+    private val xD = doubleBufferBig(1)
+    private val yD = doubleBufferBig(1)
 }
