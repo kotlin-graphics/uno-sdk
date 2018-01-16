@@ -12,9 +12,16 @@ import uno.buffer.destroyBuf
 import uno.buffer.doubleBufferBig
 import uno.buffer.intBufferBig
 
-/**
- * Created by GBarbieri on 24.04.2017.
- */
+        /**
+         * Created by GBarbieri on 24.04.2017.
+         */
+
+typealias framebufferSizeCallbackT = (Vec2i) -> Unit
+typealias cursorPosCallbackT = (Vec2d) -> Unit
+typealias scrollCallbackT = (Vec2d) -> Unit
+typealias mouseButtonCallbackT = (Int, Int, Int) -> Unit
+typealias keyCallbackT = (Int, Int, Int, Int) -> Unit
+typealias charCallbackT = (Int) -> Unit
 
 class GlfwWindow(val handle: Long) {
 
@@ -134,7 +141,7 @@ class GlfwWindow(val handle: Long) {
     }
     */
 
-    var framebufferSizeCallback: ((Vec2i) -> Unit)? = null
+    var framebufferSizeCallback: framebufferSizeCallbackT? = null
         set(value) {
             glfwSetFramebufferSizeCallback(handle, value?.let { GLFWFramebufferSizeCallbackI { _, width, height -> it(Vec2i(width, height)) } })?.free()
             field = value
@@ -169,7 +176,7 @@ class GlfwWindow(val handle: Long) {
         glfwSetCursorPosCallback(handle, callback)?.free()
     }*/
 
-    var cursorPosCallback: ((Vec2d) -> Unit)? = null
+    var cursorPosCallback: cursorPosCallbackT? = null
         set(value) {
             glfwSetCursorPosCallback(handle, value?.let { GLFWCursorPosCallbackI { _, xPos, yPos -> it(Vec2d(xPos, yPos)) } })?.free()
             field = value
@@ -196,7 +203,7 @@ class GlfwWindow(val handle: Long) {
         glfwSetScrollCallback(handle, callback)?.free()
     }*/
 
-    var scrollCallback: ((Vec2d) -> Unit)? = null
+    var scrollCallback: scrollCallbackT? = null
         set(value) {
             glfwSetScrollCallback(handle, value?.let { GLFWScrollCallbackI { _, xOffset, yOffset -> it(Vec2d(xOffset, yOffset)) } })?.free()
             field = value
@@ -218,7 +225,7 @@ class GlfwWindow(val handle: Long) {
         glfwSetMouseButtonCallback(handle, callback)?.free()
     }*/
 
-    var mouseButtonCallback: ((Int, Int, Int) -> Unit)? = null
+    var mouseButtonCallback: mouseButtonCallbackT? = null
         set(value) {
             glfwSetMouseButtonCallback(handle, value?.let { GLFWMouseButtonCallbackI { _, button, action, mods -> it(button, action, mods) } })?.free()
             field = value
@@ -240,7 +247,7 @@ class GlfwWindow(val handle: Long) {
         glfwSetKeyCallback(handle, callback)?.free()
     }*/
 
-    var keyCallback: ((Int, Int, Int, Int) -> Unit)? = null
+    var keyCallback: keyCallbackT? = null
         set(value) {
             glfwSetKeyCallback(handle, value?.let { GLFWKeyCallbackI { _, key, scancode, action, mods -> it(key, scancode, action, mods) } })?.free()
             field = value
@@ -262,7 +269,7 @@ class GlfwWindow(val handle: Long) {
         glfwSetCharCallback(handle, callback)?.free()
     }*/
 
-    var charCallback: ((Int) -> Unit)? = null
+    var charCallback: charCallbackT? = null
         set(value) {
             glfwSetCharCallback(handle, value?.let { GLFWCharCallbackI { _, codepoint -> it(codepoint) } })?.free()
             field = value
