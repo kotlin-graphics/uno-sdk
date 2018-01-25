@@ -25,6 +25,13 @@ typealias CharCallbackT = (Int) -> Unit
 
 class GlfwWindow(val handle: Long) {
 
+    private val x = intBufferBig(1)
+    private val y = intBufferBig(1)
+    private val z = intBufferBig(1)
+    private val w = intBufferBig(1)
+    private val xD = doubleBufferBig(1)
+    private val yD = doubleBufferBig(1)
+
     constructor(windowSize: Vec2i, title: String) : this(windowSize.x, windowSize.y, title)
     constructor(x: Int, title: String) : this(x, x, title)
     constructor(width: Int, height: Int, title: String) : this(glfwCreateWindow(width, height, title, 0L, 0L)) {
@@ -300,11 +307,4 @@ class GlfwWindow(val handle: Long) {
     inline fun loop(block: () -> Unit) {
         while (isOpen) block()
     }
-
-    private val x = intBufferBig(1)
-    private val y = intBufferBig(1)
-    private val z = intBufferBig(1)
-    private val w = intBufferBig(1)
-    private val xD = doubleBufferBig(1)
-    private val yD = doubleBufferBig(1)
 }
