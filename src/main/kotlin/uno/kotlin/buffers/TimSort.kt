@@ -789,7 +789,7 @@ object TimSort {
             else
                 newSize = Math.min(newSize, a.capacity ushr 1)
 
-            val newArray = MemoryUtil.memRealloc(a, newSize)
+            val newArray = MemoryUtil.memRealloc(a, newSize)!!
             tmp = newArray
             tmpLen = newSize
             tmpBase = 0

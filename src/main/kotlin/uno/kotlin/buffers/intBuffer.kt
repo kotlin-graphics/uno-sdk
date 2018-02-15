@@ -802,19 +802,19 @@ inline fun IntBuffer.copyOfRange(fromIndex: Int, toIndex: Int): IntBuffer {
 }
 
 operator fun IntBuffer.plus(element: Int): IntBuffer {
-    val dst = memRealloc(this, capacity + 1)
+    val dst = memRealloc(this, capacity + 1)!!
     dst[capacity] = element
     return dst
 }
 
 operator fun IntBuffer.plus(elements: Collection<Int>): IntBuffer {
-    val dst = memRealloc(this, capacity + elements.size)
+    val dst = memRealloc(this, capacity + elements.size)!!
     for (i in 0 until elements.size) dst[capacity + i] = elements.elementAt(i)
     return dst
 }
 
 operator fun IntBuffer.plus(elements: IntBuffer): IntBuffer {
-    val dst = memRealloc(this, capacity + elements.capacity)
+    val dst = memRealloc(this, capacity + elements.capacity)!!
     for (i in 0 until elements.size) dst[capacity + i] = elements.elementAt(i)
     return dst
 }
