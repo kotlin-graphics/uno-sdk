@@ -80,6 +80,30 @@ fun ByteBuffer.use(block: (ByteBuffer) -> Unit) {
     block(this)
     destroy()
 }
+fun ShortBuffer.use(block: (ShortBuffer) -> Unit) {
+    block(this)
+    destroy()
+}
+fun IntBuffer.use(block: (IntBuffer) -> Unit) {
+    block(this)
+    destroy()
+}
+fun LongBuffer.use(block: (LongBuffer) -> Unit) {
+    block(this)
+    destroy()
+}
+fun FloatBuffer.use(block: (FloatBuffer) -> Unit) {
+    block(this)
+    destroy()
+}
+fun DoubleBuffer.use(block: (DoubleBuffer) -> Unit) {
+    block(this)
+    destroy()
+}
+fun CharBuffer.use(block: (CharBuffer) -> Unit) {
+    block(this)
+    destroy()
+}
 
 @Suppress("UNCHECKED_CAST")
 fun withBuffer(list: List<*>, block: ByteBuffer.() -> Unit) {
