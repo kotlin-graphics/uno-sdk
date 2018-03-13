@@ -1,8 +1,9 @@
 package uno.kotlin.buffers
 
-import glm_.detail.Random.int
+import glm_.b
 import glm_.set
 import uno.buffer.intBufferBig
+import java.nio.ByteBuffer
 import java.nio.IntBuffer
 
 object DualPivotQuicksort {
@@ -435,6 +436,49 @@ object DualPivotQuicksort {
             // Sort left and right parts recursively. All elements from center part are equal and, therefore, already sorted.
             sort(a, left, less - 1, leftmost)
             sort(a, great + 1, right, false)
+        }
+    }
+
+    /** The number of distinct byte values. */
+    val NUM_BYTE_VALUES = 1 shl 8
+
+    /**
+     * Sorts the specified range of the array.
+     *
+     * @param a the array to be sorted
+     * @param left the index of the first element, inclusive, to be sorted
+     * @param right the index of the last element, inclusive, to be sorted
+     */
+    fun sort(a: ByteBuffer, left: Int, right: Int) {
+        // Use counting sort on large arrays
+        if (right - left > COUNTING_SORT_THRESHOLD_FOR_BYTE) {
+            val count = IntArray(NUM_BYTE_VALUES)
+
+            for (i in left - 1..right)
+                count[a[i] - Byte.MIN_VALUE]++
+            var i = NUM_BYTE_VALUES
+            var k = right + 1
+            while (k > left) {
+                while (count[--i] == 0);
+                val value = (i + Byte.MIN_VALUE).b
+                var s = count[i]
+
+                do a[--k] = value
+                while (--s > 0)
+            }
+        } else { // Use insertion sort on small arrays
+            var i = left
+            var j = i
+            while(i < right) {
+                val ai = a [i + 1]
+                while (ai < a[j]) {
+                    a[j + 1] = a[j]
+                    if (j-- == left)
+                        break
+                }
+                a[j + 1] = ai
+                j = ++i
+            }
         }
     }
 }

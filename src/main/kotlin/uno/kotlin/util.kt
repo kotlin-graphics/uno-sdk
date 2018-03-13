@@ -2,6 +2,7 @@ package uno.kotlin
 
 import java.awt.event.KeyEvent
 import java.io.File
+import java.lang.Appendable
 
 /**
  * Created by GBarbieri on 30.03.2017.
@@ -23,15 +24,34 @@ val String.stream get() = ClassLoader.getSystemResourceAsStream(this)!!
 
 val String.file get() = File(uri)
 
-val Char.isPrintable: Boolean get() = with(Character.UnicodeBlock.of(this)) {
-    (!Character.isISOControl(this@isPrintable)) &&
-            this@isPrintable != KeyEvent.CHAR_UNDEFINED &&
-            this != null &&
-            this != Character.UnicodeBlock.SPECIALS
-}
+val Char.isPrintable: Boolean
+    get() = with(Character.UnicodeBlock.of(this)) {
+        (!Character.isISOControl(this@isPrintable)) &&
+                this@isPrintable != KeyEvent.CHAR_UNDEFINED &&
+                this != null &&
+                this != Character.UnicodeBlock.SPECIALS
+    }
 
 fun Char.parseInt() = java.lang.Character.getNumericValue(this)
 
-fun main(args: Array<String>) {
-    println('2'.isPrintable)
+operator fun <K> HashSet<K>.plusAssign(element: K) {
+    add(element)
 }
+
+operator fun <K> HashSet<K>.minusAssign(element: K) {
+    remove(element)
+}
+
+infix operator fun Appendable.plusAssign(char: Char) {
+    append(char)
+}
+
+infix operator fun Appendable.plusAssign(charSequence: CharSequence) {
+    append(charSequence)
+}
+
+infix operator fun <T>StringBuilder.plusAssign(element: T) {
+    append(element)
+}
+
+fun <T>treeSetOf() = java.util.TreeSet<T>()
