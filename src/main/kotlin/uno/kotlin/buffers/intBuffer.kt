@@ -518,7 +518,6 @@ fun IntBuffer.sortWith(comparator: Comparator<Int>) {
 
 fun IntBuffer.binarySearch(element: Int, fromIndex: Int = 0, toIndex: Int = capacity) = _intArrays.binarySearch(this, fromIndex, toIndex, element)
 
-fun IntBuffer.fill(element: Int, fromIndex: Int = 0, toIndex: Int = capacity) = _intArrays.fill(this, fromIndex, toIndex, element)
 
 fun IntBuffer.sort(fromIndex: Int = 0, toIndex: Int = capacity) = _intArrays.sort(this, fromIndex, toIndex)
 

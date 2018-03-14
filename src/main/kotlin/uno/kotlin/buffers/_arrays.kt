@@ -4532,70 +4532,42 @@ fun CharBuffer.asList(): List<Char> {
 //inline fun CharBuffer.copyOfRange(fromIndex: Int, toIndex: Int): CharBuffer {
 //    return java.util.Arrays.copyOfRange(this, fromIndex, toIndex)
 //}
-//
-///**
-// * Fills original buffer with the provided value.
-// */
-//fun <T> Array<T>.fill(element: T, fromIndex: Int = 0, toIndex: Int = size): Unit {
-//    java.util.Arrays.fill(this, fromIndex, toIndex, element)
-//}
-//
-///**
-// * Fills original buffer with the provided value.
-// */
-//fun ByteBuffer.fill(element: Byte, fromIndex: Int = 0, toIndex: Int = size): Unit {
-//    java.util.Arrays.fill(this, fromIndex, toIndex, element)
-//}
-//
-///**
-// * Fills original buffer with the provided value.
-// */
-//fun ShortBuffer.fill(element: Short, fromIndex: Int = 0, toIndex: Int = size): Unit {
-//    java.util.Arrays.fill(this, fromIndex, toIndex, element)
-//}
-//
-///**
-// * Fills original buffer with the provided value.
-// */
-//fun IntBuffer.fill(element: Int, fromIndex: Int = 0, toIndex: Int = size): Unit {
-//    java.util.Arrays.fill(this, fromIndex, toIndex, element)
-//}
-//
-///**
-// * Fills original buffer with the provided value.
-// */
-//fun LongBuffer.fill(element: Long, fromIndex: Int = 0, toIndex: Int = size): Unit {
-//    java.util.Arrays.fill(this, fromIndex, toIndex, element)
-//}
-//
-///**
-// * Fills original buffer with the provided value.
-// */
-//fun FloatBuffer.fill(element: Float, fromIndex: Int = 0, toIndex: Int = size): Unit {
-//    java.util.Arrays.fill(this, fromIndex, toIndex, element)
-//}
-//
-///**
-// * Fills original buffer with the provided value.
-// */
-//fun DoubleBuffer.fill(element: Double, fromIndex: Int = 0, toIndex: Int = size): Unit {
-//    java.util.Arrays.fill(this, fromIndex, toIndex, element)
-//}
-//
-///**
-// * Fills original buffer with the provided value.
-// */
-//fun DELETE.fill(element: Boolean, fromIndex: Int = 0, toIndex: Int = size): Unit {
-//    java.util.Arrays.fill(this, fromIndex, toIndex, element)
-//}
-//
-///**
-// * Fills original buffer with the provided value.
-// */
-//fun CharBuffer.fill(element: Char, fromIndex: Int = 0, toIndex: Int = size): Unit {
-//    java.util.Arrays.fill(this, fromIndex, toIndex, element)
-//}
-//
+
+
+/** Fills original buffer with the provided value. */
+fun ByteBuffer.fill(element: Byte, fromIndex: Int = 0, toIndex: Int = capacity) {
+    for (i in fromIndex until toIndex) put(i, element)
+}
+
+/** Fills original buffer with the provided value. */
+fun ShortBuffer.fill(element: Short, fromIndex: Int = 0, toIndex: Int = capacity) {
+    for (i in fromIndex until toIndex) put(i, element)
+}
+
+/** Fills original buffer with the provided value. */
+fun IntBuffer.fill(element: Int, fromIndex: Int = 0, toIndex: Int = capacity) {
+    for (i in fromIndex until toIndex) put(i, element)
+}
+
+/** Fills original buffer with the provided value. */
+fun LongBuffer.fill(element: Long, fromIndex: Int = 0, toIndex: Int = capacity) {
+    for (i in fromIndex until toIndex) put(i, element)
+}
+
+/** Fills original buffer with the provided value. */
+fun FloatBuffer.fill(element: Float, fromIndex: Int = 0, toIndex: Int = capacity) {
+    for (i in fromIndex until toIndex) put(i, element)
+}
+
+/** Fills original buffer with the provided value. */
+fun DoubleBuffer.fill(element: Double, fromIndex: Int = 0, toIndex: Int = capacity) {
+    for (i in fromIndex until toIndex) put(i, element)
+}
+
+/** Fills original buffer with the provided value. */
+fun CharBuffer.fill(element: Char, fromIndex: Int = 0, toIndex: Int = capacity) {
+    for (i in fromIndex until toIndex) put(i, element)
+}
 
 
 /** Returns the range of valid indices for the buffer. */
@@ -10804,41 +10776,41 @@ fun DoubleBuffer.average(): Double {
 /** Returns the sum of all elements in the buffer. */
 fun ByteBuffer.sum(): Int {
     var sum = 0
-    for (element in this)  sum += element
+    for (element in this) sum += element
     return sum
 }
 
 /** Returns the sum of all elements in the buffer. */
 fun ShortBuffer.sum(): Int {
     var sum = 0
-    for (element in this)  sum += element
+    for (element in this) sum += element
     return sum
 }
 
 /** Returns the sum of all elements in the buffer. */
 fun IntBuffer.sum(): Int {
     var sum = 0
-    for (element in this)  sum += element
+    for (element in this) sum += element
     return sum
 }
 
 /** Returns the sum of all elements in the buffer. */
 fun LongBuffer.sum(): Long {
     var sum = 0L
-    for (element in this)  sum += element
+    for (element in this) sum += element
     return sum
 }
 
 /** Returns the sum of all elements in the buffer. */
 fun FloatBuffer.sum(): Float {
     var sum = 0f
-    for (element in this)  sum += element
+    for (element in this) sum += element
     return sum
 }
 
 /** Returns the sum of all elements in the buffer. */
 fun DoubleBuffer.sum(): Double {
     var sum = 0.0
-    for (element in this)  sum += element
+    for (element in this) sum += element
     return sum
 }
