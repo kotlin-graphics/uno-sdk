@@ -10,7 +10,6 @@ import glm_.func.rad
 import glm_.mat4x4.Mat4
 import io.kotlintest.specs.StringSpec
 import uno.glm.MatrixStack
-import uno.glsl.Program
 
 /**
  * Created by GBarbieri on 02.02.2017.
@@ -92,8 +91,8 @@ class App : GLEventListener {
 //
 //            program.link(gl, System.err)
 
-            val a = Program(gl, this::class.java, "main", "shader.vert", "shader.frag", "matrix", "myTexture")
-            val b = Program(gl, this::class.java, "main/shader.vert", "main/shader.frag", "matrix", "myTexture")
+//            val a = Program(gl, this::class.java, "main", "shader.vert", "shader.frag", "matrix", "myTexture")
+//            val b = Program(gl, this::class.java, "main/shader.vert", "main/shader.frag", "matrix", "myTexture")
 
             println("ok")
 
