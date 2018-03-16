@@ -5,6 +5,7 @@ import glm_.size
 import org.lwjgl.system.MemoryUtil
 import java.nio.*
 
+// TODO -> _buffers
 fun FloatArray.toFloatBuffer(): FloatBuffer {
     val res = MemoryUtil.memAllocFloat(size)
     for (i in 0 until size) res.put(i, this[i])
@@ -70,19 +71,3 @@ fun LongArray.toBuffer(): ByteBuffer {
     for (i in 0 until size) res.putLong(i * Long.BYTES, this[i])
     return res
 }
-
-
-fun ByteBuffer.isEmpty() = size == 0
-fun ByteBuffer.isNotEmpty() = size > 0
-fun ShortBuffer.isEmpty() = size == 0
-fun ShortBuffer.isNotEmpty() = size > 0
-fun IntBuffer.isEmpty() = size == 0
-fun IntBuffer.isNotEmpty() = size > 0
-fun LongBuffer.isEmpty() = size == 0
-fun LongBuffer.isNotEmpty() = size > 0
-fun FloatBuffer.isEmpty() = size == 0
-fun FloatBuffer.isNotEmpty() = size > 0
-fun DoubleBuffer.isEmpty() = size == 0
-fun DoubleBuffer.isNotEmpty() = size > 0
-fun CharBuffer.isEmpty() = size == 0
-fun CharBuffer.isNotEmpty() = size > 0
