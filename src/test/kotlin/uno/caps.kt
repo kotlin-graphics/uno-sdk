@@ -12,21 +12,21 @@ class caps : StringSpec() {
 
         "caps" {
 
-            with(glfw) {
-                init()
-                windowHint {
-                    context.version = "3.3"
-                    profile = "core"
-                }
-            }
-
-            GlfwWindow(640, "title").apply { makeContextCurrent() }
-
-            GL.createCapabilities()
-
-            val caps = Caps(Caps.Profile.CORE)
-
-            println()
+//            with(glfw) {
+//                init()
+//                windowHint {
+//                    context.version = "3.3"
+//                    profile = "core"
+//                }
+//            }
+//
+//            GlfwWindow(640, "title").apply { makeContextCurrent() }
+//
+//            GL.createCapabilities()
+//
+//            val caps = Caps(Caps.Profile.CORE)
+//
+//            println()
         }
     }
 }
