@@ -13,7 +13,6 @@ import java.nio.*
  */
 
 fun floatBufferBig(capacity: Int): FloatBuffer = MemoryUtil.memAllocFloat(capacity)
-
 fun doubleBufferBig(capacity: Int): DoubleBuffer = MemoryUtil.memAllocDouble(capacity)
 
 fun bufferBig(capacity: Int): ByteBuffer = MemoryUtil.memAlloc(capacity)

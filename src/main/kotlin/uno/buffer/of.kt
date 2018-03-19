@@ -1,6 +1,8 @@
 package uno.buffer
 
 import glm_.BYTES
+import glm_.i
+import glm_.set
 import glm_.vec2.Vec2
 import glm_.vec3.Vec3
 import glm_.vec4.Vec4
@@ -191,4 +193,11 @@ fun floatBufferOf(vertices: Collection<*>): FloatBuffer {
         else -> throw Error()
     }
     return res
+}
+
+fun bufferOf(charSequence: CharSequence): ByteBuffer {
+    val buffer = bufferBig(charSequence.length)
+    for(i in charSequence.indices)
+        buffer[i] = charSequence[i].i
+    return buffer
 }
