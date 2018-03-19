@@ -76,34 +76,13 @@ fun destroyBuf(vararg buffers: Buffer) {
         MemoryUtil.memFree(buffers[i])
 }
 
-fun ByteBuffer.use(block: (ByteBuffer) -> Unit) {
-    block(this)
-    destroy()
-}
-fun ShortBuffer.use(block: (ShortBuffer) -> Unit) {
-    block(this)
-    destroy()
-}
-fun IntBuffer.use(block: (IntBuffer) -> Unit) {
-    block(this)
-    destroy()
-}
-fun LongBuffer.use(block: (LongBuffer) -> Unit) {
-    block(this)
-    destroy()
-}
-fun FloatBuffer.use(block: (FloatBuffer) -> Unit) {
-    block(this)
-    destroy()
-}
-fun DoubleBuffer.use(block: (DoubleBuffer) -> Unit) {
-    block(this)
-    destroy()
-}
-fun CharBuffer.use(block: (CharBuffer) -> Unit) {
-    block(this)
-    destroy()
-}
+fun <R> ByteBuffer.use(block: (ByteBuffer) -> R) = block(this).also { destroy() }
+fun <R> ShortBuffer.use(block: (ShortBuffer) -> R) = block(this).also { destroy() }
+fun <R> IntBuffer.use(block: (IntBuffer) -> R) = block(this).also { destroy() }
+fun <R> LongBuffer.use(block: (LongBuffer) -> R) = block(this).also { destroy() }
+fun <R> FloatBuffer.use(block: (FloatBuffer) -> R) = block(this).also { destroy() }
+fun <R> DoubleBuffer.use(block: (DoubleBuffer) -> R) = block(this).also { destroy() }
+fun <R> CharBuffer.use(block: (CharBuffer) -> R) = block(this).also { destroy() }
 
 @Suppress("UNCHECKED_CAST")
 fun withBuffer(list: List<*>, block: ByteBuffer.() -> Unit) {

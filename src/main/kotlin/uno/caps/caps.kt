@@ -82,11 +82,11 @@ fun main(args: Array<String>) {
                 val s = context.version
                 var major = s[0].parseInt()
                 var minor = s[2].parseInt()
-                var version = major * 10 + minor
-                version--
-//                println("new version $version")
-                major = version / 10
-                minor = version % 10
+                var v = major * 10 + minor
+                v--
+//                println("new v $v")
+                major = v / 10
+                minor = v % 10
                 context.version = "$major.$minor"
             }
         }
