@@ -24,6 +24,8 @@ fun longBufferBig(capacity: Int): LongBuffer = MemoryUtil.memAllocLong(capacity)
 fun charBufferBig(capacity: Int): CharBuffer = TODO()
 
 fun pointerBufferBig(capacity: Int): PointerBuffer = MemoryUtil.memAllocPointer(capacity)
+fun pointerBufferBig(capacity: IntBuffer): PointerBuffer = MemoryUtil.memAllocPointer(capacity[0])
+fun pointerBufferBig(capacity: IntArray): PointerBuffer = MemoryUtil.memAllocPointer(capacity[0])
 
 /** for opengl  */
 inline fun <reified T : Enum<T>> intBufferBig() = intBufferBig(enumValues<T>().size)
