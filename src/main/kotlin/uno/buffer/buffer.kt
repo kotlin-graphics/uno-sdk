@@ -3,6 +3,7 @@ package uno.buffer
 
 import glm_.BYTES
 import glm_.set
+import org.lwjgl.PointerBuffer
 import org.lwjgl.system.MemoryUtil
 import uno.kotlin.Quadruple
 import uno.kotlin.Quintuple
@@ -19,6 +20,10 @@ fun bufferBig(capacity: Int): ByteBuffer = MemoryUtil.memAlloc(capacity)
 fun shortBufferBig(capacity: Int): ShortBuffer = MemoryUtil.memAllocShort(capacity)
 fun intBufferBig(capacity: Int): IntBuffer = MemoryUtil.memAllocInt(capacity)
 fun longBufferBig(capacity: Int): LongBuffer = MemoryUtil.memAllocLong(capacity)
+
+fun charBufferBig(capacity: Int): CharBuffer = TODO()
+
+fun pointerBufferBig(capacity: Int): PointerBuffer = MemoryUtil.memAllocPointer(capacity)
 
 /** for opengl  */
 inline fun <reified T : Enum<T>> intBufferBig() = intBufferBig(enumValues<T>().size)
@@ -69,6 +74,7 @@ fun LongBuffer.destroy() = MemoryUtil.memFree(this)
 fun FloatBuffer.destroy() = MemoryUtil.memFree(this)
 fun DoubleBuffer.destroy() = MemoryUtil.memFree(this)
 fun CharBuffer.destroy() = MemoryUtil.memFree(this)
+fun PointerBuffer.destroy() = MemoryUtil.memFree(this)
 
 fun destroyBuf(vararg buffers: Buffer) {
     for (i in 0 until buffers.size)
@@ -82,6 +88,7 @@ fun <R> LongBuffer.use(block: (LongBuffer) -> R) = block(this).also { destroy() 
 fun <R> FloatBuffer.use(block: (FloatBuffer) -> R) = block(this).also { destroy() }
 fun <R> DoubleBuffer.use(block: (DoubleBuffer) -> R) = block(this).also { destroy() }
 fun <R> CharBuffer.use(block: (CharBuffer) -> R) = block(this).also { destroy() }
+fun <R> PointerBuffer.use(block: (PointerBuffer) -> R) = block(this).also { destroy() }
 
 @Suppress("UNCHECKED_CAST")
 fun withBuffer(list: List<*>, block: ByteBuffer.() -> Unit) {
