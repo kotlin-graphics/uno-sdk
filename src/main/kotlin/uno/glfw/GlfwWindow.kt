@@ -61,14 +61,14 @@ class GlfwWindow(val handle: Long) {
     var pos = Vec2i()
         get() {
             glfwGetWindowPos(handle, x, y)
-            return field.put(x[0], y[0])
+            return field(x[0], y[0])
         }
         set(value) = glfwSetWindowPos(handle, value.x, value.y)
 
     var size = Vec2i()
         get() {
             glfwGetWindowSize(handle, x, y)
-            return field.put(x[0], y[0])
+            return field(x[0], y[0])
         }
         set(value) = glfwSetWindowSize(handle, value.x, value.y)
 
@@ -76,19 +76,19 @@ class GlfwWindow(val handle: Long) {
 //        set(value) = glfwSetWindowAspectRatio(handle, (value * 1_000).i, 1_000)
 
     var aspectRatio = Vec2i()
-        get() = field.put(size.x, size.y)
+        get() = field(size.x, size.y)
         set(value) = glfwSetWindowAspectRatio(handle, value.x, value.y)
 
     val framebufferSize = Vec2i()
         get() {
             glfwGetFramebufferSize(handle, x, y)
-            return field.put(x[0], y[0])
+            return field(x[0], y[0])
         }
 
     val frameSize = Vec4i()
         get() {
             glfwGetWindowFrameSize(handle, x, y, z, w)
-            return field.put(x[0], y[0], z[0], w[0])
+            return field(x[0], y[0], z[0], w[0])
         }
 
     fun iconify() = glfwIconifyWindow(handle)
@@ -158,7 +158,7 @@ class GlfwWindow(val handle: Long) {
     var cursorPos = Vec2d()
         get() {
             glfwGetCursorPos(handle, xD, yD)
-            return field.put(xD[0], yD[0])
+            return field(xD[0], yD[0])
         }
         set(value) = glfwSetCursorPos(handle, value.x, value.y)
 

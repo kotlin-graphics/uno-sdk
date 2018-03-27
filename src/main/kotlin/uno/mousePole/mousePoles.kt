@@ -176,7 +176,7 @@ constructor(
 
         if (isDragging) {
 
-            val position = vec2i[0].put(event.x, event.y)
+            val position = vec2i[0](event.x, event.y)
             val diff = position.minus(prevMousePos, vec2i[1])
 
             when (rotateMode) {
