@@ -72,7 +72,7 @@ class GlfwWindow(val handle: Long) {
         }
         set(value) = glfwSetWindowSize(handle, value.x, value.y)
 
-    val aspect get() = size.x / size.y.f
+    val aspect get() = size.aspect
 //        set(value) = glfwSetWindowAspectRatio(handle, (value * 1_000).i, 1_000)
 
     var aspectRatio = Vec2i()
