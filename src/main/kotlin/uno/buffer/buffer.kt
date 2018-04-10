@@ -13,19 +13,19 @@ import java.nio.*
  * Created by elect on 05/03/17.
  */
 
-fun floatBufferBig(capacity: Int): FloatBuffer = MemoryUtil.memAllocFloat(capacity)
-fun doubleBufferBig(capacity: Int): DoubleBuffer = MemoryUtil.memAllocDouble(capacity)
+fun floatBufferBig(capacity: Int): FloatBuffer = MemoryUtil.memCallocFloat(capacity)
+fun doubleBufferBig(capacity: Int): DoubleBuffer = MemoryUtil.memCallocDouble(capacity)
 
-fun bufferBig(capacity: Int): ByteBuffer = MemoryUtil.memAlloc(capacity)
-fun shortBufferBig(capacity: Int): ShortBuffer = MemoryUtil.memAllocShort(capacity)
-fun intBufferBig(capacity: Int): IntBuffer = MemoryUtil.memAllocInt(capacity)
-fun longBufferBig(capacity: Int): LongBuffer = MemoryUtil.memAllocLong(capacity)
+fun bufferBig(capacity: Int): ByteBuffer = MemoryUtil.memCalloc(capacity)
+fun shortBufferBig(capacity: Int): ShortBuffer = MemoryUtil.memCallocShort(capacity)
+fun intBufferBig(capacity: Int): IntBuffer = MemoryUtil.memCallocInt(capacity)
+fun longBufferBig(capacity: Int): LongBuffer = MemoryUtil.memCallocLong(capacity)
 
 fun charBufferBig(capacity: Int): CharBuffer = TODO()
 
-fun pointerBufferBig(capacity: Int): PointerBuffer = MemoryUtil.memAllocPointer(capacity)
-fun pointerBufferBig(capacity: IntBuffer): PointerBuffer = MemoryUtil.memAllocPointer(capacity[0])
-fun pointerBufferBig(capacity: IntArray): PointerBuffer = MemoryUtil.memAllocPointer(capacity[0])
+fun pointerBufferBig(capacity: Int): PointerBuffer = MemoryUtil.memCallocPointer(capacity)
+fun pointerBufferBig(capacity: IntBuffer): PointerBuffer = MemoryUtil.memCallocPointer(capacity[0])
+fun pointerBufferBig(capacity: IntArray): PointerBuffer = MemoryUtil.memCallocPointer(capacity[0])
 
 /** for opengl  */
 inline fun <reified T : Enum<T>> intBufferBig() = intBufferBig(enumValues<T>().size)
