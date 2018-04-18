@@ -4637,25 +4637,25 @@ inline fun CharBuffer.isNotEmpty() = !isEmpty()
 
 
 /** Returns the last valid index for the buffer. */
-val ByteBuffer.lastIndex get() = size - 1
+val ByteBuffer.lastIndex get() = capacity - 1
 
 /** Returns the last valid index for the buffer. */
-val ShortBuffer.lastIndex get() = size - 1
+val ShortBuffer.lastIndex get() = capacity - 1
 
 /** Returns the last valid index for the buffer. */
-val IntBuffer.lastIndex get() = size - 1
+val IntBuffer.lastIndex get() = capacity - 1
 
 /** Returns the last valid index for the buffer. */
-val LongBuffer.lastIndex get() = size - 1
+val LongBuffer.lastIndex get() = capacity - 1
 
 /** Returns the last valid index for the buffer. */
-val FloatBuffer.lastIndex get() = size - 1
+val FloatBuffer.lastIndex get() = capacity - 1
 
 /** Returns the last valid index for the buffer. */
-val DoubleBuffer.lastIndex get() = size - 1
+val DoubleBuffer.lastIndex get() = capacity - 1
 
 /** Returns the last valid index for the buffer. */
-val CharBuffer.lastIndex get() = size - 1
+val CharBuffer.lastIndex get() = capacity - 1
 
 
 /** Returns a buffer containing all elements of the original buffer and then the given [element]. */
