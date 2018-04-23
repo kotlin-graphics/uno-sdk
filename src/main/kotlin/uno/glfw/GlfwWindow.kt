@@ -11,6 +11,7 @@ import uno.buffer.destroyBuf
 import uno.buffer.doubleBufferBig
 import uno.buffer.intBufferBig
 import java.nio.ByteBuffer
+import java.nio.FloatBuffer
 
 /**
  * Created by GBarbieri on 24.04.2017.
@@ -310,4 +311,5 @@ class GlfwWindow(val handle: Long) {
     }
 
     fun getJoystickButtons(joystickId: Int): ByteBuffer? = glfwGetJoystickButtons(joystickId)
+    fun getJoystickAxes(joystickId: Int): FloatBuffer? = glfwGetJoystickAxes(joystickId)
 }
