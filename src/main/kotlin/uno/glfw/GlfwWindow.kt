@@ -1,7 +1,6 @@
 package uno.glfw
 
 import glm_.bool
-import glm_.f
 import glm_.vec2.Vec2d
 import glm_.vec2.Vec2i
 import glm_.vec4.Vec4i
@@ -11,12 +10,14 @@ import org.lwjgl.system.MemoryUtil
 import uno.buffer.destroyBuf
 import uno.buffer.doubleBufferBig
 import uno.buffer.intBufferBig
+import java.nio.ByteBuffer
 
-        /**
-         * Created by GBarbieri on 24.04.2017.
-         */
+/**
+ * Created by GBarbieri on 24.04.2017.
+ */
 
 typealias FramebufferSizeCallbackT = (Vec2i) -> Unit
+
 typealias CursorPosCallbackT = (Vec2d) -> Unit
 typealias ScrollCallbackT = (Vec2d) -> Unit
 typealias MouseButtonCallbackT = (Int, Int, Int) -> Unit
@@ -307,4 +308,6 @@ class GlfwWindow(val handle: Long) {
     inline fun loop(block: () -> Unit) {
         while (isOpen) block()
     }
+
+    fun getJoystickButtons(joystickId: Int): ByteBuffer? = glfwGetJoystickButtons(joystickId)
 }
