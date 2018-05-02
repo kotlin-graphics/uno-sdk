@@ -35,7 +35,7 @@ dependencies {
 
     testCompile 'io.kotlintest:kotlintest:2.0.7'
 
-    compile 'com.github.kotlin-graphics:gln:401a690455ba514658aa62e30ab117625af473ee'
+    compile 'com.github.kotlin-graphics:gln:9e7578300874893436d0aabad5ffed9399fc44b4'
 
     testCompile 'io.kotlintest:kotlintest-runner-junit5:3.0.6'
 
