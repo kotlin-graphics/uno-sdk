@@ -12,7 +12,7 @@ group = 'com.github.kotlin-graphics'
 
 buildscript {
 
-    ext.kotlinVersion = '1.2.40'
+    ext.kotlinVersion = '1.2.41'
 
     repositories {
         mavenCentral()
@@ -35,9 +35,9 @@ dependencies {
 
     testCompile 'io.kotlintest:kotlintest:2.0.7'
 
-    compile 'com.github.kotlin-graphics:gln:b45da5f3bed9b2aaa4e8a1216a6752b8ceb1e4b3'
+    compile 'com.github.kotlin-graphics:gln:401a690455ba514658aa62e30ab117625af473ee'
 
-    testCompile 'io.kotlintest:kotlintest-runner-junit5:3.0.4'
+    testCompile 'io.kotlintest:kotlintest-runner-junit5:3.0.6'
 
     compile "org.jetbrains.kotlin:kotlin-reflect:$kotlinVersion"
 
