@@ -201,7 +201,7 @@ fun floatBufferOf(vertices: Collection<*>): FloatBuffer {
         is Float -> {
             res = floatBufferBig(vertices.size)
             for (i in 0 until vertices.size)
-                res.put(i * Float.BYTES, (vertices.elementAt(i) as Float))
+                res.put(i, (vertices.elementAt(i) as Float))
         }
         is Vec2 -> {
             res = floatBufferBig(Vec2.length * vertices.size)
@@ -229,7 +229,7 @@ fun intBufferOf(vertices: Collection<*>): IntBuffer {
         is Int -> {
             res = intBufferBig(vertices.size)
             for (i in 0 until vertices.size)
-                res.put(i * Int.BYTES, (vertices.elementAt(i) as Int))
+                res.put(i, (vertices.elementAt(i) as Int))
         }
         is Vec2i -> {
             res = intBufferBig(Vec2i.length * vertices.size)
