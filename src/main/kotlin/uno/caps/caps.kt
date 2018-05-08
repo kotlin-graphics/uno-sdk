@@ -1,6 +1,7 @@
 package uno.caps
 
-import com.jogamp.opengl.GLES1.GL_ETC1_RGB8_OES
+import glm_.buffer.cap
+import glm_.buffer.intBufferBig
 import glm_.vec2.Vec2
 import gln.checkError
 import gln.glGetVec2
@@ -29,8 +30,7 @@ import org.lwjgl.opengl.GL45.GL_MAX_CULL_DISTANCES
 import org.lwjgl.opengl.KHRTextureCompressionASTCLDR.*
 import org.lwjgl.opengl.NVDeepTexture3D.GL_MAX_DEEP_3D_TEXTURE_DEPTH_NV
 import org.lwjgl.opengl.NVDeepTexture3D.GL_MAX_DEEP_3D_TEXTURE_WIDTH_HEIGHT_NV
-import uno.buffer.destroy
-import uno.buffer.intBufferBig
+import uno.buffer.use
 import uno.gl.*
 import uno.glfw.GlfwWindow
 import uno.glfw.glfw
@@ -50,7 +50,7 @@ fun main(args: Array<String>) {
     val debug = false
     val defaultVersion = "4.6"
     val defaultPath = Paths.get("").toAbsolutePath().normalize().toString()
-    val defaultFilename =  "report.txt"
+    val defaultFilename = "report.txt"
 
     val version: String
     val path: String
@@ -1207,11 +1207,10 @@ class Caps(profile: Profile) {
     inner class Formats {
 
         private val compressed by lazy {
-            val buffer = intBufferBig(limits.NUM_COMPRESSED_TEXTURE_FORMATS)
-            glGetIntegerv(GL_COMPRESSED_TEXTURE_FORMATS, buffer)
-            val formats = (0 until buffer.capacity()).map { buffer[it] }
-            buffer.destroy()
-            formats
+            intBufferBig(limits.NUM_COMPRESSED_TEXTURE_FORMATS).use { buffer ->
+                glGetIntegerv(GL_COMPRESSED_TEXTURE_FORMATS, buffer)
+                (0 until buffer.cap).map { buffer[it] }
+            }
         }
 
         @JvmField

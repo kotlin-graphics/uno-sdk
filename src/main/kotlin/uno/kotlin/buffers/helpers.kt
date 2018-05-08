@@ -1,7 +1,5 @@
 package uno.kotlin.buffers
 
-import glm_.set
-import uno.buffer.shortBufferBig
 import java.nio.*
 
 operator fun ByteBuffer.iterator() = ByteBufferIterator(this)

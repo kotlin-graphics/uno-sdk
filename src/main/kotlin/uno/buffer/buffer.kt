@@ -2,7 +2,7 @@ package uno.buffer
 
 
 import glm_.BYTES
-import glm_.set
+import glm_.buffer.*
 import org.lwjgl.PointerBuffer
 import org.lwjgl.system.MemoryUtil
 import uno.kotlin.Quadruple
@@ -13,15 +13,6 @@ import java.nio.*
  * Created by elect on 05/03/17.
  */
 
-fun floatBufferBig(capacity: Int): FloatBuffer = MemoryUtil.memCallocFloat(capacity)
-fun doubleBufferBig(capacity: Int): DoubleBuffer = MemoryUtil.memCallocDouble(capacity)
-
-fun bufferBig(capacity: Int): ByteBuffer = MemoryUtil.memCalloc(capacity)
-fun shortBufferBig(capacity: Int): ShortBuffer = MemoryUtil.memCallocShort(capacity)
-fun intBufferBig(capacity: Int): IntBuffer = MemoryUtil.memCallocInt(capacity)
-fun longBufferBig(capacity: Int): LongBuffer = MemoryUtil.memCallocLong(capacity)
-
-fun charBufferBig(capacity: Int): CharBuffer = TODO()
 
 fun pointerBufferBig(capacity: Int): PointerBuffer = MemoryUtil.memCallocPointer(capacity)
 fun pointerBufferBig(capacity: IntBuffer): PointerBuffer = MemoryUtil.memCallocPointer(capacity[0])
@@ -68,60 +59,51 @@ fun doubleBuffersBig(sizeA: Int, sizeB: Int, sizeC: Int) = Triple(doubleBufferBi
 fun doubleBuffersBig(sizeA: Int, sizeB: Int, sizeC: Int, sizeD: Int) = Quadruple(doubleBufferBig(sizeA), doubleBufferBig(sizeB), doubleBufferBig(sizeC), doubleBufferBig(sizeD))
 fun doubleBuffersBig(sizeA: Int, sizeB: Int, sizeC: Int, sizeD: Int, sizeE: Int) = Quintuple(doubleBufferBig(sizeA), doubleBufferBig(sizeB), doubleBufferBig(sizeC), doubleBufferBig(sizeD), doubleBufferBig(sizeE))
 
-
-fun ByteBuffer.destroy() = MemoryUtil.memFree(this) // TODO rename?
-fun ShortBuffer.destroy() = MemoryUtil.memFree(this)
-fun IntBuffer.destroy() = MemoryUtil.memFree(this)
-fun LongBuffer.destroy() = MemoryUtil.memFree(this)
-fun FloatBuffer.destroy() = MemoryUtil.memFree(this)
-fun DoubleBuffer.destroy() = MemoryUtil.memFree(this)
-fun CharBuffer.destroy() = MemoryUtil.memFree(this)
-fun PointerBuffer.destroy() = MemoryUtil.memFree(this)
-
-fun destroyBuf(vararg buffers: Buffer) {
+fun free(vararg buffers: Buffer) {
     for (i in 0 until buffers.size)
         MemoryUtil.memFree(buffers[i])
 }
 
-fun <R> ByteBuffer.use(block: (ByteBuffer) -> R) = block(this).also { destroy() }
-fun <R> ShortBuffer.use(block: (ShortBuffer) -> R) = block(this).also { destroy() }
-fun <R> IntBuffer.use(block: (IntBuffer) -> R) = block(this).also { destroy() }
-fun <R> LongBuffer.use(block: (LongBuffer) -> R) = block(this).also { destroy() }
-fun <R> FloatBuffer.use(block: (FloatBuffer) -> R) = block(this).also { destroy() }
-fun <R> DoubleBuffer.use(block: (DoubleBuffer) -> R) = block(this).also { destroy() }
-fun <R> CharBuffer.use(block: (CharBuffer) -> R) = block(this).also { destroy() }
-fun <R> PointerBuffer.use(block: (PointerBuffer) -> R) = block(this).also { destroy() }
-
-@Suppress("UNCHECKED_CAST")
-fun withBuffer(list: List<*>, block: ByteBuffer.() -> Unit) {
-    when (list.elementAt(0)) {
-        is Byte -> bufferBig(list.size).apply {
-            val l = list as List<Byte>
-            for (i in l.indices) set(i, l[i])
-        }
-        is Short -> bufferBig(list.size * Short.BYTES).apply {
-            val l = list as List<Short>
-            for (i in l.indices) putShort(i * Short.BYTES, l[i])
-        }
-        is Int -> bufferBig(list.size * Int.BYTES).apply {
-            val l = list as List<Int>
-            for (i in l.indices) putInt(i * Int.BYTES, l[i])
-        }
-        is Long -> bufferBig(list.size * Long.BYTES).apply {
-            val l = list as List<Long>
-            for (i in l.indices) putLong(i * Long.BYTES, l[i])
-        }
-        is Float -> bufferBig(list.size * Float.BYTES).apply {
-            val l = list as List<Float>
-            for (i in l.indices) putFloat(i * Float.BYTES, l[i])
-        }
-        is Double -> bufferBig(list.size * Double.BYTES).apply {
-            val l = list as List<Double>
-            for (i in l.indices) putDouble(i * Double.BYTES, l[i])
-        }
-        else -> throw Error("unsupported type")
-    }.run {
-        block()
-        destroy()
-    }
-}
+fun <R> ByteBuffer.use(block: (ByteBuffer) -> R) = block(this).also { free() }
+fun <R> ShortBuffer.use(block: (ShortBuffer) -> R) = block(this).also { free() }
+fun <R> IntBuffer.use(block: (IntBuffer) -> R) = block(this).also { free() }
+fun <R> LongBuffer.use(block: (LongBuffer) -> R) = block(this).also { free() }
+fun <R> FloatBuffer.use(block: (FloatBuffer) -> R) = block(this).also { free() }
+fun <R> DoubleBuffer.use(block: (DoubleBuffer) -> R) = block(this).also { free() }
+fun <R> CharBuffer.use(block: (CharBuffer) -> R) = block(this).also { free() }
+fun <R> PointerBuffer.use(block: (PointerBuffer) -> R) = block(this).also { free() }
+//
+//@Suppress("UNCHECKED_CAST")
+//fun withBuffer(list: List<*>, block: ByteBuffer.() -> Unit) {
+//    when (list.elementAt(0)) {
+//        is Byte -> bufferBig(list.size).apply {
+//            val l = list as List<Byte>
+//            for (i in l.indices)
+//                put(i, l[i])
+//        }
+//        is Short -> bufferBig(list.size * Short.BYTES).apply {
+//            val l = list as List<Short>
+//            for (i in l.indices) putShort(i * Short.BYTES, l[i])
+//        }
+//        is Int -> bufferBig(list.size * Int.BYTES).apply {
+//            val l = list as List<Int>
+//            for (i in l.indices) putInt(i * Int.BYTES, l[i])
+//        }
+//        is Long -> bufferBig(list.size * Long.BYTES).apply {
+//            val l = list as List<Long>
+//            for (i in l.indices) putLong(i * Long.BYTES, l[i])
+//        }
+//        is Float -> bufferBig(list.size * Float.BYTES).apply {
+//            val l = list as List<Float>
+//            for (i in l.indices) putFloat(i * Float.BYTES, l[i])
+//        }
+//        is Double -> bufferBig(list.size * Double.BYTES).apply {
+//            val l = list as List<Double>
+//            for (i in l.indices) putDouble(i * Double.BYTES, l[i])
+//        }
+//        else -> throw Error("unsupported type")
+//    }.run {
+//        block()
+//        free()
+//    }
+//}

@@ -5,7 +5,7 @@ import glm_.size
 import org.lwjgl.system.MemoryUtil
 import java.nio.*
 
-// TODO -> _buffers
+
 fun FloatArray.toFloatBuffer(): FloatBuffer {
     val res = MemoryUtil.memAllocFloat(size)
     for (i in 0 until size) res.put(i, this[i])

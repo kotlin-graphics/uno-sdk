@@ -2,8 +2,6 @@ package main;
 
 import uno.glm.MatrixStack;
 
-import static uno.glsl.UtilKt.programOf;
-
 /**
  * Created by elect on 15/02/17.
  */

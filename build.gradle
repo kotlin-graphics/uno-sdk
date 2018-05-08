@@ -35,16 +35,16 @@ dependencies {
 
     testCompile 'io.kotlintest:kotlintest:2.0.7'
 
-    compile 'com.github.kotlin-graphics:gln:9e7578300874893436d0aabad5ffed9399fc44b4'
+    compile 'com.github.kotlin-graphics:gln:1f1ed15e96a8cfc9489047cb98acf80352312716'
 
     testCompile 'io.kotlintest:kotlintest-runner-junit5:3.0.6'
 
     compile "org.jetbrains.kotlin:kotlin-reflect:$kotlinVersion"
 
 
-    ext.jogl = "2.3.2"
-    compile "org.jogamp.gluegen:gluegen-rt:$jogl"
-    compile "org.jogamp.jogl:jogl-all:$jogl"
+//    ext.jogl = "2.3.2"
+//    compile "org.jogamp.gluegen:gluegen-rt:$jogl"
+//    compile "org.jogamp.jogl:jogl-all:$jogl"
 
 
     switch (OperatingSystem.current()) {

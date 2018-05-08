@@ -1,15 +1,19 @@
 package uno.glfw
 
+import glm_.BYTES
 import glm_.bool
+import glm_.buffer.adr
+import glm_.buffer.bufferBig
+import glm_.buffer.free
 import glm_.vec2.Vec2d
 import glm_.vec2.Vec2i
+import glm_.vec4.Vec4
 import glm_.vec4.Vec4i
 import org.lwjgl.glfw.*
 import org.lwjgl.glfw.GLFW.*
 import org.lwjgl.system.MemoryUtil
-import uno.buffer.destroyBuf
-import uno.buffer.doubleBufferBig
-import uno.buffer.intBufferBig
+import org.lwjgl.system.MemoryUtil.memGetDouble
+import org.lwjgl.system.MemoryUtil.memGetInt
 import java.nio.ByteBuffer
 import java.nio.FloatBuffer
 
@@ -27,12 +31,8 @@ typealias CharCallbackT = (Int) -> Unit
 
 class GlfwWindow(val handle: Long) {
 
-    private val x = intBufferBig(1)
-    private val y = intBufferBig(1)
-    private val z = intBufferBig(1)
-    private val w = intBufferBig(1)
-    private val xD = doubleBufferBig(1)
-    private val yD = doubleBufferBig(1)
+    private val buff = bufferBig(Vec4.size)
+    private val adr = buff.adr
 
     constructor(windowSize: Vec2i, title: String) : this(windowSize.x, windowSize.y, title)
     constructor(x: Int, title: String) : this(x, x, title)
@@ -62,15 +62,15 @@ class GlfwWindow(val handle: Long) {
 
     var pos = Vec2i()
         get() {
-            glfwGetWindowPos(handle, x, y)
-            return field(x[0], y[0])
+            nglfwGetWindowPos(handle, adr, adr + Int.BYTES)
+            return field(memGetInt(adr), memGetInt(adr + Int.BYTES))
         }
         set(value) = glfwSetWindowPos(handle, value.x, value.y)
 
     var size = Vec2i()
         get() {
-            glfwGetWindowSize(handle, x, y)
-            return field(x[0], y[0])
+            nglfwGetWindowSize(handle, adr, adr + Int.BYTES)
+            return field(memGetInt(adr), memGetInt(adr + Int.BYTES))
         }
         set(value) = glfwSetWindowSize(handle, value.x, value.y)
 
@@ -83,14 +83,14 @@ class GlfwWindow(val handle: Long) {
 
     val framebufferSize = Vec2i()
         get() {
-            glfwGetFramebufferSize(handle, x, y)
-            return field(x[0], y[0])
+            nglfwGetFramebufferSize(handle, adr, adr + Int.BYTES)
+            return field(memGetInt(adr), memGetInt(adr + Int.BYTES))
         }
 
     val frameSize = Vec4i()
         get() {
-            glfwGetWindowFrameSize(handle, x, y, z, w)
-            return field(x[0], y[0], z[0], w[0])
+            nglfwGetWindowFrameSize(handle, adr, adr + Int.BYTES, adr + Int.BYTES * 2, adr + Int.BYTES * 3)
+            return field(memGetInt(adr), memGetInt(adr + Int.BYTES), memGetInt(adr + Int.BYTES * 2), memGetInt(adr + Int.BYTES * 3))
         }
 
     fun iconify() = glfwIconifyWindow(handle)
@@ -120,7 +120,7 @@ class GlfwWindow(val handle: Long) {
     fun makeContextCurrent() = glfwMakeContextCurrent(handle)
 
     fun destroy() {
-        destroyBuf(x, y, z, w, xD, yD)
+        buff.free()
 
         // Free the window callbacks and destroy the window
         Callbacks.glfwFreeCallbacks(handle)
@@ -159,8 +159,8 @@ class GlfwWindow(val handle: Long) {
 
     var cursorPos = Vec2d()
         get() {
-            glfwGetCursorPos(handle, xD, yD)
-            return field(xD[0], yD[0])
+            nglfwGetCursorPos(handle, adr, adr + Double.BYTES)
+            return field(memGetDouble(adr), memGetDouble(adr + Double.BYTES))
         }
         set(value) = glfwSetCursorPos(handle, value.x, value.y)
 

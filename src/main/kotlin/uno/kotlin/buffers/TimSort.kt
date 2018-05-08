@@ -3,6 +3,7 @@ package uno.kotlin.buffers
 import glm_.BYTES
 import glm_.L
 import glm_.b
+import glm_.buffer.intBufferBig
 import glm_.detail.Random.int
 import glm_.set
 import org.lwjgl.system.MemoryUtil

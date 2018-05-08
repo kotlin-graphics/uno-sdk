@@ -2,6 +2,7 @@ package uno
 
 import gli_.gl
 import gli_.gli
+import glm_.buffer.intBufferBig
 import gln.texture.initTexture2d
 import io.kotlintest.specs.StringSpec
 import org.lwjgl.opengl.GL11.*

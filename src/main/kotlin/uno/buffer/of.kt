@@ -1,6 +1,9 @@
 package uno.buffer
 
 import glm_.BYTES
+import glm_.buffer.bufferBig
+import glm_.buffer.floatBufferBig
+import glm_.buffer.intBufferBig
 import glm_.i
 import glm_.set
 import glm_.vec2.Vec2
@@ -14,6 +17,7 @@ import gln.glf.Vertex
 import gln.glf.glf
 import org.lwjgl.system.MemoryUtil
 import java.nio.*
+
 
 fun floatBufferOf(vararg floats: Float): FloatBuffer {
     val res = MemoryUtil.memAllocFloat(floats.size)
@@ -253,7 +257,7 @@ fun intBufferOf(vertices: Collection<*>): IntBuffer {
 
 fun bufferOf(charSequence: CharSequence): ByteBuffer {
     val buffer = bufferBig(charSequence.length)
-    for(i in charSequence.indices)
+    for (i in charSequence.indices)
         buffer[i] = charSequence[i].i
     return buffer
 }
