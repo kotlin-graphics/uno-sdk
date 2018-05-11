@@ -39,7 +39,7 @@ open class GlfwWindow(var handle: Long) {
                 position: Vec2i = Vec2i(Int.MIN_VALUE),
                 installCallbacks: Boolean = true) : this(glfwCreateWindow(width, height, title, monitor, NULL)) {
 
-        this._title = title
+        this.title = title
 
         if (position != Vec2i(Int.MIN_VALUE))
             glfwSetWindowPos(handle, position.x, position.y)
@@ -74,12 +74,10 @@ open class GlfwWindow(var handle: Long) {
         get() = glfwWindowShouldClose(handle)
         set(value) = glfwSetWindowShouldClose(handle, value)
 
-    private var _title = ""
-    var title: String
-        get() = _title
+    var title: String = ""
         set(value) {
             glfwSetWindowTitle(handle, value)
-            _title = value
+            field = value
         }
 
     fun setSizeLimit(width: IntRange, height: IntRange) = glfwSetWindowSizeLimits(handle, width.start, height.start, width.endInclusive, height.endInclusive)
