@@ -14,6 +14,8 @@ import org.lwjgl.glfw.GLFW.*
 import org.lwjgl.system.MemoryUtil
 import org.lwjgl.system.MemoryUtil.memGetDouble
 import org.lwjgl.system.MemoryUtil.memGetInt
+import org.lwjgl.vulkan.VkInstance
+import vkk.appBuffer
 import java.nio.ByteBuffer
 import java.nio.FloatBuffer
 
@@ -306,10 +308,16 @@ class GlfwWindow(val handle: Long) {
 
     fun mouseButton(button: Int) = glfwGetMouseButton(handle, button)
 
-    inline fun loop(block: () -> Unit) {
-        while (isOpen) block()
-    }
-
     fun getJoystickButtons(joystickId: Int): ByteBuffer? = glfwGetJoystickButtons(joystickId)
     fun getJoystickAxes(joystickId: Int): FloatBuffer? = glfwGetJoystickAxes(joystickId)
+
+    inline fun loop(block: () -> Unit) {
+        while (isOpen) {
+            glfwPollEvents()
+            block()
+            appBuffer.reset()
+        }
+    }
+
+    infix fun createSurface(instance: VkInstance) = glfw.createWindowSurface(handle, instance)
 }

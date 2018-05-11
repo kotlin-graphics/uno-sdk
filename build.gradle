@@ -31,14 +31,16 @@ apply plugin: 'com.github.johnrengelman.shadow'
 
 dependencies {
 
-    implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
-    implementation "org.jetbrains.kotlin:kotlin-reflect:$kotlinVersion"
+    ext.kotlin = "org.jetbrains.kotlin:kotlin"
+    implementation "$kotlin-stdlib:$kotlinVersion"
+    implementation "$kotlin-reflect:$kotlinVersion"
 
-    implementation 'com.github.kotlin-graphics:gln:b6f92bf107aa87046bccb5d35edcccb50e767770'
+    ext.kx = "com.github.kotlin-graphics"
+    implementation "$kx:gln:b6f92bf107aa87046bccb5d35edcccb50e767770"
+    implementation "$kx:vkk:e3791981b95038abf8a4dd1296fbdd7dfaf93279"
 
     testImplementation 'io.kotlintest:kotlintest:2.0.7'
     testImplementation 'io.kotlintest:kotlintest-runner-junit5:3.0.6'
-
 
 //    ext.jogl = "2.3.2"
 //    compile "org.jogamp.gluegen:gluegen-rt:$jogl"
@@ -57,9 +59,10 @@ dependencies {
             ext.lwjglNatives = "natives-macos"
             break
     }
-    ["", "-glfw", "-jemalloc", "-openal", "-opengl", "-stb"].each {
+    ["", "-glfw", "-jemalloc", "-openal", "-opengl", "-stb", "-vulkan"].each {
         implementation "org.lwjgl:lwjgl$it:$lwjglVersion"
-        runtime "org.lwjgl:lwjgl$it:$lwjglVersion:$lwjglNatives"
+        if (it != "-vulkan")
+            runtime "org.lwjgl:lwjgl$it:$lwjglVersion:$lwjglNatives"
     }
 }
 
