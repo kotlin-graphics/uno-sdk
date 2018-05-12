@@ -89,7 +89,7 @@ open class GlfwWindow(var handle: Long) {
             val x = appBuffer.int
             val y = appBuffer.int
             nglfwGetWindowPos(handle, x, y)
-            return field(x, y)
+            return field(memGetInt(x), memGetInt(y))
         }
         set(value) = glfwSetWindowPos(handle, value.x, value.y)
 
@@ -98,7 +98,7 @@ open class GlfwWindow(var handle: Long) {
             val x = appBuffer.int
             val y = appBuffer.int
             nglfwGetWindowSize(handle, x, y)
-            return field(x, y)
+            return field(memGetInt(x), memGetInt(y))
         }
         set(value) = glfwSetWindowSize(handle, value.x, value.y)
 
@@ -114,7 +114,7 @@ open class GlfwWindow(var handle: Long) {
             val x = appBuffer.int
             val y = appBuffer.int
             nglfwGetFramebufferSize(handle, x, y)
-            return field(x, y)
+            return field(memGetInt(x), memGetInt(y))
         }
 
     val frameSize = Vec4i()
@@ -124,7 +124,7 @@ open class GlfwWindow(var handle: Long) {
             val z = appBuffer.int
             val w = appBuffer.int
             nglfwGetWindowFrameSize(handle, x, y, z, w)
-            return field(x, y, z, w)
+            return field(memGetInt(x), memGetInt(y), memGetInt(z), memGetInt(w))
         }
 
     fun iconify() = glfwIconifyWindow(handle)
@@ -164,10 +164,10 @@ open class GlfwWindow(var handle: Long) {
 
     var cursorPos = Vec2d()
         get() {
-            val x = appBuffer.doubleBuffer
-            val y = appBuffer.doubleBuffer
-            glfwGetCursorPos(handle, x, y)
-            return field(x[0], y[0])
+            val x = appBuffer.double
+            val y = appBuffer.double
+            nglfwGetCursorPos(handle, x, y)
+            return field(memGetDouble(x), memGetDouble(y))
         }
         set(value) = glfwSetCursorPos(handle, value.x, value.y)
 
