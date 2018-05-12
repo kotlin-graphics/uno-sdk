@@ -298,10 +298,14 @@ open class GlfwWindow(var handle: Long) {
     fun getJoystickButtons(joystickId: Int): ByteBuffer? = glfwGetJoystickButtons(joystickId)
     fun getJoystickAxes(joystickId: Int): FloatBuffer? = glfwGetJoystickAxes(joystickId)
 
+    var autoSwap = true
+
     inline fun loop(block: () -> Unit) {
         while (isOpen) {
             glfwPollEvents()
             block()
+            if(autoSwap)
+                glfwSwapBuffers(handle)
             appBuffer.reset()
         }
     }
