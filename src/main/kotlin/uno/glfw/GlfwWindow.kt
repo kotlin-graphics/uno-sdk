@@ -247,7 +247,7 @@ open class GlfwWindow(var handle: Long) {
     // Event handlers are called by the GLFW callback mechanism and should not be called directly
     //
 
-    open fun onWindowResized(newSize: Vec2i) {}
+    open fun onWindowResized(newSize: Vec2i) = appBuffer.reset()
     open fun onWindowClosed() {}
 
     // Keyboard handling
