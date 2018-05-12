@@ -1,6 +1,7 @@
 package uno.glfw
 
 import glm_.bool
+import glm_.f
 import glm_.vec2.Vec2
 import glm_.vec2.Vec2d
 import glm_.vec2.Vec2i
@@ -160,8 +161,6 @@ open class GlfwWindow(var handle: Long) {
         handle = NULL
     }
 
-    fun present() = glfwSwapBuffers(handle)
-
     var cursorPos = Vec2d()
         get() {
             val x = appBuffer.double
@@ -225,7 +224,7 @@ open class GlfwWindow(var handle: Long) {
             field = value
         }
     val scrollCallbacks = sortedMapOf<String, ScrollCallbackT>()
-    val nScrollCallback = GLFWScrollCallbackI { _, xOffset, yOffset -> scrollCallbacks.values.forEach { it(Vec2(xOffset, yOffset)) } }
+    val nScrollCallback = GLFWScrollCallbackI { _, xOffset, yOffset -> scrollCallbacks.values.forEach { it(Vec2d(xOffset, yOffset)) } }
 
 
     var windowCloseCallback: WindowCloseCallbackT? = null
@@ -240,7 +239,7 @@ open class GlfwWindow(var handle: Long) {
     val defaultKeyCallback: KeyCallbackT = { key, _, _, mods -> onKeyPressed(key, mods) }
     val defaultMouseButtonCallback: MouseButtonCallbackT = { button, action, mods -> onMouseButtonEvent(button, action, mods) }
     val defaultCursorPosCallback: CursorPosCallbackT = { pos -> onMouseMoved(pos) }
-    val defaultScrollCallback: ScrollCallbackT = { scroll -> onMouseScrolled(scroll.y) }
+    val defaultScrollCallback: ScrollCallbackT = { scroll -> onMouseScrolled(scroll.y.f) }
     val defaultWindowCloseCallback: WindowCloseCallbackT = ::onWindowClosed
     val defaultFramebufferSizeCallback: FramebufferSizeCallbackT = { size -> onWindowResized(size) }
 
@@ -309,6 +308,7 @@ open class GlfwWindow(var handle: Long) {
 
     infix fun createSurface(instance: VkInstance) = glfw.createWindowSurface(handle, instance)
 
+    fun present() = glfwSwapBuffers(handle)
     fun swapBuffers() = glfwSwapBuffers(handle)
 }
 
@@ -317,5 +317,5 @@ typealias CursorPosCallbackT = (pos: Vec2) -> Unit
 typealias FramebufferSizeCallbackT = (size: Vec2i) -> Unit
 typealias KeyCallbackT = (key: Int, scanCode: Int, action: Int, mods: Int) -> Unit
 typealias MouseButtonCallbackT = (button: Int, action: Int, mods: Int) -> Unit
-typealias ScrollCallbackT = (scroll: Vec2) -> Unit
+typealias ScrollCallbackT = (scroll: Vec2d) -> Unit
 typealias WindowCloseCallbackT = () -> Unit
