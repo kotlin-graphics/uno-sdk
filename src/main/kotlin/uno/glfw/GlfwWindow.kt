@@ -1,6 +1,7 @@
 package uno.glfw
 
 import glm_.bool
+import glm_.f
 import glm_.vec2.Vec2
 import glm_.vec2.Vec2d
 import glm_.vec2.Vec2i
@@ -89,7 +90,7 @@ open class GlfwWindow(var handle: Long) {
             val x = appBuffer.int
             val y = appBuffer.int
             nglfwGetWindowPos(handle, x, y)
-            return field(x, y)
+            return field(memGetInt(x), memGetInt(y))
         }
         set(value) = glfwSetWindowPos(handle, value.x, value.y)
 
@@ -98,7 +99,7 @@ open class GlfwWindow(var handle: Long) {
             val x = appBuffer.int
             val y = appBuffer.int
             nglfwGetWindowSize(handle, x, y)
-            return field(x, y)
+            return field(memGetInt(x), memGetInt(y))
         }
         set(value) = glfwSetWindowSize(handle, value.x, value.y)
 
@@ -114,7 +115,7 @@ open class GlfwWindow(var handle: Long) {
             val x = appBuffer.int
             val y = appBuffer.int
             nglfwGetFramebufferSize(handle, x, y)
-            return field(x, y)
+            return field(memGetInt(x), memGetInt(y))
         }
 
     val frameSize = Vec4i()
@@ -124,7 +125,7 @@ open class GlfwWindow(var handle: Long) {
             val z = appBuffer.int
             val w = appBuffer.int
             nglfwGetWindowFrameSize(handle, x, y, z, w)
-            return field(x, y, z, w)
+            return field(memGetInt(x), memGetInt(y), memGetInt(z), memGetInt(w))
         }
 
     fun iconify() = glfwIconifyWindow(handle)
@@ -160,14 +161,12 @@ open class GlfwWindow(var handle: Long) {
         handle = NULL
     }
 
-    fun present() = glfwSwapBuffers(handle)
-
     var cursorPos = Vec2d()
         get() {
-            val x = appBuffer.doubleBuffer
-            val y = appBuffer.doubleBuffer
-            glfwGetCursorPos(handle, x, y)
-            return field(x[0], y[0])
+            val x = appBuffer.double
+            val y = appBuffer.double
+            nglfwGetCursorPos(handle, x, y)
+            return field(memGetDouble(x), memGetDouble(y))
         }
         set(value) = glfwSetCursorPos(handle, value.x, value.y)
 
@@ -225,7 +224,7 @@ open class GlfwWindow(var handle: Long) {
             field = value
         }
     val scrollCallbacks = sortedMapOf<String, ScrollCallbackT>()
-    val nScrollCallback = GLFWScrollCallbackI { _, xOffset, yOffset -> scrollCallbacks.values.forEach { it(Vec2(xOffset, yOffset)) } }
+    val nScrollCallback = GLFWScrollCallbackI { _, xOffset, yOffset -> scrollCallbacks.values.forEach { it(Vec2d(xOffset, yOffset)) } }
 
 
     var windowCloseCallback: WindowCloseCallbackT? = null
@@ -240,7 +239,7 @@ open class GlfwWindow(var handle: Long) {
     val defaultKeyCallback: KeyCallbackT = { key, _, _, mods -> onKeyPressed(key, mods) }
     val defaultMouseButtonCallback: MouseButtonCallbackT = { button, action, mods -> onMouseButtonEvent(button, action, mods) }
     val defaultCursorPosCallback: CursorPosCallbackT = { pos -> onMouseMoved(pos) }
-    val defaultScrollCallback: ScrollCallbackT = { scroll -> onMouseScrolled(scroll.y) }
+    val defaultScrollCallback: ScrollCallbackT = { scroll -> onMouseScrolled(scroll.y.f) }
     val defaultWindowCloseCallback: WindowCloseCallbackT = ::onWindowClosed
     val defaultFramebufferSizeCallback: FramebufferSizeCallbackT = { size -> onWindowResized(size) }
 
@@ -248,7 +247,7 @@ open class GlfwWindow(var handle: Long) {
     // Event handlers are called by the GLFW callback mechanism and should not be called directly
     //
 
-    open fun onWindowResized(newSize: Vec2i) {}
+    open fun onWindowResized(newSize: Vec2i) = appBuffer.reset()
     open fun onWindowClosed() {}
 
     // Keyboard handling
@@ -299,16 +298,21 @@ open class GlfwWindow(var handle: Long) {
     fun getJoystickButtons(joystickId: Int): ByteBuffer? = glfwGetJoystickButtons(joystickId)
     fun getJoystickAxes(joystickId: Int): FloatBuffer? = glfwGetJoystickAxes(joystickId)
 
+    var autoSwap = true
+
     inline fun loop(block: () -> Unit) {
         while (isOpen) {
             glfwPollEvents()
             block()
+            if(autoSwap)
+                glfwSwapBuffers(handle)
             appBuffer.reset()
         }
     }
 
     infix fun createSurface(instance: VkInstance) = glfw.createWindowSurface(handle, instance)
 
+    fun present() = glfwSwapBuffers(handle)
     fun swapBuffers() = glfwSwapBuffers(handle)
 }
 
@@ -317,5 +321,5 @@ typealias CursorPosCallbackT = (pos: Vec2) -> Unit
 typealias FramebufferSizeCallbackT = (size: Vec2i) -> Unit
 typealias KeyCallbackT = (key: Int, scanCode: Int, action: Int, mods: Int) -> Unit
 typealias MouseButtonCallbackT = (button: Int, action: Int, mods: Int) -> Unit
-typealias ScrollCallbackT = (scroll: Vec2) -> Unit
+typealias ScrollCallbackT = (scroll: Vec2d) -> Unit
 typealias WindowCloseCallbackT = () -> Unit
