@@ -1,7 +1,6 @@
 package uno.buffer
 
-import glm_.BYTES
-import glm_.size
+import glm_.*
 import org.lwjgl.system.MemoryUtil
 import java.nio.*
 
@@ -69,5 +68,11 @@ fun LongArray.toLongBuffer(): LongBuffer {
 fun LongArray.toBuffer(): ByteBuffer {
     val res = MemoryUtil.memAlloc(size * Long.BYTES)
     for (i in 0 until size) res.putLong(i * Long.BYTES, this[i])
+    return res
+}
+
+fun CharArray.toBuffer(): ByteBuffer {
+    val res = MemoryUtil.memAlloc(size * Byte.BYTES)
+    for (i in 0 until size) res[i * Byte.BYTES] = this[i].b
     return res
 }
