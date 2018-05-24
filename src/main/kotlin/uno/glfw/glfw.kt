@@ -1,5 +1,6 @@
 package uno.glfw
 
+import appBuffer.appBuffer
 import glm_.buffer.adr
 import glm_.vec2.Vec2i
 import org.lwjgl.glfw.GLFW.*
@@ -14,7 +15,6 @@ import org.lwjgl.vulkan.VkInstance
 import vkk.VK_CHECK_RESULT
 import vkk.VkSurfaceKHR
 import vkk.adr
-import vkk.appBuffer
 
 /**
  * Created by elect on 22/04/17.
