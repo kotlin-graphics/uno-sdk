@@ -1,6 +1,6 @@
 package uno.glfw
 
-import appBuffer.appBuffer
+import ab.appBuffer
 import glm_.buffer.adr
 import glm_.vec2.Vec2i
 import org.lwjgl.glfw.GLFW.*
