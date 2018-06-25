@@ -36,9 +36,9 @@ dependencies {
     implementation "$kotlin-reflect:$kotlinVersion"
 
     ext.kx = "com.github.kotlin-graphics"
-    implementation "$kx:gln:b290f5b3ac811e67bcf0b9c399c5f7faba53260e"
-    implementation "$kx:vkk:357eec97bc9a1a25a92b4b8e598a4c0e52c142ac"
-    implementation "$kx:appBuffer:4f7f0223516041f691a6428b1a9d511a4e093c25"
+    implementation "$kx:gln:c020a5fbcf3e4c9bb0329ffe6434161e42974ee9"
+    implementation "$kx:vkk:ec6ec017e17fe5a74baa87ce356f0102a0383268"
+    implementation "$kx:appBuffer:481338a28de7b0f409fcc28f04b15808048c0f20"
 
     testImplementation 'io.kotlintest:kotlintest:2.0.7'
     testImplementation 'io.kotlintest:kotlintest-runner-junit5:3.0.6'
