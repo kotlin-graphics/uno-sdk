@@ -1,5 +1,6 @@
 package uno.glfw
 
+import ab.appBuffer
 import glm_.bool
 import glm_.f
 import glm_.vec2.Vec2
@@ -11,7 +12,6 @@ import org.lwjgl.glfw.GLFW.*
 import org.lwjgl.system.MemoryUtil
 import org.lwjgl.system.MemoryUtil.*
 import org.lwjgl.vulkan.VkInstance
-import ab.appBuffer
 import java.nio.ByteBuffer
 import java.nio.FloatBuffer
 
@@ -298,8 +298,31 @@ open class GlfwWindow(var handle: Long) {
 
     fun mouseButton(button: Int) = glfwGetMouseButton(handle, button)
 
-    fun getJoystickButtons(joystickId: Int): ByteBuffer? = glfwGetJoystickButtons(joystickId)
-    fun getJoystickAxes(joystickId: Int): FloatBuffer? = glfwGetJoystickAxes(joystickId)
+    val joystick1Buttons: ByteBuffer?
+        get() = getJoystickButtons(GLFW_JOYSTICK_1)
+    val joystick2Buttons: ByteBuffer?
+        get() = getJoystickButtons(GLFW_JOYSTICK_2)
+    val joystick3Buttons: ByteBuffer?
+        get() = getJoystickButtons(GLFW_JOYSTICK_3)
+
+    fun getJoystickButtons(joystickId: Int): ByteBuffer? {
+        val count = appBuffer.int
+        val result = nglfwGetJoystickButtons(joystickId, count)
+        return memByteBufferSafe(result, memGetInt(count))
+    }
+
+    val joystick1Axes: FloatBuffer?
+        get() = getJoystickAxes(GLFW_JOYSTICK_1)
+    val joystick2Axes: FloatBuffer?
+        get() = getJoystickAxes(GLFW_JOYSTICK_2)
+    val joystick3Axes: FloatBuffer?
+        get() = getJoystickAxes(GLFW_JOYSTICK_3)
+
+    fun getJoystickAxes(joystickId: Int): FloatBuffer? {
+        val count = appBuffer.int
+        val result = nglfwGetJoystickAxes(joystickId, count)
+        return memFloatBufferSafe(result, memGetInt(count))
+    }
 
     var autoSwap = true
 
@@ -307,7 +330,7 @@ open class GlfwWindow(var handle: Long) {
         while (isOpen) {
             glfwPollEvents()
             block()
-            if(autoSwap)
+            if (autoSwap)
                 glfwSwapBuffers(handle)
             appBuffer.reset()
         }
