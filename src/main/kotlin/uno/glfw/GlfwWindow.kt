@@ -275,23 +275,23 @@ open class GlfwWindow(var handle: Long) {
     open fun onMouseScrolled(delta: Float) {}
 
 
-    var cursorStatus: Cursor
+    var cursorStatus: CursorStatus
         get() = when (glfwGetInputMode(handle, GLFW_CURSOR)) {
-            GLFW_CURSOR_NORMAL -> Cursor.Normal
-            GLFW_CURSOR_HIDDEN -> Cursor.Hidden
-            GLFW_CURSOR_DISABLED -> Cursor.Disabled
+            GLFW_CURSOR_NORMAL -> CursorStatus.Normal
+            GLFW_CURSOR_HIDDEN -> CursorStatus.Hidden
+            GLFW_CURSOR_DISABLED -> CursorStatus.Disabled
             else -> throw Error()
         }
         set(value) = glfwSetInputMode(handle, GLFW_CURSOR, when (value) {
-            Cursor.Normal -> GLFW_CURSOR_NORMAL
-            Cursor.Hidden -> GLFW_CURSOR_HIDDEN
-            Cursor.Disabled -> GLFW_CURSOR_DISABLED
+            CursorStatus.Normal -> GLFW_CURSOR_NORMAL
+            CursorStatus.Hidden -> GLFW_CURSOR_HIDDEN
+            CursorStatus.Disabled -> GLFW_CURSOR_DISABLED
         })
     var cursor: Long
         get() = NULL
         set(value) = glfwSetCursor(handle, value)
 
-    enum class Cursor { Normal, Hidden, Disabled }
+    enum class CursorStatus { Normal, Hidden, Disabled }
 
     fun pressed(key: Int) = glfwGetKey(handle, key) == GLFW_PRESS
     fun released(key: Int) = glfwGetKey(handle, key) == GLFW_PRESS
