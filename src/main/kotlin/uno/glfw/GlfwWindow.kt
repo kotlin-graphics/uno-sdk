@@ -9,6 +9,7 @@ import glm_.vec2.Vec2i
 import glm_.vec4.Vec4i
 import org.lwjgl.glfw.*
 import org.lwjgl.glfw.GLFW.*
+import org.lwjgl.opengl.GL
 import org.lwjgl.system.MemoryUtil
 import org.lwjgl.system.MemoryUtil.*
 import org.lwjgl.vulkan.VkInstance
@@ -67,6 +68,11 @@ open class GlfwWindow(var handle: Long) {
             glfw.terminate()
             throw RuntimeException("Failed to create the GLFW window")
         }
+        /*  This line is critical for LWJGL's interoperation with GLFW's OpenGL context,
+            or any context that is managed externally.
+            LWJGL detects the context that is current in the current thread, creates the GLCapabilities instance and
+            makes the OpenGL bindings available for use. */
+        GL.createCapabilities()
     }
 
     val isOpen get() = !shouldClose
