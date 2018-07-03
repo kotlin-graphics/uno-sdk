@@ -8,12 +8,24 @@
 
 Modules:
 
-- buffer
-  
-  - direct-buffer cleaners
+- glfw wrapper
+- GlfwWindow
 
 Don't hesitate to contribute to the project by submitting [issues](https://github.com/kotlin-graphics/uno-sdk/issues) or [pull requests](https://github.com/kotlin-graphics/uno-sdk/pulls) for bugs and features. Any feedback is welcome at [elect86@gmail.com](mailto://elect86@gmail.com).
 
+# Simplest hello world
+
+            glfw.init("3.3")
+
+            val window = GlfwWindow(1280, 720, "ImGui Lwjgl OpenGL3 example").apply {
+                init()
+            }
+            
+            glClearColor(1f, 0f, 0f, 0f)
+
+            window.loop {
+                glClear(GL_COLOR_BUFFER_BIT)
+            }
 
 ## Credits:
 
