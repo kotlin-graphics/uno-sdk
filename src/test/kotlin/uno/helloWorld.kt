@@ -26,9 +26,7 @@ class HelloWorld : StringSpec() {
                 // Set the clear color
                 glClearColor(1f, 0f, 0f, 0f)
 
-                var i = 0
-
-                loop({ i++ < 100 }) {
+                loop({ glfw.time < 1 }) {
                     glClear(GL_COLOR_BUFFER_BIT)
                 }
             }
