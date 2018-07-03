@@ -68,11 +68,6 @@ open class GlfwWindow(var handle: Long) {
             glfw.terminate()
             throw RuntimeException("Failed to create the GLFW window")
         }
-        /*  This line is critical for LWJGL's interoperation with GLFW's OpenGL context,
-            or any context that is managed externally.
-            LWJGL detects the context that is current in the current thread, creates the GLCapabilities instance and
-            makes the OpenGL bindings available for use. */
-        GL.createCapabilities()
     }
 
     val isOpen get() = !shouldClose
@@ -158,7 +153,14 @@ open class GlfwWindow(var handle: Long) {
     val decorated get() = glfwGetWindowAttrib(handle, GLFW_DECORATED).bool
     val floating get() = glfwGetWindowAttrib(handle, GLFW_FLOATING).bool
 
-    fun makeContextCurrent() = glfwMakeContextCurrent(handle)
+    fun makeContextCurrent() {
+        glfwMakeContextCurrent(handle)
+        /*  This line is critical for LWJGL's interoperation with GLFW's OpenGL context,
+            or any context that is managed externally.
+            LWJGL detects the context that is current in the current thread, creates the GLCapabilities instance and
+            makes the OpenGL bindings available for use. */
+        GL.createCapabilities()
+    }
 
     fun destroy() {
         // Free the window callbacks and destroy the window
