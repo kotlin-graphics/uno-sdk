@@ -22,6 +22,22 @@ import vkk.adr
 
 object glfw {
 
+    /** Short version of:
+     *  glfw.init()
+     *  glfw.windowHint {
+     *      context.version = "3.2"
+     *      windowHint.profile = "core"
+     *  }
+     */
+    @Throws(RuntimeException::class)
+    fun init(version: String, profile: String = "core") {
+        init()
+        windowHint {
+            context.version = version
+            windowHint.profile = profile
+        }
+    }
+
     @Throws(RuntimeException::class)
     fun init() {
 
