@@ -337,8 +337,10 @@ open class GlfwWindow(var handle: Long) {
 
     var autoSwap = true
 
-    inline fun loop(block: () -> Unit) {
-        while (isOpen) {
+    inline fun loop(block: () -> Unit) = loop( { isOpen }, block)
+
+    inline fun loop(condition: () -> Boolean, block: () -> Unit) {
+        while (condition()) {
             glfwPollEvents()
             block()
             if (autoSwap)
