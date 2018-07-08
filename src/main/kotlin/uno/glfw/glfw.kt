@@ -5,6 +5,7 @@ import glm_.buffer.adr
 import glm_.vec2.Vec2i
 import org.lwjgl.glfw.GLFW.*
 import org.lwjgl.glfw.GLFWErrorCallback
+import org.lwjgl.glfw.GLFWErrorCallbackI
 import org.lwjgl.glfw.GLFWVidMode
 import org.lwjgl.glfw.GLFWVulkan
 import org.lwjgl.system.MemoryUtil
@@ -15,12 +16,18 @@ import org.lwjgl.vulkan.VkInstance
 import vkk.VK_CHECK_RESULT
 import vkk.VkSurfaceKHR
 import vkk.adr
+import java.io.PrintStream
 
 /**
  * Created by elect on 22/04/17.
  */
 
 object glfw {
+
+    var errorCallback: GLFWErrorCallback? = null
+        set(value) {
+            glfwSetErrorCallback(value)
+        }
 
     /** Short version of:
      *  glfw.init()
@@ -39,9 +46,12 @@ object glfw {
     }
 
     @Throws(RuntimeException::class)
-    fun init() {
+    fun init(printStream: PrintStream? = null) {
 
-        GLFWErrorCallback.createPrint(System.err).set()
+        printStream?.let {
+            errorCallback = GLFWErrorCallback.createPrint(it)
+        }
+
         if (!glfwInit())
             throw RuntimeException("Unable to initialize GLFW")
 
@@ -71,7 +81,7 @@ object glfw {
 
     fun terminate() {
         glfwTerminate()
-        glfwSetErrorCallback(null)?.free()
+        errorCallback?.free()
     }
 
     fun pollEvents() = glfwPollEvents()
