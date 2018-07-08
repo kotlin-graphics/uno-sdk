@@ -48,9 +48,9 @@ object glfw {
     }
 
     @Throws(RuntimeException::class)
-    fun init(installDefaultErrorCallback: Boolean, printStream: PrintStream = System.err) {
+    fun init(installDefaultErrorCallback: Boolean) {
         if (installDefaultErrorCallback)
-            errorCallback = { error, description -> printStream.println("glfw $error error: $description") }
+            errorCallback = defaultErrorCallback
         init()
     }
 
@@ -65,6 +65,7 @@ object glfw {
             windowHint.forwardComp = true
     }
 
+    val defaultErrorCallback: GLFWErrorCallbackT = { error, description -> System.err.println("glfw $error error: $description") }
     var errorCallback: GLFWErrorCallbackT? = null
     val nErrorCallback: GLFWErrorCallback = GLFWErrorCallback.create { error, description -> errorCallback?.invoke(ERROR_CODES[error]!!, memUTF8(description)) }
     private val ERROR_CODES: MutableMap<Int, String> = APIUtil.apiClassTokens(BiPredicate { _, value -> value in 65537..131071 }, null, org.lwjgl.glfw.GLFW::class.java)
