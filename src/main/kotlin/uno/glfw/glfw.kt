@@ -5,18 +5,18 @@ import glm_.buffer.adr
 import glm_.vec2.Vec2i
 import org.lwjgl.glfw.GLFW.*
 import org.lwjgl.glfw.GLFWErrorCallback
-import org.lwjgl.glfw.GLFWErrorCallbackI
 import org.lwjgl.glfw.GLFWVidMode
 import org.lwjgl.glfw.GLFWVulkan
+import org.lwjgl.system.APIUtil
 import org.lwjgl.system.MemoryUtil
-import org.lwjgl.system.MemoryUtil.NULL
-import org.lwjgl.system.MemoryUtil.memGetLong
+import org.lwjgl.system.MemoryUtil.*
 import org.lwjgl.system.Platform
 import org.lwjgl.vulkan.VkInstance
 import vkk.VK_CHECK_RESULT
 import vkk.VkSurfaceKHR
 import vkk.adr
 import java.io.PrintStream
+import java.util.function.BiPredicate
 
 /**
  * Created by elect on 22/04/17.
@@ -24,21 +24,17 @@ import java.io.PrintStream
 
 object glfw {
 
-    var errorCallback: GLFWErrorCallback? = null
-        set(value) {
-            glfwSetErrorCallback(value)
-        }
-
     /** Short version of:
      *  glfw.init()
      *  glfw.windowHint {
      *      context.version = "3.2"
      *      windowHint.profile = "core"
      *  }
+     *  + default error callback
      */
     @Throws(RuntimeException::class)
-    fun init(version: String, profile: String = "core") {
-        init()
+    fun init(version: String, profile: String = "core", installDefaultErrorCallback: Boolean = true) {
+        init(installDefaultErrorCallback)
         windowHint {
             context.version = version
             windowHint.profile = profile
@@ -46,32 +42,48 @@ object glfw {
     }
 
     @Throws(RuntimeException::class)
-    fun init(printStream: PrintStream? = null) {
+    fun init(errorCallback: GLFWErrorCallbackT) {
+        this.errorCallback = errorCallback
+        init()
+    }
 
-        printStream?.let {
-            errorCallback = GLFWErrorCallback.createPrint(it)
-        }
+    @Throws(RuntimeException::class)
+    fun init(installDefaultErrorCallback: Boolean, printStream: PrintStream = System.err) {
+        if (installDefaultErrorCallback)
+            errorCallback = { error, description -> printStream.println("glfw $error error: $description") }
+        init()
+    }
+
+    @Throws(RuntimeException::class)
+    fun init() {
 
         if (!glfwInit())
             throw RuntimeException("Unable to initialize GLFW")
 
-        /* This window hint is required to use OpenGL 3.1+ on macOS */
+        // This window hint is required to use OpenGL 3.1+ on macOS
         if (Platform.get() == Platform.MACOSX)
             windowHint.forwardComp = true
     }
 
-    val vulkanSupported get() = GLFWVulkan.glfwVulkanSupported()
+    var errorCallback: GLFWErrorCallbackT? = null
+    val nErrorCallback: GLFWErrorCallback = GLFWErrorCallback.create { error, description -> errorCallback?.invoke(ERROR_CODES[error]!!, memUTF8(description)) }
+    private val ERROR_CODES: MutableMap<Int, String> = APIUtil.apiClassTokens(BiPredicate { _, value -> value in 65537..131071 }, null, org.lwjgl.glfw.GLFW::class.java)
+
+    val vulkanSupported: Boolean
+        get() = GLFWVulkan.glfwVulkanSupported()
 
     fun <T> windowHint(block: windowHint.() -> T) = windowHint.block()
 
-    val primaryMonitor get() = glfwGetPrimaryMonitor()
+    val primaryMonitor: Long
+        get() = glfwGetPrimaryMonitor()
 
-    val videoMode get() = glfwGetVideoMode(primaryMonitor)!!
+    val videoMode: GLFWVidMode
+        get() = glfwGetVideoMode(primaryMonitor)!!
 
     val time: Double
         get() = glfwGetTime()
 
-    fun videoMode(monitor: Long) = glfwGetVideoMode(monitor)
+    fun videoMode(monitor: Long): GLFWVidMode? = glfwGetVideoMode(monitor)
 
     val resolution
         get() = Vec2i(videoMode.width(), videoMode.height())
@@ -81,7 +93,7 @@ object glfw {
 
     fun terminate() {
         glfwTerminate()
-        errorCallback?.free()
+        nErrorCallback.free()
     }
 
     fun pollEvents() = glfwPollEvents()
@@ -120,3 +132,5 @@ inline val GLFWVidMode.blueBits: Int
     get() = GLFWVidMode.nblueBits(adr)
 inline val GLFWVidMode.refreshRate: Int
     get() = GLFWVidMode.nrefreshRate(adr)
+
+typealias GLFWErrorCallbackT = (String, String) -> Unit
