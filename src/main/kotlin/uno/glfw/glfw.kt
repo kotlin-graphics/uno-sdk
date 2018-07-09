@@ -17,6 +17,7 @@ import vkk.VkSurfaceKHR
 import vkk.adr
 import java.io.PrintStream
 import java.util.function.BiPredicate
+import uno.glfw.windowHint.Profile
 
 /**
  * Created by elect on 22/04/17.
@@ -33,7 +34,7 @@ object glfw {
      *  + default error callback
      */
     @Throws(RuntimeException::class)
-    fun init(version: String, profile: String = "core", installDefaultErrorCallback: Boolean = true) {
+    fun init(version: String, profile: Profile = Profile.core, installDefaultErrorCallback: Boolean = true) {
         init(installDefaultErrorCallback)
         windowHint {
             context.version = version
