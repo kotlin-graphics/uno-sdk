@@ -2,6 +2,7 @@ package uno.glfw
 
 import ab.appBuffer
 import glm_.buffer.adr
+import glm_.i
 import glm_.vec2.Vec2i
 import org.lwjgl.glfw.GLFW.*
 import org.lwjgl.glfw.GLFWErrorCallback
@@ -12,10 +13,10 @@ import org.lwjgl.system.MemoryUtil
 import org.lwjgl.system.MemoryUtil.*
 import org.lwjgl.system.Platform
 import org.lwjgl.vulkan.VkInstance
+import uno.glfw.windowHint.Profile
 import vkk.VK_CHECK_RESULT
 import vkk.VkSurfaceKHR
 import vkk.adr
-import java.io.PrintStream
 import java.util.function.BiPredicate
 
 /**
@@ -33,7 +34,7 @@ object glfw {
      *  + default error callback
      */
     @Throws(RuntimeException::class)
-    fun init(version: String, profile: String = "core", installDefaultErrorCallback: Boolean = true) {
+    fun init(version: String, profile: Profile = Profile.core, installDefaultErrorCallback: Boolean = true) {
         init(installDefaultErrorCallback)
         windowHint {
             context.version = version
@@ -65,37 +66,47 @@ object glfw {
             windowHint.forwardComp = true
     }
 
-    val defaultErrorCallback: GLFWErrorCallbackT = { error, description -> System.err.println("glfw $error error: $description") }
-    var errorCallback: GLFWErrorCallbackT? = null
-    val nErrorCallback: GLFWErrorCallback = GLFWErrorCallback.create { error, description -> errorCallback?.invoke(ERROR_CODES[error]!!, memUTF8(description)) }
-    private val ERROR_CODES: MutableMap<Int, String> = APIUtil.apiClassTokens(BiPredicate { _, value -> value in 65537..131071 }, null, org.lwjgl.glfw.GLFW::class.java)
-
-    val vulkanSupported: Boolean
-        get() = GLFWVulkan.glfwVulkanSupported()
-
-    fun <T> windowHint(block: windowHint.() -> T) = windowHint.block()
-
-    val primaryMonitor: Long
-        get() = glfwGetPrimaryMonitor()
-
-    val videoMode: GLFWVidMode
-        get() = glfwGetVideoMode(primaryMonitor)!!
-
-    val time: Double
-        get() = glfwGetTime()
-
-    fun videoMode(monitor: Long): GLFWVidMode? = glfwGetVideoMode(monitor)
-
-    val resolution
-        get() = Vec2i(videoMode.width(), videoMode.height())
-
-    var swapInterval = 0
-        set(value) = glfwSwapInterval(value)
-
     fun terminate() {
         glfwTerminate()
         nErrorCallback.free()
     }
+
+    val version: String
+        get() = glfwGetVersionString()
+
+    private val ERROR_CODES: MutableMap<Int, String> = APIUtil.apiClassTokens(BiPredicate { _, value -> value in 65537..131071 }, null, org.lwjgl.glfw.GLFW::class.java)
+    val nErrorCallback: GLFWErrorCallback = GLFWErrorCallback.create { error, description -> errorCallback?.invoke(ERROR_CODES[error]!!, memUTF8(description)) }
+    val defaultErrorCallback: GLFWErrorCallbackT = { error, description -> System.err.println("glfw $error error: $description") }
+
+    var errorCallback: GLFWErrorCallbackT? = null
+        set(value) {
+            if (value != null) {
+                field = value
+                nglfwSetErrorCallback(nErrorCallback.adr)
+            } else
+                nglfwSetErrorCallback(NULL)
+        }
+
+    val vulkanSupported: Boolean
+        get() = GLFWVulkan.glfwVulkanSupported()
+
+    val time: Double
+        get() = glfwGetTime()
+
+    val primaryMonitor: GlfwMonitor
+        get() = glfwGetPrimaryMonitor()
+
+    /** videoMode of primaryMonitor */
+    val videoMode: GLFWVidMode
+        get() = glfwGetVideoMode(primaryMonitor)!!
+
+    fun videoMode(monitor: GlfwMonitor): GLFWVidMode? = glfwGetVideoMode(monitor)
+
+    val resolution: Vec2i
+        get() = Vec2i(videoMode.width, videoMode.height)
+
+    var swapInterval = 0
+        set(value) = glfwSwapInterval(value)
 
     fun pollEvents() = glfwPollEvents()
 
@@ -103,7 +114,6 @@ object glfw {
         get() {
             val pCount = appBuffer.intBuffer
             val ppNames = GLFWVulkan.nglfwGetRequiredInstanceExtensions(pCount.adr)
-            val a = GLFWVulkan.glfwGetRequiredInstanceExtensions()
             val count = pCount[0]
             val pNames = MemoryUtil.memPointerBufferSafe(ppNames, count) ?: return arrayListOf()
             val res = ArrayList<String>(count)
@@ -117,21 +127,57 @@ object glfw {
         VK_CHECK_RESULT(GLFWVulkan.nglfwCreateWindowSurface(instance.adr, windowHandle, NULL, pSurface))
         return memGetLong(pSurface)
     }
+
+    enum class Error(val i: Int) {
+        none(GLFW_NO_ERROR),
+        notInitialized(0x00010001),
+        noCurrentContext(0x00010002),
+        invalidEnum(0x00010003),
+        invalidValue(0x00010004),
+        outOfMemory(0x00010005),
+        apiUnavailable(0x00010006),
+        versionUnavailable(0x00010007),
+        platformError(0x00010008),
+        formatUnavailable(0x00010009);
+
+        companion object {
+            infix fun of(i: Int) = values().first { it.i == i }
+        }
+    }
+
+    val error: Error
+        get() {
+            val pointer = appBuffer.pointerBuffer
+            val code = glfwGetError(pointer)
+            errorDescription = when {
+                code != GLFW_NO_ERROR -> memUTF8(pointer[0])
+                else -> ""
+            }
+            return Error of pointer[0].i
+        }
+    var errorDescription = ""
+
+    fun <T> initHint(block: initHint.() -> T) = initHint.block()
+    fun <T> windowHint(block: windowHint.() -> T) = windowHint.block()
 }
 
-inline val GLFWVidMode.width: Int
-    get() = GLFWVidMode.nwidth(adr)
-inline val GLFWVidMode.height: Int
-    get() = GLFWVidMode.nheight(adr)
-inline val GLFWVidMode.size: Vec2i
-    get() = Vec2i(width, height)
-inline val GLFWVidMode.redBits: Int
-    get() = GLFWVidMode.nredBits(adr)
-inline val GLFWVidMode.greenBits: Int
-    get() = GLFWVidMode.ngreenBits(adr)
-inline val GLFWVidMode.blueBits: Int
-    get() = GLFWVidMode.nblueBits(adr)
-inline val GLFWVidMode.refreshRate: Int
-    get() = GLFWVidMode.nrefreshRate(adr)
+object initHint {
 
-typealias GLFWErrorCallbackT = (String, String) -> Unit
+    var joystickHatButtons = true
+        set(value) {
+            glfwInitHint(GLFW_JOYSTICK_HAT_BUTTONS, value.i)
+            field = value
+        }
+
+    var cocoaChdirResources = true
+        set(value) {
+            glfwInitHint(GLFW_COCOA_CHDIR_RESOURCES, value.i)
+            field = value
+        }
+
+    var cocoaMenubar = true
+        set(value) {
+            glfwInitHint(GLFW_COCOA_MENUBAR, value.i)
+            field = value
+        }
+}

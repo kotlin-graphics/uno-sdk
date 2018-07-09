@@ -51,6 +51,24 @@ object windowHint {
             field = value
         }
 
+    var centerCursor = true
+        set(value) {
+            glfwWindowHint(GLFW_CENTER_CURSOR, value.i)
+            field = value
+        }
+
+    var transparentFramebuffer = false
+        set(value) {
+            glfwWindowHint(GLFW_TRANSPARENT_FRAMEBUFFER, value.i)
+            field = value
+        }
+
+    var focusOnShow = true
+        set(value) {
+            glfwWindowHint(GLFW_FOCUS_ON_SHOW, value.i)
+            field = value
+        }
+
     var redBits = 8
         set(value) {
             glfwWindowHint(GLFW_RED_BITS, value)
@@ -147,87 +165,93 @@ object windowHint {
             field = value
         }
 
-    var api = "gl"
+    enum class Api { gl, glEs, None }
+
+    var api = Api.gl
         set(value) {
             glfwWindowHint(GLFW_CLIENT_API, when (value) {
-                "gl" -> GLFW_OPENGL_API
-                "es" -> GLFW_OPENGL_ES_API
-                "none" -> GLFW_NO_API
-                else -> throw Error("invalid client api, possible values [gl, es, none]")
+                Api.gl -> GLFW_OPENGL_API
+                Api.glEs -> GLFW_OPENGL_ES_API
+                Api.None -> GLFW_NO_API
             })
             field = value
         }
 
     val context = Context
 
-    var forwardComp = true
+    object Context {
+
+        enum class CreationApi { native, egl }
+        var creationApi = CreationApi.native
+            set(value) {
+                glfwWindowHint(GLFW_CONTEXT_CREATION_API, when (value) {
+                    CreationApi.native -> GLFW_NATIVE_CONTEXT_API
+                    CreationApi.egl -> GLFW_EGL_CONTEXT_API
+                })
+                field = value
+            }
+
+        var version = "1.0"
+            set(value) {
+                glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, java.lang.Integer.parseInt(value[0].toString()))
+                glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, java.lang.Integer.parseInt(value[2].toString()))
+                field = value
+            }
+
+        var major = 1
+            set(value) {
+                glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, value)
+                field = value
+            }
+
+        var minor = 0
+            set(value) {
+                glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, value)
+                field = value
+            }
+
+        enum class Robustness { noResetNotification, loseContextOnReset, none }
+        var robustness = Robustness.none
+            set(value) {
+                glfwWindowHint(GLFW_CONTEXT_ROBUSTNESS, when(value) {
+                    Robustness.none -> GLFW_NO_ROBUSTNESS
+                    Robustness.noResetNotification -> GLFW_NO_RESET_NOTIFICATION
+                    Robustness.loseContextOnReset -> GLFW_LOSE_CONTEXT_ON_RESET
+                })
+                field = value
+            }
+
+        enum class ReleaseBehaviour { any, flush, none }
+        var releaseBehaviour = ReleaseBehaviour.any
+            set(value) {
+                glfwWindowHint(GLFW_CONTEXT_RELEASE_BEHAVIOR, when(value){
+                    ReleaseBehaviour.any -> GLFW_ANY_RELEASE_BEHAVIOR
+                    ReleaseBehaviour.flush -> GLFW_RELEASE_BEHAVIOR_FLUSH
+                    ReleaseBehaviour.none -> GLFW_RELEASE_BEHAVIOR_NONE
+                })
+                field = value
+            }
+    }
+
+    var forwardComp = false
         set(value) {
             glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, value.i)
             field = value
         }
 
-    var debug = true
+    var debug = false
         set(value) {
             glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, value.i)
             field = value
         }
 
-    var profile = "any"
+    enum class Profile { any, compat, core }
+    var profile = Profile.any
         set(value) {
             glfwWindowHint(GLFW_OPENGL_PROFILE, when (value) {
-                "core" -> GLFW_OPENGL_CORE_PROFILE
-                "compat" -> GLFW_OPENGL_COMPAT_PROFILE
-                "any" -> GLFW_OPENGL_ANY_PROFILE
-                else -> throw Error("invalid profile, possible values [core, compat, any]")
-            })
-            field = value
-        }
-}
-
-object Context {
-
-    var creationApi = "native"
-        set(value) {
-            glfwWindowHint(GLFW_CONTEXT_CREATION_API, when (value) {
-                "native" -> GLFW_NATIVE_CONTEXT_API
-                "egl" -> GLFW_EGL_CONTEXT_API
-                else -> throw Error("invalid context creation api, possible values [native, egl]")
-            })
-            field = value
-        }
-
-    var version = "1.0"
-        set(value) {
-            glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, java.lang.Integer.parseInt(value[0].toString()))
-            glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, java.lang.Integer.parseInt(value[2].toString()))
-            field = value
-        }
-
-    var major = 1
-        set(value) {
-            glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, value)
-            field = value
-        }
-
-    var minor = 0
-        set(value) {
-            glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, value)
-            field = value
-        }
-
-    var robustness = GLFW_NO_ROBUSTNESS
-        set(value) {
-            glfwWindowHint(GLFW_CONTEXT_ROBUSTNESS, value)
-            field = value
-        }
-
-    var releaseBehaviour = "any"
-        set(value) {
-            glfwWindowHint(GLFW_CONTEXT_ROBUSTNESS, when(value){
-                "any" -> GLFW_ANY_RELEASE_BEHAVIOR
-                "flush" -> GLFW_RELEASE_BEHAVIOR_FLUSH
-                "none" -> GLFW_RELEASE_BEHAVIOR_NONE
-                else -> throw Error("invalid release behaviour, possible values [any, flush, none]")
+                Profile.core -> GLFW_OPENGL_CORE_PROFILE
+                Profile.compat -> GLFW_OPENGL_COMPAT_PROFILE
+                Profile.any -> GLFW_OPENGL_ANY_PROFILE
             })
             field = value
         }

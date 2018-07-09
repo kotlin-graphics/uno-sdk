@@ -40,6 +40,7 @@ import java.io.PrintWriter
 import java.nio.file.Paths
 import kotlin.reflect.KVisibility
 import kotlin.reflect.full.memberProperties
+import uno.glfw.windowHint.Profile
 
 /**
  * Created by GBarbieri on 10.03.2017.
@@ -66,10 +67,11 @@ fun main(args: Array<String>) {
     }
 
     with(glfw) {
+        println(error)
         init()
         windowHint {
             context.version = version
-            profile = "core"
+            profile = Profile.core
         }
     }
 
