@@ -2,6 +2,7 @@ package uno.glfw
 
 import ab.appBuffer
 import glm_.buffer.adr
+import glm_.i
 import glm_.vec2.Vec2i
 import org.lwjgl.glfw.GLFW.*
 import org.lwjgl.glfw.GLFWErrorCallback
@@ -12,12 +13,11 @@ import org.lwjgl.system.MemoryUtil
 import org.lwjgl.system.MemoryUtil.*
 import org.lwjgl.system.Platform
 import org.lwjgl.vulkan.VkInstance
+import uno.glfw.windowHint.Profile
 import vkk.VK_CHECK_RESULT
 import vkk.VkSurfaceKHR
 import vkk.adr
-import java.io.PrintStream
 import java.util.function.BiPredicate
-import uno.glfw.windowHint.Profile
 
 /**
  * Created by elect on 22/04/17.
@@ -80,7 +80,7 @@ object glfw {
 
     var errorCallback: GLFWErrorCallbackT? = null
         set(value) {
-            if(value != null) {
+            if (value != null) {
                 field = value
                 nglfwSetErrorCallback(nErrorCallback.adr)
             } else
@@ -128,5 +128,56 @@ object glfw {
         return memGetLong(pSurface)
     }
 
+    enum class Error(val i: Int) {
+        none(GLFW_NO_ERROR),
+        notInitialized(0x00010001),
+        noCurrentContext(0x00010002),
+        invalidEnum(0x00010003),
+        invalidValue(0x00010004),
+        outOfMemory(0x00010005),
+        apiUnavailable(0x00010006),
+        versionUnavailable(0x00010007),
+        platformError(0x00010008),
+        formatUnavailable(0x00010009);
+
+        companion object {
+            infix fun of(i: Int) = values().first { it.i == i }
+        }
+    }
+
+    val error: Error
+        get() {
+            val pointer = appBuffer.pointerBuffer
+            val code = glfwGetError(pointer)
+            errorDescription = when {
+                code != GLFW_NO_ERROR -> memUTF8(pointer[0])
+                else -> ""
+            }
+            return Error of pointer[0].i
+        }
+    var errorDescription = ""
+
+    fun <T> initHint(block: initHint.() -> T) = initHint.block()
     fun <T> windowHint(block: windowHint.() -> T) = windowHint.block()
+}
+
+object initHint {
+
+    var joystickHatButtons = true
+        set(value) {
+            glfwInitHint(GLFW_JOYSTICK_HAT_BUTTONS, value.i)
+            field = value
+        }
+
+    var cocoaChdirResources = true
+        set(value) {
+            glfwInitHint(GLFW_COCOA_CHDIR_RESOURCES, value.i)
+            field = value
+        }
+
+    var cocoaMenubar = true
+        set(value) {
+            glfwInitHint(GLFW_COCOA_MENUBAR, value.i)
+            field = value
+        }
 }

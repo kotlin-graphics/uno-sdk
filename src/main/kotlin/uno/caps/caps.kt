@@ -67,6 +67,7 @@ fun main(args: Array<String>) {
     }
 
     with(glfw) {
+        println(error)
         init()
         windowHint {
             context.version = version

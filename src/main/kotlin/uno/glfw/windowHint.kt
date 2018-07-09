@@ -51,6 +51,24 @@ object windowHint {
             field = value
         }
 
+    var centerCursor = true
+        set(value) {
+            glfwWindowHint(GLFW_CENTER_CURSOR, value.i)
+            field = value
+        }
+
+    var transparentFramebuffer = false
+        set(value) {
+            glfwWindowHint(GLFW_TRANSPARENT_FRAMEBUFFER, value.i)
+            field = value
+        }
+
+    var focusOnShow = true
+        set(value) {
+            glfwWindowHint(GLFW_FOCUS_ON_SHOW, value.i)
+            field = value
+        }
+
     var redBits = 8
         set(value) {
             glfwWindowHint(GLFW_RED_BITS, value)

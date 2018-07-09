@@ -3,6 +3,7 @@ package uno.glfw
 import ab.appBuffer
 import glm_.bool
 import glm_.f
+import glm_.i
 import glm_.vec2.Vec2
 import glm_.vec2.Vec2d
 import glm_.vec2.Vec2i
@@ -19,6 +20,22 @@ import java.nio.FloatBuffer
  * Created by GBarbieri on 24.04.2017.
  */
 
+
+
+/*  TODO
+    icon
+    glfwGetJoystickHats, GLFW_JOYSTICK_HAT_BUTTONS
+    glfwSetJoystickUserPointer
+    glfwSetMonitorUserPointer
+    glfwSetWindowMaximizeCallback
+    glfwGetKeyScancode
+    glfwGetWindowContentScale, glfwGetMonitorContentScale and glfwSetWindowContentScaleCallback
+    glfwGetGamepadState function, GLFW_GAMEPAD_* and GLFWgamepadstate
+    glfwGetJoystickGUID
+    glfwGetGamepadName
+    glfwJoystickIsGamepad
+    glfwUpdateGamepadMappings
+ */
 
 open class GlfwWindow(var handle: GlfwWindowHandle) {
 
@@ -96,8 +113,6 @@ open class GlfwWindow(var handle: GlfwWindowHandle) {
 
     fun setSizeLimit(width: IntRange, height: IntRange) = glfwSetWindowSizeLimits(handle, width.start, height.start, width.endInclusive, height.endInclusive)
 
-    // TODO icon
-
     var pos = Vec2i()
         get() {
             val x = appBuffer.int
@@ -115,6 +130,8 @@ open class GlfwWindow(var handle: GlfwWindowHandle) {
             return field(memGetInt(x), memGetInt(y))
         }
         set(value) = glfwSetWindowSize(handle, value.x, value.y)
+
+    fun sizeLimit(minWidth: Int, minHeight: Int, maxWidth: Int, maxHeight: Int) = glfwSetWindowSizeLimits(handle, minWidth, minHeight, maxWidth, maxHeight)
 
     val aspect: Float
         get() = size.aspect
@@ -142,6 +159,28 @@ open class GlfwWindow(var handle: GlfwWindowHandle) {
             return field(memGetInt(x), memGetInt(y), memGetInt(z), memGetInt(w))
         }
 
+    val contentScale = Vec2()
+        get() {
+            val x = appBuffer.float
+            val y = appBuffer.float
+            nglfwGetWindowContentScale(handle, x, y)
+            return field(memGetFloat(x), memGetFloat(y))
+        }
+
+    var opacity: Float
+        get() = glfwGetWindowOpacity(handle)
+        set(value) = glfwSetWindowOpacity(handle, value)
+
+    var stickyKeys: Boolean
+        get() = glfwGetInputMode(handle, GLFW_STICKY_KEYS).bool
+        set(value) = glfwSetInputMode(handle, GLFW_STICKY_KEYS, value.i)
+
+    var lockKeyMods: Boolean
+        get() = glfwGetInputMode(handle, GLFW_LOCK_KEY_MODS).bool
+        set(value) = glfwSetInputMode(handle, GLFW_LOCK_KEY_MODS, value.i)
+
+    fun defaultHints() = glfwDefaultWindowHints()
+
     fun iconify() = glfwIconifyWindow(handle)
     fun restore() = glfwRestoreWindow(handle)
     fun maximize() = glfwMaximizeWindow(handle)
@@ -158,13 +197,29 @@ open class GlfwWindow(var handle: GlfwWindowHandle) {
         }
         set(value) = glfwSetWindowMonitor(handle, value.monitor, value.xPos, value.yPos, value.width, value.height, value.refreshRate)
 
-    val isFocused get() = glfwGetWindowAttrib(handle, GLFW_FOCUSED).bool
-    val isIconified get() = glfwGetWindowAttrib(handle, GLFW_ICONIFIED).bool
-    val isMaximized get() = glfwGetWindowAttrib(handle, GLFW_MAXIMIZED).bool
-    val isVisible get() = glfwGetWindowAttrib(handle, GLFW_VISIBLE).bool
-    val isResizable get() = glfwGetWindowAttrib(handle, GLFW_RESIZABLE).bool
-    val isDecorated get() = glfwGetWindowAttrib(handle, GLFW_DECORATED).bool
-    val isFloating get() = glfwGetWindowAttrib(handle, GLFW_FLOATING).bool
+    val isFocused: Boolean
+        get() = glfwGetWindowAttrib(handle, GLFW_FOCUSED).bool
+    val isIconified: Boolean
+        get() = glfwGetWindowAttrib(handle, GLFW_ICONIFIED).bool
+    val isMaximized: Boolean
+        get() = glfwGetWindowAttrib(handle, GLFW_MAXIMIZED).bool
+    val isVisible: Boolean
+        get() = glfwGetWindowAttrib(handle, GLFW_VISIBLE).bool
+    val isHovered: Boolean
+        get() = glfwGetWindowAttrib(handle, GLFW_HOVERED).bool
+
+    var resizable: Boolean
+        get() = glfwGetWindowAttrib(handle, GLFW_RESIZABLE).bool
+        set(value) = glfwSetWindowAttrib(handle, GLFW_RESIZABLE, value.i)
+    var decorated: Boolean
+        get() = glfwGetWindowAttrib(handle, GLFW_DECORATED).bool
+        set(value) = glfwSetWindowAttrib(handle, GLFW_DECORATED, value.i)
+    var floating: Boolean
+        get() = glfwGetWindowAttrib(handle, GLFW_FLOATING).bool
+        set(value) = glfwSetWindowAttrib(handle, GLFW_FLOATING, value.i)
+    var autoIconified: Boolean
+        get() = glfwGetWindowAttrib(handle, GLFW_AUTO_ICONIFY).bool
+        set(value) = glfwSetWindowAttrib(handle, GLFW_AUTO_ICONIFY, value.i)
 
     fun makeContextCurrent() = glfwMakeContextCurrent(handle)
 
@@ -370,4 +425,6 @@ open class GlfwWindow(var handle: GlfwWindowHandle) {
 
     fun swapBuffers() = glfwSwapBuffers(handle)
     inline fun present() = swapBuffers()
+
+    fun requestAttention() = glfwRequestWindowAttention(handle)
 }
