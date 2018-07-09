@@ -10,7 +10,6 @@ import glm_.vec4.Vec4i
 import org.lwjgl.glfw.*
 import org.lwjgl.glfw.GLFW.*
 import org.lwjgl.opengl.GL
-import org.lwjgl.system.MemoryUtil
 import org.lwjgl.system.MemoryUtil.*
 import org.lwjgl.vulkan.VkInstance
 import java.nio.ByteBuffer
@@ -54,12 +53,14 @@ open class GlfwWindow(var handle: GlfwWindowHandle) {
             glfwSetMouseButtonCallback(handle, nMouseButtonCallback)
             glfwSetScrollCallback(handle, nScrollCallback)
             glfwSetWindowCloseCallback(handle, nWindowCloseCallback)
+            glfwSetWindowContentScaleCallback(handle, nWindowContentScaleCallback)
             cursorPosCallback = defaultCursorPosCallback
             framebufferSizeCallback = defaultFramebufferSizeCallback
             keyCallback = defaultKeyCallback
             mouseButtonCallback = defaultMouseButtonCallback
             scrollCallback = defaultScrollCallback
             windowCloseCallback = defaultWindowCloseCallback
+            windowContentScaleCallback = defaultWindowContentScaleCallback
         }
     }
 
@@ -184,6 +185,9 @@ open class GlfwWindow(var handle: GlfwWindowHandle) {
         set(value) = glfwSetCursorPos(handle, value.x, value.y)
 
 
+    // ------------------- Callbacks -------------------
+
+
     var charCallback: CharCallbackT? = null
         set(value) {
             charCallbacks["0 - default"] = value
@@ -249,11 +253,21 @@ open class GlfwWindow(var handle: GlfwWindowHandle) {
     val nWindowCloseCallback = GLFWWindowCloseCallbackI { windowCloseCallbacks.values.forEach { it() } }
 
 
-    val defaultKeyCallback: KeyCallbackT = { key, _, _, mods -> onKeyPressed(key, mods) }
-    val defaultMouseButtonCallback: MouseButtonCallbackT = { button, action, mods -> onMouseButtonEvent(button, action, mods) }
+    var windowContentScaleCallback: WindowContentScaleCallbackT? = null
+        set(value) {
+            windowContentScaleCallbacks["0 - default"] = value
+            field = value
+        }
+    val windowContentScaleCallbacks = sortedMapOf<String, WindowContentScaleCallbackT>()
+    val nWindowContentScaleCallback = GLFWWindowContentScaleCallbackI { _, xScale, yScale -> windowContentScaleCallbacks.values.forEach { it(Vec2(xScale, yScale)) } }
+
+
+    val defaultKeyCallback: KeyCallbackT = { key, scanCode, action, mods -> onKey(key, scanCode, action, mods) }
+    val defaultMouseButtonCallback: MouseButtonCallbackT = { button, action, mods -> onMouse(button, action, mods) }
     val defaultCursorPosCallback: CursorPosCallbackT = { pos -> onMouseMoved(pos) }
     val defaultScrollCallback: ScrollCallbackT = { scroll -> onMouseScrolled(scroll.y.f) }
     val defaultWindowCloseCallback: WindowCloseCallbackT = ::onWindowClosed
+    val defaultWindowContentScaleCallback: WindowContentScaleCallbackT = { newScale -> onWindowContentScaled(newScale) }
     val defaultFramebufferSizeCallback: FramebufferSizeCallbackT = { size -> onWindowResized(size) }
 
     //
@@ -264,7 +278,7 @@ open class GlfwWindow(var handle: GlfwWindowHandle) {
     open fun onWindowClosed() {}
 
     // Keyboard handling
-    open fun onKeyEvent(key: Int, scanCode: Int, action: Int, mods: Int) {
+    open fun onKey(key: Int, scanCode: Int, action: Int, mods: Int) {
         when (action) {
             GLFW_PRESS -> onKeyPressed(key, mods)
             GLFW_RELEASE -> onKeyReleased(key, mods)
@@ -275,7 +289,7 @@ open class GlfwWindow(var handle: GlfwWindowHandle) {
     open fun onKeyReleased(key: Int, mods: Int) {}
 
     // Mouse handling
-    open fun onMouseButtonEvent(button: Int, action: Int, mods: Int) {
+    open fun onMouse(button: Int, action: Int, mods: Int) {
         when (action) {
             GLFW_PRESS -> onMousePressed(button, mods)
             GLFW_RELEASE -> onMouseReleased(button, mods)
@@ -287,6 +301,7 @@ open class GlfwWindow(var handle: GlfwWindowHandle) {
     open fun onMouseMoved(newPos: Vec2) {}
     open fun onMouseScrolled(delta: Float) {}
 
+    open fun onWindowContentScaled(newScale: Vec2) {}
 
     var cursorStatus: CursorStatus
         get() = when (glfwGetInputMode(handle, GLFW_CURSOR)) {
@@ -339,7 +354,7 @@ open class GlfwWindow(var handle: GlfwWindowHandle) {
 
     var autoSwap = true
 
-    inline fun loop(block: () -> Unit) = loop( { isOpen }, block)
+    inline fun loop(block: () -> Unit) = loop({ isOpen }, block)
 
     inline fun loop(condition: () -> Boolean, block: () -> Unit) {
         while (condition()) {

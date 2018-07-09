@@ -21,3 +21,4 @@ typealias KeyCallbackT = (key: Int, scanCode: Int, action: Int, mods: Int) -> Un
 typealias MouseButtonCallbackT = (button: Int, action: Int, mods: Int) -> Unit
 typealias ScrollCallbackT = (scroll: Vec2d) -> Unit
 typealias WindowCloseCallbackT = () -> Unit
+typealias WindowContentScaleCallbackT = (Vec2) -> Unit
