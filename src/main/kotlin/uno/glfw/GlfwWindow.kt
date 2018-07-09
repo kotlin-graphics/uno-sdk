@@ -21,23 +21,23 @@ import java.nio.FloatBuffer
  */
 
 
-open class GlfwWindow(var handle: Long) {
+open class GlfwWindow(var handle: GlfwWindowHandle) {
 
     constructor(windowSize: Vec2i,
                 title: String,
-                monitor: Long = NULL,
+                monitor: GlfwMonitor = NULL,
                 position: Vec2i = Vec2i(Int.MIN_VALUE),
                 installCallbacks: Boolean = true) : this(windowSize.x, windowSize.y, title, monitor, position, installCallbacks)
 
     constructor(x: Int,
                 title: String,
-                monitor: Long = NULL,
+                monitor: GlfwMonitor = NULL,
                 position: Vec2i = Vec2i(Int.MIN_VALUE),
                 installCallbacks: Boolean = true) : this(x, x, title, monitor, position, installCallbacks)
 
     constructor(width: Int, height: Int,
                 title: String,
-                monitor: Long = NULL,
+                monitor: GlfwMonitor = NULL,
                 position: Vec2i = Vec2i(Int.MIN_VALUE),
                 installCallbacks: Boolean = true) : this(glfwCreateWindow(width, height, title, monitor, NULL)) {
 
@@ -64,25 +64,26 @@ open class GlfwWindow(var handle: Long) {
     }
 
     init {
-        if (handle == MemoryUtil.NULL) {
+        if (handle == NULL) {
             glfw.terminate()
             throw RuntimeException("Failed to create the GLFW window")
         }
     }
 
-    fun init() {
+    fun init(show: Boolean = true) {
         makeContextCurrent()
         /*  This line is critical for LWJGL's interoperation with GLFW's OpenGL context,
             or any context that is managed externally.
             LWJGL detects the context that is current in the current thread, creates the GLCapabilities instance and
             makes the OpenGL bindings available for use. */
         GL.createCapabilities()
-        show()
+        show(show)
     }
 
-    val isOpen get() = !shouldClose
+    val isOpen: Boolean
+        get() = !shouldClose
 
-    var shouldClose
+    var shouldClose: Boolean
         get() = glfwWindowShouldClose(handle)
         set(value) = glfwSetWindowShouldClose(handle, value)
 
@@ -114,7 +115,8 @@ open class GlfwWindow(var handle: Long) {
         }
         set(value) = glfwSetWindowSize(handle, value.x, value.y)
 
-    val aspect get() = size.aspect
+    val aspect: Float
+        get() = size.aspect
 //        set(value) = glfwSetWindowAspectRatio(handle, (value * 1_000).i, 1_000)
 
     var aspectRatio = Vec2i()
@@ -155,13 +157,13 @@ open class GlfwWindow(var handle: Long) {
         }
         set(value) = glfwSetWindowMonitor(handle, value.monitor, value.xPos, value.yPos, value.width, value.height, value.refreshRate)
 
-    val focused get() = glfwGetWindowAttrib(handle, GLFW_FOCUSED).bool
-    val iconified get() = glfwGetWindowAttrib(handle, GLFW_ICONIFIED).bool
-    val maximized get() = glfwGetWindowAttrib(handle, GLFW_MAXIMIZED).bool
-    val visible get() = glfwGetWindowAttrib(handle, GLFW_VISIBLE).bool
-    val resizable get() = glfwGetWindowAttrib(handle, GLFW_RESIZABLE).bool
-    val decorated get() = glfwGetWindowAttrib(handle, GLFW_DECORATED).bool
-    val floating get() = glfwGetWindowAttrib(handle, GLFW_FLOATING).bool
+    val isFocused get() = glfwGetWindowAttrib(handle, GLFW_FOCUSED).bool
+    val isIconified get() = glfwGetWindowAttrib(handle, GLFW_ICONIFIED).bool
+    val isMaximized get() = glfwGetWindowAttrib(handle, GLFW_MAXIMIZED).bool
+    val isVisible get() = glfwGetWindowAttrib(handle, GLFW_VISIBLE).bool
+    val isResizable get() = glfwGetWindowAttrib(handle, GLFW_RESIZABLE).bool
+    val isDecorated get() = glfwGetWindowAttrib(handle, GLFW_DECORATED).bool
+    val isFloating get() = glfwGetWindowAttrib(handle, GLFW_FLOATING).bool
 
     fun makeContextCurrent() = glfwMakeContextCurrent(handle)
 
@@ -298,7 +300,7 @@ open class GlfwWindow(var handle: Long) {
             CursorStatus.Hidden -> GLFW_CURSOR_HIDDEN
             CursorStatus.Disabled -> GLFW_CURSOR_DISABLED
         })
-    var cursor: Long
+    var cursor: GlfwCursor
         get() = NULL
         set(value) = glfwSetCursor(handle, value)
 
@@ -351,14 +353,6 @@ open class GlfwWindow(var handle: Long) {
 
     infix fun createSurface(instance: VkInstance) = glfw.createWindowSurface(handle, instance)
 
-    fun present() = glfwSwapBuffers(handle)
     fun swapBuffers() = glfwSwapBuffers(handle)
+    inline fun present() = swapBuffers()
 }
-
-typealias CharCallbackT = (codePoint: Int) -> Unit
-typealias CursorPosCallbackT = (pos: Vec2) -> Unit
-typealias FramebufferSizeCallbackT = (size: Vec2i) -> Unit
-typealias KeyCallbackT = (key: Int, scanCode: Int, action: Int, mods: Int) -> Unit
-typealias MouseButtonCallbackT = (button: Int, action: Int, mods: Int) -> Unit
-typealias ScrollCallbackT = (scroll: Vec2d) -> Unit
-typealias WindowCloseCallbackT = () -> Unit
