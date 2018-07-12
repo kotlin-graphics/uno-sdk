@@ -10,8 +10,7 @@ import glm_.vec2.Vec2i
 import glm_.vec4.Vec4i
 import org.lwjgl.glfw.*
 import org.lwjgl.glfw.GLFW.*
-import org.lwjgl.opengl.GL
-import org.lwjgl.opengl.GLUtil
+import org.lwjgl.opengl.*
 import org.lwjgl.system.Callback
 import org.lwjgl.system.MemoryUtil.*
 import org.lwjgl.vulkan.VkInstance
@@ -99,8 +98,11 @@ open class GlfwWindow(var handle: GlfwWindowHandle) {
             makes the OpenGL bindings available for use. */
         GL.createCapabilities()
         show(show)
-        if (windowHint.debug)
+        if (windowHint.debug) {
             debugProc = GLUtil.setupDebugMessageCallback()
+            // turn off notifications only
+
+        }
     }
 
     val isOpen: Boolean
@@ -228,8 +230,8 @@ open class GlfwWindow(var handle: GlfwWindowHandle) {
 
     fun makeContextCurrent() = glfwMakeContextCurrent(handle)
 
+    /** Free the window callbacks and destroy the window and reset its handle back to NULL */
     fun destroy() {
-        // Free the window callbacks and destroy the window
         Callbacks.glfwFreeCallbacks(handle)
         debugProc?.free()
         glfwDestroyWindow(handle)
