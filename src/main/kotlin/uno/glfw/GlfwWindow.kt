@@ -11,6 +11,8 @@ import glm_.vec4.Vec4i
 import org.lwjgl.glfw.*
 import org.lwjgl.glfw.GLFW.*
 import org.lwjgl.opengl.GL
+import org.lwjgl.opengl.GLUtil
+import org.lwjgl.system.Callback
 import org.lwjgl.system.MemoryUtil.*
 import org.lwjgl.vulkan.VkInstance
 import java.nio.ByteBuffer
@@ -19,7 +21,6 @@ import java.nio.FloatBuffer
 /**
  * Created by GBarbieri on 24.04.2017.
  */
-
 
 
 /*  TODO
@@ -88,6 +89,8 @@ open class GlfwWindow(var handle: GlfwWindowHandle) {
         }
     }
 
+    var debugProc: Callback? = null
+
     fun init(show: Boolean = true) {
         makeContextCurrent()
         /*  This line is critical for LWJGL's interoperation with GLFW's OpenGL context,
@@ -96,6 +99,8 @@ open class GlfwWindow(var handle: GlfwWindowHandle) {
             makes the OpenGL bindings available for use. */
         GL.createCapabilities()
         show(show)
+        if (windowHint.debug)
+            debugProc = GLUtil.setupDebugMessageCallback()
     }
 
     val isOpen: Boolean
@@ -226,6 +231,7 @@ open class GlfwWindow(var handle: GlfwWindowHandle) {
     fun destroy() {
         // Free the window callbacks and destroy the window
         Callbacks.glfwFreeCallbacks(handle)
+        debugProc?.free()
         glfwDestroyWindow(handle)
         handle = NULL
     }
