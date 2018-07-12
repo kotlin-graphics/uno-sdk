@@ -8,6 +8,10 @@ import glm_.vec2.Vec2
 import glm_.vec2.Vec2d
 import glm_.vec2.Vec2i
 import glm_.vec4.Vec4i
+import gln.debug.GlDebugSeverity
+import gln.debug.GlDebugSource
+import gln.debug.GlDebugType
+import gln.debug.glDebugMessageControl
 import org.lwjgl.glfw.*
 import org.lwjgl.glfw.GLFW.*
 import org.lwjgl.opengl.*
@@ -101,7 +105,7 @@ open class GlfwWindow(var handle: GlfwWindowHandle) {
         if (windowHint.debug) {
             debugProc = GLUtil.setupDebugMessageCallback()
             // turn off notifications only
-
+            glDebugMessageControl(GlDebugSource.DONT_CARE, GlDebugType.DONT_CARE, GlDebugSeverity.NOTIFICATION, 0, false)
         }
     }
 
