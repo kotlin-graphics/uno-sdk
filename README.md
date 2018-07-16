@@ -6,14 +6,9 @@
 [![Release](https://jitpack.io/v/kotlin-graphics/uno-sdk.svg)](https://jitpack.io/#kotlin-graphics/uno-sdk) 
 [![Slack Status](http://slack.kotlinlang.org/badge.svg)](http://slack.kotlinlang.org/)
 
-Modules:
+This is kind of a small suite, born and shaped around GL, it includes the gln dependencies, such as [unsigned support](https://github.com/elect86/kotlin-unsigned), [glm](https://github.com/kotlin-graphics/glm) and [gli](https://github.com/kotlin-graphics/gli). Its main usage is basically as wrapper for the lwjgl glfw binding.
 
-- glfw wrapper
-- GlfwWindow
-
-Don't hesitate to contribute to the project by submitting [issues](https://github.com/kotlin-graphics/uno-sdk/issues) or [pull requests](https://github.com/kotlin-graphics/uno-sdk/pulls) for bugs and features. Any feedback is welcome at [elect86@gmail.com](mailto://elect86@gmail.com).
-
-# Simplest hello world
+A kind of a [gln](https://github.com/kotlin-graphics/glm) for glfw. So, code more compact, clear and intuitive. You can have up and running a whole gl clear example in just a couple of lines:
 
             glfw.init("3.3")
 
@@ -26,6 +21,23 @@ Don't hesitate to contribute to the project by submitting [issues](https://githu
             window.loop {
                 glClear(GL_COLOR_BUFFER_BIT)
             }
+
+Plus some other small utils like:
+- methods for allocating very easily many different type of buffers from a lot of different data type, such as different arrays and so on.
+- an cap class for a deep and complete resume about a machine opengl capabilities
+- matrixStack for [glm](https://github.com/kotlin-graphics/glm)
+- glsl utils (to refresh)
+- an experimental kotlin stlib on intBuffers. So that you can for example `textureName.forEach(::glDestroyTexture)`
+- mousePole, an util for camera management
+- and attempt to port stb completely on jvm (unfinished)
+- timer util
+
+And lately it also includes a counterpart of gln for vulkan, [vkk](https://github.com/kotlin-graphics/vkk), plus an util for making short-live allocations easy and free, [appBuffer](https://github.com/kotlin-graphics/appBuffer).
+
+
+Don't hesitate to contribute to the project by submitting [issues](https://github.com/kotlin-graphics/uno-sdk/issues) or [pull requests](https://github.com/kotlin-graphics/uno-sdk/pulls) for bugs and features. Any feedback is welcome at [elect86@gmail.com](mailto://elect86@gmail.com).
+
+
 
 ## Credits:
 
