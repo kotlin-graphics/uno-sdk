@@ -38,7 +38,9 @@ object glfw {
         init(installDefaultErrorCallback)
         windowHint {
             context.version = version
-            windowHint.profile = profile
+            val v = version[0].i * 10 + version[1].i
+            if(v >= 32) // The concept of a core profile does not exist prior to OpenGL 3.2
+                windowHint.profile = profile
         }
     }
 
