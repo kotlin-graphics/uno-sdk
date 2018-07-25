@@ -19,6 +19,8 @@ import org.lwjgl.opengl.GLUtil
 import org.lwjgl.system.Callback
 import org.lwjgl.system.MemoryUtil.*
 import org.lwjgl.vulkan.VkInstance
+import uno.kotlin.first
+import uno.kotlin.getOrfirst
 import java.nio.ByteBuffer
 import java.nio.FloatBuffer
 
@@ -255,10 +257,12 @@ open class GlfwWindow(var handle: GlfwWindowHandle) {
 
     // ------------------- Callbacks -------------------
 
+    val defaultKey = "0 - default"
 
     var charCallback: CharCallbackT? = null
+        get() = charCallbacks.getOrfirst(defaultKey)
         set(value) {
-            charCallbacks["0 - default"] = value
+            charCallbacks[defaultKey] = value
             field = value
         }
 
@@ -267,8 +271,9 @@ open class GlfwWindow(var handle: GlfwWindowHandle) {
 
 
     var cursorPosCallback: CursorPosCallbackT? = null
+        get() = cursorPosCallbacks.getOrfirst(defaultKey)
         set(value) {
-            cursorPosCallbacks["0 - default"] = value
+            cursorPosCallbacks[defaultKey] = value
             field = value
         }
 
@@ -277,8 +282,9 @@ open class GlfwWindow(var handle: GlfwWindowHandle) {
 
 
     var framebufferSizeCallback: FramebufferSizeCallbackT? = null
+        get() = framebufferSizeCallbacks.getOrfirst(defaultKey)
         set(value) {
-            framebufferSizeCallbacks["0 - default"] = value
+            framebufferSizeCallbacks[defaultKey] = value
             field = value
         }
     val framebufferSizeCallbacks = sortedMapOf<String, FramebufferSizeCallbackT>()
@@ -286,8 +292,9 @@ open class GlfwWindow(var handle: GlfwWindowHandle) {
 
 
     var keyCallback: KeyCallbackT? = null
+        get() = keyCallbacks.getOrfirst(defaultKey)
         set(value) {
-            keyCallbacks["0 - default"] = value
+            keyCallbacks[defaultKey] = value
             field = value
         }
     val keyCallbacks = sortedMapOf<String, KeyCallbackT>()
@@ -295,8 +302,9 @@ open class GlfwWindow(var handle: GlfwWindowHandle) {
 
 
     var mouseButtonCallback: MouseButtonCallbackT? = null
+        get() = mouseButtonCallbacks.getOrfirst(defaultKey)
         set(value) {
-            mouseButtonCallbacks["0 - default"] = value
+            mouseButtonCallbacks[defaultKey] = value
             field = value
         }
     val mouseButtonCallbacks = sortedMapOf<String, MouseButtonCallbackT>()
@@ -304,8 +312,9 @@ open class GlfwWindow(var handle: GlfwWindowHandle) {
 
 
     var scrollCallback: ScrollCallbackT? = null
+        get() = scrollCallbacks.getOrfirst(defaultKey)
         set(value) {
-            scrollCallbacks["0 - default"] = value
+            scrollCallbacks[defaultKey] = value
             field = value
         }
     val scrollCallbacks = sortedMapOf<String, ScrollCallbackT>()
@@ -313,8 +322,9 @@ open class GlfwWindow(var handle: GlfwWindowHandle) {
 
 
     var windowCloseCallback: WindowCloseCallbackT? = null
+        get() = windowCloseCallbacks.getOrfirst(defaultKey)
         set(value) {
-            windowCloseCallbacks["0 - default"] = value
+            windowCloseCallbacks[defaultKey] = value
             field = value
         }
     val windowCloseCallbacks = sortedMapOf<String, WindowCloseCallbackT>()
@@ -322,8 +332,9 @@ open class GlfwWindow(var handle: GlfwWindowHandle) {
 
 
     var windowContentScaleCallback: WindowContentScaleCallbackT? = null
+        get() = windowContentScaleCallbacks.getOrfirst(defaultKey)
         set(value) {
-            windowContentScaleCallbacks["0 - default"] = value
+            windowContentScaleCallbacks[defaultKey] = value
             field = value
         }
     val windowContentScaleCallbacks = sortedMapOf<String, WindowContentScaleCallbackT>()
