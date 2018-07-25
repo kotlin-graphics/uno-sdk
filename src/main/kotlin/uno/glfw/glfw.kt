@@ -14,6 +14,7 @@ import org.lwjgl.system.MemoryUtil.*
 import org.lwjgl.system.Platform
 import org.lwjgl.vulkan.VkInstance
 import uno.glfw.windowHint.Profile
+import uno.kotlin.parseInt
 import vkk.VK_CHECK_RESULT
 import vkk.VkSurfaceKHR
 import vkk.adr
@@ -38,7 +39,7 @@ object glfw {
         init(installDefaultErrorCallback)
         windowHint {
             context.version = version
-            val v = version[0].i * 10 + version[1].i
+            val v = version[0].parseInt() * 10 + version[1].parseInt()
             if(v >= 32) // The concept of a core profile does not exist prior to OpenGL 3.2
                 windowHint.profile = profile
         }
