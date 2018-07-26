@@ -3,6 +3,7 @@ package uno.kotlin
 import java.awt.event.KeyEvent
 import java.io.File
 import java.lang.Appendable
+import java.util.*
 
 /**
  * Created by GBarbieri on 30.03.2017.
@@ -55,3 +56,6 @@ infix operator fun <T>StringBuilder.plusAssign(element: T) {
 }
 
 fun <T>treeSetOf() = java.util.TreeSet<T>()
+
+fun <K, V>SortedMap<K, V>.getOrfirst(key: K): V? = get(key) ?: first
+val <K, V>SortedMap<K, V>.first: V?  get() = get(firstKey())
