@@ -39,7 +39,8 @@ One cool feature is that it supports multiple listeners of the same type, like `
 
 `charCallbacks` is the `SortedMap` containing all the current callbacks
 
-I've been chosen that so they can be easier ordered, the default callback has always this key `val defaultKey = "0 - default"`
+I've been chosen that so they can be easier ordered, the default callback has always this key:
+`val defaultKey = "0 - default"`
 
 I actually asked for this multi-callback in the native glfw, but in the meanwhile we can already use it. And this is also faster because it's all on the jvm!
     
