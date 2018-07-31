@@ -22,6 +22,27 @@ A kind of a [gln](https://github.com/kotlin-graphics/glm) for glfw. So, code mor
                 glClear(GL_COLOR_BUFFER_BIT)
             }
 
+One cool feature is that it supports multiple listeners of the same type, like `CharCallback`:
+
+    var charCallback: CharCallbackT? = null
+       get() = charCallbacks.getOrfirst(defaultKey)
+       set(value) {
+           charCallbacks[defaultKey] = value
+           field = value
+       }
+    val charCallbacks = sortedMapOf<String, CharCallbackT>()
+    val nCharCallback = GLFWCharCallbackI { _, codePoint -> charCallbacks.values.forEach { it(codePoint) } }
+    
+`nCharCallback` where `n` stays for native is the only and real callback
+
+`charCallback` is just a comfortable interface to automatically set/get a single callback
+
+`charCallbacks` is the `SortedMap` containing all the current callbacks
+
+I've been chosen that so they can be easier ordered, the default callback has always this key `val defaultKey = "0 - default"`
+
+I actually asked for this multi-callback in the native glfw, but in the meanwhile we can already use it. And this is also faster because it's all on the jvm!
+    
 Plus some other small utils like:
 - methods for allocating very easily many different type of buffers from a lot of different data type, such as different arrays and so on.
 - an cap class for a deep and complete resume about a machine opengl capabilities
