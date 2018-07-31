@@ -19,3 +19,6 @@ inline val GLFWVidMode.blueBits: Int
     get() = GLFWVidMode.nblueBits(adr)
 inline val GLFWVidMode.refreshRate: Int
     get() = GLFWVidMode.nrefreshRate(adr)
+
+
+typealias HWND = Long

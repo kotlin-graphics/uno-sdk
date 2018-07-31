@@ -451,4 +451,7 @@ open class GlfwWindow(var handle: GlfwWindowHandle) {
     inline fun present() = swapBuffers()
 
     fun requestAttention() = glfwRequestWindowAttention(handle)
+
+    val hwnd: HWND
+        get() = GLFWNativeWin32.glfwGetWin32Window(handle)
 }
