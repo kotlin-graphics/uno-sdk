@@ -17,6 +17,7 @@ import org.lwjgl.opengl.GL
 import org.lwjgl.opengl.GL43C
 import org.lwjgl.opengl.GLUtil
 import org.lwjgl.system.Callback
+import org.lwjgl.system.MemoryStack
 import org.lwjgl.system.MemoryUtil.*
 import org.lwjgl.vulkan.VkInstance
 import uno.kotlin.first
@@ -433,15 +434,23 @@ open class GlfwWindow(var handle: GlfwWindowHandle) {
 
     var autoSwap = true
 
-    inline fun loop(block: () -> Unit) = loop({ isOpen }, block)
+    inline fun loop(block: (MemoryStack) -> Unit) = loop({ isOpen }, block)
 
-    inline fun loop(condition: () -> Boolean, block: () -> Unit) {
+    /**
+     *  The `stack` passed to `block` will be automatically a stack frame in place
+     *  (i.e. it has been pushed exactly once, without popping).
+     *  So you can do any allocation on that frame without pushing/popping further
+     *  It's the user choice to pass it down the stacktrace to avoid TLS
+     */
+    inline fun loop(condition: () -> Boolean, block: (MemoryStack) -> Unit) {
         while (condition()) {
             glfwPollEvents()
-            block()
+            val stack = MemoryStack.stackGet()
+            block(stack.push())
             if (autoSwap)
                 glfwSwapBuffers(handle)
-            appBuffer.reset()
+            stack.pop()
+            appBuffer.reset() // TODO delete
         }
     }
 
