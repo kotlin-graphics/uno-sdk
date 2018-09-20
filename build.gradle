@@ -36,7 +36,7 @@ dependencies {
     implementation "$kotlin-reflect:$kotlinVersion"
 
     ext.kx = "com.github.kotlin-graphics"
-    implementation "$kx:gln:294d84e53f"
+    implementation "$kx:gln:820ec8bca2"
     implementation "$kx:vkk:86fe39a"
     implementation "$kx:appBuffer:39d8216"
 
