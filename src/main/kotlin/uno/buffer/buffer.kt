@@ -1,6 +1,8 @@
 package uno.buffer
 
 
+// TODO remove whole /buffer in favor of kool
+
 import kool.*
 import org.lwjgl.PointerBuffer
 import org.lwjgl.system.MemoryUtil
