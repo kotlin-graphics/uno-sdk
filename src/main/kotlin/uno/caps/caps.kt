@@ -1,7 +1,7 @@
 package uno.caps
 
-import glm_.buffer.cap
-import glm_.buffer.intBufferBig
+import kool.cap
+import kool.intBufferBig
 import glm_.vec2.Vec2
 import gln.checkError
 import gln.glGetVec2

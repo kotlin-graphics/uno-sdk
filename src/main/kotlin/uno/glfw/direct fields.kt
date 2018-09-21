@@ -2,23 +2,22 @@ package uno.glfw
 
 import glm_.vec2.Vec2i
 import org.lwjgl.glfw.GLFWVidMode
-import vkk.adr
 
 
 inline val GLFWVidMode.width: Int
-    get() = GLFWVidMode.nwidth(adr)
+    get() = GLFWVidMode.nwidth(address()) // TODO adr
 inline val GLFWVidMode.height: Int
-    get() = GLFWVidMode.nheight(adr)
+    get() = GLFWVidMode.nheight(address())
 inline val GLFWVidMode.size: Vec2i
     get() = Vec2i(width, height)
 inline val GLFWVidMode.redBits: Int
-    get() = GLFWVidMode.nredBits(adr)
+    get() = GLFWVidMode.nredBits(address())
 inline val GLFWVidMode.greenBits: Int
-    get() = GLFWVidMode.ngreenBits(adr)
+    get() = GLFWVidMode.ngreenBits(address())
 inline val GLFWVidMode.blueBits: Int
-    get() = GLFWVidMode.nblueBits(adr)
+    get() = GLFWVidMode.nblueBits(address())
 inline val GLFWVidMode.refreshRate: Int
-    get() = GLFWVidMode.nrefreshRate(adr)
+    get() = GLFWVidMode.nrefreshRate(address())
 
 
 typealias HWND = Long

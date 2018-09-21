@@ -1,6 +1,6 @@
 package uno.glfw
 
-import ab.appBuffer
+import glm_.BYTES
 import glm_.bool
 import glm_.f
 import glm_.i
@@ -11,6 +11,7 @@ import glm_.vec4.Vec4i
 import gln.debug.GlDebugSeverity
 import gln.debug.GlDebugSource
 import gln.debug.GlDebugType
+import kool.stak
 import org.lwjgl.glfw.*
 import org.lwjgl.glfw.GLFW.*
 import org.lwjgl.opengl.GL
@@ -20,7 +21,6 @@ import org.lwjgl.system.Callback
 import org.lwjgl.system.MemoryStack
 import org.lwjgl.system.MemoryUtil.*
 import org.lwjgl.vulkan.VkInstance
-import uno.kotlin.first
 import uno.kotlin.getOrfirst
 import java.nio.ByteBuffer
 import java.nio.FloatBuffer
@@ -129,18 +129,18 @@ open class GlfwWindow(var handle: GlfwWindowHandle) {
     fun setSizeLimit(width: IntRange, height: IntRange) = glfwSetWindowSizeLimits(handle, width.start, height.start, width.endInclusive, height.endInclusive)
 
     var pos = Vec2i()
-        get() {
-            val x = appBuffer.int
-            val y = appBuffer.int
+        get() = stak {
+            val x = it.nmalloc(Int.BYTES * 2)
+            val y = x + Int.BYTES
             nglfwGetWindowPos(handle, x, y)
             return field(memGetInt(x), memGetInt(y))
         }
         set(value) = glfwSetWindowPos(handle, value.x, value.y)
 
     var size = Vec2i()
-        get() {
-            val x = appBuffer.int
-            val y = appBuffer.int
+        get() = stak {
+            val x = it.nmalloc(Int.BYTES * 2)
+            val y = x + Int.BYTES
             nglfwGetWindowSize(handle, x, y)
             return field(memGetInt(x), memGetInt(y))
         }
@@ -157,27 +157,27 @@ open class GlfwWindow(var handle: GlfwWindowHandle) {
         set(value) = glfwSetWindowAspectRatio(handle, value.x, value.y)
 
     val framebufferSize = Vec2i()
-        get() {
-            val x = appBuffer.int
-            val y = appBuffer.int
+        get() = stak {
+            val x = it.nmalloc(Int.BYTES * 2)
+            val y = x + Int.BYTES
             nglfwGetFramebufferSize(handle, x, y)
             return field(memGetInt(x), memGetInt(y))
         }
 
     val frameSize = Vec4i()
-        get() {
-            val x = appBuffer.int
-            val y = appBuffer.int
-            val z = appBuffer.int
-            val w = appBuffer.int
+        get() = stak {
+            val x = it.nmalloc(Int.BYTES * 4)
+            val y = x + Int.BYTES
+            val z = y + Int.BYTES
+            val w = z + Int.BYTES
             nglfwGetWindowFrameSize(handle, x, y, z, w)
             return field(memGetInt(x), memGetInt(y), memGetInt(z), memGetInt(w))
         }
 
     val contentScale = Vec2()
-        get() {
-            val x = appBuffer.float
-            val y = appBuffer.float
+        get() = stak {
+            val x = it.nmalloc(Float.BYTES * 2)
+            val y = x + Float.BYTES
             nglfwGetWindowContentScale(handle, x, y)
             return field(memGetFloat(x), memGetFloat(y))
         }
@@ -247,9 +247,9 @@ open class GlfwWindow(var handle: GlfwWindowHandle) {
     }
 
     var cursorPos = Vec2d()
-        get() {
-            val x = appBuffer.double
-            val y = appBuffer.double
+        get() = stak {
+            val x = it.nmalloc(Double.BYTES * 2)
+            val y = x + Double.BYTES
             nglfwGetCursorPos(handle, x, y)
             return field(memGetDouble(x), memGetDouble(y))
         }
@@ -354,7 +354,7 @@ open class GlfwWindow(var handle: GlfwWindowHandle) {
     // Event handlers are called by the GLFW callback mechanism and should not be called directly
     //
 
-    open fun onWindowResized(newSize: Vec2i) = appBuffer.reset()
+    open fun onWindowResized(newSize: Vec2i) {}
     open fun onWindowClosed() {}
 
     // Keyboard handling
@@ -413,8 +413,8 @@ open class GlfwWindow(var handle: GlfwWindowHandle) {
     val joystick3Buttons: ByteBuffer?
         get() = getJoystickButtons(GLFW_JOYSTICK_3)
 
-    fun getJoystickButtons(joystickId: Int): ByteBuffer? {
-        val count = appBuffer.int
+    fun getJoystickButtons(joystickId: Int): ByteBuffer? = stak {
+        val count = it.nmalloc(Int.BYTES)
         val result = nglfwGetJoystickButtons(joystickId, count)
         return memByteBufferSafe(result, memGetInt(count))
     }
@@ -426,8 +426,8 @@ open class GlfwWindow(var handle: GlfwWindowHandle) {
     val joystick3Axes: FloatBuffer?
         get() = getJoystickAxes(GLFW_JOYSTICK_3)
 
-    fun getJoystickAxes(joystickId: Int): FloatBuffer? {
-        val count = appBuffer.int
+    fun getJoystickAxes(joystickId: Int): FloatBuffer? = stak {
+        val count = it.nmalloc(Int.BYTES)
         val result = nglfwGetJoystickAxes(joystickId, count)
         return memFloatBufferSafe(result, memGetInt(count))
     }
@@ -445,16 +445,15 @@ open class GlfwWindow(var handle: GlfwWindowHandle) {
     inline fun loop(condition: () -> Boolean, block: (MemoryStack) -> Unit) {
         while (condition()) {
             glfwPollEvents()
-            val stack = MemoryStack.stackGet()
-            block(stack.push())
-            if (autoSwap)
-                glfwSwapBuffers(handle)
-            stack.pop()
-            appBuffer.reset() // TODO delete
+            stak {
+                block(it)
+                if (autoSwap)
+                    glfwSwapBuffers(handle)
+            }
         }
     }
 
-    infix fun createSurface(instance: VkInstance) = glfw.createWindowSurface(handle, instance)
+//    infix fun createSurface(instance: VkInstance) = glfw.createWindowSurface(handle, instance)
 
     fun swapBuffers() = glfwSwapBuffers(handle)
     inline fun present() = swapBuffers()

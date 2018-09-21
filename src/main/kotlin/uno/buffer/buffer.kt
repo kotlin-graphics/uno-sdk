@@ -1,8 +1,7 @@
 package uno.buffer
 
 
-import glm_.BYTES
-import glm_.buffer.*
+import kool.*
 import org.lwjgl.PointerBuffer
 import org.lwjgl.system.MemoryUtil
 import uno.kotlin.Quadruple

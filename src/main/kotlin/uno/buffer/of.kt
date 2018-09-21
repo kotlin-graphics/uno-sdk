@@ -1,9 +1,9 @@
 package uno.buffer
 
 import glm_.BYTES
-import glm_.buffer.bufferBig
-import glm_.buffer.floatBufferBig
-import glm_.buffer.intBufferBig
+import kool.bufferBig
+import kool.floatBufferBig
+import kool.intBufferBig
 import glm_.i
 import glm_.set
 import glm_.vec2.Vec2

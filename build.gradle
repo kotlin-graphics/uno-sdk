@@ -12,7 +12,7 @@ group = 'com.github.kotlin-graphics'
 
 buildscript {
 
-    ext.kotlinVersion = '1.2.60'
+    ext.kotlinVersion = '1.2.70'
 
     repositories {
         mavenCentral()
@@ -23,7 +23,7 @@ buildscript {
     dependencies {
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion"
         classpath 'com.github.jengelman.gradle.plugins:shadow:2.0.4'
-        classpath "org.junit.platform:junit-platform-gradle-plugin:1.1.0"
+        classpath "org.junit.platform:junit-platform-gradle-plugin:1.2.0"
     }
 }
 
@@ -36,12 +36,11 @@ dependencies {
     implementation "$kotlin-reflect:$kotlinVersion"
 
     ext.kx = "com.github.kotlin-graphics"
-    implementation "$kx:gln:820ec8bca2"
-    implementation "$kx:vkk:86fe39a"
-    implementation "$kx:appBuffer:39d8216"
+    implementation "$kx:gln:1e35c8c7a5f0f1e61a77f0a2cb803111da5ef4df"
+//    implementation "$kx:vkk:86fe39a"
+//    implementation "$kx:appBuffer:39d8216"
 
-    testImplementation 'io.kotlintest:kotlintest:2.0.7'
-    testImplementation 'io.kotlintest:kotlintest-runner-junit5:3.0.6'
+    testImplementation 'io.kotlintest:kotlintest-runner-junit5:3.1.10'
 
 //    ext.jogl = "2.3.2"
 //    compile "org.jogamp.gluegen:gluegen-rt:$jogl"

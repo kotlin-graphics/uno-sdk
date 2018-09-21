@@ -1,9 +1,8 @@
 package uno.kotlin.buffers
 
 import glm_.b
-import glm_.buffer.intBufferBig
 import glm_.set
-import uno.buffer.intBufferBig
+import kool.intBufferBig
 import java.nio.ByteBuffer
 import java.nio.IntBuffer
 

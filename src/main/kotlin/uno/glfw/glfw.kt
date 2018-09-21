@@ -1,9 +1,9 @@
 package uno.glfw
 
-import ab.appBuffer
-import glm_.buffer.adr
+import kool.adr
 import glm_.i
 import glm_.vec2.Vec2i
+import kool.stak
 import org.lwjgl.glfw.GLFW.*
 import org.lwjgl.glfw.GLFWErrorCallback
 import org.lwjgl.glfw.GLFWVidMode
@@ -15,9 +15,9 @@ import org.lwjgl.system.Platform
 import org.lwjgl.vulkan.VkInstance
 import uno.glfw.windowHint.Profile
 import uno.kotlin.parseInt
-import vkk.VK_CHECK_RESULT
-import vkk.VkSurfaceKHR
-import vkk.adr
+//import vkk.VK_CHECK_RESULT
+//import vkk.VkSurfaceKHR
+//import vkk.adr
 import java.util.function.BiPredicate
 
 /**
@@ -85,7 +85,7 @@ object glfw {
         set(value) {
             if (value != null) {
                 field = value
-                nglfwSetErrorCallback(nErrorCallback.adr)
+                nglfwSetErrorCallback(nErrorCallback.address()) // TODO adr
             } else
                 nglfwSetErrorCallback(NULL)
         }
@@ -113,23 +113,23 @@ object glfw {
 
     fun pollEvents() = glfwPollEvents()
 
-    val requiredInstanceExtensions: ArrayList<String>
-        get() {
-            val pCount = appBuffer.intBuffer
-            val ppNames = GLFWVulkan.nglfwGetRequiredInstanceExtensions(pCount.adr)
-            val count = pCount[0]
-            val pNames = MemoryUtil.memPointerBufferSafe(ppNames, count) ?: return arrayListOf()
-            val res = ArrayList<String>(count)
-            for (i in 0 until count)
-                res += MemoryUtil.memASCII(pNames[i])
-            return res
-        }
-
-    fun createWindowSurface(windowHandle: Long, instance: VkInstance): VkSurfaceKHR {
-        val pSurface = appBuffer.long
-        VK_CHECK_RESULT(GLFWVulkan.nglfwCreateWindowSurface(instance.adr, windowHandle, NULL, pSurface))
-        return memGetLong(pSurface)
-    }
+//    val requiredInstanceExtensions: ArrayList<String>
+//        get() {
+//            val pCount = appBuffer.intBuffer
+//            val ppNames = GLFWVulkan.nglfwGetRequiredInstanceExtensions(pCount.adr)
+//            val count = pCount[0]
+//            val pNames = MemoryUtil.memPointerBufferSafe(ppNames, count) ?: return arrayListOf()
+//            val res = ArrayList<String>(count)
+//            for (i in 0 until count)
+//                res += MemoryUtil.memASCII(pNames[i])
+//            return res
+//        }
+//
+//    fun createWindowSurface(windowHandle: Long, instance: VkInstance): VkSurfaceKHR {
+//        val pSurface = appBuffer.long
+//        VK_CHECK_RESULT(GLFWVulkan.nglfwCreateWindowSurface(instance.adr, windowHandle, NULL, pSurface))
+//        return memGetLong(pSurface)
+//    }
 
     enum class Error(val i: Int) {
         none(GLFW_NO_ERROR),
@@ -149,8 +149,8 @@ object glfw {
     }
 
     val error: Error
-        get() {
-            val pointer = appBuffer.pointerBuffer
+        get() = stak {
+            val pointer = it.mallocPointer(1)
             val code = glfwGetError(pointer)
             errorDescription = when {
                 code != GLFW_NO_ERROR -> memUTF8(pointer[0])

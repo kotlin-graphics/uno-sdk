@@ -2,12 +2,9 @@ package uno.kotlin.buffers
 
 import glm_.BYTES
 import glm_.L
-import glm_.b
-import glm_.buffer.intBufferBig
-import glm_.detail.Random.int
 import glm_.set
+import kool.intBufferBig
 import org.lwjgl.system.MemoryUtil
-import uno.buffer.intBufferBig
 import java.nio.IntBuffer
 
 /** A stable, adaptive, iterative mergesort that requires far fewer than n lg(n) comparisons when running on partially
