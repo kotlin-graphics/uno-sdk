@@ -133,7 +133,7 @@ open class GlfwWindow(var handle: GlfwWindowHandle) {
             val x = it.nmalloc(Int.BYTES * 2)
             val y = x + Int.BYTES
             nglfwGetWindowPos(handle, x, y)
-            return field(memGetInt(x), memGetInt(y))
+            field(memGetInt(x), memGetInt(y))
         }
         set(value) = glfwSetWindowPos(handle, value.x, value.y)
 
@@ -142,7 +142,7 @@ open class GlfwWindow(var handle: GlfwWindowHandle) {
             val x = it.nmalloc(Int.BYTES * 2)
             val y = x + Int.BYTES
             nglfwGetWindowSize(handle, x, y)
-            return field(memGetInt(x), memGetInt(y))
+            field(memGetInt(x), memGetInt(y))
         }
         set(value) = glfwSetWindowSize(handle, value.x, value.y)
 
@@ -161,7 +161,7 @@ open class GlfwWindow(var handle: GlfwWindowHandle) {
             val x = it.nmalloc(Int.BYTES * 2)
             val y = x + Int.BYTES
             nglfwGetFramebufferSize(handle, x, y)
-            return field(memGetInt(x), memGetInt(y))
+            field(memGetInt(x), memGetInt(y))
         }
 
     val frameSize = Vec4i()
@@ -171,7 +171,7 @@ open class GlfwWindow(var handle: GlfwWindowHandle) {
             val z = y + Int.BYTES
             val w = z + Int.BYTES
             nglfwGetWindowFrameSize(handle, x, y, z, w)
-            return field(memGetInt(x), memGetInt(y), memGetInt(z), memGetInt(w))
+            field(memGetInt(x), memGetInt(y), memGetInt(z), memGetInt(w))
         }
 
     val contentScale = Vec2()
@@ -179,7 +179,7 @@ open class GlfwWindow(var handle: GlfwWindowHandle) {
             val x = it.nmalloc(Float.BYTES * 2)
             val y = x + Float.BYTES
             nglfwGetWindowContentScale(handle, x, y)
-            return field(memGetFloat(x), memGetFloat(y))
+            field(memGetFloat(x), memGetFloat(y))
         }
 
     var opacity: Float
@@ -251,7 +251,7 @@ open class GlfwWindow(var handle: GlfwWindowHandle) {
             val x = it.nmalloc(Double.BYTES * 2)
             val y = x + Double.BYTES
             nglfwGetCursorPos(handle, x, y)
-            return field(memGetDouble(x), memGetDouble(y))
+            field(memGetDouble(x), memGetDouble(y))
         }
         set(value) = glfwSetCursorPos(handle, value.x, value.y)
 
@@ -416,7 +416,7 @@ open class GlfwWindow(var handle: GlfwWindowHandle) {
     fun getJoystickButtons(joystickId: Int): ByteBuffer? = stak {
         val count = it.nmalloc(Int.BYTES)
         val result = nglfwGetJoystickButtons(joystickId, count)
-        return memByteBufferSafe(result, memGetInt(count))
+        memByteBufferSafe(result, memGetInt(count))
     }
 
     val joystick1Axes: FloatBuffer?
@@ -429,7 +429,7 @@ open class GlfwWindow(var handle: GlfwWindowHandle) {
     fun getJoystickAxes(joystickId: Int): FloatBuffer? = stak {
         val count = it.nmalloc(Int.BYTES)
         val result = nglfwGetJoystickAxes(joystickId, count)
-        return memFloatBufferSafe(result, memGetInt(count))
+        memFloatBufferSafe(result, memGetInt(count))
     }
 
     var autoSwap = true
@@ -456,7 +456,7 @@ open class GlfwWindow(var handle: GlfwWindowHandle) {
 //    infix fun createSurface(instance: VkInstance) = glfw.createWindowSurface(handle, instance)
 
     fun swapBuffers() = glfwSwapBuffers(handle)
-    inline fun present() = swapBuffers()
+    fun present() = swapBuffers()
 
     fun requestAttention() = glfwRequestWindowAttention(handle)
 
