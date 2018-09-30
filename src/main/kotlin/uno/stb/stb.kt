@@ -93,7 +93,7 @@ object stb {
         val start = 0
         val end = start + length
 
-        var matchMax = 0
+        var matchMax: Int
         var litStart = start
         var q = start
 
@@ -111,13 +111,13 @@ object stb {
             few bytes unless they were part of something longer */
         while (q < start + length && q + 12 < end) {
 
-            var m = 0
-            var h1 = 0
-            var h2 = 0
-            var h3 = 0
-            var h4 = 0
-            var h = 0
-            var t = 0
+            var m: Int
+            var h1: Int
+            var h2: Int
+            var h3: Int
+            var h4: Int
+            var h: Int
+            var t: Int
             var best = 2
             var dist = 0
 
@@ -222,7 +222,7 @@ object stb {
         val ADLER_MOD = 65521
         var s1 = adler32 and 0xffff
         var s2 = adler32 ushr 16
-        var blockLen = 0L
+        var blockLen: Long
         var i = 0L
 
         blockLen = _bufLen % 5552

@@ -20,4 +20,4 @@ inline val GLFWVidMode.refreshRate: Int
     get() = GLFWVidMode.nrefreshRate(address())
 
 
-typealias HWND = Long
+inline class HWND(val L: Long)

@@ -7,9 +7,7 @@ import uno.kotlin.plusAssign
 import java.nio.IntBuffer
 
 
-
-
-inline fun IntBuffer.single(): Int {
+fun IntBuffer.single(): Int {
     return when (capacity) {
         0 -> throw NoSuchElementException("Array is empty.")
         1 -> this[0]
@@ -30,7 +28,7 @@ inline fun IntBuffer.single(predicate: (Int) -> Boolean): Int {
     return single as Int
 }
 
-inline fun IntBuffer.singleOrNull() = if (capacity == 1) this[0] else null
+fun IntBuffer.singleOrNull() = if (capacity == 1) this[0] else null
 inline fun IntBuffer.singleOrNull(predicate: (Int) -> Boolean): Int? {
     var single: Int? = null
     var found = false
@@ -45,8 +43,7 @@ inline fun IntBuffer.singleOrNull(predicate: (Int) -> Boolean): Int? {
 }
 
 
-
-inline fun IntBuffer.dropLast(n: Int): List<Int> {
+fun IntBuffer.dropLast(n: Int): List<Int> {
     require(n >= 0) { "Requested element count $n is less than zero." }
     return take((capacity - n).coerceAtLeast(0))
 }
@@ -90,12 +87,12 @@ inline fun <C : MutableCollection<in Int>> IntBuffer.filterTo(destination: C, pr
     return destination
 }
 
-inline fun IntBuffer.slice(indices: IntRange): List<Int> {
+fun IntBuffer.slice(indices: IntRange): List<Int> {
     if (indices.isEmpty()) return listOf()
     return copyOfRange(indices.start, indices.endInclusive + 1).asList()
 }
 
-inline fun IntBuffer.slice(indices: Iterable<Int>): List<Int> {
+fun IntBuffer.slice(indices: Iterable<Int>): List<Int> {
     val size = indices.collectionSizeOrDefault(10)
     if (size == 0) return emptyList()
     val list = ArrayList<Int>(size)
@@ -103,7 +100,7 @@ inline fun IntBuffer.slice(indices: Iterable<Int>): List<Int> {
     return list
 }
 
-inline fun IntBuffer.sliceArray(indices: Collection<Int>): IntArray {
+fun IntBuffer.sliceArray(indices: Collection<Int>): IntArray {
     val result = IntArray(indices.size)
     var targetIndex = 0
     for (sourceIndex in indices)
@@ -111,12 +108,12 @@ inline fun IntBuffer.sliceArray(indices: Collection<Int>): IntArray {
     return result
 }
 
-inline fun IntBuffer.sliceArray(indices: IntRange): IntArray {
+fun IntBuffer.sliceArray(indices: IntRange): IntArray {
     if (indices.isEmpty()) return IntArray(0)
     return IntArray(indices.last - indices.first + 1, { this[it] })
 }
 
-inline fun IntBuffer.take(n: Int): List<Int> {
+fun IntBuffer.take(n: Int): List<Int> {
     require(n >= 0) { "Requested element count $n is less than zero." }
     if (n == 0) return emptyList()
     if (n >= capacity) return toList()
@@ -130,7 +127,7 @@ inline fun IntBuffer.take(n: Int): List<Int> {
     return list
 }
 
-inline fun IntBuffer.reversedBuffer(): IntBuffer {
+fun IntBuffer.reversedBuffer(): IntBuffer {
     if (isEmpty()) return this
     val result = IntArray(capacity)
     val lastIndex = lastIndex
@@ -147,30 +144,30 @@ inline fun <R : Comparable<R>> IntBuffer.sortByDescending(crossinline selector: 
     if (capacity > 1) sortWith(compareByDescending(selector))
 }
 
-inline fun IntBuffer.sortDescending() {
+fun IntBuffer.sortDescending() {
     if (capacity > 1) {
         sort()
         reverse()
     }
 }
 
-inline fun IntBuffer.sorted() = toTypedArray().apply { sort() }.asList()
-inline fun IntBuffer.sortedArray(): IntArray {
+fun IntBuffer.sorted() = toTypedArray().apply { sort() }.asList()
+fun IntBuffer.sortedArray(): IntArray {
     if (isEmpty()) return IntArray(0)
     return copyOf().apply { sort() }.toIntArray()
 }
 
-inline fun IntBuffer.sortedArrayDescending(): IntArray {
+fun IntBuffer.sortedArrayDescending(): IntArray {
     if (isEmpty()) return IntArray(0)
     return copyOf().apply { sortDescending() }.toIntArray()
 }
 
 inline fun <R : Comparable<R>> IntBuffer.sortedBy(crossinline selector: (Int) -> R?) = sortedWith(compareBy(selector))
 inline fun <R : Comparable<R>> IntBuffer.sortedByDescending(crossinline selector: (Int) -> R?) = sortedWith(compareByDescending(selector))
-inline fun IntBuffer.sortedDescending() = copyOf().apply { sort() }.reversed()
-inline fun IntBuffer.sortedWith(comparator: Comparator<Int>) = toTypedArray().apply { sortWith(comparator) }.asList()
+fun IntBuffer.sortedDescending() = copyOf().apply { sort() }.reversed()
+fun IntBuffer.sortedWith(comparator: Comparator<Int>) = toTypedArray().apply { sortWith(comparator) }.asList()
 // no contentDeepEquals, contentDeepHashCode, contentDeepToString
-inline infix fun IntBuffer.contentEquals(other: IntBuffer?): Boolean {
+infix fun IntBuffer.contentEquals(other: IntBuffer?): Boolean {
     if (this === other) return true
     if (other === null) return false
     val length = capacity
@@ -181,14 +178,14 @@ inline infix fun IntBuffer.contentEquals(other: IntBuffer?): Boolean {
     return true
 }
 
-inline fun IntBuffer.contentHashCode(): Int {
+fun IntBuffer.contentHashCode(): Int {
     var result = 1
     for (element in this) result = 31 * result + element
     return result
 }
 
-inline fun IntBuffer.contentToString(): String {
-    var iMax = capacity - 1
+fun IntBuffer.contentToString(): String {
+    val iMax = capacity - 1
     if (iMax == -1) return "[]"
     val builder = StringBuilder()
     builder += '['
@@ -202,16 +199,15 @@ inline fun IntBuffer.contentToString(): String {
 }
 
 
+fun IntBuffer.toBooleanArray() = BooleanArray(capacity, { this[it].bool })
+fun IntBuffer.toByteArray() = ByteArray(capacity, { this[it].toByte() })
+fun IntBuffer.toCharArray() = CharArray(capacity, { this[it].toChar() })
+fun IntBuffer.toDoubleArray() = DoubleArray(capacity, { this[it].toDouble() })
+fun IntBuffer.toFloatArray() = FloatArray(capacity, { this[it].toFloat() })
 
-inline fun IntBuffer.toBooleanArray() = BooleanArray(capacity, { this[it].bool })
-inline fun IntBuffer.toByteArray() = ByteArray(capacity, { this[it].toByte() })
-inline fun IntBuffer.toCharArray() = CharArray(capacity, { this[it].toChar() })
-inline fun IntBuffer.toDoubleArray() = DoubleArray(capacity, { this[it].toDouble() })
-inline fun IntBuffer.toFloatArray() = FloatArray(capacity, { this[it].toFloat() })
 
-
-inline fun IntBuffer.toLongArray() = LongArray(capacity, { this[it].toLong() })
-inline fun IntBuffer.toShortArray() = ShortArray(capacity, { this[it].toShort() })
+fun IntBuffer.toLongArray() = LongArray(capacity, { this[it].toLong() })
+fun IntBuffer.toShortArray() = ShortArray(capacity, { this[it].toShort() })
 // TODO unsigned?
 
 inline fun <K, V> IntBuffer.associate(transform: (Int) -> Pair<K, V>): Map<K, V> {
@@ -289,8 +285,8 @@ inline fun <R : Any, C : MutableCollection<in R>> IntBuffer.mapNotNullTo(destina
 }
 
 
-inline fun IntBuffer.withIndex(): Iterable<IndexedValue<Int>> = IndexingIterable { iterator() }
-inline fun IntBuffer.distinct(): List<Int> = toMutableSet().toList()
+fun IntBuffer.withIndex(): Iterable<IndexedValue<Int>> = IndexingIterable { iterator() }
+fun IntBuffer.distinct(): List<Int> = toMutableSet().toList()
 inline fun <K> IntBuffer.distinctBy(selector: (Int) -> K): List<Int> {
     val set = HashSet<K>()
     val list = ArrayList<Int>()
@@ -352,7 +348,7 @@ inline fun <R> IntBuffer.foldRightIndexed(initial: R, operation: (index: Int, In
 }
 
 
-inline fun IntBuffer.maxWith(comparator: Comparator<in Int>): Int? {
+fun IntBuffer.maxWith(comparator: Comparator<in Int>): Int? {
     if (isEmpty()) return null
     var max = this[0]
     for (i in 1..lastIndex) {
@@ -363,7 +359,7 @@ inline fun IntBuffer.maxWith(comparator: Comparator<in Int>): Int? {
 }
 
 
-inline fun IntBuffer.minWith(comparator: Comparator<in Int>): Int? {
+fun IntBuffer.minWith(comparator: Comparator<in Int>): Int? {
     if (isEmpty()) return null
     var min = this[0]
     for (i in 1..lastIndex) {
@@ -465,14 +461,13 @@ fun IntBuffer.joinToString(separator: CharSequence = ", ", prefix: CharSequence 
         joinTo(StringBuilder(), separator, prefix, postfix, limit, truncated, transform).toString()
 
 
-
-inline fun IntBuffer.copyOf(): IntBuffer {
+fun IntBuffer.copyOf(): IntBuffer {
     val dst = memAllocInt(capacity)
     memCopy(memAddress(this), memAddress(dst), size.L)
     return dst
 }
 
-inline fun IntBuffer.copyOf(newSize: Int): IntBuffer {
+fun IntBuffer.copyOf(newSize: Int): IntBuffer {
     val dst = memAllocInt(newSize)
     memCopy(memAddress(this), memAddress(dst), newSize.L)
     return dst
@@ -482,7 +477,7 @@ inline fun IntBuffer.copyOf(newSize: Int): IntBuffer {
  * @param fromIndex the initial index of the range to be copied, inclusive
  * @param toIndex the final index of the range to be copied, exclusive.
  */
-inline fun IntBuffer.copyOfRange(fromIndex: Int, toIndex: Int): IntBuffer {
+fun IntBuffer.copyOfRange(fromIndex: Int, toIndex: Int): IntBuffer {
     val count = toIndex - fromIndex
     val dst = memAllocInt(count)
     memCopy(memAddress(this), memAddress(dst), count.L * Int.BYTES)
@@ -594,7 +589,7 @@ class IndexingIterable<out T>(private val iteratorFactory: () -> Iterator<T>) : 
 /** Iterators   */
 class IndexingIterator<out T>(private val iterator: Iterator<T>) : Iterator<IndexedValue<T>> {
     private var index = 0
-    final override fun hasNext(): Boolean = iterator.hasNext()
-    final override fun next(): IndexedValue<T> = IndexedValue(index++, iterator.next())
+    override fun hasNext(): Boolean = iterator.hasNext()
+    override fun next(): IndexedValue<T> = IndexedValue(index++, iterator.next())
 }
 
