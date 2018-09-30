@@ -38,7 +38,6 @@ dependencies {
     ext.kx = "com.github.kotlin-graphics"
     implementation "$kx:gln:8aaf6daa0859dcefbe411796f2bb56b4eb989d18"
     implementation "$kx:vkk:0ef6a693e009a7dab93071814b5ab72c8120f482"
-//    implementation "$kx:appBuffer:39d8216"
 
     testImplementation 'io.kotlintest:kotlintest-runner-junit5:3.1.10'
 
