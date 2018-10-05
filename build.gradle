@@ -12,7 +12,7 @@ group = 'com.github.kotlin-graphics'
 
 buildscript {
 
-    ext.kotlinVersion = '1.3.0-rc-116'
+    ext.kotlinVersion = '1.3.0-rc-146'
 
     repositories {
         mavenCentral()
@@ -36,8 +36,8 @@ dependencies {
     implementation "$kotlin-reflect:$kotlinVersion"
 
     ext.kx = "com.github.kotlin-graphics"
-    implementation "$kx:gln:8aaf6daa0859dcefbe411796f2bb56b4eb989d18"
-    implementation "$kx:vkk:0ef6a693e009a7dab93071814b5ab72c8120f482"
+    implementation "$kx:gln:e3d4250f0c"
+    implementation "$kx:vkk:6110d303b90a0d84204b80f83ae3ed622bc87d15"
 
     testImplementation 'io.kotlintest:kotlintest-runner-junit5:3.1.10'
 
