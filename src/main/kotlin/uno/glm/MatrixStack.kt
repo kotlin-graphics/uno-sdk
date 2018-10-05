@@ -206,7 +206,8 @@ class MatrixStack(
      * @param top The top camera-space position in the Y axis that will be captured within the projection.
      * @param zNear The front camera-space position in the Z axis that will be captured within the projection.
      * @param zFar The rear camera-space position in the Z axis that will be captured within the projection.     */
-    @JvmOverloads fun orthographic(left: Float, right: Float, bottom: Float, top: Float, zNear: Float = -1f, zFar: Float = 1f): MatrixStack {
+    @JvmOverloads
+    fun orthographic(left: Float, right: Float, bottom: Float, top: Float, zNear: Float = -1f, zFar: Float = 1f): MatrixStack {
         currMat.timesAssign(glm.ortho(left, right, bottom, top, zNear, zFar))
         return this
     }
@@ -222,7 +223,8 @@ class MatrixStack(
      * @param size The size of the window space.
      * @param depthRange The near and far depth range. The x coord is zNear, and the y coord is zFar.
      * @param isTopLeft True if this should be top-left orientation, false if it should be bottom-left.     */
-    @JvmOverloads fun pixelPerfectOrtho(size: Vec2i, depthRange: Vec2i, isTopLeft: Boolean = true) =
+    @JvmOverloads
+    fun pixelPerfectOrtho(size: Vec2i, depthRange: Vec2i, isTopLeft: Boolean = true) =
             if (isTopLeft)
                 translate(-1.0f, 1.0f, (depthRange.x + depthRange.y) / 2.0f)
                         .scale(2.0f / size.x, -2.0f / size.y, 1.0f)
