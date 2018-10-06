@@ -4,6 +4,8 @@ import java.awt.event.KeyEvent
 import java.io.File
 import java.lang.Appendable
 import java.util.*
+import kotlin.reflect.KMutableProperty0
+import kotlin.reflect.KProperty
 
 /**
  * Created by GBarbieri on 30.03.2017.
@@ -59,5 +61,8 @@ fun <T>treeSetOf() = java.util.TreeSet<T>()
 
 fun <K, V>SortedMap<K, V>.getOrfirst(key: K): V? = get(key) ?: first
 val <K, V>SortedMap<K, V>.first: V?  get() = get(firstKey())
+
+operator fun <R> KMutableProperty0<R>.setValue(host: Any?, property: KProperty<*>, value: R) = set(value)
+operator fun <R> KMutableProperty0<R>.getValue(host: Any?, property: KProperty<*>): R = get()
 
 val version = "0.7.4"
