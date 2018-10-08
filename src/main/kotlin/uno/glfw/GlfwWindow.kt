@@ -454,7 +454,7 @@ open class GlfwWindow(var handle: GlfwWindowHandle) {
         }
     }
 
-    infix fun createSurface(instance: VkInstance) = glfw.createWindowSurface(handle.L, instance)
+    infix fun createSurface(instance: VkInstance) = glfw.createWindowSurface(handle, instance)
 
     fun swapBuffers() = glfwSwapBuffers(handle.L)
     fun present() = swapBuffers()

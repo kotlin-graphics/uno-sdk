@@ -129,9 +129,9 @@ object glfw {
             return res
         }
 
-    fun createWindowSurface(windowHandle: Long, instance: VkInstance): VkSurface =
+    fun createWindowSurface(windowHandle: GlfwWindowHandle, instance: VkInstance): VkSurface =
             VkSurface(stak.longAddress { surface ->
-                VK_CHECK_RESULT(GLFWVulkan.nglfwCreateWindowSurface(instance.adr, windowHandle, NULL, surface))
+                VK_CHECK_RESULT(GLFWVulkan.nglfwCreateWindowSurface(instance.adr, windowHandle.L, NULL, surface))
             })
 
     enum class Error(val i: Int) {
