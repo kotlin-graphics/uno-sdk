@@ -36,18 +36,18 @@ object DualPivotQuicksort {
 
     /** Sorts the specified range of the array using the given workspace array slice if possible for merging
      *
-     * @param a the array to be sorted
+     * @param a_ the array to be sorted
      * @param left the index of the first element, inclusive, to be sorted
-     * @param right the index of the last element, inclusive, to be sorted
-     * @param work a workspace array (slice)
-     * @param workBase origin of usable space in work array
+     * @param right_ the index of the last element, inclusive, to be sorted
+     * @param work_ a workspace array (slice)
+     * @param workBase_ origin of usable space in work array
      * @param workLen usable size of work array
      */
-    fun sort(a: IntBuffer, left: Int, right: Int, work: IntBuffer?, workBase: Int, workLen: Int) {
-        var a = a
-        var right = right
-        var work = work
-        var workBase = workBase
+    fun sort(a_: IntBuffer, left: Int, right_: Int, work_: IntBuffer?, workBase_: Int, workLen: Int) {
+        var a = a_
+        var right = right_
+        var work = work_
+        var workBase = workBase_
         // Use Quicksort on small arrays
         if (right - left < QUICKSORT_THRESHOLD) {
             sort(a, left, right, true)
@@ -105,8 +105,8 @@ object DualPivotQuicksort {
         // Use or create temporary array b for merging
         var b: IntBuffer    // temp array; alternates with a
         // array offsets from 'left'
-        var ao = 0
-        var bo = 0
+        var ao: Int
+        var bo: Int
         val blen = right - left // space needed for b
         if (work == null || workLen < blen || workBase + blen > work.capacity) {
             work = intBufferBig(blen)
@@ -160,15 +160,15 @@ object DualPivotQuicksort {
      * Sorts the specified range of the array by Dual-Pivot Quicksort.
      *
      * @param a the array to be sorted
-     * @param left the index of the first element, inclusive, to be sorted
-     * @param right the index of the last element, inclusive, to be sorted
+     * @param left_ the index of the first element, inclusive, to be sorted
+     * @param right_ the index of the last element, inclusive, to be sorted
      * @param leftmost indicates if this part is the leftmost in the range
      */
-    private fun sort(a: IntBuffer, left: Int, right: Int, leftmost: Boolean) {
+    private fun sort(a: IntBuffer, left_: Int, right_: Int, leftmost: Boolean) {
 
-        val length = right - left + 1
-        var left = left
-        var right = right
+        val length = right_ - left_ + 1
+        var left = left_
+        var right = right_
 
         // Use insertion sort on tiny arrays
         if (length < INSERTION_SORT_THRESHOLD) {

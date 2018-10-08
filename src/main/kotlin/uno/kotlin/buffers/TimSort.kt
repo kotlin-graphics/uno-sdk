@@ -128,18 +128,18 @@ object TimSort {
      *  and expanding parameters into the required forms.
      *
      * @param a the array to be sorted
-     * @param lo the index of the first element, inclusive, to be sorted
+     * @param lo_ the index of the first element, inclusive, to be sorted
      * @param hi the index of the last element, exclusive, to be sorted
      * @param c the comparator to use
      * @param work a workspace array (slice)
      * @param workBase origin of usable space in work array
      * @param workLen usable size of work array
      * @since 1.8   */
-    fun sort(a: IntBuffer, lo: Int, hi: Int, c: Comparator<Int>, work: IntBuffer?, workBase: Int, workLen: Int) {
+    fun sort(a: IntBuffer, lo_: Int, hi: Int, c: Comparator<Int>, work: IntBuffer?, workBase: Int, workLen: Int) {
 
-        assert(lo >= 0 && lo <= hi && hi <= a.capacity)
+        assert(lo_ in 0..hi && hi <= a.capacity)
 
-        var lo = lo
+        var lo = lo_
 
         var nRemaining = hi - lo
         if (nRemaining < 2) return  // Arrays of size 0 and 1 are always sorted
@@ -190,12 +190,12 @@ object TimSort {
      * @param a the array in which a range is to be sorted
      * @param lo the index of the first element in the range to be sorted
      * @param hi the index after the last element in the range to be sorted
-     * @param start the index of the first element in the range that is not already known to be sorted ({@code lo <= start <= hi})
+     * @param start_ the index of the first element in the range that is not already known to be sorted ({@code lo <= start <= hi})
      * @param c comparator to used for the sort */
-    private fun binarySort(a: IntBuffer, lo: Int, hi: Int, start: Int, c: Comparator<Int>) {
+    private fun binarySort(a: IntBuffer, lo: Int, hi: Int, start_: Int, c: Comparator<Int>) {
 
-        assert(lo <= start && start <= hi)
-        var start = start
+        assert(start_ in lo..hi)
+        var start = start_
         if (start == lo)
             start++
         while (start < hi) {
@@ -273,12 +273,12 @@ object TimSort {
     /** Reverse the specified range of the specified array.
      *
      * @param a the array in which a range is to be reversed
-     * @param lo the index of the first element in the range to be reversed
-     * @param hi the index after the last element in the range to be reversed
+     * @param lo_ the index of the first element in the range to be reversed
+     * @param hi_ the index after the last element in the range to be reversed
      */
-    private fun reverseRange(a: IntBuffer, lo: Int, hi: Int) {
-        var hi = hi - 1
-        var lo = lo
+    private fun reverseRange(a: IntBuffer, lo_: Int, hi_: Int) {
+        var hi = hi_ - 1
+        var lo = lo_
         while (lo < hi) {
             val t = a[lo]
             a[lo++] = a[hi]
@@ -300,13 +300,13 @@ object TimSort {
      *
      * For the rationale, see listsort.txt.
      *
-     * @param n the length of the array to be sorted
+     * @param n_ the length of the array to be sorted
      * @return the length of the minimum run to be merged
      */
-    private fun minRunLength(n: Int): Int {
-        assert(n >= 0)
+    private fun minRunLength(n_: Int): Int {
+        assert(n_ >= 0)
         var r = 0      // Becomes 1 if any 1 bits are shifted off
-        var n = n
+        var n = n_
         while (n >= MIN_MERGE) {
             r = r or (n and 1)
             n = n shr 1
@@ -546,15 +546,15 @@ object TimSort {
      *  len1 >= len2.  (Either method may be called if len1 == len2.)
      *
      * @param base1 index of first element in first run to be merged
-     * @param len1  length of first run to be merged (must be > 0)
+     * @param len1_  length of first run to be merged (must be > 0)
      * @param base2 index of first element in second run to be merged (must be aBase + aLen)
-     * @param len2  length of second run to be merged (must be > 0)
+     * @param len2_  length of second run to be merged (must be > 0)
      */
-    private fun mergeLo(base1: Int, len1: Int, base2: Int, len2: Int) {
-        assert(len1 > 0 && len2 > 0 && base1 + len1 == base2)
+    private fun mergeLo(base1: Int, len1_: Int, base2: Int, len2_: Int) {
+        assert(len1_ > 0 && len2_ > 0 && base1 + len1_ == base2)
 
-        var len1 = len1
-        var len2 = len2
+        var len1 = len1_
+        var len2 = len2_
 
         // Copy first run into temp array
         val a = this.a // For performance
@@ -656,15 +656,15 @@ object TimSort {
      *  len1 <= len2.  (Either method may be called if len1 == len2.)
      *
      * @param base1 index of first element in first run to be merged
-     * @param len1  length of first run to be merged (must be > 0)
+     * @param len1_  length of first run to be merged (must be > 0)
      * @param base2 index of first element in second run to be merged (must be aBase + aLen)
-     * @param len2  length of second run to be merged (must be > 0)
+     * @param len2_  length of second run to be merged (must be > 0)
      */
-    private fun mergeHi(base1: Int, len1: Int, base2: Int, len2: Int) {
-        assert(len1 > 0 && len2 > 0 && base1 + len1 == base2)
+    private fun mergeHi(base1: Int, len1_: Int, base2: Int, len2_: Int) {
+        assert(len1_ > 0 && len2_ > 0 && base1 + len1_ == base2)
 
-        var len1 = len1
-        var len2 = len2
+        var len1 = len1_
+        var len2 = len2_
 
         // Copy second run into temp array
         val a = this.a // For performance
@@ -787,7 +787,7 @@ object TimSort {
             else
                 newSize = Math.min(newSize, a.capacity ushr 1)
 
-            val newArray = MemoryUtil.memRealloc(a, newSize)!!
+            val newArray = MemoryUtil.memRealloc(a, newSize)
             tmp = newArray
             tmpLen = newSize
             tmpBase = 0

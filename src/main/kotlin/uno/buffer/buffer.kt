@@ -20,7 +20,7 @@ fun pointerBufferBig(capacity: IntBuffer): PointerBuffer = MemoryUtil.memCallocP
 fun pointerBufferBig(capacity: IntArray): PointerBuffer = MemoryUtil.memCallocPointer(capacity[0])
 
 /** for opengl  */
-inline fun <reified T : Enum<T>> intBufferBig() = intBufferBig(enumValues<T>().size)
+inline fun <reified E : Enum<E>> intBufferBig() = intBufferBig(enumValues<E>().size)
 /** glGenTextures(textureName[Tex.Color]) */
 operator fun <E : Enum<E>, T> Array<T>.get(enum: Enum<E>): T = get(enum.ordinal)
 
