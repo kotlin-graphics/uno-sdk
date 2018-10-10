@@ -1,6 +1,8 @@
 package uno.glfw
 
-import kool.adr
+//import vkk.VK_CHECK_RESULT
+//import vkk.VkSurfaceKHR
+//import vkk.adr
 import glm_.i
 import glm_.vec2.Vec2i
 import kool.stak
@@ -9,15 +11,11 @@ import org.lwjgl.glfw.GLFWErrorCallback
 import org.lwjgl.glfw.GLFWVidMode
 import org.lwjgl.glfw.GLFWVulkan
 import org.lwjgl.system.APIUtil
-import org.lwjgl.system.MemoryUtil
-import org.lwjgl.system.MemoryUtil.*
+import org.lwjgl.system.MemoryUtil.NULL
+import org.lwjgl.system.MemoryUtil.memUTF8
 import org.lwjgl.system.Platform
-import org.lwjgl.vulkan.VkInstance
 import uno.glfw.windowHint.Profile
 import uno.kotlin.parseInt
-//import vkk.VK_CHECK_RESULT
-//import vkk.VkSurfaceKHR
-//import vkk.adr
 import java.util.function.BiPredicate
 
 /**
@@ -40,7 +38,7 @@ object glfw {
         windowHint {
             context.version = version
             val v = version[0].parseInt() * 10 + version[1].parseInt()
-            if(v >= 32) // The concept of a core profile does not exist prior to OpenGL 3.2
+            if (v >= 32) // The concept of a core profile does not exist prior to OpenGL 3.2
                 windowHint.profile = profile
         }
     }
@@ -162,25 +160,4 @@ object glfw {
 
     fun <T> initHint(block: initHint.() -> T) = initHint.block()
     fun <T> windowHint(block: windowHint.() -> T) = windowHint.block()
-}
-
-object initHint {
-
-    var joystickHatButtons = true
-        set(value) {
-            glfwInitHint(GLFW_JOYSTICK_HAT_BUTTONS, value.i)
-            field = value
-        }
-
-    var cocoaChdirResources = true
-        set(value) {
-            glfwInitHint(GLFW_COCOA_CHDIR_RESOURCES, value.i)
-            field = value
-        }
-
-    var cocoaMenubar = true
-        set(value) {
-            glfwInitHint(GLFW_COCOA_MENUBAR, value.i)
-            field = value
-        }
 }
