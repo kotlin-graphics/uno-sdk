@@ -5,6 +5,7 @@ package uno.glfw
 //import vkk.adr
 import glm_.i
 import glm_.vec2.Vec2i
+import gln.debug.glDebugCallback
 import kool.stak
 import org.lwjgl.glfw.GLFW.*
 import org.lwjgl.glfw.GLFWErrorCallback
@@ -70,6 +71,7 @@ object glfw {
     fun terminate() {
         glfwTerminate()
         nErrorCallback.free()
+        glDebugCallback?.free()
     }
 
     val version: String
