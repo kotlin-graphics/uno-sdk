@@ -8,7 +8,7 @@
 
 This is kind of a small suite, born and shaped around GL, it includes the gln dependencies, such as [unsigned support](https://github.com/elect86/kotlin-unsigned), [glm](https://github.com/kotlin-graphics/glm) and [gli](https://github.com/kotlin-graphics/gli). Its main usage is basically as wrapper for the lwjgl glfw binding.
 
-A kind of a [gln](https://github.com/kotlin-graphics/glm) for glfw. So, code more compact, clear and intuitive. You can have up and running a whole gl clear example in just a couple of lines:
+A kind of a [gln](https://github.com/kotlin-graphics/glm) for glfw. So, code more compact, type-safe, clear and intuitive. You can have up and running a whole gl clear example in just a couple of lines:
 
             glfw.init("3.3")
 
