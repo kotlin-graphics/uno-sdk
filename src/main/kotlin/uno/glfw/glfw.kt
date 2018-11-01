@@ -8,17 +8,16 @@ import gln.debug.glDebugCallback
 import kool.stak
 import org.lwjgl.glfw.GLFW.*
 import org.lwjgl.glfw.GLFWErrorCallback
+import org.lwjgl.glfw.GLFWNativeWin32
 import org.lwjgl.glfw.GLFWVidMode
 import org.lwjgl.glfw.GLFWVulkan
 import org.lwjgl.system.APIUtil
 import org.lwjgl.system.MemoryUtil.NULL
 import org.lwjgl.system.MemoryUtil.memUTF8
 import org.lwjgl.system.Platform
+import org.lwjgl.vulkan.VkInstance
 import uno.glfw.windowHint.Profile
 import uno.kotlin.parseInt
-import vkk.VK_CHECK_RESULT
-import vkk.VkSurface
-import vkk.adr
 //import vkk.VK_CHECK_RESULT
 //import vkk.VkSurfaceKHR
 //import vkk.adr
@@ -121,22 +120,24 @@ object glfw {
 
     fun pollEvents() = glfwPollEvents()
 
-    val requiredInstanceExtensions: ArrayList<String>
-        get() = stak {
-            val pCount = it.nmalloc(1, Int.BYTES)
-            val ppNames = GLFWVulkan.nglfwGetRequiredInstanceExtensions(pCount)
-            val count = memGetInt(pCount)
-            val pNames = MemoryUtil.memPointerBuffer(ppNames, count) ?: return arrayListOf()
-            val res = ArrayList<String>(count)
-            for (i in 0 until count)
-                res += MemoryUtil.memASCII(pNames[i])
-            return res
-        }
+//    val requiredInstanceExtensions: ArrayList<String>
+//        get() = stak {
+//            val pCount = it.nmalloc(1, Int.BYTES)
+//            val ppNames = GLFWVulkan.nglfwGetRequiredInstanceExtensions(pCount)
+//            val count = memGetInt(pCount)
+//            val pNames = MemoryUtil.memPointerBuffer(ppNames, count) ?: return arrayListOf()
+//            val res = ArrayList<String>(count)
+//            for (i in 0 until count)
+//                res += MemoryUtil.memASCII(pNames[i])
+//            return res
+//        }
+//
+//    fun createWindowSurface(windowHandle: GlfwWindowHandle, instance: VkInstance): VkSurface =
+//            VkSurface(stak.longAddress { surface ->
+//                VK_CHECK_RESULT(GLFWVulkan.nglfwCreateWindowSurface(instance.adr, windowHandle.L, NULL, surface))
+//            })
 
-    fun createWindowSurface(windowHandle: GlfwWindowHandle, instance: VkInstance): VkSurface =
-            VkSurface(stak.longAddress { surface ->
-                VK_CHECK_RESULT(GLFWVulkan.nglfwCreateWindowSurface(instance.adr, windowHandle.L, NULL, surface))
-            })
+    fun attachWin32Window(handle: HWND): GlfwWindowHandle = GlfwWindowHandle(GLFWNativeWin32.glfwAttachWin32Window(handle.L, NULL))
 
     enum class Error(val i: Int) {
         none(GLFW_NO_ERROR),

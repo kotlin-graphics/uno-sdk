@@ -3,6 +3,8 @@ package uno.glfw
 import glm_.vec2.Vec2
 import glm_.vec2.Vec2d
 import glm_.vec2.Vec2i
+import org.lwjgl.glfw.GLFWNativeWin32
+import org.lwjgl.system.MemoryUtil.NULL
 
 
 typealias GLFWErrorCallbackT = (String, String) -> Unit

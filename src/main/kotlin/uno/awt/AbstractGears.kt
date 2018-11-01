@@ -58,7 +58,7 @@ class AbstractGears {
         glTranslatef(0f, 0f, -40f)
     }
 
-    fun renderLoop() {
+    fun render() {
         angle += 2f
 
         glClear(GL_COLOR_BUFFER_BIT or GL_DEPTH_BUFFER_BIT)

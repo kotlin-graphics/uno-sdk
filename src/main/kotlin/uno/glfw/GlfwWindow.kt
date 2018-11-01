@@ -237,7 +237,7 @@ open class GlfwWindow(var handle: GlfwWindowHandle) {
         get() = glfwGetWindowAttrib(handle.L, GLFW_AUTO_ICONIFY).bool
         set(value) = glfwSetWindowAttrib(handle.L, GLFW_AUTO_ICONIFY, value.i)
 
-    fun makeContextCurrent(windowHandle: GlfwWindowHandle = handle.L) = glfwMakeContextCurrent(windowHandle)
+    fun makeContextCurrent(windowHandle: GlfwWindowHandle = handle) = glfwMakeContextCurrent(windowHandle.L)
 
     /** Free the window callbacks and destroy the window and reset its handle back to NULL */
     fun destroy() {
@@ -405,7 +405,7 @@ open class GlfwWindow(var handle: GlfwWindowHandle) {
     fun isPressed(key: Key) = glfwGetKey(handle.L, key.i) == GLFW_PRESS
     fun isReleased(key: Key) = glfwGetKey(handle.L, key.i) == GLFW_RELEASE
 
-    fun isPressed(button: MouseButton) = glfwGetMouseButton(handle, button.i) == GLFW_PRESS
+    fun isPressed(button: MouseButton) = glfwGetMouseButton(handle.L, button.i) == GLFW_PRESS
     fun isRelease(button: MouseButton) = glfwGetMouseButton(handle.L, button.i)  == GLFW_RELEASE
 
     val joystick1Buttons: ByteBuffer?
@@ -455,7 +455,7 @@ open class GlfwWindow(var handle: GlfwWindowHandle) {
         }
     }
 
-    infix fun createSurface(instance: VkInstance) = glfw.createWindowSurface(handle, instance)
+//    infix fun createSurface(instance: VkInstance) = glfw.createWindowSurface(handle, instance)
 
     fun swapBuffers() = glfwSwapBuffers(handle.L)
     fun present() = swapBuffers()
@@ -463,9 +463,9 @@ open class GlfwWindow(var handle: GlfwWindowHandle) {
     fun requestAttention() = glfwRequestWindowAttention(handle.L)
 
     val hwnd: HWND
-        get() = GLFWNativeWin32.glfwGetWin32Window(handle)
+        get() = HWND(GLFWNativeWin32.glfwGetWin32Window(handle.L))
 
     companion object {
-        infix fun fromWin32Window(hwnd: HWND) = GlfwWindow(GLFWNativeWin32.glfwAttachWin32Window(hwnd, NULL))
+        infix fun fromWin32Window(hwnd: HWND): GlfwWindow = GlfwWindow(glfw.attachWin32Window(hwnd))
     }
 }

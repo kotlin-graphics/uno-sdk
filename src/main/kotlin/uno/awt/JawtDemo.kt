@@ -1,24 +1,16 @@
 package uno.awt
 
 import gli_.has
-import glm_.d
-import glm_.f
 import glm_.i
 import glm_.vec2.Vec2i
-import org.lwjgl.glfw.GLFW
 import org.lwjgl.glfw.GLFWErrorCallback
-import org.lwjgl.glfw.GLFWKeyCallbackI
 import org.lwjgl.opengl.GL
-import org.lwjgl.opengl.GL11.*
 import org.lwjgl.opengl.GLCapabilities
 import org.lwjgl.system.MemoryUtil.NULL
 import org.lwjgl.system.Platform
 import org.lwjgl.system.jawt.*
 import org.lwjgl.system.jawt.JAWTFunctions.*
-import uno.glfw.GlfwWindow
-import uno.glfw.Key
-import uno.glfw.VSync
-import uno.glfw.glfw
+import uno.glfw.*
 import java.awt.*
 import java.awt.event.*
 import javax.swing.JFrame
@@ -46,13 +38,15 @@ fun main(args: Array<String>) {
 
     val keyListener = object : KeyListener {
         override fun keyTyped(e: KeyEvent) {
-            println("keyTyped "+ Thread.currentThread().name)
-            if (e.keyChar.i == KeyEvent.VK_ESCAPE)
-                frame.dispose()
+            println("keyTyped " + Thread.currentThread().name)
         }
 
         override fun keyPressed(e: KeyEvent) {
             println("keyPressed")
+            if (e.keyCode == KeyEvent.VK_ESCAPE)
+                frame.dispose()
+            else if (e.keyCode == KeyEvent.VK_A)
+                canvas.toggleAnimation()
         }
 
         override fun keyReleased(e: KeyEvent) {
@@ -92,7 +86,8 @@ open class LwjglCanvas : Canvas() {
             GlfwWindow.fromWin32Window(hwnd).also {
 
                 it.makeContextCurrent()
-                caps = GL.createCapabilities()
+//                caps = GL.createCapabilities()
+                GL.createCapabilities()
 
                 glfw.swapInterval = VSync.OFF
 
@@ -103,8 +98,9 @@ open class LwjglCanvas : Canvas() {
 
     var initialized = false
     var resized = false
+    var animated = true
 
-    var caps: GLCapabilities? = null
+//    var caps: GLCapabilities? = null
 
     //  According to jawt.h: "This value may be cached"
     lateinit var surface: JAWTDrawingSurface
@@ -151,7 +147,7 @@ open class LwjglCanvas : Canvas() {
 
         lockWithHWND { hwnd ->
 
-//            glfwMakeContextCurrent(glfwWindow)
+            //            glfwMakeContextCurrent(glfwWindow)
 //            GL.setCapabilities(caps)
 
             if (resized) {
@@ -178,7 +174,8 @@ open class LwjglCanvas : Canvas() {
             }
         }
 
-        repaint()
+        if (animated)
+            repaint()
     }
 
     /*fun init() {
@@ -203,15 +200,7 @@ open class LwjglCanvas : Canvas() {
         println("/init")
     }*/
 
-    open fun init() = gears.init()
-
-    open fun reshape(size: Vec2i)  = gears.reshape(size)
-
-    open fun render() = gears.renderLoop()
-
-    open fun destroy() = gears.destroy()
-
-    private inline fun <R> lockWithHWND(block: (hwnd: Long) -> R): R {
+    private inline fun <R> lockWithHWND(block: (hwnd: HWND) -> R): R {
 
         // Lock the drawing surface
         val lock = JAWT_DrawingSurface_Lock(surface.Lock(), surface)
@@ -229,7 +218,7 @@ open class LwjglCanvas : Canvas() {
 
                 val hdc = surfaceInfo.hdc()
                 assert(hdc != NULL)
-                return block(surfaceInfo.hwnd())
+                return block(HWND(surfaceInfo.hwnd()))
 
             } finally {
                 // Free the drawing surface info
@@ -246,7 +235,7 @@ open class LwjglCanvas : Canvas() {
 
         destroy()
 
-        glfwWindow.makeContextCurrent(NULL)
+        glfwWindow.makeContextCurrent(GlfwWindowHandle(NULL))
         GL.setCapabilities(null)
 
         JAWT_FreeDrawingSurface(awt.FreeDrawingSurface(), surface)
@@ -255,4 +244,24 @@ open class LwjglCanvas : Canvas() {
         glfwWindow.destroy()
         glfw.terminate()
     }
+
+    fun toggleAnimation() {
+        println("toggleAnimation")
+        if(animated)
+            animated = false
+        else {
+            animated = true
+            repaint()
+        }
+    }
+
+    // public methods to overwrite in application
+
+    open fun init() = gears.init()
+
+    open fun reshape(size: Vec2i) = gears.reshape(size)
+
+    open fun render() = gears.render()
+
+    open fun destroy() = gears.destroy()
 }

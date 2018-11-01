@@ -59,7 +59,7 @@ fun main(args: Array<String>) {
 //            glVertex2f(+0.75f / aspect, 0f)
 //            glVertex2f(0f, +0.75f)
 //            glEnd()
-            gears.renderLoop()
+            gears.render()
             swapBuffers()
 
             val now = System.currentTimeMillis()
@@ -81,7 +81,7 @@ fun main(args: Array<String>) {
         transferFocus()
     }
 
-//    val renderLoop = object : Runnable {
+//    val render = object : Runnable {
 //        override fun run() {
 //            if (!canvas.isValid)
 //                return
@@ -89,7 +89,7 @@ fun main(args: Array<String>) {
 //            SwingUtilities.invokeLater(this)
 //        }
 //    }
-//    SwingUtilities.invokeLater(renderLoop)
+//    SwingUtilities.invokeLater(render)
 
     var run = true
 

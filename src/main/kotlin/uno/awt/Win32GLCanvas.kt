@@ -44,7 +44,7 @@ import java.awt.Canvas
  */
 class Win32GLCanvas : GLCanvas() {
 
-    private var hwnd: HWND = 0
+    private var hwnd: Long = 0
     private var wglDelayBeforeSwapNVAddr = NULL
     private var wglDelayBeforeSwapNVAddr_set = false
 
@@ -77,7 +77,7 @@ class Win32GLCanvas : GLCanvas() {
         }
     }
 
-    private fun createDummyWindow(): HWND {
+    private fun createDummyWindow(): Long {
         val defaultWndProc = WindowProcI { hwnd, msg, wParam, lParam ->
             User32.DefWindowProc(hwnd, msg, wParam, lParam)
         }
@@ -98,7 +98,7 @@ class Win32GLCanvas : GLCanvas() {
     }
 
     @Throws(AWTException::class)
-    private fun create(windowHandle: HWND, dummyWindowHandle: HWND, data: GLData, effective: GLData): WglContext {
+    private fun create(windowHandle: Long, dummyWindowHandle: Long, data: GLData, effective: GLData): WglContext {
 
         val stack = MemoryStack.stackGet()
         val bufferAddr = stack.nmalloc(4, 4 * 2 shl 2)
