@@ -1,8 +1,12 @@
 package uno.kotlin
 
+import glm_.i
+import kool.Adr
+import org.lwjgl.system.Pointer
 import java.awt.event.KeyEvent
 import java.io.File
 import java.lang.Appendable
+import java.nio.IntBuffer
 import java.util.*
 
 /**
@@ -59,5 +63,10 @@ fun <T>treeSetOf() = java.util.TreeSet<T>()
 
 fun <K, V>SortedMap<K, V>.getOrfirst(key: K): V? = get(key) ?: first
 val <K, V>SortedMap<K, V>.first: V?  get() = get(firstKey())
+
+operator fun IntBuffer.plusAssign(bool: Boolean) = plusAssign(bool.i)
+operator fun IntBuffer.plusAssign(i: Int) {
+    put(i)
+}
 
 val version = "0.7.4"

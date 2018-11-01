@@ -235,7 +235,7 @@ open class GlfwWindow(var handle: GlfwWindowHandle) {
         get() = glfwGetWindowAttrib(handle, GLFW_AUTO_ICONIFY).bool
         set(value) = glfwSetWindowAttrib(handle, GLFW_AUTO_ICONIFY, value.i)
 
-    fun makeContextCurrent() = glfwMakeContextCurrent(handle)
+    fun makeContextCurrent(windowHandle: GlfwWindowHandle = handle) = glfwMakeContextCurrent(windowHandle)
 
     /** Free the window callbacks and destroy the window and reset its handle back to NULL */
     fun destroy() {
@@ -462,4 +462,8 @@ open class GlfwWindow(var handle: GlfwWindowHandle) {
 
     val hwnd: HWND
         get() = GLFWNativeWin32.glfwGetWin32Window(handle)
+
+    companion object {
+        infix fun fromWin32Window(hwnd: HWND) = GlfwWindow(GLFWNativeWin32.glfwAttachWin32Window(hwnd, NULL))
+    }
 }

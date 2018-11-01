@@ -108,8 +108,11 @@ object glfw {
     val resolution: Vec2i
         get() = Vec2i(videoMode.width, videoMode.height)
 
-    var swapInterval = 0
-        set(value) = glfwSwapInterval(value)
+    var swapInterval: VSync = VSync.ON
+        set(value) {
+            glfwSwapInterval(value.i)
+            field = value
+        }
 
     fun pollEvents() = glfwPollEvents()
 

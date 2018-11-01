@@ -22,3 +22,9 @@ typealias MouseButtonCallbackT = (button: Int, action: Int, mods: Int) -> Unit
 typealias ScrollCallbackT = (scroll: Vec2d) -> Unit
 typealias WindowCloseCallbackT = () -> Unit
 typealias WindowContentScaleCallbackT = (Vec2) -> Unit
+
+
+enum class VSync { AdaptiveHalfRate, Adaptive, OFF, ON;
+
+    val i = ordinal - 2
+}
