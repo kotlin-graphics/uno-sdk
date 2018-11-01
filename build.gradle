@@ -59,7 +59,7 @@ dependencies {
     }
     ["", "-glfw", "-jemalloc", "-openal", "-opengl", "-stb", "-vulkan", "-jawt"].each {
         implementation "org.lwjgl:lwjgl$it:$lwjglVersion"
-        if (it != "-vulkan")
+        if (it != "-vulkan" && it != "-jawt")
             runtime "org.lwjgl:lwjgl$it:$lwjglVersion:$lwjglNatives"
     }
 }
