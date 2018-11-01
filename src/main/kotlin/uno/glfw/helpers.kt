@@ -7,11 +7,11 @@ import glm_.vec2.Vec2i
 
 typealias GLFWErrorCallbackT = (String, String) -> Unit
 
-typealias GlfwMonitor = Long
+inline class GlfwMonitor(val L: Long)
 
-typealias GlfwWindowHandle = Long
+inline class GlfwWindowHandle(val L: Long)
 
-typealias GlfwCursor = Long
+inline class GlfwCursor(val L: Long)
 
 
 typealias CharCallbackT = (codePoint: Int) -> Unit

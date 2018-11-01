@@ -7,113 +7,113 @@ import org.lwjgl.system.MemoryUtil.*
 import java.nio.*
 
 /** Returns 1st *element* from the collection. */
-inline operator fun ByteBuffer.component1() = get(0)
+operator fun ByteBuffer.component1() = get(0)
 
 /** Returns 1st *element* from the collection. */
-inline operator fun ShortBuffer.component1() = get(0)
+operator fun ShortBuffer.component1() = get(0)
 
 /** Returns 1st *element* from the collection. */
-inline operator fun IntBuffer.component1() = get(0)
+operator fun IntBuffer.component1() = get(0)
 
 /** Returns 1st *element* from the collection. */
-inline operator fun LongBuffer.component1() = get(0)
+operator fun LongBuffer.component1() = get(0)
 
 /** Returns 1st *element* from the collection. */
-inline operator fun FloatBuffer.component1() = get(0)
+operator fun FloatBuffer.component1() = get(0)
 
 /** Returns 1st *element* from the collection. */
-inline operator fun DoubleBuffer.component1() = get(0)
+operator fun DoubleBuffer.component1() = get(0)
 
 /** Returns 1st *element* from the collection. */
-inline operator fun CharBuffer.component1() = get(0)
+operator fun CharBuffer.component1() = get(0)
 
 
 /** Returns 2nd *element* from the collection. */
-inline operator fun ByteBuffer.component2() = get(1)
+operator fun ByteBuffer.component2() = get(1)
 
 /** Returns 2nd *element* from the collection. */
-inline operator fun ShortBuffer.component2() = get(1)
+operator fun ShortBuffer.component2() = get(1)
 
 /** Returns 2nd *element* from the collection. */
-inline operator fun IntBuffer.component2() = get(1)
+operator fun IntBuffer.component2() = get(1)
 
 /** Returns 2nd *element* from the collection. */
-inline operator fun LongBuffer.component2() = get(1)
+operator fun LongBuffer.component2() = get(1)
 
 /** Returns 2nd *element* from the collection. */
-inline operator fun FloatBuffer.component2() = get(1)
+operator fun FloatBuffer.component2() = get(1)
 
 /** Returns 2nd *element* from the collection. */
-inline operator fun DoubleBuffer.component2() = get(1)
+operator fun DoubleBuffer.component2() = get(1)
 
 /** Returns 2nd *element* from the collection. */
-inline operator fun CharBuffer.component2() = get(1)
+operator fun CharBuffer.component2() = get(1)
 
 
 /** Returns 3rd *element* from the collection. */
-inline operator fun ByteBuffer.component3() = get(2)
+operator fun ByteBuffer.component3() = get(2)
 
 /** Returns 3rd *element* from the collection. */
-inline operator fun ShortBuffer.component3() = get(2)
+operator fun ShortBuffer.component3() = get(2)
 
 /** Returns 3rd *element* from the collection. */
-inline operator fun IntBuffer.component3() = get(2)
+operator fun IntBuffer.component3() = get(2)
 
 /** Returns 3rd *element* from the collection. */
-inline operator fun LongBuffer.component3() = get(2)
+operator fun LongBuffer.component3() = get(2)
 
 /** Returns 3rd *element* from the collection. */
-inline operator fun FloatBuffer.component3() = get(2)
+operator fun FloatBuffer.component3() = get(2)
 
 /** Returns 3rd *element* from the collection. */
-inline operator fun DoubleBuffer.component3() = get(2)
+operator fun DoubleBuffer.component3() = get(2)
 
 /** Returns 3rd *element* from the collection. */
-inline operator fun CharBuffer.component3() = get(2)
+operator fun CharBuffer.component3() = get(2)
 
 
 /** Returns 4th *element* from the collection. */
-inline operator fun ByteBuffer.component4() = get(3)
+operator fun ByteBuffer.component4() = get(3)
 
 /** Returns 4th *element* from the collection. */
-inline operator fun ShortBuffer.component4() = get(3)
+operator fun ShortBuffer.component4() = get(3)
 
 /** Returns 4th *element* from the collection. */
-inline operator fun IntBuffer.component4() = get(3)
+operator fun IntBuffer.component4() = get(3)
 
 /** Returns 4th *element* from the collection. */
-inline operator fun LongBuffer.component4() = get(3)
+operator fun LongBuffer.component4() = get(3)
 
 /** Returns 4th *element* from the collection. */
-inline operator fun FloatBuffer.component4() = get(3)
+operator fun FloatBuffer.component4() = get(3)
 
 /** Returns 4th *element* from the collection. */
-inline operator fun DoubleBuffer.component4() = get(3)
+operator fun DoubleBuffer.component4() = get(3)
 
 /** Returns 4th *element* from the collection. */
-inline operator fun CharBuffer.component4() = get(3)
+operator fun CharBuffer.component4() = get(3)
 
 
 /** Returns 5th *element* from the collection. */
-inline operator fun ByteBuffer.component5() = get(4)
+operator fun ByteBuffer.component5() = get(4)
 
 /** Returns 5th *element* from the collection. */
-inline operator fun ShortBuffer.component5() = get(4)
+operator fun ShortBuffer.component5() = get(4)
 
 /** Returns 5th *element* from the collection. */
-inline operator fun IntBuffer.component5() = get(4)
+operator fun IntBuffer.component5() = get(4)
 
 /** Returns 5th *element* from the collection. */
-inline operator fun LongBuffer.component5() = get(4)
+operator fun LongBuffer.component5() = get(4)
 
 /** Returns 5th *element* from the collection. */
-inline operator fun FloatBuffer.component5() = get(4)
+operator fun FloatBuffer.component5() = get(4)
 
 /** Returns 5th *element* from the collection. */
-inline operator fun DoubleBuffer.component5() = get(4)
+operator fun DoubleBuffer.component5() = get(4)
 
 /** Returns 5th *element* from the collection. */
-inline operator fun CharBuffer.component5() = get(4)
+operator fun CharBuffer.component5() = get(4)
 
 
 /** Returns `true` if [element] is found in the buffer. */
@@ -139,25 +139,25 @@ operator fun CharBuffer.contains(element: Char) = indexOf(element) >= 0
 
 
 /** Returns an element at the given [index] or throws an [IndexOutOfBoundsException] if the [index] is out of bounds of this buffer. */
-inline fun ByteBuffer.elementAt(index: Int) = get(index)
+fun ByteBuffer.elementAt(index: Int) = get(index)
 
 /** Returns an element at the given [index] or throws an [IndexOutOfBoundsException] if the [index] is out of bounds of this buffer. */
-inline fun ShortBuffer.elementAt(index: Int) = get(index)
+fun ShortBuffer.elementAt(index: Int) = get(index)
 
 /** Returns an element at the given [index] or throws an [IndexOutOfBoundsException] if the [index] is out of bounds of this buffer. */
-inline fun IntBuffer.elementAt(index: Int) = get(index)
+fun IntBuffer.elementAt(index: Int) = get(index)
 
 /** Returns an element at the given [index] or throws an [IndexOutOfBoundsException] if the [index] is out of bounds of this buffer. */
-inline fun LongBuffer.elementAt(index: Int) = get(index)
+fun LongBuffer.elementAt(index: Int) = get(index)
 
 /** Returns an element at the given [index] or throws an [IndexOutOfBoundsException] if the [index] is out of bounds of this buffer. */
-inline fun FloatBuffer.elementAt(index: Int) = get(index)
+fun FloatBuffer.elementAt(index: Int) = get(index)
 
 /** Returns an element at the given [index] or throws an [IndexOutOfBoundsException] if the [index] is out of bounds of this buffer. */
-inline fun DoubleBuffer.elementAt(index: Int) = get(index)
+fun DoubleBuffer.elementAt(index: Int) = get(index)
 
 /** Returns an element at the given [index] or throws an [IndexOutOfBoundsException] if the [index] is out of bounds of this buffer. */
-inline fun CharBuffer.elementAt(index: Int) = get(index)
+fun CharBuffer.elementAt(index: Int) = get(index)
 
 
 /** Returns an element at the given [index] or the result of calling the [defaultValue] function if the [index] is out of bounds of this buffer. */
@@ -183,25 +183,25 @@ inline fun CharBuffer.elementAtOrElse(index: Int, defaultValue: (Int) -> Char) =
 
 
 /** Returns an element at the given [index] or `null` if the [index] is out of bounds of this buffer. */
-inline fun ByteBuffer.elementAtOrNull(index: Int) = getOrNull(index)
+ fun ByteBuffer.elementAtOrNull(index: Int) = getOrNull(index)
 
 /** Returns an element at the given [index] or `null` if the [index] is out of bounds of this buffer. */
-inline fun ShortBuffer.elementAtOrNull(index: Int) = getOrNull(index)
+ fun ShortBuffer.elementAtOrNull(index: Int) = getOrNull(index)
 
 /** Returns an element at the given [index] or `null` if the [index] is out of bounds of this buffer. */
-inline fun IntBuffer.elementAtOrNull(index: Int) = getOrNull(index)
+ fun IntBuffer.elementAtOrNull(index: Int) = getOrNull(index)
 
 /** Returns an element at the given [index] or `null` if the [index] is out of bounds of this buffer. */
-inline fun LongBuffer.elementAtOrNull(index: Int) = getOrNull(index)
+ fun LongBuffer.elementAtOrNull(index: Int) = getOrNull(index)
 
 /** Returns an element at the given [index] or `null` if the [index] is out of bounds of this buffer. */
-inline fun FloatBuffer.elementAtOrNull(index: Int) = getOrNull(index)
+ fun FloatBuffer.elementAtOrNull(index: Int) = getOrNull(index)
 
 /** Returns an element at the given [index] or `null` if the [index] is out of bounds of this buffer. */
-inline fun DoubleBuffer.elementAtOrNull(index: Int) = getOrNull(index)
+ fun DoubleBuffer.elementAtOrNull(index: Int) = getOrNull(index)
 
 /** Returns an element at the given [index] or `null` if the [index] is out of bounds of this buffer. */
-inline fun CharBuffer.elementAtOrNull(index: Int) = getOrNull(index)
+ fun CharBuffer.elementAtOrNull(index: Int) = getOrNull(index)
 
 
 /** Returns the first element matching the given [predicate], or `null` if no such element was found. */
@@ -4593,47 +4593,47 @@ val CharBuffer.indices get() = IntRange(0, lastIndex)
 
 
 /** Returns `true` if the buffer is empty. */
-inline fun ByteBuffer.isEmpty() = capacity == 0
+ fun ByteBuffer.isEmpty() = capacity == 0
 
 /** Returns `true` if the buffer is empty. */
-inline fun ShortBuffer.isEmpty() = capacity == 0
+ fun ShortBuffer.isEmpty() = capacity == 0
 
 /** Returns `true` if the buffer is empty. */
-inline fun IntBuffer.isEmpty() = capacity == 0
+ fun IntBuffer.isEmpty() = capacity == 0
 
 /** Returns `true` if the buffer is empty. */
-inline fun LongBuffer.isEmpty() = capacity == 0
+ fun LongBuffer.isEmpty() = capacity == 0
 
 /** Returns `true` if the buffer is empty. */
-inline fun FloatBuffer.isEmpty() = capacity == 0
+ fun FloatBuffer.isEmpty() = capacity == 0
 
 /** Returns `true` if the buffer is empty. */
-inline fun DoubleBuffer.isEmpty() = capacity == 0
+ fun DoubleBuffer.isEmpty() = capacity == 0
 
 /** Returns `true` if the buffer is empty. */
-inline fun CharBuffer.isEmpty() = capacity == 0
+ fun CharBuffer.isEmpty() = capacity == 0
 
 
 /** Returns `true` if the buffer is not empty. */
-inline fun ByteBuffer.isNotEmpty() = !isEmpty()
+ fun ByteBuffer.isNotEmpty() = !isEmpty()
 
 /** Returns `true` if the buffer is not empty. */
-inline fun ShortBuffer.isNotEmpty() = !isEmpty()
+ fun ShortBuffer.isNotEmpty() = !isEmpty()
 
 /** Returns `true` if the buffer is not empty. */
-inline fun IntBuffer.isNotEmpty() = !isEmpty()
+ fun IntBuffer.isNotEmpty() = !isEmpty()
 
 /** Returns `true` if the buffer is not empty. */
-inline fun LongBuffer.isNotEmpty() = !isEmpty()
+ fun LongBuffer.isNotEmpty() = !isEmpty()
 
 /** Returns `true` if the buffer is not empty. */
-inline fun FloatBuffer.isNotEmpty() = !isEmpty()
+ fun FloatBuffer.isNotEmpty() = !isEmpty()
 
 /** Returns `true` if the buffer is not empty. */
-inline fun DoubleBuffer.isNotEmpty() = !isEmpty()
+ fun DoubleBuffer.isNotEmpty() = !isEmpty()
 
 /** Returns `true` if the buffer is not empty. */
-inline fun CharBuffer.isNotEmpty() = !isEmpty()
+ fun CharBuffer.isNotEmpty() = !isEmpty()
 
 
 /** Returns the last valid index for the buffer. */
@@ -7647,25 +7647,25 @@ inline fun CharBuffer.any(predicate: (Char) -> Boolean): Boolean {
 
 
 /** Returns the number of elements in this buffer. */
-inline fun ByteBuffer.count() = capacity
+ fun ByteBuffer.count() = capacity
 
 /** Returns the number of elements in this buffer. */
-inline fun ShortBuffer.count() = capacity
+ fun ShortBuffer.count() = capacity
 
 /** Returns the number of elements in this buffer. */
-inline fun IntBuffer.count() = capacity
+ fun IntBuffer.count() = capacity
 
 /** Returns the number of elements in this buffer. */
-inline fun LongBuffer.count() = capacity
+ fun LongBuffer.count() = capacity
 
 /** Returns the number of elements in this buffer. */
-inline fun FloatBuffer.count() = capacity
+ fun FloatBuffer.count() = capacity
 
 /** Returns the number of elements in this buffer. */
-inline fun DoubleBuffer.count() = capacity
+ fun DoubleBuffer.count() = capacity
 
 /** Returns the number of elements in this buffer. */
-inline fun CharBuffer.count() = capacity
+ fun CharBuffer.count() = capacity
 
 
 /** Returns the number of elements matching the given [predicate]. */

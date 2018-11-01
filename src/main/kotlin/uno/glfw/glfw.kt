@@ -1,8 +1,7 @@
 package uno.glfw
 
-//import vkk.VK_CHECK_RESULT
-//import vkk.VkSurfaceKHR
-//import vkk.adr
+import glm_.BYTES
+import kool.adr
 import glm_.i
 import glm_.vec2.Vec2i
 import gln.debug.glDebugCallback
@@ -17,6 +16,12 @@ import org.lwjgl.system.MemoryUtil.memUTF8
 import org.lwjgl.system.Platform
 import uno.glfw.windowHint.Profile
 import uno.kotlin.parseInt
+import vkk.VK_CHECK_RESULT
+import vkk.VkSurface
+import vkk.adr
+//import vkk.VK_CHECK_RESULT
+//import vkk.VkSurfaceKHR
+//import vkk.adr
 import java.util.function.BiPredicate
 
 /**
@@ -97,13 +102,13 @@ object glfw {
         get() = glfwGetTime()
 
     val primaryMonitor: GlfwMonitor
-        get() = glfwGetPrimaryMonitor()
+        get() = GlfwMonitor(glfwGetPrimaryMonitor())
 
     /** videoMode of primaryMonitor */
     val videoMode: GLFWVidMode
-        get() = glfwGetVideoMode(primaryMonitor)!!
+        get() = glfwGetVideoMode(primaryMonitor.L)!!
 
-    fun videoMode(monitor: GlfwMonitor): GLFWVidMode? = glfwGetVideoMode(monitor)
+    fun videoMode(monitor: GlfwMonitor): GLFWVidMode? = glfwGetVideoMode(monitor.L)
 
     val resolution: Vec2i
         get() = Vec2i(videoMode.width, videoMode.height)
@@ -116,23 +121,22 @@ object glfw {
 
     fun pollEvents() = glfwPollEvents()
 
-//    val requiredInstanceExtensions: ArrayList<String>
-//        get() {
-//            val pCount = appBuffer.intBuffer
-//            val ppNames = GLFWVulkan.nglfwGetRequiredInstanceExtensions(pCount.adr)
-//            val count = pCount[0]
-//            val pNames = MemoryUtil.memPointerBufferSafe(ppNames, count) ?: return arrayListOf()
-//            val res = ArrayList<String>(count)
-//            for (i in 0 until count)
-//                res += MemoryUtil.memASCII(pNames[i])
-//            return res
-//        }
-//
-//    fun createWindowSurface(windowHandle: Long, instance: VkInstance): VkSurfaceKHR {
-//        val pSurface = appBuffer.long
-//        VK_CHECK_RESULT(GLFWVulkan.nglfwCreateWindowSurface(instance.adr, windowHandle, NULL, pSurface))
-//        return memGetLong(pSurface)
-//    }
+    val requiredInstanceExtensions: ArrayList<String>
+        get() = stak {
+            val pCount = it.nmalloc(1, Int.BYTES)
+            val ppNames = GLFWVulkan.nglfwGetRequiredInstanceExtensions(pCount)
+            val count = memGetInt(pCount)
+            val pNames = MemoryUtil.memPointerBuffer(ppNames, count) ?: return arrayListOf()
+            val res = ArrayList<String>(count)
+            for (i in 0 until count)
+                res += MemoryUtil.memASCII(pNames[i])
+            return res
+        }
+
+    fun createWindowSurface(windowHandle: GlfwWindowHandle, instance: VkInstance): VkSurface =
+            VkSurface(stak.longAddress { surface ->
+                VK_CHECK_RESULT(GLFWVulkan.nglfwCreateWindowSurface(instance.adr, windowHandle.L, NULL, surface))
+            })
 
     enum class Error(val i: Int) {
         none(GLFW_NO_ERROR),
