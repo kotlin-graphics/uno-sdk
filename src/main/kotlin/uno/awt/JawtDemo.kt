@@ -246,7 +246,6 @@ open class LwjglCanvas : Canvas() {
     }
 
     fun toggleAnimation() {
-        println("toggleAnimation")
         if(animated)
             animated = false
         else {
