@@ -1,17 +1,17 @@
 package uno.awt
 
 import gli_.has
-import glm_.i
 import glm_.vec2.Vec2i
 import org.lwjgl.glfw.GLFWErrorCallback
 import org.lwjgl.opengl.GL
-import org.lwjgl.opengl.GLCapabilities
 import org.lwjgl.system.MemoryUtil.NULL
 import org.lwjgl.system.Platform
 import org.lwjgl.system.jawt.*
 import org.lwjgl.system.jawt.JAWTFunctions.*
 import uno.glfw.*
-import java.awt.*
+import java.awt.BorderLayout
+import java.awt.Canvas
+import java.awt.Graphics
 import java.awt.event.*
 import javax.swing.JFrame
 import javax.swing.SwingUtilities
@@ -76,12 +76,16 @@ open class LwjglCanvas : Canvas() {
 
     val gears = AbstractGears()
 
-    val glfwWindow: GlfwWindow by lazy {
+    val glfwWindow: GlfwWindow by lazy(::initInternal)
 
+    var swapBuffers = true
+
+    private fun initInternal(): GlfwWindow {
+        println("initInternal")
         GLFWErrorCallback.createPrint().set()
         glfw.init()
 
-        lockWithHWND { hwnd ->
+        return lockWithHWND { hwnd ->
             // glfwWindowHint can be used here to configure the GL context
             GlfwWindow.fromWin32Window(hwnd).also {
 
@@ -113,21 +117,14 @@ open class LwjglCanvas : Canvas() {
         // this avoids to calling the super method
         this.addComponentListener(object : ComponentAdapter() {
             override fun componentResized(e: ComponentEvent?) {
-                println("resized")
                 resized = true
             }
 
-            override fun componentHidden(e: ComponentEvent?) {
-                println("hidden")
-            }
+            override fun componentHidden(e: ComponentEvent?) {}
 
-            override fun componentMoved(e: ComponentEvent?) {
-                println("moved")
-            }
+            override fun componentMoved(e: ComponentEvent?) {}
 
-            override fun componentShown(e: ComponentEvent?) {
-                println("shown")
-            }
+            override fun componentShown(e: ComponentEvent?) {}
         })
 
         SwingUtilities.invokeAndWait {
@@ -157,7 +154,8 @@ open class LwjglCanvas : Canvas() {
 
             render()
 
-            glfwWindow.swapBuffers()
+            if (swapBuffers)
+                glfwWindow.swapBuffers()
 
 //            glfwMakeContextCurrent(NULL)
 //            GL.setCapabilities(null)
@@ -246,7 +244,7 @@ open class LwjglCanvas : Canvas() {
     }
 
     fun toggleAnimation() {
-        if(animated)
+        if (animated)
             animated = false
         else {
             animated = true
