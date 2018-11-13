@@ -2,18 +2,22 @@ package uno.awt
 
 import gli_.has
 import glm_.vec2.Vec2i
-import org.lwjgl.Version
+import org.lwjgl.glfw.GLFW
 import org.lwjgl.glfw.GLFWErrorCallback
 import org.lwjgl.opengl.GL
+import org.lwjgl.opengl.GLCapabilities
 import org.lwjgl.system.MemoryUtil.NULL
 import org.lwjgl.system.Platform
 import org.lwjgl.system.jawt.*
 import org.lwjgl.system.jawt.JAWTFunctions.*
 import uno.glfw.*
+import uno.kotlin.set
+import uno.kotlin.unset
 import java.awt.BorderLayout
 import java.awt.Canvas
 import java.awt.Graphics
 import java.awt.event.*
+import java.util.*
 import javax.swing.JFrame
 import javax.swing.SwingUtilities
 import javax.swing.WindowConstants
@@ -31,7 +35,11 @@ fun main(args: Array<String>) {
         // set it, because default is HIDE_ON_CLOSE
         defaultCloseOperation = WindowConstants.DISPOSE_ON_CLOSE
         addWindowListener(object : WindowAdapter() {
-            override fun windowClosed(e: WindowEvent?) {
+            /*
+            windowClosed will be called when it's too late, the awt hwnd will be invalid at that point and
+            so will be also the glfw Window handle
+             */
+            override fun windowClosing(e: WindowEvent?) {
                 canvas.destroyInternal()
             }
         })
@@ -78,37 +86,36 @@ open class LwjglCanvas : Canvas() {
 
     val gears = AbstractGears()
 
-    val glfwWindow: GlfwWindow by lazy(::initInternal)
+    lateinit var glfwWindow: GlfwWindow
 
     var swapBuffers = true
 
-    private fun initInternal(): GlfwWindow {
-        println("LwjglCanvas.initInternal")
+    private fun initInternal(hwnd: HWND) {
+//        println("LwjglCanvas.initInternal ${Date().toInstant()}")
+
+        initialized = true
+
         GLFWErrorCallback.createPrint().set()
         glfw.init()
 
-        return lockWithHWND { hwnd ->
-            // glfwWindowHint can be used here to configure the GL context
-            GlfwWindow.fromWin32Window(hwnd).also {
+        // glfwWindowHint can be used here to configure the GL context
+        glfwWindow = GlfwWindow.fromWin32Window(hwnd).apply { makeContextCurrent() }
+        caps = GL.createCapabilities()
 
-                it.makeContextCurrent()
-//                caps = GL.createCapabilities()
-                GL.createCapabilities()
+        glfw.swapInterval = VSync.OFF
 
-                glfw.swapInterval = VSync.OFF
+        init()
 
-                init()
-            }
-        }
+//        println("/LwjglCanvas.initInternal ${Date().toInstant()}")
     }
 
     var initialized = false
     var resized = false
     var animated = true
 
-//    var caps: GLCapabilities? = null
+    private lateinit var caps: GLCapabilities
 
-    //  According to jawt.h: "This value may be cached"
+    //  According to jawt.h > This value may be cached
     lateinit var surface: JAWTDrawingSurface
 
     init {
@@ -142,67 +149,7 @@ open class LwjglCanvas : Canvas() {
     var frames = 0
 
     override fun paint(g: Graphics) {
-        println("paint " + Thread.currentThread().name)
-
-        lockWithHWND {
-
-            //            glfwMakeContextCurrent(glfwWindow)
-//            GL.setCapabilities(caps)
-
-            if (resized) {
-                println("LwjglCanvas.reshape")
-                reshape(glfwWindow.size(width, height))
-                resized = false
-            }
-
-            println("LwjglCanvas.render")
-            render()
-
-            if (swapBuffers)
-                glfwWindow.swapBuffers()
-
-//            glfwMakeContextCurrent(NULL)
-//            GL.setCapabilities(null)
-
-
-            val now = System.currentTimeMillis()
-            time += now - last
-            last = now
-            frames++
-            if (time > 1000) {
-                time %= 1000
-                println("fps = $frames")
-                frames = 0
-            }
-        }
-
-        if (animated)
-            repaint()
-    }
-
-    /*fun init() {
-        println("init")
-
-        lockWithHWND { hwnd ->
-            // glfwWindowHint can be used here to configure the GL context
-            glfwWindow = glfwAttachWin32Window(hwnd, NULL)
-            if (glfwWindow == NULL)
-                throw IllegalStateException("Failed to attach win32 window.")
-
-            glfwMakeContextCurrent(glfwWindow)
-            caps = GL.createCapabilities()
-            GL.setCapabilities(caps)
-
-            glfwSwapInterval(0)
-
-            initGL()
-
-            resized = true
-        }
-        println("/init")
-    }*/
-
-    private inline fun <R> lockWithHWND(block: (hwnd: HWND) -> R): R {
+//        println("paint " + Thread.currentThread().name)
 
         // Lock the drawing surface
         val lock = JAWT_DrawingSurface_Lock(surface.Lock(), surface)
@@ -220,7 +167,45 @@ open class LwjglCanvas : Canvas() {
 
                 val hdc = surfaceInfo.hdc()
                 assert(hdc != NULL)
-                return block(HWND(surfaceInfo.hwnd()))
+
+
+                if (!initialized)
+                    initInternal(HWND(surfaceInfo.hwnd()))
+                else {
+                    glfwWindow.makeContextCurrent()
+                    caps.set()
+                }
+
+
+                if (resized) {
+//                    println("LwjglCanvas.reshape ${Date().toInstant()}")
+                    val newSize = Vec2i(width, height)
+                    glfwWindow.size = newSize
+                    reshape(newSize)
+                    resized = false
+//                    println("/LwjglCanvas.reshape ${Date().toInstant()}")
+                }
+
+//                println("LwjglCanvas.render ${Date().toInstant()}")
+                render()
+//                println("/LwjglCanvas.render ${Date().toInstant()}")
+
+                if (swapBuffers)
+                    glfwWindow.swapBuffers()
+
+                val now = System.currentTimeMillis()
+                time += now - last
+                last = now
+                frames++
+                if (time > 1000) {
+                    time %= 1000
+                    println("fps = $frames")
+                    frames = 0
+                }
+
+
+                glfwWindow.unmakeContextCurrent()
+                caps.unset()
 
             } finally {
                 // Free the drawing surface info
@@ -230,15 +215,22 @@ open class LwjglCanvas : Canvas() {
             // Unlock the drawing surface
             JAWT_DrawingSurface_Unlock(surface.Unlock(), surface)
         }
+
+        if (animated)
+            repaint()
     }
 
     fun destroyInternal() {
         println("destroyInternal")
 
+        println(glfwWindow.handle)
+        glfwWindow.makeContextCurrent()
+        caps.set()
+
         destroy()
 
-        glfwWindow.makeContextCurrent(GlfwWindowHandle(NULL))
-        GL.setCapabilities(null)
+        glfwWindow.unmakeContextCurrent()
+        caps.unset()
 
         JAWT_FreeDrawingSurface(awt.FreeDrawingSurface(), surface)
         awt.free()

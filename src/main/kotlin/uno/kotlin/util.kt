@@ -2,6 +2,8 @@ package uno.kotlin
 
 import glm_.i
 import kool.Adr
+import org.lwjgl.opengl.GL
+import org.lwjgl.opengl.GLCapabilities
 import org.lwjgl.system.Pointer
 import java.awt.event.KeyEvent
 import java.io.File
@@ -73,5 +75,8 @@ operator fun IntBuffer.plusAssign(bool: Boolean) = plusAssign(bool.i)
 operator fun IntBuffer.plusAssign(i: Int) {
     put(i)
 }
+
+fun GLCapabilities.set() = GL.setCapabilities(this)
+fun GLCapabilities.unset() = GL.setCapabilities(null)
 
 val version = "0.7.4"

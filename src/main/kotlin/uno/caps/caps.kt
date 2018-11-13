@@ -54,15 +54,14 @@ fun main(args: Array<String>) {
     val defaultFilename = "report.txt"
 
     val version: String
-    val path: String
-    when {
+    val path: String = when {
         debug -> {
             version = defaultVersion
-            path = defaultPath + defaultFilename
+            defaultPath + defaultFilename
         }
         else -> {
             version = args.getOrNull(0)?.takeIf { it.matches(Regex("[0-9].[0-9]")) } ?: defaultVersion
-            path = defaultPath + "\\" + (args.getOrNull(1)?.takeIf { it.isNotEmpty() } ?: defaultFilename)
+            defaultPath + "\\" + (args.getOrNull(1)?.takeIf { it.isNotEmpty() } ?: defaultFilename)
         }
     }
 
@@ -103,25 +102,9 @@ fun main(args: Array<String>) {
 
     GL.createCapabilities()
 
-    val caps = Caps(Caps.Profile.ES)
-
     println("writing report to $path")
-    File(path).printWriter().use {
-        val `-` = "--------------------------------------------------"
-        it.println("$`-`version$`-`")
-        caps.version.write(it)
-        it.println("$`-`extensions$`-`")
-        caps.extensions.write(it)
-        it.println("$`-`debug$`-`")
-        caps.debug.write(it)
-        it.println("$`-`limits$`-`")
-        caps.limits.write(it)
-        it.println("$`-`values$`-`")
-        caps.values.write(it)
-        it.println("$`-`formats$`-`")
-        caps.formats.write(it)
-    }
-    checkError("caps")
+
+    Caps(Caps.Profile.CORE).to(path)
 
     glfw.terminate()
 }
@@ -162,11 +145,10 @@ class Caps(profile: Profile) {
         @JvmField
         val SHADING_LANGUAGE_VERSION = glGetString(GL_SHADING_LANGUAGE_VERSION)
         @JvmField
-        val NUM_SHADING_LANGUAGE_VERSIONS =
-                if (check(4, 3))
-                    glGetInteger(GL_NUM_SHADING_LANGUAGE_VERSIONS)
-                else 0
-
+        val NUM_SHADING_LANGUAGE_VERSIONS = when {
+            check(4, 3) -> glGetInteger(GL_NUM_SHADING_LANGUAGE_VERSIONS)
+            else -> 0
+        }
 
         private val glslVersions by lazy { (0 until NUM_SHADING_LANGUAGE_VERSIONS).map { glGetStringi(GL_SHADING_LANGUAGE_VERSION, it) } }
 
@@ -1342,6 +1324,7 @@ class Caps(profile: Profile) {
         @JvmField
         val COMPRESSED_RGBA_FXT1_3DFX = has(GL_COMPRESSED_RGBA_FXT1_3DFX)
 
+        /*
         @JvmField
         val PALETTE4_RGB8_OES = has(GL_PALETTE4_RGB8_OES)
         @JvmField
@@ -1362,6 +1345,8 @@ class Caps(profile: Profile) {
         val PALETTE8_RGBA4_OES = has(GL_PALETTE8_RGBA4_OES)
         @JvmField
         val PALETTE8_RGB5_A1_OES = has(GL_PALETTE8_RGB5_A1_OES)
+        */
+
         @JvmField
         val ETC1_RGB8_OES = has(GL_ETC1_RGB8_OES)
 
@@ -1375,4 +1360,23 @@ class Caps(profile: Profile) {
     fun check(majorVersionRequire: Int, minorVersionRequire: Int) = version.check(majorVersionRequire, minorVersionRequire)
 
     enum class Profile(@JvmField val i: Int) { CORE(0x1), COMPATIBILITY(0x2), ES(0x4) }
+
+    fun to(path: String) {
+
+        File(path).printWriter().use {
+            val `-` = "--------------------------------------------------"
+            it.println("\n$`-` version $`-`")
+            version.write(it)
+            it.println("\n$`-` extensions $`-`")
+            extensions.write(it)
+            it.println("\n$`-` debug $`-`")
+            debug.write(it)
+            it.println("\n$`-` limits $`-`")
+            limits.write(it)
+            it.println("\n$`-` values $`-`")
+            values.write(it)
+            it.println("\n$`-` formats $`-`")
+            formats.write(it)
+        }
+    }
 }
