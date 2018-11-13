@@ -2,6 +2,7 @@ package uno.awt
 
 import gli_.has
 import glm_.vec2.Vec2i
+import org.lwjgl.Version
 import org.lwjgl.glfw.GLFWErrorCallback
 import org.lwjgl.opengl.GL
 import org.lwjgl.system.MemoryUtil.NULL
@@ -24,7 +25,7 @@ fun main(args: Array<String>) {
     if (Platform.get() != Platform.WINDOWS)
         throw UnsupportedOperationException("This demo can only run on Windows.")
 
-    val canvas = LwjglCanvas().apply { setSize(640, 480) }
+    val canvas = LwjglCanvas()//.apply { setSize(640, 480) }
 
     val frame = JFrame("JAWT Demo").apply {
         // set it, because default is HIDE_ON_CLOSE
@@ -59,6 +60,7 @@ fun main(args: Array<String>) {
         add(canvas, BorderLayout.CENTER)
 
         pack()
+        setSize(640, 480)
         addKeyListener(keyListener)
         isVisible = true
     }
@@ -81,7 +83,7 @@ open class LwjglCanvas : Canvas() {
     var swapBuffers = true
 
     private fun initInternal(): GlfwWindow {
-        println("initInternal")
+        println("LwjglCanvas.initInternal")
         GLFWErrorCallback.createPrint().set()
         glfw.init()
 
@@ -140,18 +142,20 @@ open class LwjglCanvas : Canvas() {
     var frames = 0
 
     override fun paint(g: Graphics) {
-//        println("paint " + Thread.currentThread().name)
+        println("paint " + Thread.currentThread().name)
 
-        lockWithHWND { hwnd ->
+        lockWithHWND {
 
             //            glfwMakeContextCurrent(glfwWindow)
 //            GL.setCapabilities(caps)
 
             if (resized) {
+                println("LwjglCanvas.reshape")
                 reshape(glfwWindow.size(width, height))
                 resized = false
             }
 
+            println("LwjglCanvas.render")
             render()
 
             if (swapBuffers)
