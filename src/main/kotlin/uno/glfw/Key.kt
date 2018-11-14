@@ -125,7 +125,11 @@ enum class Key(val i: Int) {
     RIGHT_ALT(GLFW_KEY_RIGHT_ALT),
     RIGHT_SUPER(GLFW_KEY_RIGHT_SUPER),
     MENU(GLFW_KEY_MENU),
-    LAST(GLFW_KEY_MENU)
+    LAST(GLFW_KEY_MENU);
+
+    companion object {
+        infix fun of(i: Int) = values().first { it.i == i }
+    }
 }
 
 enum class MouseButton(@JvmField val i: Int) {
@@ -141,5 +145,9 @@ enum class MouseButton(@JvmField val i: Int) {
     LAST  (`8`.i),
     LEFT  (`1`.i),
     RIGHT (`2`.i),
-    MIDDLE(`3`.i)
+    MIDDLE(`3`.i);
+
+    companion object {
+        infix fun of(i: Int) = values().first { it.i == i }
+    }
 }

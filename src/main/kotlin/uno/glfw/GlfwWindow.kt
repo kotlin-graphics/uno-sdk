@@ -344,8 +344,8 @@ open class GlfwWindow(var handle: GlfwWindowHandle) {
     val nWindowContentScaleCallback = GLFWWindowContentScaleCallbackI { _, xScale, yScale -> windowContentScaleCallbacks.values.forEach { it(Vec2(xScale, yScale)) } }
 
 
-    val defaultKeyCallback: KeyCallbackT = { key, scanCode, action, mods -> onKey(key, scanCode, action, mods) }
-    val defaultMouseButtonCallback: MouseButtonCallbackT = { button, action, mods -> onMouse(button, action, mods) }
+    val defaultKeyCallback: KeyCallbackT = { key, scanCode, action, mods -> onKey(Key of key, scanCode, action, mods) }
+    val defaultMouseButtonCallback: MouseButtonCallbackT = { button, action, mods -> onMouse(MouseButton of button, action, mods) }
     val defaultCursorPosCallback: CursorPosCallbackT = { pos -> onMouseMoved(pos) }
     val defaultScrollCallback: ScrollCallbackT = { scroll -> onMouseScrolled(scroll.y.f) }
     val defaultWindowCloseCallback: WindowCloseCallbackT = ::onWindowClosed
@@ -360,26 +360,26 @@ open class GlfwWindow(var handle: GlfwWindowHandle) {
     open fun onWindowClosed() {}
 
     // Keyboard handling
-    open fun onKey(key: Int, scanCode: Int, action: Int, mods: Int) {
+    open fun onKey(key: Key, scanCode: Int, action: Int, mods: Int) {
         when (action) {
             GLFW_PRESS -> onKeyPressed(key, mods)
             GLFW_RELEASE -> onKeyReleased(key, mods)
         }
     }
 
-    open fun onKeyPressed(key: Int, mods: Int) {}
-    open fun onKeyReleased(key: Int, mods: Int) {}
+    open fun onKeyPressed(key: Key, mods: Int) {}
+    open fun onKeyReleased(key: Key, mods: Int) {}
 
     // Mouse handling
-    open fun onMouse(button: Int, action: Int, mods: Int) {
+    open fun onMouse(button: MouseButton, action: Int, mods: Int) {
         when (action) {
             GLFW_PRESS -> onMousePressed(button, mods)
             GLFW_RELEASE -> onMouseReleased(button, mods)
         }
     }
 
-    open fun onMousePressed(button: Int, mods: Int) {}
-    open fun onMouseReleased(button: Int, mods: Int) {}
+    open fun onMousePressed(button: MouseButton, mods: Int) {}
+    open fun onMouseReleased(button: MouseButton, mods: Int) {}
     open fun onMouseMoved(newPos: Vec2) {}
     open fun onMouseScrolled(delta: Float) {}
 
