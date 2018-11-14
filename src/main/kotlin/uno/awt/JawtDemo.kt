@@ -2,6 +2,7 @@ package uno.awt
 
 import gli_.has
 import glm_.vec2.Vec2i
+import gln.checkError
 import org.lwjgl.glfw.GLFW
 import org.lwjgl.glfw.GLFWErrorCallback
 import org.lwjgl.opengl.GL
@@ -22,6 +23,9 @@ import javax.swing.JFrame
 import javax.swing.SwingUtilities
 import javax.swing.WindowConstants
 import org.lwjgl.system.jawt.JAWT as Jawt
+import org.lwjgl.opengl.GLUtil
+import org.lwjgl.system.Callback
+
 
 /** AWT integration demo using jawt.  */
 fun main(args: Array<String>) {
@@ -80,7 +84,7 @@ fun main(args: Array<String>) {
  *
  * This implementation supports Windows only.
  */
-open class LwjglCanvas : Canvas() {
+open class LwjglCanvas(val debug: Boolean = false) : Canvas() {
 
     val awt = Jawt.calloc().apply { version(JAWT_VERSION_1_4) }
 
@@ -90,6 +94,8 @@ open class LwjglCanvas : Canvas() {
 
     var swapBuffers = true
 
+    var debugProc: Callback? = null
+
     private fun initInternal(hwnd: HWND) {
 //        println("LwjglCanvas.initInternal ${Date().toInstant()}")
 
@@ -98,9 +104,16 @@ open class LwjglCanvas : Canvas() {
         GLFWErrorCallback.createPrint().set()
         glfw.init()
 
+        glfw.windowHint { debug = this@LwjglCanvas.debug }
+
         // glfwWindowHint can be used here to configure the GL context
-        glfwWindow = GlfwWindow.fromWin32Window(hwnd).apply { makeContextCurrent() }
+        glfwWindow = GlfwWindow.fromWin32Window(hwnd).apply {
+            makeContextCurrent()
+        }
         caps = GL.createCapabilities()
+
+        if (debug)
+            debugProc = GLUtil.setupDebugMessageCallback()
 
         glfw.swapInterval = VSync.OFF
 
@@ -168,13 +181,11 @@ open class LwjglCanvas : Canvas() {
                 val hdc = surfaceInfo.hdc()
                 assert(hdc != NULL)
 
-
-                if (!initialized)
-                    initInternal(HWND(surfaceInfo.hwnd()))
-                else {
+                if (initialized) {
                     glfwWindow.makeContextCurrent()
                     caps.set()
-                }
+                } else
+                    initInternal(HWND(surfaceInfo.hwnd()))
 
 
                 if (resized) {
@@ -228,6 +239,8 @@ open class LwjglCanvas : Canvas() {
         caps.set()
 
         destroy()
+
+        debugProc?.free()
 
         glfwWindow.unmakeContextCurrent()
         caps.unset()

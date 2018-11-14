@@ -237,7 +237,7 @@ open class GlfwWindow(var handle: GlfwWindowHandle) {
         get() = glfwGetWindowAttrib(handle.L, GLFW_AUTO_ICONIFY).bool
         set(value) = glfwSetWindowAttrib(handle.L, GLFW_AUTO_ICONIFY, value.i)
 
-    fun makeContextCurrent(windowHandle: GlfwWindowHandle = handle) = glfwMakeContextCurrent(windowHandle.L)
+    fun makeContextCurrent() = glfwMakeContextCurrent(handle.L)
     fun unmakeContextCurrent() = glfwMakeContextCurrent(NULL)
 
     /** Free the window callbacks and destroy the window and reset its handle back to NULL */
