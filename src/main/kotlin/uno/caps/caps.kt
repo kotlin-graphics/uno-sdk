@@ -1,7 +1,7 @@
 package uno.caps
 
 import kool.cap
-import kool.intBufferBig
+import kool.IntBuffer
 import glm_.vec2.Vec2
 import gln.checkError
 import gln.glGetVec2
@@ -1191,7 +1191,7 @@ class Caps(profile: Profile) {
     inner class Formats {
 
         private val compressed by lazy {
-            intBufferBig(limits.NUM_COMPRESSED_TEXTURE_FORMATS).use { buffer ->
+            IntBuffer(limits.NUM_COMPRESSED_TEXTURE_FORMATS).use { buffer ->
                 glGetIntegerv(GL_COMPRESSED_TEXTURE_FORMATS, buffer)
                 (0 until buffer.cap).map { buffer[it] }
             }

@@ -2,13 +2,12 @@ package uno.kotlin.buffers
 
 import glm_.*
 import org.lwjgl.system.MemoryUtil.*
-import uno.buffer.intBufferOf
 import uno.kotlin.plusAssign
 import java.nio.IntBuffer
 
 
 fun IntBuffer.single(): Int {
-    return when (capacity) {
+    return when (cap) {
         0 -> throw NoSuchElementException("Array is empty.")
         1 -> this[0]
         else -> throw IllegalArgumentException("Array has more than one element.")
@@ -28,7 +27,7 @@ inline fun IntBuffer.single(predicate: (Int) -> Boolean): Int {
     return single as Int
 }
 
-fun IntBuffer.singleOrNull() = if (capacity == 1) this[0] else null
+fun IntBuffer.singleOrNull() = if (cap == 1) this[0] else null
 inline fun IntBuffer.singleOrNull(predicate: (Int) -> Boolean): Int? {
     var single: Int? = null
     var found = false
@@ -45,7 +44,7 @@ inline fun IntBuffer.singleOrNull(predicate: (Int) -> Boolean): Int? {
 
 fun IntBuffer.dropLast(n: Int): List<Int> {
     require(n >= 0) { "Requested element count $n is less than zero." }
-    return take((capacity - n).coerceAtLeast(0))
+    return take((cap - n).coerceAtLeast(0))
 }
 
 inline fun IntBuffer.dropLastWhile(predicate: (Int) -> Boolean): List<Int> {
@@ -116,7 +115,7 @@ fun IntBuffer.sliceArray(indices: IntRange): IntArray {
 fun IntBuffer.take(n: Int): List<Int> {
     require(n >= 0) { "Requested element count $n is less than zero." }
     if (n == 0) return emptyList()
-    if (n >= capacity) return toList()
+    if (n >= cap) return toList()
     if (n == 1) return listOf(this[0])
     var count = 0
     val list = ArrayList<Int>(n)
@@ -128,24 +127,25 @@ fun IntBuffer.take(n: Int): List<Int> {
 }
 
 fun IntBuffer.reversedBuffer(): IntBuffer {
-    if (isEmpty()) return this
-    val result = IntArray(capacity)
-    val lastIndex = lastIndex
-    for (i in 0..lastIndex)
-        result[lastIndex - i] = this[i]
-    return intBufferOf(*result)
+    TODO()
+//    if (isEmpty()) return this
+//    val result = IntArray(capacity)
+//    val lastIndex = lastIndex
+//    for (i in 0..lastIndex)
+//        result[lastIndex - i] = this[i]
+//    return IntBuffer(*result)
 }
 
 inline fun <R : Comparable<R>> IntBuffer.sortBy(crossinline selector: (Int) -> R?) {
-    if (capacity > 1) sortWith(compareBy(selector))
+    if (cap > 1) sortWith(compareBy(selector))
 }
 
 inline fun <R : Comparable<R>> IntBuffer.sortByDescending(crossinline selector: (Int) -> R?) {
-    if (capacity > 1) sortWith(compareByDescending(selector))
+    if (cap > 1) sortWith(compareByDescending(selector))
 }
 
 fun IntBuffer.sortDescending() {
-    if (capacity > 1) {
+    if (cap > 1) {
         sort()
         reverse()
     }
@@ -170,8 +170,8 @@ fun IntBuffer.sortedWith(comparator: Comparator<Int>) = toTypedArray().apply { s
 infix fun IntBuffer.contentEquals(other: IntBuffer?): Boolean {
     if (this === other) return true
     if (other === null) return false
-    val length = capacity
-    if (other.capacity != length) return false
+    val length = cap
+    if (other.cap != length) return false
     for (i in 0 until length)
         if (this[i] != other[i])
             return false
@@ -185,7 +185,7 @@ fun IntBuffer.contentHashCode(): Int {
 }
 
 fun IntBuffer.contentToString(): String {
-    val iMax = capacity - 1
+    val iMax = cap - 1
     if (iMax == -1) return "[]"
     val builder = StringBuilder()
     builder += '['
@@ -199,29 +199,29 @@ fun IntBuffer.contentToString(): String {
 }
 
 
-fun IntBuffer.toBooleanArray() = BooleanArray(capacity, { this[it].bool })
-fun IntBuffer.toByteArray() = ByteArray(capacity, { this[it].toByte() })
-fun IntBuffer.toCharArray() = CharArray(capacity, { this[it].toChar() })
-fun IntBuffer.toDoubleArray() = DoubleArray(capacity, { this[it].toDouble() })
-fun IntBuffer.toFloatArray() = FloatArray(capacity, { this[it].toFloat() })
+fun IntBuffer.toBooleanArray() = BooleanArray(cap, { this[it].bool })
+fun IntBuffer.toByteArray() = ByteArray(cap, { this[it].toByte() })
+fun IntBuffer.toCharArray() = CharArray(cap, { this[it].toChar() })
+fun IntBuffer.toDoubleArray() = DoubleArray(cap, { this[it].toDouble() })
+fun IntBuffer.toFloatArray() = FloatArray(cap, { this[it].toFloat() })
 
 
-fun IntBuffer.toLongArray() = LongArray(capacity, { this[it].toLong() })
-fun IntBuffer.toShortArray() = ShortArray(capacity, { this[it].toShort() })
+fun IntBuffer.toLongArray() = LongArray(cap, { this[it].toLong() })
+fun IntBuffer.toShortArray() = ShortArray(cap, { this[it].toShort() })
 // TODO unsigned?
 
 inline fun <K, V> IntBuffer.associate(transform: (Int) -> Pair<K, V>): Map<K, V> {
-    val capacity = maps.mapCapacity(capacity).coerceAtLeast(16)
+    val capacity = maps.mapCapacity(cap).coerceAtLeast(16)
     return associateTo(LinkedHashMap(capacity), transform)
 }
 
 inline fun <K> IntBuffer.associateBy(keySelector: (Int) -> K): Map<K, Int> {
-    val capacity = maps.mapCapacity(capacity).coerceAtLeast(16)
+    val capacity = maps.mapCapacity(cap).coerceAtLeast(16)
     return associateByTo(LinkedHashMap(capacity), keySelector)
 }
 
 inline fun <K, V> IntBuffer.associateBy(keySelector: (Int) -> K, valueTransform: (Int) -> V): Map<K, V> {
-    val capacity = maps.mapCapacity(capacity).coerceAtLeast(16)
+    val capacity = maps.mapCapacity(cap).coerceAtLeast(16)
     return associateByTo(LinkedHashMap(capacity), keySelector, valueTransform)
 }
 
@@ -421,7 +421,7 @@ inline fun IntBuffer.partition(predicate: (Int) -> Boolean): Pair<List<Int>, Lis
 
 infix fun <R> IntBuffer.zip(other: Iterable<R>): List<Pair<Int, R>> = zip(other) { t1, t2 -> t1 to t2 }
 inline fun <R, V> IntBuffer.zip(other: Iterable<R>, transform: (a: Int, b: R) -> V): List<V> {
-    val arraySize = capacity
+    val arraySize = cap
     val list = ArrayList<V>(minOf(other.collectionSizeOrDefault(10), arraySize))
     var i = 0
     for (element in other) {
@@ -433,7 +433,7 @@ inline fun <R, V> IntBuffer.zip(other: Iterable<R>, transform: (a: Int, b: R) ->
 
 infix fun IntBuffer.zip(other: IntBuffer): List<Pair<Int, Int>> = zip(other) { t1, t2 -> t1 to t2 }
 inline fun <V> IntBuffer.zip(other: IntBuffer, transform: (a: Int, b: Int) -> V): List<V> {
-    val size = minOf(capacity, other.capacity)
+    val size = minOf(cap, other.cap)
     val list = ArrayList<V>(size)
     for (i in 0 until size)
         list += transform(this[i], other[i])
@@ -462,7 +462,7 @@ fun IntBuffer.joinToString(separator: CharSequence = ", ", prefix: CharSequence 
 
 
 fun IntBuffer.copyOf(): IntBuffer {
-    val dst = memAllocInt(capacity)
+    val dst = memAllocInt(cap)
     memCopy(memAddress(this), memAddress(dst), size.L)
     return dst
 }
@@ -503,32 +503,32 @@ fun IntBuffer.copyOfRange(fromIndex: Int, toIndex: Int): IntBuffer {
 //}
 
 fun IntBuffer.sort() {
-    if (capacity > 1) _intArrays.sort(this)
+    if (cap > 1) _intArrays.sort(this)
 }
 
 fun IntBuffer.sortWith(comparator: Comparator<Int>) {
-    if (capacity > 1) _intArrays.sort(this, comparator)
+    if (cap > 1) _intArrays.sort(this, comparator)
 }
 
 
-fun IntBuffer.binarySearch(element: Int, fromIndex: Int = 0, toIndex: Int = capacity) = _intArrays.binarySearch(this, fromIndex, toIndex, element)
+fun IntBuffer.binarySearch(element: Int, fromIndex: Int = 0, toIndex: Int = cap) = _intArrays.binarySearch(this, fromIndex, toIndex, element)
 
 
-fun IntBuffer.sort(fromIndex: Int = 0, toIndex: Int = capacity) = _intArrays.sort(this, fromIndex, toIndex)
+fun IntBuffer.sort(fromIndex: Int = 0, toIndex: Int = cap) = _intArrays.sort(this, fromIndex, toIndex)
 
-fun IntBuffer.sortWith(comparator: Comparator<Int>, fromIndex: Int = 0, toIndex: Int = capacity) = _intArrays.sort(this, fromIndex, toIndex, comparator)
+fun IntBuffer.sortWith(comparator: Comparator<Int>, fromIndex: Int = 0, toIndex: Int = cap) = _intArrays.sort(this, fromIndex, toIndex, comparator)
 
 object _intArrays {
 
-    fun sort(intBuffer: IntBuffer) = DualPivotQuicksort.sort(intBuffer, 0, intBuffer.capacity - 1, null, 0, 0)
+    fun sort(intBuffer: IntBuffer) = DualPivotQuicksort.sort(intBuffer, 0, intBuffer.cap - 1, null, 0, 0)
 
     fun sort(a: IntBuffer, c: Comparator<Int>?) {
         if (c == null) sort(a)
-        else TimSort.sort(a, 0, a.capacity, c, null, 0, 0)
+        else TimSort.sort(a, 0, a.cap, c, null, 0, 0)
     }
 
     fun binarySearch(a: IntBuffer, fromIndex: Int, toIndex: Int, key: Int): Int {
-        rangeCheck(a.capacity, fromIndex, toIndex)
+        rangeCheck(a.cap, fromIndex, toIndex)
         return binarySearch0(a, fromIndex, toIndex, key)
     }
 
@@ -560,12 +560,12 @@ object _intArrays {
     }
 
     fun fill(a: IntBuffer, fromIndex: Int, toIndex: Int, value: Int) {
-        rangeCheck(a.capacity, fromIndex, toIndex)
+        rangeCheck(a.cap, fromIndex, toIndex)
         for (i in fromIndex until toIndex) a[i] = value
     }
 
     fun sort(a: IntBuffer, fromIndex: Int, toIndex: Int) {
-        rangeCheck(a.capacity, fromIndex, toIndex)
+        rangeCheck(a.cap, fromIndex, toIndex)
         DualPivotQuicksort.sort(a, fromIndex, toIndex - 1, null, 0, 0)
     }
 
@@ -573,7 +573,7 @@ object _intArrays {
         if (c == null)
             sort(a, fromIndex, toIndex)
         else {
-            rangeCheck(a.capacity, fromIndex, toIndex)
+            rangeCheck(a.cap, fromIndex, toIndex)
             TimSort.sort(a, fromIndex, toIndex, c, null, 0, 0)
         }
     }

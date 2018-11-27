@@ -1,5 +1,6 @@
 package uno.kotlin.buffers
 
+import kool.cap
 import java.nio.*
 
 operator fun ByteBuffer.iterator() = ByteBufferIterator(this)
@@ -15,7 +16,7 @@ class ByteBufferIterator(private val byteBuffer: ByteBuffer) : Iterator<Byte> {
     private var position = byteBuffer.position()
 
     override fun next() = byteBuffer[position++]
-    override fun hasNext() = position < byteBuffer.capacity
+    override fun hasNext() = position < byteBuffer.cap
 }
 
 class ShortBufferIterator(private val shortBuffer: ShortBuffer) : Iterator<Short> {
@@ -23,7 +24,7 @@ class ShortBufferIterator(private val shortBuffer: ShortBuffer) : Iterator<Short
     private var position = shortBuffer.position()
 
     override fun next() = shortBuffer[position++]
-    override fun hasNext() = position < shortBuffer.capacity
+    override fun hasNext() = position < shortBuffer.cap
 }
 
 class IntBufferIterator(private val intBuffer: IntBuffer) : Iterator<Int> {
@@ -31,7 +32,7 @@ class IntBufferIterator(private val intBuffer: IntBuffer) : Iterator<Int> {
     private var position = intBuffer.position()
 
     override fun next() = intBuffer[position++]
-    override fun hasNext() = position < intBuffer.capacity
+    override fun hasNext() = position < intBuffer.cap
 }
 
 class LongBufferIterator(private val longBuffer: LongBuffer) : Iterator<Long> {
@@ -39,7 +40,7 @@ class LongBufferIterator(private val longBuffer: LongBuffer) : Iterator<Long> {
     private var position = longBuffer.position()
 
     override fun next() = longBuffer[position++]
-    override fun hasNext() = position < longBuffer.capacity
+    override fun hasNext() = position < longBuffer.cap
 }
 
 class FloatBufferIterator(private val floatBuffer: FloatBuffer) : Iterator<Float> {
@@ -47,7 +48,7 @@ class FloatBufferIterator(private val floatBuffer: FloatBuffer) : Iterator<Float
     private var position = floatBuffer.position()
 
     override fun next() = floatBuffer[position++]
-    override fun hasNext() = position < floatBuffer.capacity
+    override fun hasNext() = position < floatBuffer.cap
 }
 
 class DoubleBufferIterator(private val doubleBuffer: DoubleBuffer) : Iterator<Double> {
@@ -55,7 +56,7 @@ class DoubleBufferIterator(private val doubleBuffer: DoubleBuffer) : Iterator<Do
     private var position = doubleBuffer.position()
 
     override fun next() = doubleBuffer[position++]
-    override fun hasNext() = position < doubleBuffer.capacity
+    override fun hasNext() = position < doubleBuffer.cap
 }
 
 class CharBufferIterator(private val charBuffer: CharBuffer) : Iterator<Char> {
@@ -63,24 +64,8 @@ class CharBufferIterator(private val charBuffer: CharBuffer) : Iterator<Char> {
     private var position = charBuffer.position()
 
     override fun next() = charBuffer[position++]
-    override fun hasNext() = position < charBuffer.capacity
+    override fun hasNext() = position < charBuffer.cap
 }
-
-inline val ByteBuffer.capacity get() = capacity()
-inline val ShortBuffer.capacity get() = capacity()
-inline val IntBuffer.capacity get() = capacity()
-inline val LongBuffer.capacity get() = capacity()
-inline val FloatBuffer.capacity get() = capacity()
-inline val DoubleBuffer.capacity get() = capacity()
-inline val CharBuffer.capacity get() = capacity()
-
-inline val ByteBuffer.remaining get() = remaining()
-inline val ShortBuffer.remaining get() = remaining()
-inline val IntBuffer.remaining get() = remaining()
-inline val LongBuffer.remaining get() = remaining()
-inline val FloatBuffer.remaining get() = remaining()
-inline val DoubleBuffer.remaining get() = remaining()
-inline val CharBuffer.remaining get() = remaining()
 
 
 

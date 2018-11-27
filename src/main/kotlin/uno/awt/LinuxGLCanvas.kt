@@ -3,6 +3,7 @@ package uno.awt
 import gli_.has
 import glm_.i
 import kool.cap
+import kool.intBufferOf
 import org.lwjgl.opengl.GLX13.*
 import org.lwjgl.system.MemoryUtil.NULL
 import org.lwjgl.system.jawt.JAWTDrawingSurface

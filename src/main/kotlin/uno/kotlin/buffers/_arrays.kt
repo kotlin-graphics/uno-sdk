@@ -3,6 +3,7 @@ package uno.kotlin.buffers
 import glm_.L
 import glm_.set
 import glm_.size
+import gln.get
 import org.lwjgl.system.MemoryUtil.*
 import java.nio.*
 
@@ -4535,37 +4536,37 @@ fun CharBuffer.asList(): List<Char> {
 
 
 /** Fills original buffer with the provided value. */
-fun ByteBuffer.fill(element: Byte, fromIndex: Int = 0, toIndex: Int = capacity) {
+fun ByteBuffer.fill(element: Byte, fromIndex: Int = 0, toIndex: Int = cap) {
     for (i in fromIndex until toIndex) put(i, element)
 }
 
 /** Fills original buffer with the provided value. */
-fun ShortBuffer.fill(element: Short, fromIndex: Int = 0, toIndex: Int = capacity) {
+fun ShortBuffer.fill(element: Short, fromIndex: Int = 0, toIndex: Int = cap) {
     for (i in fromIndex until toIndex) put(i, element)
 }
 
 /** Fills original buffer with the provided value. */
-fun IntBuffer.fill(element: Int, fromIndex: Int = 0, toIndex: Int = capacity) {
+fun IntBuffer.fill(element: Int, fromIndex: Int = 0, toIndex: Int = cap) {
     for (i in fromIndex until toIndex) put(i, element)
 }
 
 /** Fills original buffer with the provided value. */
-fun LongBuffer.fill(element: Long, fromIndex: Int = 0, toIndex: Int = capacity) {
+fun LongBuffer.fill(element: Long, fromIndex: Int = 0, toIndex: Int = cap) {
     for (i in fromIndex until toIndex) put(i, element)
 }
 
 /** Fills original buffer with the provided value. */
-fun FloatBuffer.fill(element: Float, fromIndex: Int = 0, toIndex: Int = capacity) {
+fun FloatBuffer.fill(element: Float, fromIndex: Int = 0, toIndex: Int = cap) {
     for (i in fromIndex until toIndex) put(i, element)
 }
 
 /** Fills original buffer with the provided value. */
-fun DoubleBuffer.fill(element: Double, fromIndex: Int = 0, toIndex: Int = capacity) {
+fun DoubleBuffer.fill(element: Double, fromIndex: Int = 0, toIndex: Int = cap) {
     for (i in fromIndex until toIndex) put(i, element)
 }
 
 /** Fills original buffer with the provided value. */
-fun CharBuffer.fill(element: Char, fromIndex: Int = 0, toIndex: Int = capacity) {
+fun CharBuffer.fill(element: Char, fromIndex: Int = 0, toIndex: Int = cap) {
     for (i in fromIndex until toIndex) put(i, element)
 }
 
@@ -4593,25 +4594,25 @@ val CharBuffer.indices get() = IntRange(0, lastIndex)
 
 
 /** Returns `true` if the buffer is empty. */
- fun ByteBuffer.isEmpty() = capacity == 0
+ fun ByteBuffer.isEmpty() = cap == 0
 
 /** Returns `true` if the buffer is empty. */
- fun ShortBuffer.isEmpty() = capacity == 0
+ fun ShortBuffer.isEmpty() = cap == 0
 
 /** Returns `true` if the buffer is empty. */
- fun IntBuffer.isEmpty() = capacity == 0
+ fun IntBuffer.isEmpty() = cap == 0
 
 /** Returns `true` if the buffer is empty. */
- fun LongBuffer.isEmpty() = capacity == 0
+ fun LongBuffer.isEmpty() = cap == 0
 
 /** Returns `true` if the buffer is empty. */
- fun FloatBuffer.isEmpty() = capacity == 0
+ fun FloatBuffer.isEmpty() = cap == 0
 
 /** Returns `true` if the buffer is empty. */
- fun DoubleBuffer.isEmpty() = capacity == 0
+ fun DoubleBuffer.isEmpty() = cap == 0
 
 /** Returns `true` if the buffer is empty. */
- fun CharBuffer.isEmpty() = capacity == 0
+ fun CharBuffer.isEmpty() = cap == 0
 
 
 /** Returns `true` if the buffer is not empty. */
@@ -4637,67 +4638,67 @@ val CharBuffer.indices get() = IntRange(0, lastIndex)
 
 
 /** Returns the last valid index for the buffer. */
-val ByteBuffer.lastIndex get() = capacity - 1
+val ByteBuffer.lastIndex get() = cap - 1
 
 /** Returns the last valid index for the buffer. */
-val ShortBuffer.lastIndex get() = capacity - 1
+val ShortBuffer.lastIndex get() = cap - 1
 
 /** Returns the last valid index for the buffer. */
-val IntBuffer.lastIndex get() = capacity - 1
+val IntBuffer.lastIndex get() = cap - 1
 
 /** Returns the last valid index for the buffer. */
-val LongBuffer.lastIndex get() = capacity - 1
+val LongBuffer.lastIndex get() = cap - 1
 
 /** Returns the last valid index for the buffer. */
-val FloatBuffer.lastIndex get() = capacity - 1
+val FloatBuffer.lastIndex get() = cap - 1
 
 /** Returns the last valid index for the buffer. */
-val DoubleBuffer.lastIndex get() = capacity - 1
+val DoubleBuffer.lastIndex get() = cap - 1
 
 /** Returns the last valid index for the buffer. */
-val CharBuffer.lastIndex get() = capacity - 1
+val CharBuffer.lastIndex get() = cap - 1
 
 
 /** Returns a buffer containing all elements of the original buffer and then the given [element]. */
 operator fun ByteBuffer.plus(element: Byte): ByteBuffer {
-    val dst = memAlloc(capacity + 1)
+    val dst = memAlloc(cap + 1)
     memCopy(this, dst)
-    return dst.put(capacity, element)
+    return dst.put(cap, element)
 }
 
 /** Returns a buffer containing all elements of the original buffer and then the given [element]. */
 operator fun ShortBuffer.plus(element: Short): ShortBuffer {
-    val dst = memAllocShort(capacity + 1)
+    val dst = memAllocShort(cap + 1)
     memCopy(this, dst)
-    return dst.put(capacity, element)
+    return dst.put(cap, element)
 }
 
 /** Returns a buffer containing all elements of the original buffer and then the given [element]. */
 operator fun IntBuffer.plus(element: Int): IntBuffer {
-    val dst = memAllocInt(capacity + 1)
+    val dst = memAllocInt(cap + 1)
     memCopy(this, dst)
-    return dst.put(capacity, element)
+    return dst.put(cap, element)
 }
 
 /** Returns a buffer containing all elements of the original buffer and then the given [element]. */
 operator fun LongBuffer.plus(element: Long): LongBuffer {
-    val dst = memAllocLong(capacity + 1)
+    val dst = memAllocLong(cap + 1)
     memCopy(this, dst)
-    return dst.put(capacity, element)
+    return dst.put(cap, element)
 }
 
 /** Returns a buffer containing all elements of the original buffer and then the given [element]. */
 operator fun FloatBuffer.plus(element: Float): FloatBuffer {
-    val dst = memAllocFloat(capacity + 1)
+    val dst = memAllocFloat(cap + 1)
     memCopy(this, dst)
-    return dst.put(capacity, element)
+    return dst.put(cap, element)
 }
 
 /** Returns a buffer containing all elements of the original buffer and then the given [element]. */
 operator fun DoubleBuffer.plus(element: Double): DoubleBuffer {
-    val dst = memAllocDouble(capacity + 1)
+    val dst = memAllocDouble(cap + 1)
     memCopy(this, dst)
-    return dst.put(capacity, element)
+    return dst.put(cap, element)
 }
 
 /** Returns a buffer containing all elements of the original buffer and then the given [element]. */
@@ -4708,49 +4709,49 @@ operator fun CharBuffer.plus(element: Char): CharBuffer {
 
 /** Returns a buffer containing all elements of the original buffer and then all elements of the given [elements] collection. */
 operator fun ByteBuffer.plus(elements: Collection<Byte>): ByteBuffer {
-    val dst = memAlloc(capacity + elements.size)
+    val dst = memAlloc(cap + elements.size)
     memCopy(this, dst)
-    for (i in elements.indices) dst[capacity + i] = elements.elementAt(i)
+    for (i in elements.indices) dst[cap + i] = elements.elementAt(i)
     return dst
 }
 
 /** Returns a buffer containing all elements of the original buffer and then all elements of the given [elements] collection. */
 operator fun ShortBuffer.plus(elements: Collection<Short>): ShortBuffer {
-    val dst = memAllocShort(capacity + elements.size)
+    val dst = memAllocShort(cap + elements.size)
     memCopy(this, dst)
-    for (i in elements.indices) dst[capacity + i] = elements.elementAt(i)
+    for (i in elements.indices) dst[cap + i] = elements.elementAt(i)
     return dst
 }
 
 /** Returns a buffer containing all elements of the original buffer and then all elements of the given [elements] collection. */
 operator fun IntBuffer.plus(elements: Collection<Int>): IntBuffer {
-    val dst = memAllocInt(capacity + elements.size)
+    val dst = memAllocInt(cap + elements.size)
     memCopy(this, dst)
-    for (i in elements.indices) dst[capacity + i] = elements.elementAt(i)
+    for (i in elements.indices) dst[cap + i] = elements.elementAt(i)
     return dst
 }
 
 /** Returns a buffer containing all elements of the original buffer and then all elements of the given [elements] collection. */
 operator fun LongBuffer.plus(elements: Collection<Long>): LongBuffer {
-    val dst = memAllocLong(capacity + elements.size)
+    val dst = memAllocLong(cap + elements.size)
     memCopy(this, dst)
-    for (i in elements.indices) dst[capacity + i] = elements.elementAt(i)
+    for (i in elements.indices) dst[cap + i] = elements.elementAt(i)
     return dst
 }
 
 /** Returns a buffer containing all elements of the original buffer and then all elements of the given [elements] collection. */
 operator fun FloatBuffer.plus(elements: Collection<Float>): FloatBuffer {
-    val dst = memAllocFloat(capacity + elements.size)
+    val dst = memAllocFloat(cap + elements.size)
     memCopy(this, dst)
-    for (i in elements.indices) dst[capacity + i] = elements.elementAt(i)
+    for (i in elements.indices) dst[cap + i] = elements.elementAt(i)
     return dst
 }
 
 /** Returns a buffer containing all elements of the original buffer and then all elements of the given [elements] collection. */
 operator fun DoubleBuffer.plus(elements: Collection<Double>): DoubleBuffer {
-    val dst = memAllocDouble(capacity + elements.size)
+    val dst = memAllocDouble(cap + elements.size)
     memCopy(this, dst)
-    for (i in elements.indices) dst[capacity + i] = elements.elementAt(i)
+    for (i in elements.indices) dst[cap + i] = elements.elementAt(i)
     return dst
 }
 
@@ -4762,49 +4763,49 @@ operator fun CharBuffer.plus(elements: Collection<Char>): CharBuffer {
 
 /** Returns a buffer containing all elements of the original buffer and then all elements of the given [elements] buffer. */
 operator fun ByteBuffer.plus(elements: ByteBuffer): ByteBuffer {
-    val dst = memAlloc(capacity + elements.size)
+    val dst = memAlloc(cap + elements.size)
     memCopy(this, dst)
-    memCopy(memAddress(elements), memAddress(dst, capacity), elements.remaining.L)
+    memCopy(memAddress(elements), memAddress(dst, cap), elements.rem.L)
     return dst
 }
 
 /** Returns a buffer containing all elements of the original buffer and then all elements of the given [elements] buffer. */
 operator fun ShortBuffer.plus(elements: ShortBuffer): ShortBuffer {
-    val dst = memAllocShort(capacity + elements.size)
+    val dst = memAllocShort(cap + elements.size)
     memCopy(this, dst)
-    memCopy(memAddress(elements), memAddress(dst, capacity), elements.remaining.L)
+    memCopy(memAddress(elements), memAddress(dst, cap), elements.rem.L)
     return dst
 }
 
 /** Returns a buffer containing all elements of the original buffer and then all elements of the given [elements] buffer. */
 operator fun IntBuffer.plus(elements: IntBuffer): IntBuffer {
-    val dst = memAllocInt(capacity + elements.size)
+    val dst = memAllocInt(cap + elements.size)
     memCopy(this, dst)
-    memCopy(memAddress(elements), memAddress(dst, capacity), elements.remaining.L)
+    memCopy(memAddress(elements), memAddress(dst, cap), elements.rem.L)
     return dst
 }
 
 /** Returns a buffer containing all elements of the original buffer and then all elements of the given [elements] buffer. */
 operator fun LongBuffer.plus(elements: LongBuffer): LongBuffer {
-    val dst = memAllocLong(capacity + elements.size)
+    val dst = memAllocLong(cap + elements.size)
     memCopy(this, dst)
-    memCopy(memAddress(elements), memAddress(dst, capacity), elements.remaining.L)
+    memCopy(memAddress(elements), memAddress(dst, cap), elements.rem.L)
     return dst
 }
 
 /** Returns a buffer containing all elements of the original buffer and then all elements of the given [elements] buffer. */
 operator fun FloatBuffer.plus(elements: FloatBuffer): FloatBuffer {
-    val dst = memAllocFloat(capacity + elements.size)
+    val dst = memAllocFloat(cap + elements.size)
     memCopy(this, dst)
-    memCopy(memAddress(elements), memAddress(dst, capacity), elements.remaining.L)
+    memCopy(memAddress(elements), memAddress(dst, cap), elements.rem.L)
     return dst
 }
 
 /** Returns a buffer containing all elements of the original buffer and then all elements of the given [elements] buffer. */
 operator fun DoubleBuffer.plus(elements: DoubleBuffer): DoubleBuffer {
-    val dst = memAllocDouble(capacity + elements.size)
+    val dst = memAllocDouble(cap + elements.size)
     memCopy(this, dst)
-    memCopy(memAddress(elements), memAddress(dst, capacity), elements.remaining.L)
+    memCopy(memAddress(elements), memAddress(dst, cap), elements.rem.L)
     return dst
 }
 
@@ -7647,25 +7648,25 @@ inline fun CharBuffer.any(predicate: (Char) -> Boolean): Boolean {
 
 
 /** Returns the number of elements in this buffer. */
- fun ByteBuffer.count() = capacity
+ fun ByteBuffer.count() = cap
 
 /** Returns the number of elements in this buffer. */
- fun ShortBuffer.count() = capacity
+ fun ShortBuffer.count() = cap
 
 /** Returns the number of elements in this buffer. */
- fun IntBuffer.count() = capacity
+ fun IntBuffer.count() = cap
 
 /** Returns the number of elements in this buffer. */
- fun LongBuffer.count() = capacity
+ fun LongBuffer.count() = cap
 
 /** Returns the number of elements in this buffer. */
- fun FloatBuffer.count() = capacity
+ fun FloatBuffer.count() = cap
 
 /** Returns the number of elements in this buffer. */
- fun DoubleBuffer.count() = capacity
+ fun DoubleBuffer.count() = cap
 
 /** Returns the number of elements in this buffer. */
- fun CharBuffer.count() = capacity
+ fun CharBuffer.count() = cap
 
 
 /** Returns the number of elements matching the given [predicate]. */

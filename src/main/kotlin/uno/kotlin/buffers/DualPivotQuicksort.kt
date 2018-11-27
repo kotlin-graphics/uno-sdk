@@ -2,7 +2,8 @@ package uno.kotlin.buffers
 
 import glm_.b
 import glm_.set
-import kool.intBufferBig
+import kool.IntBuffer
+import kool.cap
 import java.nio.ByteBuffer
 import java.nio.IntBuffer
 
@@ -108,8 +109,8 @@ object DualPivotQuicksort {
         var ao: Int
         var bo: Int
         val blen = right - left // space needed for b
-        if (work == null || workLen < blen || workBase + blen > work.capacity) {
-            work = intBufferBig(blen)
+        if (work == null || workLen < blen || workBase + blen > work.cap) {
+            work = IntBuffer(blen)
             workBase = 0
         }
         if (odd == 0) {

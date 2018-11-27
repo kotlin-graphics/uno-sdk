@@ -3,7 +3,8 @@ package uno.kotlin.buffers
 import glm_.BYTES
 import glm_.L
 import glm_.set
-import kool.intBufferBig
+import kool.IntBuffer
+import kool.cap
 import org.lwjgl.system.MemoryUtil
 import java.nio.IntBuffer
 
@@ -91,10 +92,10 @@ object TimSort {
         this.c = c
 
         // Allocate temp storage (which may be increased later if necessary)
-        val len = a.capacity
+        val len = a.cap
         val tlen = if (len < 2 * INITIAL_TMP_STORAGE_LENGTH) len ushr 1 else INITIAL_TMP_STORAGE_LENGTH
-        if (work == null || workLen < tlen || workBase + tlen > work.capacity) {
-            tmp = intBufferBig(tlen)
+        if (work == null || workLen < tlen || workBase + tlen > work.cap) {
+            tmp = IntBuffer(tlen)
             tmpBase = 0
             tmpLen = tlen
         } else {
@@ -137,7 +138,7 @@ object TimSort {
      * @since 1.8   */
     fun sort(a: IntBuffer, lo_: Int, hi: Int, c: Comparator<Int>, work: IntBuffer?, workBase: Int, workLen: Int) {
 
-        assert(lo_ in 0..hi && hi <= a.capacity)
+        assert(lo_ in 0..hi && hi <= a.cap)
 
         var lo = lo_
 
@@ -785,7 +786,7 @@ object TimSort {
             if (newSize < 0) // Not bloody likely!
                 newSize = minCapacity
             else
-                newSize = Math.min(newSize, a.capacity ushr 1)
+                newSize = Math.min(newSize, a.cap ushr 1)
 
             val newArray = MemoryUtil.memRealloc(a, newSize)
             tmp = newArray
