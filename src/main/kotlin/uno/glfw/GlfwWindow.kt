@@ -20,7 +20,8 @@ import org.lwjgl.opengl.GLUtil
 import org.lwjgl.system.Callback
 import org.lwjgl.system.MemoryStack
 import org.lwjgl.system.MemoryUtil.*
-import org.lwjgl.vulkan.VkInstance
+import uno.caps.Caps
+import uno.caps.Caps.Profile
 import uno.kotlin.getOrfirst
 import java.nio.ByteBuffer
 import java.nio.FloatBuffer
@@ -72,21 +73,7 @@ open class GlfwWindow(var handle: GlfwWindowHandle) {
             glfwSetWindowPos(handle.L, position.x, position.y)
 
         if (installCallbacks) {
-            glfwSetCharCallback(handle.L, nCharCallback)
-            glfwSetCursorPosCallback(handle.L, nCursorPosCallback)
-            glfwSetFramebufferSizeCallback(handle.L, nFramebufferSizeCallback)
-            glfwSetKeyCallback(handle.L, nKeyCallback)
-            glfwSetMouseButtonCallback(handle.L, nMouseButtonCallback)
-            glfwSetScrollCallback(handle.L, nScrollCallback)
-            glfwSetWindowCloseCallback(handle.L, nWindowCloseCallback)
-            glfwSetWindowContentScaleCallback(handle.L, nWindowContentScaleCallback)
-            cursorPosCallback = defaultCursorPosCallback
-            framebufferSizeCallback = defaultFramebufferSizeCallback
-            keyCallback = defaultKeyCallback
-            mouseButtonCallback = defaultMouseButtonCallback
-            scrollCallback = defaultScrollCallback
-            windowCloseCallback = defaultWindowCloseCallback
-            windowContentScaleCallback = defaultWindowContentScaleCallback
+            installNativeCallbacks() // TODO default too?
         }
     }
 
@@ -95,6 +82,41 @@ open class GlfwWindow(var handle: GlfwWindowHandle) {
             glfw.terminate()
             throw RuntimeException("Failed to create the GLFW window")
         }
+    }
+
+    fun installNativeCallbacks() {
+        glfwSetCharCallback(handle.L, nCharCallback)
+        glfwSetCursorPosCallback(handle.L, nCursorPosCallback)
+        glfwSetCursorEnterCallback(handle.L, nCursorEnterCallback)
+        glfwSetFramebufferSizeCallback(handle.L, nFramebufferSizeCallback)
+        glfwSetKeyCallback(handle.L, nKeyCallback)
+        glfwSetMouseButtonCallback(handle.L, nMouseButtonCallback)
+        glfwSetScrollCallback(handle.L, nScrollCallback)
+        glfwSetWindowCloseCallback(handle.L, nWindowCloseCallback)
+        glfwSetWindowContentScaleCallback(handle.L, nWindowContentScaleCallback)
+    }
+
+    fun installDefaultCallbacks() {
+        cursorPosCallback = defaultCursorPosCallback
+        cursorEnterCallback = defaultCursorEnterCallback
+        framebufferSizeCallback = defaultFramebufferSizeCallback
+        keyCallback = defaultKeyCallback
+        mouseButtonCallback = defaultMouseButtonCallback
+        scrollCallback = defaultScrollCallback
+        windowCloseCallback = defaultWindowCloseCallback
+        windowContentScaleCallback = defaultWindowContentScaleCallback
+    }
+
+    lateinit var caps: Caps
+
+    /**
+     * Spasi: "the ideal option for modern applications is: compatibility context + forwardCompatible. A compatibility context
+     * does not do extra validations that may cost performance and with `forwardCompatible == true` you don't risk using
+     * legacy functionality by mistake.
+     * LWJGL will not try to load deprecated functions, so calling them will crash but the context will actually expose them"
+     */
+    fun createCapabilities(profile: Profile = Profile.COMPATIBILITY, forwardCompatible: Boolean = true) {
+        caps = Caps(profile, forwardCompatible)
     }
 
     var debugProc: Callback? = null
@@ -238,6 +260,7 @@ open class GlfwWindow(var handle: GlfwWindowHandle) {
         set(value) = glfwSetWindowAttrib(handle.L, GLFW_AUTO_ICONIFY, value.i)
 
     fun makeContextCurrent() = glfwMakeContextCurrent(handle.L)
+
     fun unmakeContextCurrent() = glfwMakeContextCurrent(NULL)
 
     /** Free the window callbacks and destroy the window and reset its handle back to NULL */
@@ -262,83 +285,112 @@ open class GlfwWindow(var handle: GlfwWindowHandle) {
 
     val defaultKey = "0 - default"
 
-    var charCallback: CharCallbackT? = null
+    var charCallback: CharCallbackT?
         get() = charCallbacks.getOrfirst(defaultKey)
         set(value) {
-            charCallbacks[defaultKey] = value
-            field = value
+            if (value != null)
+                charCallbacks[defaultKey] = value
+            else
+                charCallbacks -= defaultKey
         }
 
     val charCallbacks = sortedMapOf<String, CharCallbackT>()
     val nCharCallback = GLFWCharCallbackI { _, codePoint -> charCallbacks.values.forEach { it(codePoint) } }
 
 
-    var cursorPosCallback: CursorPosCallbackT? = null
+    var cursorPosCallback: CursorPosCallbackT?
         get() = cursorPosCallbacks.getOrfirst(defaultKey)
         set(value) {
-            cursorPosCallbacks[defaultKey] = value
-            field = value
+            if (value != null)
+                cursorPosCallbacks[defaultKey] = value
+            else
+                cursorPosCallbacks -= defaultKey
         }
 
     val cursorPosCallbacks = sortedMapOf<String, CursorPosCallbackT>()
     val nCursorPosCallback = GLFWCursorPosCallbackI { _, xPos, yPos -> cursorPosCallbacks.values.forEach { it(Vec2(xPos, yPos)) } }
 
 
-    var framebufferSizeCallback: FramebufferSizeCallbackT? = null
+    var cursorEnterCallback: CursorEnterCallbackT?
+        get() = cursorEnterCallbacks.getOrfirst(defaultKey)
+        set(value) {
+            if (value != null)
+                cursorEnterCallbacks[defaultKey] = value
+            else
+                cursorEnterCallbacks -= defaultKey
+        }
+
+    val cursorEnterCallbacks = sortedMapOf<String, CursorEnterCallbackT>()
+    val nCursorEnterCallback = GLFWCursorEnterCallbackI { _, entered -> cursorEnterCallbacks.values.forEach { it(entered) } }
+
+
+    var framebufferSizeCallback: FramebufferSizeCallbackT?
         get() = framebufferSizeCallbacks.getOrfirst(defaultKey)
         set(value) {
-            framebufferSizeCallbacks[defaultKey] = value
-            field = value
+            if (value != null)
+                framebufferSizeCallbacks[defaultKey] = value
+            else
+                framebufferSizeCallbacks -= defaultKey
         }
     val framebufferSizeCallbacks = sortedMapOf<String, FramebufferSizeCallbackT>()
     val nFramebufferSizeCallback = GLFWFramebufferSizeCallbackI { _, width, height -> framebufferSizeCallbacks.values.forEach { it(Vec2i(width, height)) } }
 
 
-    var keyCallback: KeyCallbackT? = null
+    var keyCallback: KeyCallbackT?
         get() = keyCallbacks.getOrfirst(defaultKey)
         set(value) {
-            keyCallbacks[defaultKey] = value
-            field = value
+            if (value != null)
+                keyCallbacks[defaultKey] = value
+            else
+                keyCallbacks -= defaultKey
         }
     val keyCallbacks = sortedMapOf<String, KeyCallbackT>()
     val nKeyCallback = GLFWKeyCallbackI { _, key, scanCode, action, mods -> keyCallbacks.values.forEach { it(key, scanCode, action, mods) } }
 
 
-    var mouseButtonCallback: MouseButtonCallbackT? = null
+    var mouseButtonCallback: MouseButtonCallbackT?
         get() = mouseButtonCallbacks.getOrfirst(defaultKey)
         set(value) {
-            mouseButtonCallbacks[defaultKey] = value
-            field = value
+            if (value != null)
+                mouseButtonCallbacks[defaultKey] = value
+            else
+                mouseButtonCallbacks -= defaultKey
         }
     val mouseButtonCallbacks = sortedMapOf<String, MouseButtonCallbackT>()
     val nMouseButtonCallback = GLFWMouseButtonCallbackI { _, button, action, mods -> mouseButtonCallbacks.values.forEach { it(button, action, mods) } }
 
 
-    var scrollCallback: ScrollCallbackT? = null
+    var scrollCallback: ScrollCallbackT?
         get() = scrollCallbacks.getOrfirst(defaultKey)
         set(value) {
-            scrollCallbacks[defaultKey] = value
-            field = value
+            if (value != null)
+                scrollCallbacks[defaultKey] = value
+            else
+                scrollCallbacks -= defaultKey
         }
     val scrollCallbacks = sortedMapOf<String, ScrollCallbackT>()
     val nScrollCallback = GLFWScrollCallbackI { _, xOffset, yOffset -> scrollCallbacks.values.forEach { it(Vec2d(xOffset, yOffset)) } }
 
 
-    var windowCloseCallback: WindowCloseCallbackT? = null
+    var windowCloseCallback: WindowCloseCallbackT?
         get() = windowCloseCallbacks.getOrfirst(defaultKey)
         set(value) {
-            windowCloseCallbacks[defaultKey] = value
-            field = value
+            if (value != null)
+                windowCloseCallbacks[defaultKey] = value
+            else
+                windowCloseCallbacks -= defaultKey
         }
     val windowCloseCallbacks = sortedMapOf<String, WindowCloseCallbackT>()
     val nWindowCloseCallback = GLFWWindowCloseCallbackI { windowCloseCallbacks.values.forEach { it() } }
 
 
-    var windowContentScaleCallback: WindowContentScaleCallbackT? = null
+    var windowContentScaleCallback: WindowContentScaleCallbackT?
         get() = windowContentScaleCallbacks.getOrfirst(defaultKey)
         set(value) {
-            windowContentScaleCallbacks[defaultKey] = value
-            field = value
+            if (value != null)
+                windowContentScaleCallbacks[defaultKey] = value
+            else
+                windowContentScaleCallbacks -= defaultKey
         }
     val windowContentScaleCallbacks = sortedMapOf<String, WindowContentScaleCallbackT>()
     val nWindowContentScaleCallback = GLFWWindowContentScaleCallbackI { _, xScale, yScale -> windowContentScaleCallbacks.values.forEach { it(Vec2(xScale, yScale)) } }
@@ -347,6 +399,7 @@ open class GlfwWindow(var handle: GlfwWindowHandle) {
     val defaultKeyCallback: KeyCallbackT = { key, scanCode, action, mods -> onKey(Key of key, scanCode, action, mods) }
     val defaultMouseButtonCallback: MouseButtonCallbackT = { button, action, mods -> onMouse(MouseButton of button, action, mods) }
     val defaultCursorPosCallback: CursorPosCallbackT = { pos -> onMouseMoved(pos) }
+    val defaultCursorEnterCallback: CursorEnterCallbackT = { entered -> if(entered) onMouseEntered() else onMouseExited() }
     val defaultScrollCallback: ScrollCallbackT = { scroll -> onMouseScrolled(scroll.y.f) }
     val defaultWindowCloseCallback: WindowCloseCallbackT = ::onWindowClosed
     val defaultWindowContentScaleCallback: WindowContentScaleCallbackT = { newScale -> onWindowContentScaled(newScale) }
@@ -381,6 +434,8 @@ open class GlfwWindow(var handle: GlfwWindowHandle) {
     open fun onMousePressed(button: MouseButton, mods: Int) {}
     open fun onMouseReleased(button: MouseButton, mods: Int) {}
     open fun onMouseMoved(newPos: Vec2) {}
+    open fun onMouseEntered() {}
+    open fun onMouseExited() {}
     open fun onMouseScrolled(delta: Float) {}
 
     open fun onWindowContentScaled(newScale: Vec2) {}
@@ -407,7 +462,7 @@ open class GlfwWindow(var handle: GlfwWindowHandle) {
     fun isReleased(key: Key) = glfwGetKey(handle.L, key.i) == GLFW_RELEASE
 
     fun isPressed(button: MouseButton) = glfwGetMouseButton(handle.L, button.i) == GLFW_PRESS
-    fun isRelease(button: MouseButton) = glfwGetMouseButton(handle.L, button.i)  == GLFW_RELEASE
+    fun isRelease(button: MouseButton) = glfwGetMouseButton(handle.L, button.i) == GLFW_RELEASE
 
     val joystick1Buttons: ByteBuffer?
         get() = getJoystickButtons(GLFW_JOYSTICK_1)

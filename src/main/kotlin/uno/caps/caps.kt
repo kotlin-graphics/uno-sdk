@@ -109,12 +109,28 @@ fun main(args: Array<String>) {
     glfw.terminate()
 }
 
-class Caps(profile: Profile) {
+/**
+ * Spasi: "the ideal option for modern applications is: compatibility context + forwardCompatible. A compatibility context
+ * does not do extra validations that may cost performance and with `forwardCompatible == true` you don't risk using
+ * legacy functionality by mistake.
+ * LWJGL will not try to load deprecated functions, so calling them will crash but the context will actually expose them"
+ */
+class Caps(profile: Profile = Profile.COMPATIBILITY, forwardCompatible: Boolean = true) {
+
+    val caps = GL.createCapabilities(forwardCompatible)
 
     @JvmField
     val version = Version(profile)
     @JvmField
     val extensions = Extensions()
+
+    init {
+        version.CONTEXT_FLAGS = when {
+            check(4, 3) || extensions.KHR_debug -> glGetInteger(GL_CONTEXT_FLAGS)
+            else -> 0
+        }
+    }
+
     @JvmField
     val debug = Debug()
     @JvmField
@@ -130,10 +146,9 @@ class Caps(profile: Profile) {
         val MINOR_VERSION = glGetInteger(GL_MINOR_VERSION)
         @JvmField
         val MAJOR_VERSION = glGetInteger(GL_MAJOR_VERSION)
-        //         val CONTEXT_FLAGS =
-//                if (check(4, 3) || glisExtensionAvailable("GL_KHR_debug"))
-//                    glGetInteger(GL_CONTEXT_FLAGS)
-//                else 0
+        /** It will be actually initialized later, after extensions */
+        @JvmField
+        var CONTEXT_FLAGS = 0
         @JvmField
         val NUM_EXTENSIONS = glGetInteger(GL_NUM_EXTENSIONS)
         @JvmField

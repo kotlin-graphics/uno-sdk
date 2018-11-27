@@ -2,29 +2,26 @@ package uno.awt
 
 import gli_.has
 import glm_.vec2.Vec2i
-import gln.checkError
-import org.lwjgl.glfw.GLFW
 import org.lwjgl.glfw.GLFWErrorCallback
-import org.lwjgl.opengl.GL
 import org.lwjgl.opengl.GLCapabilities
+import org.lwjgl.opengl.GLUtil
+import org.lwjgl.system.Callback
 import org.lwjgl.system.MemoryUtil.NULL
 import org.lwjgl.system.Platform
 import org.lwjgl.system.jawt.*
 import org.lwjgl.system.jawt.JAWTFunctions.*
-import uno.glfw.*
-import uno.kotlin.set
-import uno.kotlin.unset
+import uno.glfw.GlfwWindow
+import uno.glfw.HWND
+import uno.glfw.VSync
+import uno.glfw.glfw
 import java.awt.BorderLayout
 import java.awt.Canvas
 import java.awt.Graphics
 import java.awt.event.*
-import java.util.*
 import javax.swing.JFrame
 import javax.swing.SwingUtilities
 import javax.swing.WindowConstants
 import org.lwjgl.system.jawt.JAWT as Jawt
-import org.lwjgl.opengl.GLUtil
-import org.lwjgl.system.Callback
 
 
 /** AWT integration demo using jawt.  */
@@ -44,6 +41,7 @@ fun main(args: Array<String>) {
             so will be also the glfw Window handle
              */
             override fun windowClosing(e: WindowEvent?) {
+                println("windowClosing")
                 canvas.destroyInternal()
             }
         })
@@ -67,13 +65,50 @@ fun main(args: Array<String>) {
         }
     }
 
+    val mouseListener = object : MouseAdapter() {
+        override fun mouseClicked(e: MouseEvent) {
+            println("clicked")
+        }
+
+        override fun mouseEntered(e: MouseEvent?) {
+            println("entered")
+        }
+
+        override fun mouseExited(e: MouseEvent?) {
+            println("exited")
+        }
+
+        override fun mousePressed(e: MouseEvent?) {
+            println("pressed")
+        }
+
+        override fun mouseReleased(e: MouseEvent?) {
+            println("released")
+        }
+
+        override fun mouseDragged(e: MouseEvent?) {
+            println("dragged")
+        }
+
+        override fun mouseMoved(e: MouseEvent) {
+            println("moved (" + e.x + ", " + e.y + ") " + Thread.currentThread().name)
+        }
+
+        override fun mouseWheelMoved(e: MouseWheelEvent?) {
+            println("wheel")
+        }
+    }
+
     frame.apply {
         layout = BorderLayout()
         add(canvas, BorderLayout.CENTER)
 
         pack()
         setSize(640, 480)
-        addKeyListener(keyListener)
+        canvas.addKeyListener(keyListener)
+//        canvas.addMouseListener(mouseListener)
+//        canvas.addMouseMotionListener(mouseListener)
+//        canvas.addMouseWheelListener(mouseListener)
         isVisible = true
     }
 }
@@ -81,6 +116,10 @@ fun main(args: Array<String>) {
 /**
  * A Canvas component that uses OpenGL for rendering.
  *
+ * Spasi:  GLFW saves the AWT window proc somewhere and replaces it with its own on `glfwAttachWin32Window`.
+ * It restores it back when the GLFW window is destroyed.
+ * The difference between key and mouse events is that for key events the GLFW window proc returns `DefWindowProcW(...)`,
+ * but for mouse events it returns 0, so the events do not propagate to AWT
  *
  * This implementation supports Windows only.
  */
@@ -93,6 +132,7 @@ open class LwjglCanvas(val debug: Boolean = false) : Canvas() {
     lateinit var glfwWindow: GlfwWindow
 
     var swapBuffers = true
+    var fps = false
 
     var debugProc: Callback? = null
 
@@ -109,8 +149,10 @@ open class LwjglCanvas(val debug: Boolean = false) : Canvas() {
         // glfwWindowHint can be used here to configure the GL context
         glfwWindow = GlfwWindow.fromWin32Window(hwnd).apply {
             makeContextCurrent()
+            createCapabilities(forwardCompatible = false)
         }
-        caps = GL.createCapabilities()
+
+        glfwWindow.cursorPosCallback = { it.toString() }
 
         if (debug)
             debugProc = GLUtil.setupDebugMessageCallback()
@@ -181,10 +223,9 @@ open class LwjglCanvas(val debug: Boolean = false) : Canvas() {
                 val hdc = surfaceInfo.hdc()
                 assert(hdc != NULL)
 
-                if (initialized) {
+                if (initialized)
                     glfwWindow.makeContextCurrent()
-                    caps.set()
-                } else
+                else
                     initInternal(HWND(surfaceInfo.hwnd()))
 
 
@@ -204,19 +245,19 @@ open class LwjglCanvas(val debug: Boolean = false) : Canvas() {
                 if (swapBuffers)
                     glfwWindow.swapBuffers()
 
-                val now = System.currentTimeMillis()
-                time += now - last
-                last = now
-                frames++
-                if (time > 1000) {
-                    time %= 1000
-                    println("fps = $frames")
-                    frames = 0
+                if(fps) {
+                    val now = System.currentTimeMillis()
+                    time += now - last
+                    last = now
+                    frames++
+                    if (time > 1000) {
+                        time %= 1000
+                        println("fps = $frames")
+                        frames = 0
+                    }
                 }
 
-
                 glfwWindow.unmakeContextCurrent()
-                caps.unset()
 
             } finally {
                 // Free the drawing surface info
@@ -234,16 +275,13 @@ open class LwjglCanvas(val debug: Boolean = false) : Canvas() {
     fun destroyInternal() {
         println("destroyInternal")
 
-        println(glfwWindow.handle)
         glfwWindow.makeContextCurrent()
-        caps.set()
 
         destroy()
 
         debugProc?.free()
 
         glfwWindow.unmakeContextCurrent()
-        caps.unset()
 
         JAWT_FreeDrawingSurface(awt.FreeDrawingSurface(), surface)
         awt.free()

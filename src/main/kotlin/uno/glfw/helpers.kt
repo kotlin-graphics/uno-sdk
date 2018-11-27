@@ -18,6 +18,7 @@ inline class GlfwCursor(val L: Long)
 
 typealias CharCallbackT = (codePoint: Int) -> Unit
 typealias CursorPosCallbackT = (pos: Vec2) -> Unit
+typealias CursorEnterCallbackT = (entered: Boolean) -> Unit
 typealias FramebufferSizeCallbackT = (size: Vec2i) -> Unit
 typealias KeyCallbackT = (key: Int, scanCode: Int, action: Int, mods: Int) -> Unit
 typealias MouseButtonCallbackT = (button: Int, action: Int, mods: Int) -> Unit

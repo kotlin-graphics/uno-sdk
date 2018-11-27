@@ -76,7 +76,4 @@ operator fun IntBuffer.plusAssign(i: Int) {
     put(i)
 }
 
-fun GLCapabilities.set() = GL.setCapabilities(this)
-fun GLCapabilities.unset() = GL.setCapabilities(null)
-
 val version = "0.7.4"
