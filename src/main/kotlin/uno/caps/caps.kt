@@ -115,6 +115,12 @@ class Caps(profile: Profile) {
     val version = Version(profile)
     @JvmField
     val extensions = Extensions()
+
+    init {
+        if (check(4, 3) || extensions.KHR_debug)
+            version.CONTEXT_FLAGS = glGetInteger(GL_CONTEXT_FLAGS)
+    }
+
     @JvmField
     val debug = Debug()
     @JvmField
@@ -130,10 +136,9 @@ class Caps(profile: Profile) {
         val MINOR_VERSION = glGetInteger(GL_MINOR_VERSION)
         @JvmField
         val MAJOR_VERSION = glGetInteger(GL_MAJOR_VERSION)
-        //         val CONTEXT_FLAGS =
-//                if (check(4, 3) || glisExtensionAvailable("GL_KHR_debug"))
-//                    glGetInteger(GL_CONTEXT_FLAGS)
-//                else 0
+        /** Will be initialized later */
+        @JvmField
+        var CONTEXT_FLAGS = 0
         @JvmField
         val NUM_EXTENSIONS = glGetInteger(GL_NUM_EXTENSIONS)
         @JvmField
