@@ -1,7 +1,7 @@
 package uno.caps
 
 import kool.cap
-import kool.intBufferBig
+import kool.IntBuffer
 import glm_.vec2.Vec2
 import gln.checkError
 import gln.glGetVec2
@@ -125,10 +125,8 @@ class Caps(profile: Profile = Profile.COMPATIBILITY, forwardCompatible: Boolean 
     val extensions = Extensions()
 
     init {
-        version.CONTEXT_FLAGS = when {
-            check(4, 3) || extensions.KHR_debug -> glGetInteger(GL_CONTEXT_FLAGS)
-            else -> 0
-        }
+        if (check(4, 3) || extensions.KHR_debug)
+            version.CONTEXT_FLAGS = glGetInteger(GL_CONTEXT_FLAGS)
     }
 
     @JvmField
@@ -1206,7 +1204,7 @@ class Caps(profile: Profile = Profile.COMPATIBILITY, forwardCompatible: Boolean 
     inner class Formats {
 
         private val compressed by lazy {
-            intBufferBig(limits.NUM_COMPRESSED_TEXTURE_FORMATS).use { buffer ->
+            IntBuffer(limits.NUM_COMPRESSED_TEXTURE_FORMATS).use { buffer ->
                 glGetIntegerv(GL_COMPRESSED_TEXTURE_FORMATS, buffer)
                 (0 until buffer.cap).map { buffer[it] }
             }
