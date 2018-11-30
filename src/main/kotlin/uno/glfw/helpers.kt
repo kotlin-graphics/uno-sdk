@@ -9,7 +9,7 @@ import org.lwjgl.system.MemoryUtil.NULL
 
 typealias GLFWErrorCallbackT = (String, String) -> Unit
 
-inline class GlfwMonitor(val L: Long)
+typealias GlfwMonitor = Long
 
 inline class GlfwWindowHandle(val L: Long)
 

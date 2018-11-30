@@ -101,13 +101,13 @@ object glfw {
         get() = glfwGetTime()
 
     val primaryMonitor: GlfwMonitor
-        get() = GlfwMonitor(glfwGetPrimaryMonitor())
+        get() = glfwGetPrimaryMonitor()
 
     /** videoMode of primaryMonitor */
     val videoMode: GLFWVidMode
-        get() = glfwGetVideoMode(primaryMonitor.L)!!
+        get() = glfwGetVideoMode(primaryMonitor)!!
 
-    fun videoMode(monitor: GlfwMonitor): GLFWVidMode? = glfwGetVideoMode(monitor.L)
+    fun videoMode(monitor: GlfwMonitor): GLFWVidMode? = glfwGetVideoMode(monitor)
 
     val resolution: Vec2i
         get() = Vec2i(videoMode.width, videoMode.height)
