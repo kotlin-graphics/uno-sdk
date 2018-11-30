@@ -8,6 +8,7 @@ import glm_.vec2.Vec2
 import glm_.vec2.Vec2d
 import glm_.vec2.Vec2i
 import glm_.vec4.Vec4i
+import gln.cap.Caps
 import gln.debug.GlDebugSeverity
 import gln.debug.GlDebugSource
 import gln.debug.GlDebugType
@@ -20,8 +21,6 @@ import org.lwjgl.opengl.GLUtil
 import org.lwjgl.system.Callback
 import org.lwjgl.system.MemoryStack
 import org.lwjgl.system.MemoryUtil.*
-import uno.caps.Caps
-import uno.caps.Caps.Profile
 import uno.kotlin.getOrfirst
 import java.nio.ByteBuffer
 import java.nio.FloatBuffer
@@ -115,7 +114,7 @@ open class GlfwWindow(var handle: GlfwWindowHandle) {
      * legacy functionality by mistake.
      * LWJGL will not try to load deprecated functions, so calling them will crash but the context will actually expose them"
      */
-    fun createCapabilities(profile: Profile = Profile.COMPATIBILITY, forwardCompatible: Boolean = true) {
+    fun createCapabilities(profile: Caps.Profile = Caps.Profile.COMPATIBILITY, forwardCompatible: Boolean = true) {
         caps = Caps(profile, forwardCompatible)
     }
 

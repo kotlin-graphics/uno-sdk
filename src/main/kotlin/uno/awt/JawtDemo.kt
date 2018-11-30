@@ -2,6 +2,7 @@ package uno.awt
 
 import gli_.has
 import glm_.vec2.Vec2i
+import gln.cap.Caps
 import org.lwjgl.glfw.GLFWErrorCallback
 import org.lwjgl.opengl.GLCapabilities
 import org.lwjgl.opengl.GLUtil
@@ -168,7 +169,7 @@ open class LwjglCanvas(val debug: Boolean = false) : Canvas() {
     var resized = false
     var animated = true
 
-    private lateinit var caps: GLCapabilities
+//    lateinit var caps: Caps
 
     //  According to jawt.h > This value may be cached
     lateinit var surface: JAWTDrawingSurface

@@ -15,9 +15,9 @@ import java.nio.*
  */
 
 
-fun PointerBuffer(capacity: Int): PointerBuffer = MemoryUtil.memCallocPointer(capacity)
-fun PointerBuffer(capacity: IntBuffer): PointerBuffer = MemoryUtil.memCallocPointer(capacity[0])
-fun PointerBuffer(capacity: IntArray): PointerBuffer = MemoryUtil.memCallocPointer(capacity[0])
+//fun PointerBuffer(capacity: Int): PointerBuffer = MemoryUtil.memCallocPointer(capacity)
+//fun PointerBuffer(capacity: IntBuffer): PointerBuffer = MemoryUtil.memCallocPointer(capacity[0])
+//fun PointerBuffer(capacity: IntArray): PointerBuffer = MemoryUtil.memCallocPointer(capacity[0])
 
 // i.e: clear color buffer
 fun FloatBuffer.put(vararg floats: Float): FloatBuffer {
@@ -56,19 +56,10 @@ fun doubleBuffersBig(sizeA: Int, sizeB: Int, sizeC: Int) = Triple(DoubleBuffer(s
 fun doubleBuffersBig(sizeA: Int, sizeB: Int, sizeC: Int, sizeD: Int) = Quadruple(DoubleBuffer(sizeA), DoubleBuffer(sizeB), DoubleBuffer(sizeC), DoubleBuffer(sizeD))
 fun doubleBuffersBig(sizeA: Int, sizeB: Int, sizeC: Int, sizeD: Int, sizeE: Int) = Quintuple(DoubleBuffer(sizeA), DoubleBuffer(sizeB), DoubleBuffer(sizeC), DoubleBuffer(sizeD), DoubleBuffer(sizeE))
 
-fun free(vararg buffers: Buffer) {
+fun memFree(vararg buffers: Buffer) {
     for (i in 0 until buffers.size)
         MemoryUtil.memFree(buffers[i])
 }
-
-fun <R> ByteBuffer.use(block: (ByteBuffer) -> R) = block(this).also { free() }
-fun <R> ShortBuffer.use(block: (ShortBuffer) -> R) = block(this).also { free() }
-fun <R> IntBuffer.use(block: (IntBuffer) -> R) = block(this).also { free() }
-fun <R> LongBuffer.use(block: (LongBuffer) -> R) = block(this).also { free() }
-fun <R> FloatBuffer.use(block: (FloatBuffer) -> R) = block(this).also { free() }
-fun <R> DoubleBuffer.use(block: (DoubleBuffer) -> R) = block(this).also { free() }
-fun <R> CharBuffer.use(block: (CharBuffer) -> R) = block(this).also { free() }
-fun <R> PointerBuffer.use(block: (PointerBuffer) -> R) = block(this).also { free() }
 
 //@Suppress("UNCHECKED_CAST")
 //fun withBuffer(list: List<*>, block: ByteBuffer.() -> Unit) {

@@ -1,8 +1,6 @@
 package uno
 
 import io.kotlintest.specs.StringSpec
-import org.lwjgl.opengl.GL
-import uno.caps.Caps
 import uno.glfw.GlfwWindow
 import uno.glfw.glfw
 
@@ -12,13 +10,7 @@ class caps : StringSpec() {
 
         "caps" {
 
-//            with(glfw) {
-//                init()
-//                windowHint {
-//                    context.version = "3.3"
-//                    profile = "core"
-//                }
-//            }
+//            glfw.init()
 //
 //            GlfwWindow(640, "title").apply { makeContextCurrent() }
 //
