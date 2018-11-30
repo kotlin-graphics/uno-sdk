@@ -2,6 +2,8 @@
 
 package uno.kotlin
 
+import gln.objects.GlProgram
+
 /** https://gist.github.com/elizarov/03425be1c4209d59ad813ddccab29313 */
 class Result<T> private constructor(private val result: Any?) {
     // discovery
