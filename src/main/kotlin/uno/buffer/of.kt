@@ -1,11 +1,7 @@
 package uno.buffer
 
 import glm_.BYTES
-import kool.Buffer
-import kool.FloatBuffer
-import kool.IntBuffer
 import glm_.i
-import glm_.set
 import glm_.vec2.Vec2
 import glm_.vec2.Vec2i
 import glm_.vec3.Vec3
@@ -15,8 +11,13 @@ import glm_.vec4.Vec4b
 import glm_.vec4.Vec4i
 import gln.glf.Vertex
 import gln.glf.glf
-import org.lwjgl.system.MemoryUtil
-import java.nio.*
+import kool.Buffer
+import kool.FloatBuffer
+import kool.IntBuffer
+import kool.set
+import java.nio.ByteBuffer
+import java.nio.FloatBuffer
+import java.nio.IntBuffer
 
 
 fun bufferOf(vertices: Collection<*>): ByteBuffer {
