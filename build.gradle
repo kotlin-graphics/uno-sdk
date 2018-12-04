@@ -15,7 +15,8 @@ ext{
     moduleName = 'com.github.kotlin_graphics.uno'
     kotlin_version = '1.3.10'
     kotlintest_version = '3.1.10'
-    gli_version = 'ea878d63a9faf4d90cf1a065c0f37479aa814153'
+    gln_version = '22f9809d9c6bd8b6d88aa8625c0076335e5ddd5f'
+    vkk_version = '9bb5abbc9ddfe51b9d0e1c4c1b8b88fcfa07c078'
     lwjgl_version = "3.2.1-SNAPSHOT"
     lwjgl_natives = current() == WINDOWS ? "windows" : current() == LINUX ? "linux" : "macos"
 }
@@ -27,8 +28,8 @@ dependencies {
     implementation "$kotlin-reflect:$kotlin_version".toString()
 
     ext.kx = "com.github.kotlin-graphics"
-    api "$kx:gln:7a88384b82cb804f874b78adbd7caff4ddb2fc31".toString()
-    api "$kx:vkk:9bb5abbc9ddfe51b9d0e1c4c1b8b88fcfa07c078".toString()
+    api "$kx:gln:$gln_version".toString()
+    api "$kx:vkk:$vkk_version".toString()
 
     testImplementation "io.kotlintest:kotlintest-runner-junit5:$kotlintest_version".toString()
 
@@ -46,7 +47,6 @@ dependencies {
 repositories {
     mavenCentral()
     jcenter()
-    maven { setUrl("https://dl.bintray.com/kotlin/kotlin-eap") }
     maven { setUrl("https://oss.sonatype.org/content/repositories/snapshots/") }
     maven { setUrl("https://jitpack.io") }
 }
