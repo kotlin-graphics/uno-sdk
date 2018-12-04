@@ -49,22 +49,22 @@ open class GlfwWindow(var handle: GlfwWindowHandle) {
 
     constructor(windowSize: Vec2i,
                 title: String,
-                monitor: GlfwMonitor = GlfwMonitor(NULL),
+                monitor: GlfwMonitor = NULL,
                 position: Vec2i = Vec2i(Int.MIN_VALUE),
                 installCallbacks: Boolean = true) : this(windowSize.x, windowSize.y, title, monitor, position, installCallbacks)
 
     constructor(x: Int,
                 title: String,
-                monitor: GlfwMonitor = GlfwMonitor(NULL),
+                monitor: GlfwMonitor = NULL,
                 position: Vec2i = Vec2i(Int.MIN_VALUE),
                 installCallbacks: Boolean = true) : this(x, x, title, monitor, position, installCallbacks)
 
     constructor(width: Int, height: Int,
                 title: String,
-                monitor: GlfwMonitor = GlfwMonitor(NULL),
+                monitor: GlfwMonitor = NULL,
                 position: Vec2i = Vec2i(Int.MIN_VALUE),
                 installCallbacks: Boolean = true) :
-            this(GlfwWindowHandle(glfwCreateWindow(width, height, title, monitor.L, NULL))) {
+            this(GlfwWindowHandle(glfwCreateWindow(width, height, title, monitor, NULL))) {
 
         this.title = title
 
