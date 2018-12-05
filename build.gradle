@@ -15,8 +15,8 @@ ext{
     moduleName = 'com.github.kotlin_graphics.uno'
     kotlin_version = '1.3.10'
     kotlintest_version = '3.1.10'
-    gln_version = '905ca394df4c9fe9588281e36203705c43bd7596'
-    vkk_version = '4f4da68bc9e9b95ccd3559360a57cd047aa1493e'
+    gln_version = 'f1e357953dd3dd8a5685d76ead6b2090376ad003'
+    vkk_version = '5aaae7835557a9f2eaeb279998bdcc441184e0ee'
     lwjgl_version = "3.2.1-SNAPSHOT"
     lwjgl_natives = current() == WINDOWS ? "windows" : current() == LINUX ? "linux" : "macos"
 }
