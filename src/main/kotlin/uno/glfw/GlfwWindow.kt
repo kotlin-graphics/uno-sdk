@@ -522,5 +522,6 @@ open class GlfwWindow(var handle: GlfwWindowHandle) {
 
     companion object {
         infix fun fromWin32Window(hwnd: HWND): GlfwWindow = GlfwWindow(glfw.attachWin32Window(hwnd))
+        fun from(handle: Long) = GlfwWindow(GlfwWindowHandle(handle))
     }
 }
