@@ -1,6 +1,7 @@
 package uno.buffer
 
 import glm_.BYTES
+import glm_.b
 import glm_.i
 import glm_.vec2.Vec2
 import glm_.vec2.Vec2i
@@ -181,6 +182,6 @@ fun intBufferOf(vertices: Collection<*>): IntBuffer {
 fun bufferOf(charSequence: CharSequence): ByteBuffer {
     val buffer = Buffer(charSequence.length)
     for (i in charSequence.indices)
-        buffer[i] = charSequence[i].i
+        buffer[i] = charSequence[i].b
     return buffer
 }

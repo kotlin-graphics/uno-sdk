@@ -76,4 +76,4 @@ operator fun IntBuffer.plusAssign(i: Int) {
     put(i)
 }
 
-val version = "0.7.4"
+val version = "0.7.5"

@@ -42,7 +42,7 @@ fun main(args: Array<String>) {
         override fun initGL() {
             System.out.println("OpenGL version: " + effective.majorVersion + "." + effective.minorVersion + " (Profile: " + effective.profile + ")")
             GL.createCapabilities()
-//            glClearColor(0.3f, 0.4f, 0.5f, 1f)
+            glClearColor(0.3f, 0.4f, 0.5f, 1f)
             gears.init()
             last = System.currentTimeMillis()
         }
