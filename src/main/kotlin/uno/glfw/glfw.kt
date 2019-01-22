@@ -46,7 +46,7 @@ object glfw {
             context.version = version
             val v = version[0].parseInt() * 10 + version[1].parseInt()
             if (v >= 32) // The concept of a core profile does not exist prior to OpenGL 3.2
-                windowHint.profile = profile
+                this.profile = profile
         }
     }
 
