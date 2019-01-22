@@ -44,21 +44,23 @@ import java.nio.FloatBuffer
     glfwJoystickIsGamepad
     glfwUpdateGamepadMappings
  */
-
 open class GlfwWindow(var handle: GlfwWindowHandle) {
 
+    @Throws(RuntimeException::class)
     constructor(windowSize: Vec2i,
                 title: String,
                 monitor: GlfwMonitor = NULL,
                 position: Vec2i = Vec2i(Int.MIN_VALUE),
                 installCallbacks: Boolean = true) : this(windowSize.x, windowSize.y, title, monitor, position, installCallbacks)
 
+    @Throws(RuntimeException::class)
     constructor(x: Int,
                 title: String,
                 monitor: GlfwMonitor = NULL,
                 position: Vec2i = Vec2i(Int.MIN_VALUE),
                 installCallbacks: Boolean = true) : this(x, x, title, monitor, position, installCallbacks)
 
+    @Throws(RuntimeException::class)
     constructor(width: Int, height: Int,
                 title: String,
                 monitor: GlfwMonitor = NULL,
