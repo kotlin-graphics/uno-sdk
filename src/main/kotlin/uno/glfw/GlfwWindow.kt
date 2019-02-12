@@ -12,6 +12,7 @@ import gln.cap.Caps
 import gln.debug.GlDebugSeverity
 import gln.debug.GlDebugSource
 import gln.debug.GlDebugType
+import kool.Adr
 import kool.stak
 import org.lwjgl.glfw.*
 import org.lwjgl.glfw.GLFW.*
@@ -281,6 +282,9 @@ open class GlfwWindow(var handle: GlfwWindowHandle) {
         }
         set(value) = glfwSetCursorPos(handle.L, value.x, value.y)
 
+//    var userPointer: Adr
+//        get() = glfwGetWindowUserPointer(handle.L)
+//        set(value) = glfwSetWindowUserPointer(handle.L, value)
 
     // ------------------- Callbacks -------------------
 
