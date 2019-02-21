@@ -1,7 +1,7 @@
 package main;
 
 import org.lwjgl.system.Platform;
-import uno.awt.LwjglCanvas;
+import uno.jawt.LwjglCanvas;
 
 import javax.swing.*;
 import java.awt.*;
