@@ -4,7 +4,7 @@ import glm_.f
 import org.lwjgl.opengl.GL
 import org.lwjgl.opengl.GL11.*
 import uno.awt.AWTGLCanvas
-import uno.awt.AbstractGears
+import uno.jawt.AbstractGears
 import uno.awt.GLData
 import java.awt.BorderLayout
 import java.awt.Dimension
