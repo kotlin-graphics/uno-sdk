@@ -47,7 +47,7 @@ object windowHint {
 
     var maximized = false
         set(value) {
-            glfwWindowHint(GLFW_FLOATING, value.i)
+            glfwWindowHint(GLFW_MAXIMIZED, value.i)
             field = value
         }
 
