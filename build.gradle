@@ -16,7 +16,7 @@ ext{
     kotlin = 'org.jetbrains.kotlin:kotlin'
     kotlin_version = '1.3.11'
     kotlintest_version = '3.1.11'
-    gln_version = '8082ce6286faeb842813c86af4b46adc430c12dd'
+    gln_version = 'b63b9fda85cda153b1c470fe291c2a0114cea06d'
     vkk_version = 'a0d037b48e'
     lwjgl_version = "3.2.1"
     lwjgl_natives = current() == WINDOWS ? "windows" : current() == LINUX ? "linux" : "macos"
