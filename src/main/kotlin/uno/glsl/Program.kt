@@ -5,7 +5,7 @@
 // */
 //
 //
-//import com.jogamp.common.net.Uri
+//import com.jogamp.common.net.Urij
 //import com.jogamp.opengl.GL.GL_FALSE
 //import com.jogamp.opengl.GL2ES2
 //import com.jogamp.opengl.GL2ES2.*

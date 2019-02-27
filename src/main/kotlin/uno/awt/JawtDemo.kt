@@ -124,7 +124,7 @@ fun main(args: Array<String>) {
  *
  * This implementation supports Windows only.
  */
-open class LwjglCanvas(val debug: Boolean = false) : Canvas() {
+open class LwjglCanvas(val glDebug: Boolean = false) : Canvas() {
 
     val awt = Jawt.calloc().apply { version(JAWT_VERSION_1_4) }
 
@@ -137,6 +137,8 @@ open class LwjglCanvas(val debug: Boolean = false) : Canvas() {
 
     var debugProc: Callback? = null
 
+    var awtDebug = false
+
     private fun initInternal(hwnd: HWND) {
 //        println("LwjglCanvas.initInternal ${Date().toInstant()}")
 
@@ -145,7 +147,7 @@ open class LwjglCanvas(val debug: Boolean = false) : Canvas() {
         GLFWErrorCallback.createPrint().set()
         glfw.init()
 
-        glfw.windowHint { debug = this@LwjglCanvas.debug }
+        glfw.windowHint { debug = glDebug }
 
         // glfwWindowHint can be used here to configure the GL context
         glfwWindow = GlfwWindow.fromWin32Window(hwnd).apply {
@@ -155,7 +157,7 @@ open class LwjglCanvas(val debug: Boolean = false) : Canvas() {
 
         glfwWindow.cursorPosCallback = { it.toString() }
 
-        if (debug)
+        if (glDebug)
             debugProc = GLUtil.setupDebugMessageCallback()
 
         glfw.swapInterval = VSync.OFF
@@ -205,7 +207,9 @@ open class LwjglCanvas(val debug: Boolean = false) : Canvas() {
     var frames = 0
 
     override fun paint(g: Graphics) {
-//        println("paint " + Thread.currentThread().name)
+        if (awtDebug) {
+            println("paint start " + Thread.currentThread().name)
+        }
 
         // Lock the drawing surface
         val lock = JAWT_DrawingSurface_Lock(surface.Lock(), surface)
@@ -225,7 +229,7 @@ open class LwjglCanvas(val debug: Boolean = false) : Canvas() {
                 assert(hdc != NULL)
 
                 if (initialized)
-                    glfwWindow.makeContextCurrent()
+                   // glfwWindow.makeContextCurrent()
                 else
                     initInternal(HWND(surfaceInfo.hwnd()))
 
@@ -240,13 +244,16 @@ open class LwjglCanvas(val debug: Boolean = false) : Canvas() {
                 }
 
 //                println("LwjglCanvas.render ${Date().toInstant()}")
+                if (awtDebug) {
+                    println("paint before render ")
+                }
                 render()
 //                println("/LwjglCanvas.render ${Date().toInstant()}")
 
                 if (swapBuffers)
                     glfwWindow.swapBuffers()
 
-                if(fps) {
+                if (fps) {
                     val now = System.currentTimeMillis()
                     time += now - last
                     last = now
@@ -258,7 +265,7 @@ open class LwjglCanvas(val debug: Boolean = false) : Canvas() {
                     }
                 }
 
-                glfwWindow.unmakeContextCurrent()
+                //glfwWindow.unmakeContextCurrent()
 
             } finally {
                 // Free the drawing surface info
@@ -267,6 +274,10 @@ open class LwjglCanvas(val debug: Boolean = false) : Canvas() {
         } finally {
             // Unlock the drawing surface
             JAWT_DrawingSurface_Unlock(surface.Unlock(), surface)
+        }
+
+        if (awtDebug) {
+            println("paint end")
         }
 
         if (animated)
