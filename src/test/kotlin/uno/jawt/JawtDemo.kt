@@ -1,10 +1,8 @@
-package uno.awt
+package uno.jawt
 
 import gli_.has
 import glm_.vec2.Vec2i
-import gln.cap.Caps
 import org.lwjgl.glfw.GLFWErrorCallback
-import org.lwjgl.opengl.GLCapabilities
 import org.lwjgl.opengl.GLUtil
 import org.lwjgl.system.Callback
 import org.lwjgl.system.MemoryUtil.NULL

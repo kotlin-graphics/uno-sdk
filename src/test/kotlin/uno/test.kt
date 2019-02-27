@@ -1,114 +1,154 @@
-//package uno
+//package uno.awt
 //
-//import com.jogamp.newt.opengl.GLWindow
-//import com.jogamp.opengl.GLAutoDrawable
-//import com.jogamp.opengl.GLCapabilities
-//import com.jogamp.opengl.GLEventListener
-//import com.jogamp.opengl.GLProfile
-//import com.jogamp.opengl.util.Animator
-//import glm_.func.rad
-//import glm_.mat4x4.Mat4
-//import io.kotlintest.specs.StringSpec
-//import uno.glm.MatrixStack
-//import uno.glsl.Program
-//
-///**
-// * Created by GBarbieri on 02.02.2017.
-// */
+//import org.lwjgl.opengl.GL30C
+//import java.awt.*
+//import java.awt.event.KeyAdapter
+//import java.awt.event.KeyEvent
+//import javax.swing.*
+//import java.awt.event.WindowAdapter
+//import java.awt.event.WindowEvent
+//import javax.swing.JPanel
+//import kotlin.system.exitProcess
+//import javax.swing.RepaintManager
 //
 //
-//class Test : StringSpec() {
+//
+//
+//lateinit var test: Test
+//
+//fun main() {
+//    test = Test()
+//}
+//
+//class Test : JFrame() {
+//
+//    lateinit var borderPanel: BorderPanel
+//    lateinit var centerPanel: CenterPanel
+//    var viewer: Viewer
 //
 //    init {
+//        JFrame.setDefaultLookAndFeelDecorated(false)
+//        isUndecorated = false
 //
-//        "test" {
+//        val rm = RepaintManager.currentManager(this)
+//        val b = rm.isDoubleBufferingEnabled()
+//        rm.setDoubleBufferingEnabled(false)
 //
-//            val parthenonWidth = 14f
-//            val parthenonLength = 20f
-//            val parthenonColumnHeight = 5f
-//            val parthenonBaseHeight = 1f
-//            val parthenonTopHeight = 2f
+//        // Set Look & Feel
+//        UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName())
 //
-//            val stack = MatrixStack()
+//        initComponents()
 //
+//        addWindowListener(object : WindowAdapter() {
+//            override fun windowClosing(event: WindowEvent) = println("windowClosing")
+//        })
 //
-//            val a = stack
-//                    .translate(20f, 0f, -10f)
-//                    .translate(
-//                            0f,
-//                            parthenonColumnHeight + parthenonBaseHeight + parthenonTopHeight / 2f,
-//                            parthenonLength / 2f)
-//                    .rotateX(-135f)
-//                    .top()
-////                    .rotateY(45f)
+//        JPopupMenu.setDefaultLightWeightPopupEnabled(false)
 //
-//            val top = stack.top()
-//
-//            val b = Mat4()
-//                    .translateAssign(20f, 0f, -10f)
-//                    .translateAssign(
-//                            0f,
-//                            parthenonColumnHeight + parthenonBaseHeight + parthenonTopHeight / 2f,
-//                            parthenonLength / 2f)
-//                    .rotate((-135f).rad, 1f, 0f, 0f)
-//
-////            for(i in 0 until 16){
-////                println("a "+a[i])
-//////                println("b "+b[i])
-////            }
-//
-//// .rotate_(45f, 0f, 1f, 0f)
-//
-//            println()
-//
-////            val app = App()
-////
-////            window.addGLEventListener(app)
-////            window.isVisible = true
-////
-////            animator.start()
+//        viewer = Viewer().apply {
+//            isVisible = true
+//            size = Dimension(500,500)
 //        }
+//        centerPanel.add(viewer, BorderLayout.CENTER)
+//
+//        size = Dimension(500, 500)
+//        location = Point(100, 50)
+//        isVisible = true
+//
+//
+//    }
+//
+//    fun makeScreenShot(){
+//        viewer.renderImmediatly()
+//        System.err.println("1")
+//        viewer.renderImmediatly()
+//        System.err.println("2")
+//        viewer.renderImmediatly()
+//        System.err.println("3")
+//
+//    }
+//
+//    fun initComponents() {
+//
+//        borderPanel = BorderPanel().apply { size = Dimension(50, 50) }
+//        centerPanel = CenterPanel().apply {
+//            size = Dimension(50, 50)
+//        }
+//
+//        defaultCloseOperation = WindowConstants.DISPOSE_ON_CLOSE
+//
+//        centerPanel.layout = BorderLayout()
+//        borderPanel.add(centerPanel, BorderLayout.CENTER)
+//
+//        contentPane.add(borderPanel, BorderLayout.CENTER)
+//
+//        pack()
+//
+//        borderPanel.isVisible = true
+//        centerPanel.isVisible = true
+//    }
+//
+//    override fun paint(g: Graphics) {
+//        super.paint(g)
+//        println("[Test] paint")
 //    }
 //}
 //
-//val window: GLWindow = GLWindow.create(GLCapabilities(GLProfile.get(GLProfile.GL3)))
-//val animator = Animator(window)
+//class CenterPanel : JPanel() {
+//    override fun paint(g: Graphics) {
+//        super.paint(g)
+//        test.viewer.paint(g)
+//        println("[CenterPanel] paint")
+//    }
+//}
 //
-//class App : GLEventListener {
+//class BorderPanel : JPanel() {
+//    override fun paint(g: Graphics) {
+//        super.paint(g)
+//        println("[BorderPanel] paint")
+//    }
+//}
 //
-//    override fun init(drawable: GLAutoDrawable) {
+//class Viewer : LwjglCanvas() {
+//    var count = 0;
+//    var halloCount = 0;
+//    init {
+//        animated = false
+//        focusTraversalKeysEnabled = false
+//        val rm = RepaintManager.currentManager(this)
+//        val b = rm.isDoubleBufferingEnabled()
+//        rm.setDoubleBufferingEnabled(false)
 //
-//        val gl = drawable.gl.gL3
+//        addKeyListener(object : KeyAdapter() {
+//            override fun keyPressed(e: KeyEvent) {
+//                println("keyPressed")
+//                if (e.keyCode == KeyEvent.VK_F10) {
+//                    (test.centerPanel as JComponent).paintImmediately(0, 0, 500, 500)
+//                } else if (e.keyCode == KeyEvent.VK_F11){
 //
-//        with(gl) {
+//                    test.makeScreenShot()
 //
-//            //            val program = ShaderProgram()
-////
-////            val vert = shaderCodeOf("main/shader.vert", gl, this::class.java)
-////            val frag = shaderCodeOf("main/shader.frag", gl, this::class.java)
-////
-////            program.add(gl, vert, System.err)
-////            program.add(gl, frag, System.err)
-////
-////            program.link(gl, System.err)
+//                }    else if (e.keyCode == KeyEvent.VK_ESCAPE)
+//                    exitProcess(0)
+//            }
+//        })
+//    }
 //
-//            val a = Program(gl, this::class.java, "main", "shader.vert", "shader.frag", "matrix", "myTexture")
-//            val b = Program(gl, this::class.java, "main/shader.vert", "main/shader.frag", "matrix", "myTexture")
+//    fun renderImmediatly(){
+//        val g = test.viewer.graphics;
+//        if(g != null) {
+//            halloCount++
+//            test.viewer.paint(g)
 //
-//            println("ok")
-//
-////            println("a ${javaClass.classLoader.getResource("shader.vert").toString()}")
-////            println("b ${Uri.valueOf(javaClass.getResource("shader.vert"))}")
-////            val program = Program(this, javaClass, arrayOf("shader.vert", "shader.frag"))
+//            //g.clearRect(0,0,500,500)
+//            //g.drawString(" HALLO!"+ halloCount, 350, 250);
+//            g.dispose()
 //        }
 //    }
 //
-//    override fun reshape(drawable: GLAutoDrawable, x: Int, y: Int, width: Int, height: Int) {
-//        animator.remove(window)
-//        window.destroy()
+//    override fun render() {
+//        val time = System.currentTimeMillis()
+//        GL30C.glClearColor((time % 1000) / 1000f, 0.5f, 0f, 1f)
+//        GL30C.glClear(GL_COLOR_BUFFER_BIT.i)
 //    }
-//
-//    override fun display(drawable: GLAutoDrawable) {}
-//
-//    override fun dispose(drawable: GLAutoDrawable) = System.exit(0)
 //}
