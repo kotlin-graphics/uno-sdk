@@ -1,4 +1,4 @@
-package uno.awt
+package uno.awtOld
 
 import org.lwjgl.system.jawt.JAWT
 import org.lwjgl.system.jawt.JAWTFunctions

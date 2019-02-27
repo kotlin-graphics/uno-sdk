@@ -1,4 +1,4 @@
-package uno.awt
+package uno.awtOld
 
 import gli_.has
 import glm_.b
@@ -32,7 +32,6 @@ import org.lwjgl.system.jawt.JAWTFunctions.*
 import org.lwjgl.system.jawt.JAWTWin32DrawingSurfaceInfo
 import org.lwjgl.system.windows.*
 import org.lwjgl.system.windows.WindowsLibrary.HINSTANCE
-import uno.glfw.HWND
 import uno.kotlin.plusAssign
 import java.awt.AWTException
 import java.awt.Canvas
@@ -50,13 +49,13 @@ class Win32GLCanvas : GLCanvas() {
 
     @Throws(AWTException::class)
     override fun createContext(canvas: Canvas, data: GLData, effective: GLData): WglContext {
-        val ds = JAWT_GetDrawingSurface(awt.GetDrawingSurface(), canvas) ?: throw Error()
+        val ds = JAWT_GetDrawingSurface(canvas, awt.GetDrawingSurface()) ?: throw Error()
         try {
-            val lock = JAWT_DrawingSurface_Lock(ds.Lock(), ds)
+            val lock = JAWT_DrawingSurface_Lock(ds, ds.Lock())
             if (lock has JAWT_LOCK_ERROR)
                 throw AWTException("JAWT_DrawingSurface_Lock() failed")
             try {
-                val dsi = JAWT_DrawingSurface_GetDrawingSurfaceInfo(ds.GetDrawingSurfaceInfo(), ds)!!
+                val dsi = JAWT_DrawingSurface_GetDrawingSurfaceInfo(ds, ds.GetDrawingSurfaceInfo())!!
                 try {
                     val dsiWin = JAWTWin32DrawingSurfaceInfo.create(dsi.platformInfo())
                     hwnd = dsiWin.hwnd()
@@ -67,13 +66,13 @@ class Win32GLCanvas : GLCanvas() {
                         User32.DestroyWindow(hwndDummy)
                     }
                 } finally {
-                    JAWT_DrawingSurface_FreeDrawingSurfaceInfo(ds.FreeDrawingSurfaceInfo(), dsi)
+                    JAWT_DrawingSurface_FreeDrawingSurfaceInfo(dsi, ds.FreeDrawingSurfaceInfo())
                 }
             } finally {
-                JAWT_DrawingSurface_Unlock(ds.Unlock(), ds)
+                JAWT_DrawingSurface_Unlock(ds, ds.Unlock())
             }
         } finally {
-            JAWT_FreeDrawingSurface(awt.FreeDrawingSurface(), ds)
+            JAWT_FreeDrawingSurface(ds, awt.FreeDrawingSurface())
         }
     }
 
@@ -130,19 +129,19 @@ class Win32GLCanvas : GLCanvas() {
             cAccumAlphaBits(data.accumAlphaSize.b)
             cAccumBits((data.accumRedSize + data.accumGreenSize + data.accumBlueSize + data.accumAlphaSize).b)
         }
-        val hDCdummy = User32.GetDC(dummyWindowHandle)
-        var pixelFormat = GDI32.ChoosePixelFormat(hDCdummy, pfd)
-        if (pixelFormat == 0 || !GDI32.SetPixelFormat(hDCdummy, pixelFormat, pfd)) {
-            User32.ReleaseDC(dummyWindowHandle, hDCdummy)
+        val hdcDummy = User32.GetDC(dummyWindowHandle)
+        var pixelFormat = GDI32.ChoosePixelFormat(hdcDummy, pfd)
+        if (pixelFormat == 0 || !GDI32.SetPixelFormat(hdcDummy, pixelFormat, pfd)) {
+            User32.ReleaseDC(dummyWindowHandle, hdcDummy)
             throw AWTException("Unsupported pixel format")
         }
 
         /* Next, create a dummy context using Opengl32.lib's wglCreateContext. This should ALWAYS work, but won't give us a "new"/"core" context if we requested
          * that and also does not support multisampling. But we use this "dummy" context then to request the required WGL function pointers to create a new
          * OpenGL >= 3.0 context and with optional multisampling.         */
-        val dummyContext = wglCreateContext(hDCdummy)
+        val dummyContext = wglCreateContext(hdcDummy)
         if (dummyContext == NULL) {
-            User32.ReleaseDC(dummyWindowHandle, hDCdummy)
+            User32.ReleaseDC(dummyWindowHandle, hdcDummy)
             throw AWTException("Failed to create OpenGL context")
         }
 
@@ -151,9 +150,9 @@ class Win32GLCanvas : GLCanvas() {
         val currentDc = wglGetCurrentDC()
 
         // Make the new dummy context current
-        var success = wglMakeCurrent(hDCdummy, dummyContext)
+        var success = wglMakeCurrent(hdcDummy, dummyContext)
         if (!success) {
-            User32.ReleaseDC(dummyWindowHandle, hDCdummy)
+            User32.ReleaseDC(dummyWindowHandle, hdcDummy)
             wglDeleteContext(dummyContext)
             throw AWTException("Failed to make OpenGL context current")
         }
@@ -162,7 +161,7 @@ class Win32GLCanvas : GLCanvas() {
         var wglExtensions = ""
         val wglGetExtensionsStringARBAddr = wglGetProcAddress("wglGetExtensionsStringARB")
         if (wglGetExtensionsStringARBAddr != NULL) {
-            val str = JNI.callPP(wglGetExtensionsStringARBAddr, hDCdummy)
+            val str = JNI.callPP(hdcDummy, wglGetExtensionsStringARBAddr)
             if (str != NULL)
                 wglExtensions = memASCII(str)
         } else {
@@ -175,7 +174,7 @@ class Win32GLCanvas : GLCanvas() {
             }
         }
         val wglExtensionsList = wglExtensions.split(" ".toRegex()).toSet()
-        success = User32.ReleaseDC(dummyWindowHandle, hDCdummy)
+        success = User32.ReleaseDC(dummyWindowHandle, hdcDummy)
         if (!success) {
             wglDeleteContext(dummyContext)
             wglMakeCurrent(currentDc, currentContext)
@@ -220,7 +219,7 @@ class Win32GLCanvas : GLCanvas() {
                 }
                 val wglSwapIntervalEXTAddr = wglGetProcAddress("wglSwapIntervalEXT")
                 if (wglSwapIntervalEXTAddr != NULL)
-                    JNI.callI(wglSwapIntervalEXTAddr, it)
+                    JNI.callI(it, wglSwapIntervalEXTAddr)
             }
 
             if (data.swapGroupNV > 0 || data.swapBarrierNV > 0) {
@@ -337,7 +336,7 @@ class Win32GLCanvas : GLCanvas() {
                 throwSince("Floating-point format requested but WGL_ARB_pixel_format_float is unavailable")
             // Query matching pixel formats
             data encodePixelFormatAttribs attribList
-            success = JNI.callPPPPPI(wglChoosePixelFormatAddr, hDC, attribListAddr, NULL, 1, bufferAddr + 4, bufferAddr) == 1
+            success = JNI.callPPPPPI(hDC, attribListAddr, NULL, 1, bufferAddr + 4, bufferAddr, wglChoosePixelFormatAddr) == 1
             val numFormats = memGetInt(bufferAddr)
             if (!success || numFormats == 0)
                 throwSince("No supported pixel format found.")
@@ -370,7 +369,7 @@ class Win32GLCanvas : GLCanvas() {
             }
             val attribValues = BufferUtils.createIntBuffer(attribList.pos) // TODO
             val attribValuesAddr = attribValues.adr
-            success = JNI.callPPPI(wglGetPixelFormatAttribivAddr, hDC, pixelFormat, GDI32.PFD_MAIN_PLANE.i, attribList.pos, attribListAddr, attribValuesAddr).bool
+            success = JNI.callPPPI(hDC, pixelFormat, GDI32.PFD_MAIN_PLANE.i, attribList.pos, attribListAddr, attribValuesAddr, wglGetPixelFormatAttribivAddr).bool
             if (!success)
                 throwSince("Failed to get pixel format attributes.")
 
@@ -456,8 +455,7 @@ class Win32GLCanvas : GLCanvas() {
         if (!success)
             throwSince("Failed to set pixel format.")
         // And create new context with it
-        val newCtx = JNI.callPPPP(wglCreateContextAttribsARBAddr, hDC, data.shareContext?.context
-                ?: NULL, attribListAddr)
+        val newCtx = JNI.callPPPP(hDC, data.shareContext?.context?: NULL, attribListAddr, wglCreateContextAttribsARBAddr)
         wglDeleteContext(dummyContext)
         if (newCtx == NULL) {
             User32.ReleaseDC(windowHandle, hDC)
@@ -474,7 +472,7 @@ class Win32GLCanvas : GLCanvas() {
                 throwSince("Negative swap interval requested but WGL_EXT_swap_control_tear is unavailable")
             val wglSwapIntervalEXTAddr = wglGetProcAddress("wglSwapIntervalEXT")
             if (wglSwapIntervalEXTAddr != NULL)
-                JNI.callI(wglSwapIntervalEXTAddr, it)
+                JNI.callI(it, wglSwapIntervalEXTAddr)
         }
         if (data.swapGroupNV > 0 || data.swapBarrierNV > 0) {
             // Only allowed if WGL_NV_swap_group is available
@@ -495,29 +493,29 @@ class Win32GLCanvas : GLCanvas() {
             api = data.api
             when {
                 data.atLeast30 -> {
-                    JNI.callPV(getInteger, GL_MAJOR_VERSION, bufferAddr)
+                    JNI.callPV(GL_MAJOR_VERSION, bufferAddr, getInteger)
                     majorVersion = memGetInt(bufferAddr)
-                    JNI.callPV(getInteger, GL_MINOR_VERSION, bufferAddr)
+                    JNI.callPV(GL_MINOR_VERSION, bufferAddr, getInteger)
                     minorVersion = memGetInt(bufferAddr)
-                    JNI.callPV(getInteger, GL_CONTEXT_FLAGS, bufferAddr)
+                    JNI.callPV(GL_CONTEXT_FLAGS, bufferAddr, getInteger)
                     val effectiveContextFlags = memGetInt(bufferAddr)
                     debug = effectiveContextFlags has GL_CONTEXT_FLAG_DEBUG_BIT
                     forwardCompatible = effectiveContextFlags has GL_CONTEXT_FLAG_FORWARD_COMPATIBLE_BIT
                     robustness = effectiveContextFlags has GL_CONTEXT_FLAG_ROBUST_ACCESS_BIT_ARB
                 }
                 data.api == GLData.API.GL -> {
-                    val version = APIUtil.apiParseVersion(memUTF8(Checks.check(JNI.callP(getString, GL_VERSION))))
+                    val version = APIUtil.apiParseVersion(memUTF8(Checks.check(JNI.callP(GL_VERSION, getString))))
                     majorVersion = version.major
                     minorVersion = version.minor
                 }
                 data.api == GLData.API.GLES -> {
-                    val version = APIUtil.apiParseVersion(memUTF8(Checks.check(JNI.callP(getString, GL_VERSION))), "OpenGL ES")
+                    val version = APIUtil.apiParseVersion(memUTF8(Checks.check(JNI.callP(GL_VERSION, getString))), "OpenGL ES")
                     majorVersion = version.major
                     minorVersion = version.minor
                 }
             }
             if (data.api == GLData.API.GL && atLeast32) {
-                JNI.callPV(getInteger, GL32.GL_CONTEXT_PROFILE_MASK, bufferAddr)
+                JNI.callPV(GL32.GL_CONTEXT_PROFILE_MASK, bufferAddr, getInteger)
                 val effectiveProfileMask = MemoryUtil.memGetInt(bufferAddr)
                 val core = effectiveProfileMask has GL32.GL_CONTEXT_CORE_PROFILE_BIT
                 val comp = effectiveProfileMask has GL32.GL_CONTEXT_COMPATIBILITY_PROFILE_BIT
@@ -528,12 +526,12 @@ class Win32GLCanvas : GLCanvas() {
                 }
             }
             if (data.samples >= 1) {
-                JNI.callPV(getInteger, GL_SAMPLES_ARB, bufferAddr)
+                JNI.callPV(GL_SAMPLES_ARB, bufferAddr, getInteger)
                 samples = memGetInt(bufferAddr)
-                JNI.callPV(getInteger, GL_SAMPLE_BUFFERS_ARB, bufferAddr)
+                JNI.callPV(GL_SAMPLE_BUFFERS_ARB, bufferAddr, getInteger)
                 sampleBuffers = memGetInt(bufferAddr)
                 if ("WGL_NV_multisample_coverage" in wglExtensionsList) {
-                    JNI.callPV(getInteger, GL_COLOR_SAMPLES_NV, bufferAddr)
+                    JNI.callPV(GL_COLOR_SAMPLES_NV, bufferAddr, getInteger)
                     colorSamplesNV = memGetInt(bufferAddr)
                 }
             }
@@ -546,7 +544,7 @@ class Win32GLCanvas : GLCanvas() {
     @Throws(AWTException::class)
     private fun wglNvSwapGroupAndBarrier(attribs: GLData, bufferAddr: Adr, hDC: Long) {
         val wglQueryMaxSwapGroupsNVAddr = wglGetProcAddress("wglQueryMaxSwapGroupsNV")
-        var success = JNI.callPPPI(wglQueryMaxSwapGroupsNVAddr, hDC, bufferAddr, bufferAddr + 4)
+        var success: Int
         val maxGroups = memGetInt(bufferAddr)
         if (maxGroups < attribs.swapGroupNV)
             throw AWTException("Swap group exceeds maximum group index")
@@ -560,7 +558,7 @@ class Win32GLCanvas : GLCanvas() {
             if (wglJoinSwapGroupNVAddr == NULL)
                 throw AWTException("WGL_NV_swap_group available but wglJoinSwapGroupNV is NULL")
 
-            success = JNI.callPI(wglJoinSwapGroupNVAddr, hDC, attribs.swapGroupNV)
+            success = JNI.callPI(hDC, attribs.swapGroupNV, wglJoinSwapGroupNVAddr)
             if (success == 0)
                 throw AWTException("Failed to join swap group")
 
@@ -569,7 +567,7 @@ class Win32GLCanvas : GLCanvas() {
                 if (wglBindSwapBarrierNVAddr == NULL)
                     throw AWTException("WGL_NV_swap_group available but wglBindSwapBarrierNV is NULL")
 
-                success = JNI.callI(wglBindSwapBarrierNVAddr, attribs.swapGroupNV, attribs.swapBarrierNV)
+                success = JNI.callI(attribs.swapGroupNV, attribs.swapBarrierNV, wglBindSwapBarrierNVAddr)
                 if (success == 0)
                     throw AWTException("Failed to bind swap barrier. Probably no G-Sync card installed.")
             }
@@ -608,7 +606,7 @@ class Win32GLCanvas : GLCanvas() {
             throw UnsupportedOperationException("wglDelayBeforeSwapNV is unavailable")
 
         val hDC = User32.GetDC(hwnd)
-        val ret = JNI.callPI(wglDelayBeforeSwapNVAddr, hDC, seconds)
+        val ret = JNI.callPI(hDC, seconds, wglDelayBeforeSwapNVAddr)
         User32.ReleaseDC(hwnd, hDC)
         return ret == 1
     }

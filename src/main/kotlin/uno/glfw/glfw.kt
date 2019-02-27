@@ -1,10 +1,10 @@
 package uno.glfw
 
 import glm_.BYTES
-import kool.adr
 import glm_.i
 import glm_.vec2.Vec2i
 import gln.debug.glDebugCallback
+import kool.adr
 import kool.stak
 import org.lwjgl.glfw.GLFW.*
 import org.lwjgl.glfw.GLFWErrorCallback
@@ -19,10 +19,7 @@ import org.lwjgl.vulkan.VkInstance
 import uno.glfw.windowHint.Profile
 import uno.kotlin.parseInt
 import vkk.VK_CHECK_RESULT
-import vkk.entities.VkSurface
-//import vkk.VK_CHECK_RESULT
-//import vkk.VkSurfaceKHR
-//import vkk.adr
+import vkk.entities.VkSurfaceKHR
 import java.util.function.BiPredicate
 
 /**
@@ -134,8 +131,8 @@ object glfw {
             return res
         }
 
-    fun createWindowSurface(windowHandle: GlfwWindowHandle, instance: VkInstance): VkSurface =
-            VkSurface(stak.longAddress { surface ->
+    fun createWindowSurface(windowHandle: GlfwWindowHandle, instance: VkInstance): VkSurfaceKHR =
+            VkSurfaceKHR(stak.longAddress { surface ->
                 VK_CHECK_RESULT(GLFWVulkan.nglfwCreateWindowSurface(instance.adr, windowHandle.L, NULL, surface))
             })
 
@@ -170,6 +167,7 @@ object glfw {
         }
     var errorDescription = ""
 
+    inline operator fun invoke(block: glfw.() -> Unit) = glfw.block()
     fun <T> initHint(block: initHint.() -> T) = initHint.block()
     fun <T> windowHint(block: windowHint.() -> T) = windowHint.block()
 }

@@ -53,21 +53,21 @@ public class LWJGLCanvas extends Canvas {
     public void paint(Graphics g) {
         if (ds == null) {
             // Get the drawing surface
-            ds = JAWT_GetDrawingSurface(awt.GetDrawingSurface(), this);
+            ds = JAWT_GetDrawingSurface(this, awt.GetDrawingSurface());
             if (ds == null) {
-                throw new IllegalStateException("awt->GetDrawingSurface() failed");
+                throw new IllegalStateException("awtOld->GetDrawingSurface() failed");
             }
         }
 
         // Lock the drawing surface
-        int lock = JAWT_DrawingSurface_Lock(ds.Lock(), ds);
+        int lock = JAWT_DrawingSurface_Lock(ds, ds.Lock());
         if ((lock & JAWT_LOCK_ERROR) != 0) {
             throw new IllegalStateException("ds->Lock() failed");
         }
 
         try {
             // Get the drawing surface info
-            JAWTDrawingSurfaceInfo dsi = JAWT_DrawingSurface_GetDrawingSurfaceInfo(ds.GetDrawingSurfaceInfo(), ds);
+            JAWTDrawingSurfaceInfo dsi = JAWT_DrawingSurface_GetDrawingSurfaceInfo(ds, ds.GetDrawingSurfaceInfo());
             if (dsi == null) {
                 throw new IllegalStateException("ds->GetDrawingSurfaceInfo() failed");
             }
@@ -119,11 +119,11 @@ public class LWJGLCanvas extends Canvas {
                 }
             } finally {
                 // Free the drawing surface info
-                JAWT_DrawingSurface_FreeDrawingSurfaceInfo(ds.FreeDrawingSurfaceInfo(), dsi);
+                JAWT_DrawingSurface_FreeDrawingSurfaceInfo(dsi, ds.FreeDrawingSurfaceInfo());
             }
         } finally {
             // Unlock the drawing surface
-            JAWT_DrawingSurface_Unlock(ds.Unlock(), ds);
+            JAWT_DrawingSurface_Unlock(ds, ds.Unlock());
         }
 
         repaint();
@@ -131,7 +131,7 @@ public class LWJGLCanvas extends Canvas {
 
     public void destroy() {
         // Free the drawing surface
-        JAWT_FreeDrawingSurface(awt.FreeDrawingSurface(), ds);
+        JAWT_FreeDrawingSurface(ds, awt.FreeDrawingSurface());
 
         awt.free();
 

@@ -1,4 +1,4 @@
-package uno.awt
+package uno.awtOld
 
 import org.lwjgl.system.MemoryUtil.NULL
 import org.lwjgl.system.Platform

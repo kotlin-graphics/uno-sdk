@@ -265,6 +265,19 @@ open class GlfwWindow(var handle: GlfwWindowHandle) {
 
     fun unmakeContextCurrent() = glfwMakeContextCurrent(NULL)
 
+    inline fun inContext(block: () -> Unit) {
+        glfwMakeContextCurrent(handle.L)
+        block()
+        glfwMakeContextCurrent(NULL)
+    }
+
+    /** for Java */
+    fun inContext(runnable: Runnable) {
+        glfwMakeContextCurrent(handle.L)
+        runnable.run()
+        glfwMakeContextCurrent(NULL)
+    }
+
     /** Free the window callbacks and destroy the window and reset its handle back to NULL */
     fun destroy() {
         Callbacks.glfwFreeCallbacks(handle.L)

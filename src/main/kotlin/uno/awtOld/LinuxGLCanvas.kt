@@ -1,4 +1,4 @@
-package uno.awt
+package uno.awtOld
 
 import gli_.has
 import glm_.i
@@ -10,7 +10,6 @@ import org.lwjgl.system.jawt.JAWTDrawingSurface
 import org.lwjgl.system.jawt.JAWTFunctions.*
 import org.lwjgl.system.jawt.JAWTX11DrawingSurfaceInfo
 import org.lwjgl.system.linux.X11
-import uno.buffer.intBufferOf
 import java.awt.AWTException
 import java.awt.Canvas
 
@@ -23,7 +22,7 @@ internal class LinuxGLCanvas : GLCanvas() {
     @Throws(AWTException::class)
     private fun create(depth: Int, attribs: GLData, effective: GLData): WglContext {
         val screen = X11.XDefaultScreen(display)
-        val attribs = intBufferOf( // TODO stak
+        val attributes = intBufferOf( // TODO stak
                 GLX_DRAWABLE_TYPE, GLX_WINDOW_BIT,
                 GLX_RENDER_TYPE, GLX_RGBA_BIT,
                 GLX_RED_SIZE, attribs.redSize,
@@ -32,7 +31,7 @@ internal class LinuxGLCanvas : GLCanvas() {
                 GLX_DEPTH_SIZE, attribs.depthSize,
                 GLX_DOUBLEBUFFER, attribs.doubleBuffer.i,
                 0, 0)
-        val fbConfigs = glXChooseFBConfig(display, screen, attribs)
+        val fbConfigs = glXChooseFBConfig(display, screen, attributes)
         if (fbConfigs == null || fbConfigs.cap == 0)
             throw AWTException("No supported framebuffer configurations found")
 
@@ -41,22 +40,22 @@ internal class LinuxGLCanvas : GLCanvas() {
 
     @Throws(AWTException::class)
     override fun lock() {
-        val lock = JAWT_DrawingSurface_Lock(ds.Lock(), ds)
+        val lock = JAWT_DrawingSurface_Lock(ds, ds.Lock())
         if (lock has JAWT_LOCK_ERROR)
             throw AWTException("JAWT_DrawingSurface_Lock() failed")
     }
 
     @Throws(AWTException::class)
-    override fun unlock() = JAWT_DrawingSurface_Unlock(ds.Unlock(), ds)
+    override fun unlock() = JAWT_DrawingSurface_Unlock(ds, ds.Unlock())
 
     @Throws(AWTException::class)
     override fun createContext(canvas: Canvas, data: GLData, effective: GLData): WglContext {
-        ds = JAWT_GetDrawingSurface(awt.GetDrawingSurface(), canvas)!!
-        val ds = JAWT_GetDrawingSurface(awt.GetDrawingSurface(), canvas)!!
+        ds = JAWT_GetDrawingSurface(canvas, awt.GetDrawingSurface())!!
+        val ds = JAWT_GetDrawingSurface(canvas, awt.GetDrawingSurface())!!
         try {
             lock()
             try {
-                val dsi = JAWT_DrawingSurface_GetDrawingSurfaceInfo(ds.GetDrawingSurfaceInfo(), ds)!!
+                val dsi = JAWT_DrawingSurface_GetDrawingSurfaceInfo(ds, ds.GetDrawingSurfaceInfo())!!
                 try {
                     val dsiWin = JAWTX11DrawingSurfaceInfo.create(dsi.platformInfo())
                     val depth = dsiWin.depth()
@@ -64,13 +63,13 @@ internal class LinuxGLCanvas : GLCanvas() {
                     drawable = dsiWin.drawable()
                     return create(depth, data, effective)
                 } finally {
-                    JAWT_DrawingSurface_FreeDrawingSurfaceInfo(ds.FreeDrawingSurfaceInfo(), dsi)
+                    JAWT_DrawingSurface_FreeDrawingSurfaceInfo(dsi, ds.FreeDrawingSurfaceInfo())
                 }
             } finally {
                 unlock()
             }
         } finally {
-            JAWT_FreeDrawingSurface(awt.FreeDrawingSurface(), ds)
+            JAWT_FreeDrawingSurface(ds, awt.FreeDrawingSurface())
         }
     }
 

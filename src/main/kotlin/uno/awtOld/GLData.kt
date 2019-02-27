@@ -1,4 +1,4 @@
-package uno.awt
+package uno.awtOld
 
 import org.lwjgl.opengl.WGLARBMultisample.WGL_SAMPLES_ARB
 import org.lwjgl.opengl.WGLARBMultisample.WGL_SAMPLE_BUFFERS_ARB

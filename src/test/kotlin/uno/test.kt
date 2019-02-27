@@ -1,12 +1,12 @@
-//package uno.awt
+//package uno.awtOld
 //
 //import org.lwjgl.opengl.GL30C
-//import java.awt.*
-//import java.awt.event.KeyAdapter
-//import java.awt.event.KeyEvent
+//import java.awtOld.*
+//import java.awtOld.event.KeyAdapter
+//import java.awtOld.event.KeyEvent
 //import javax.swing.*
-//import java.awt.event.WindowAdapter
-//import java.awt.event.WindowEvent
+//import java.awtOld.event.WindowAdapter
+//import java.awtOld.event.WindowEvent
 //import javax.swing.JPanel
 //import kotlin.system.exitProcess
 //import javax.swing.RepaintManager

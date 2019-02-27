@@ -3,9 +3,9 @@ package uno
 import glm_.f
 import org.lwjgl.opengl.GL
 import org.lwjgl.opengl.GL11.*
-import uno.awt.AWTGLCanvas
+import uno.awtOld.AWTGLCanvas
 import uno.jawt.AbstractGears
-import uno.awt.GLData
+import uno.awtOld.GLData
 import java.awt.BorderLayout
 import java.awt.Dimension
 import java.awt.event.WindowAdapter

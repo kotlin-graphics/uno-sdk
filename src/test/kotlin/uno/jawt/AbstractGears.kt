@@ -22,9 +22,9 @@ class AbstractGears {
     private var angle = 0f
 
     fun init() = stak {
-        System.out.println("GL_VENDOR: ${glGetString(GL_VENDOR)}")
-        System.out.println("GL_RENDERER: ${glGetString(GL_RENDERER)}")
-        System.out.println("GL_VERSION: ${glGetString(GL_VERSION)}")
+        println("GL_VENDOR: ${glGetString(GL_VENDOR)}")
+        println("GL_RENDERER: ${glGetString(GL_RENDERER)}")
+        println("GL_VERSION: ${glGetString(GL_VERSION)}")
 
         // setup ogl
         glEnable(GL_CULL_FACE)
