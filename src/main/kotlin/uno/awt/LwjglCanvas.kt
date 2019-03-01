@@ -280,13 +280,10 @@ abstract class LwjglCanvas(val glDebug: Boolean = false) : Canvas() {
     fun destroyInternal() {
         println("destroyInternal")
 
-        glfwWindow.makeContextCurrent()
-
-        destroy()
-
-        debugProc?.free()
-
-        glfwWindow.unmakeContextCurrent()
+        glfwWindow.inContext {
+            destroy()
+            debugProc?.free()
+        }
 
         JAWTFunctions.JAWT_FreeDrawingSurface(surface, awt.FreeDrawingSurface())
         awt.free()

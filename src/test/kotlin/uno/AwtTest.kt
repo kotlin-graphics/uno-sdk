@@ -13,7 +13,7 @@ import java.awt.event.WindowEvent
 import javax.swing.JFrame
 
 
-fun main(args: Array<String>) {
+fun main() {
 
     val frame = JFrame("AWT test").apply {
         defaultCloseOperation = JFrame.DISPOSE_ON_CLOSE

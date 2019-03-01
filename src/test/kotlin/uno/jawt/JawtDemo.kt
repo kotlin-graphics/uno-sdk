@@ -1,6 +1,9 @@
 package uno.jawt
 
 import glm_.vec2.Vec2i
+import glm_.vec4.Vec4
+import gln.clear.glClearBuffer
+import org.lwjgl.opengl.GL11C.GL_COLOR
 import org.lwjgl.system.Platform
 import uno.awt.LwjglCanvas
 import java.awt.BorderLayout
@@ -106,7 +109,10 @@ class Viewer : LwjglCanvas() {
 
     override fun init() = gears.init()
 
-    override fun render() = gears.render()
+    override fun render() {
+//        glClearBuffer(GL_COLOR, 0, Vec4(1f, 0.5f, 0f, 1f))
+        gears.render()
+    }
 
     override fun reshape(size: Vec2i) = gears.reshape(size)
 

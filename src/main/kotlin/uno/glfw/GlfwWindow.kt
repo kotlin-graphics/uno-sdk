@@ -539,6 +539,9 @@ open class GlfwWindow(var handle: GlfwWindowHandle) {
     val hwnd: HWND
         get() = HWND(GLFWNativeWin32.glfwGetWin32Window(handle.L))
 
+    val isCurrent: Boolean
+        get() = glfw.currentContext == handle
+
     companion object {
         infix fun fromWin32Window(hwnd: HWND): GlfwWindow = GlfwWindow(glfw.attachWin32Window(hwnd))
         @JvmStatic

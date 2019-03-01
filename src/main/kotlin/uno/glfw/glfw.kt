@@ -167,6 +167,9 @@ object glfw {
         }
     var errorDescription = ""
 
+    val currentContext: GlfwWindowHandle
+        get() = GlfwWindowHandle(glfwGetCurrentContext())
+
     inline operator fun invoke(block: glfw.() -> Unit) = glfw.block()
     fun <T> initHint(block: initHint.() -> T) = initHint.block()
     fun <T> windowHint(block: windowHint.() -> T) = windowHint.block()
