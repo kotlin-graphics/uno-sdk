@@ -3,7 +3,8 @@
 [![Build Status](https://travis-ci.org/kotlin-graphics/uno-sdk.svg?branch=master)](https://travis-ci.org/kotlin-graphics/uno-sdk) 
 [![license](https://img.shields.io/badge/License-MIT-orange.svg)](https://github.com/kotlin-graphics/uno-sdk/blob/master/LICENSE) 
 ![](https://reposs.herokuapp.com/?path=kotlin-graphics/uno-sdk&color=yellow) 
-[![Release](https://jitpack.io/v/kotlin-graphics/uno-sdk.svg)](https://jitpack.io/#kotlin-graphics/uno-sdk) 
+[![Release](https://jitpack.io/v/kotlin-graphics/uno-sdk.svg)](https://jitpack.io/#kotlin-graphics/uno-sdk)
+[![Awesome Kotlin Badge](https://kotlin.link/awesome-kotlin.svg)](https://github.com/KotlinBy/awesome-kotlin) 
 [![Slack Status](http://slack.kotlinlang.org/badge.svg)](http://slack.kotlinlang.org/)
 
 This is kind of a small suite, born and shaped around GL, it includes the gln dependencies, such as [unsigned support](https://github.com/elect86/kotlin-unsigned), [glm](https://github.com/kotlin-graphics/glm) and [gli](https://github.com/kotlin-graphics/gli). Its main usage is basically as wrapper for the lwjgl glfw binding.
