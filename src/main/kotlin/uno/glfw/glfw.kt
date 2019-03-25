@@ -3,7 +3,7 @@ package uno.glfw
 import glm_.BYTES
 import glm_.i
 import glm_.vec2.Vec2i
-import gln.debug.glDebugCallback
+import gln.misc.glDebugCallback
 import kool.adr
 import kool.stak
 import org.lwjgl.glfw.GLFW.*

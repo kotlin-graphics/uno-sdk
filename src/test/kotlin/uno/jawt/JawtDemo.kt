@@ -1,9 +1,6 @@
 package uno.jawt
 
 import glm_.vec2.Vec2i
-import glm_.vec4.Vec4
-import gln.clear.glClearBuffer
-import org.lwjgl.opengl.GL11C.GL_COLOR
 import org.lwjgl.system.Platform
 import uno.awt.LwjglCanvas
 import java.awt.BorderLayout

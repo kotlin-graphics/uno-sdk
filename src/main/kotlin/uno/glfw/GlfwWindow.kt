@@ -9,10 +9,9 @@ import glm_.vec2.Vec2d
 import glm_.vec2.Vec2i
 import glm_.vec4.Vec4i
 import gln.cap.Caps
-import gln.debug.GlDebugSeverity
-import gln.debug.GlDebugSource
-import gln.debug.GlDebugType
-import kool.Adr
+import gln.misc.GlDebugSeverity
+import gln.misc.GlDebugSource
+import gln.misc.GlDebugType
 import kool.stak
 import org.lwjgl.glfw.*
 import org.lwjgl.glfw.GLFW.*
@@ -267,6 +266,7 @@ open class GlfwWindow(var handle: GlfwWindowHandle) {
 
     inline fun inContext(block: () -> Unit) {
         glfwMakeContextCurrent(handle.L)
+        GL.setCapabilities(caps.caps)
         block()
         glfwMakeContextCurrent(NULL)
     }
@@ -274,6 +274,7 @@ open class GlfwWindow(var handle: GlfwWindowHandle) {
     /** for Java */
     fun inContext(runnable: Runnable) {
         glfwMakeContextCurrent(handle.L)
+        GL.setCapabilities(caps.caps)
         runnable.run()
         glfwMakeContextCurrent(NULL)
     }

@@ -39,27 +39,25 @@ abstract class LwjglCanvas(val glDebug: Boolean = false) : Canvas() {
 
     var awtDebug = false
 
-    lateinit var glfwErrorCallback: GLFWErrorCallback
+    val glfwErrorCallback = GLFWErrorCallback.createPrint().set()
+
+    init {
+        glfw {
+            init()
+            windowHint { debug = glDebug }
+        }
+    }
 
     private fun initInternal(hwnd: HWND) {
 //        println("LwjglCanvas.initInternal ${Date().toInstant()}")
 
         initialized = true
 
-        glfwErrorCallback = GLFWErrorCallback.createPrint().set()
-
-        glfw {
-            init()
-            windowHint { debug = glDebug }
-        }
-
         // glfwWindowHint can be used here to configure the GL context
         glfwWindow = GlfwWindow.fromWin32Window(hwnd).apply {
             makeContextCurrent()
             createCapabilities(forwardCompatible = false)
         }
-
-        glfwWindow.cursorPosCallback = { it.toString() }
 
         if (glDebug)
             debugProc = GLUtil.setupDebugMessageCallback()
@@ -290,6 +288,7 @@ abstract class LwjglCanvas(val glDebug: Boolean = false) : Canvas() {
 
         glfwWindow.destroy()
         glfw.terminate()
+        glfwErrorCallback.free()
     }
 
     fun toggleAnimation() {
