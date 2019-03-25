@@ -303,6 +303,7 @@ abstract class LwjglCanvas(val glDebug: Boolean = false) : Canvas() {
         }
     }
 
+    @JvmOverloads
     fun animate(animate: Boolean = true) {
 
         if (animated != animate) {
