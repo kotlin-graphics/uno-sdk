@@ -96,7 +96,7 @@ object glfw {
     val vulkanSupported: Boolean
         get() = GLFWVulkan.glfwVulkanSupported()
 
-    val time: Double
+    val time: Seconds
         get() = glfwGetTime()
 
     val primaryMonitor: GlfwMonitor

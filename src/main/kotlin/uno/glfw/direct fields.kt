@@ -20,3 +20,5 @@ inline val GLFWVidMode.refreshRate: Int
     get() = GLFWVidMode.nrefreshRate(address())
 
 inline class HWND(val L: Long)
+
+typealias Seconds = Double
