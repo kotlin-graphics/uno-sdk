@@ -5,7 +5,6 @@ import glm_.i
 import glm_.vec2.Vec2i
 import gln.misc.glDebugCallback
 import kool.adr
-import kool.stak
 import org.lwjgl.glfw.GLFW.*
 import org.lwjgl.glfw.GLFWErrorCallback
 import org.lwjgl.glfw.GLFWNativeWin32

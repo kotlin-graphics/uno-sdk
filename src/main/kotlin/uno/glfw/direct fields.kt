@@ -1,6 +1,7 @@
 package uno.glfw
 
 import glm_.vec2.Vec2i
+import kool.Stack
 import org.lwjgl.glfw.GLFWVidMode
 
 
@@ -22,3 +23,4 @@ inline val GLFWVidMode.refreshRate: Int
 inline class HWND(val L: Long)
 
 typealias Seconds = Double
+typealias stak = Stack

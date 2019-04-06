@@ -12,7 +12,6 @@ import gln.cap.Caps
 import gln.misc.GlDebugSeverity
 import gln.misc.GlDebugSource
 import gln.misc.GlDebugType
-import kool.stak
 import org.lwjgl.glfw.*
 import org.lwjgl.glfw.GLFW.*
 import org.lwjgl.opengl.GL
