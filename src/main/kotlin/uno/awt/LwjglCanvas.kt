@@ -11,7 +11,9 @@ import uno.glfw.HWND
 import uno.glfw.VSync
 import uno.glfw.glfw
 import java.awt.Canvas
+import java.awt.Color
 import java.awt.Graphics
+import java.awt.Graphics2D
 import java.awt.event.ComponentAdapter
 import java.awt.event.ComponentEvent
 import javax.swing.SwingUtilities

@@ -105,13 +105,7 @@ class Viewer : LwjglCanvas() {
     val gears = AbstractGears()
 
     override fun init() = gears.init()
-
-    override fun render() {
-//        glClearBuffer(GL_COLOR, 0, Vec4(1f, 0.5f, 0f, 1f))
-        gears.render()
-    }
-
+    override fun render() = gears.render()
     override fun reshape(size: Vec2i) = gears.reshape(size)
-
     override fun destroy() = gears.destroy()
 }
