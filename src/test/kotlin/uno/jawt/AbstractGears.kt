@@ -6,8 +6,8 @@ import glm_.f
 import glm_.func.cos
 import glm_.func.sin
 import glm_.vec2.Vec2i
-import kool.stak
 import org.lwjgl.opengl.GL11.*
+import uno.glfw.stak
 import kotlin.math.sqrt
 
 

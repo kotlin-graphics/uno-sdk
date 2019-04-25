@@ -17,6 +17,9 @@ import java.awt.Graphics2D
 import java.awt.event.ComponentAdapter
 import java.awt.event.ComponentEvent
 import javax.swing.SwingUtilities
+import java.util.logging.Level.SEVERE
+import java.lang.reflect.InvocationTargetException
+
 
 /**
  * A Canvas component that uses OpenGL for rendering.
@@ -299,6 +302,40 @@ abstract class LwjglCanvas(val glDebug: Boolean = false) : Canvas() {
         else {
             animated = true
             repaint()
+        }
+    }
+
+    @JvmOverloads
+    fun animate(animate: Boolean = true) {
+
+        if (animated != animate) {
+
+            animated = animate
+
+            if (animate) {
+
+                if (SwingUtilities.isEventDispatchThread()) {
+                    val g = graphics
+                    if (g != null) {
+                        paint(g)
+                        g.dispose()
+                    }
+                } else {
+                    try {
+                        SwingUtilities.invokeAndWait {
+                            val g = graphics
+                            if (g != null) {
+                                paint(g)
+                                g.dispose()
+                            }
+                        }
+                    } catch (ex: InterruptedException) {
+                        println("Exception while starting viewer animation")
+                    } catch (ex: InvocationTargetException) {
+                        println("Exception while starting viewer animation")
+                    }
+                }
+            }
         }
     }
 

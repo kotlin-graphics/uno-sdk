@@ -3,7 +3,6 @@ package uno.al
 import kool.adr
 import kool.free
 import kool.remSize
-import kool.stak
 import org.lwjgl.openal.ALC10.*
 import org.lwjgl.openal.ALC10.alcMakeContextCurrent
 import org.lwjgl.openal.AL
@@ -13,6 +12,7 @@ import org.lwjgl.openal.ALCCapabilities
 import org.lwjgl.stb.STBVorbis.stb_vorbis_decode_filename
 import org.lwjgl.system.MemoryStack.stackGet
 import org.lwjgl.system.MemoryStack.stackPush
+import uno.glfw.stak
 import java.nio.Buffer
 import java.nio.IntBuffer
 import java.nio.ShortBuffer
