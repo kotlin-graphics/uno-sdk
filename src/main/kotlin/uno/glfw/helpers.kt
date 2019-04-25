@@ -7,7 +7,7 @@ import org.lwjgl.glfw.GLFWNativeWin32
 import org.lwjgl.system.MemoryUtil.NULL
 
 
-typealias GLFWErrorCallbackT = (String, String) -> Unit
+typealias GLFWErrorCallbackT = (glfw.Error, String) -> Unit
 
 typealias GlfwMonitor = Long
 
