@@ -23,6 +23,8 @@ import org.lwjgl.system.MemoryUtil.*
 import uno.kotlin.getOrfirst
 import java.nio.ByteBuffer
 import java.nio.FloatBuffer
+import java.util.function.BooleanSupplier
+import java.util.function.Consumer
 
 /**
  * Created by GBarbieri on 24.04.2017.
@@ -523,6 +525,25 @@ open class GlfwWindow(var handle: GlfwWindowHandle) {
             glfwPollEvents()
             stak {
                 block(it)
+                if (autoSwap)
+                    glfwSwapBuffers(handle.L)
+            }
+        }
+    }
+
+    fun loop(block: Consumer<MemoryStack>) = loop(BooleanSupplier { isOpen }, block)
+
+    /**
+     *  The `stack` passed to `block` will be automatically a stack frame in place
+     *  (i.e. it has been pushed exactly once, without popping).
+     *  So you can do any allocation on that frame without pushing/popping further
+     *  It's the user choice to pass it down the stacktrace to avoid TLS
+     */
+    fun loop(condition: BooleanSupplier, block: Consumer<MemoryStack>) {
+        while (condition.asBoolean) {
+            glfwPollEvents()
+            stak {
+                block.accept(it)
                 if (autoSwap)
                     glfwSwapBuffers(handle.L)
             }
