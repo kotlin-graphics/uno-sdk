@@ -129,7 +129,7 @@ object glfw {
             return res
         }
 
-    fun createWindowSurface(windowHandle: GlfwWindowHandle, instance: VkInstance): VkSurfaceKHR =
+    fun createWindowSurface(instance: VkInstance, windowHandle: GlfwWindowHandle): VkSurfaceKHR =
             VkSurfaceKHR(stak.longAddress { surface ->
                 VK_CHECK_RESULT(GLFWVulkan.nglfwCreateWindowSurface(instance.adr, windowHandle.L, NULL, surface))
             })
