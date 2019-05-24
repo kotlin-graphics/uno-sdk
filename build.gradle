@@ -17,7 +17,7 @@ ext{
     kotlin_version = '1.3.21'
     kotlintest_version = '3.2.1'
     gln_version = '4cff66c0c1772f8d183436c504b349f34b8db5be'
-    vkk_version = '683cf3417d9fbdc07806dc81526ca32336724f8f'
+    vkk_version = '448bdc596876beab3315d7e883f933fdaca50587'
     lwjgl_version = "3.2.2-SNAPSHOT"
     lwjgl_natives = current() == WINDOWS ? "windows" : current() == LINUX ? "linux" : "macos"
 }
