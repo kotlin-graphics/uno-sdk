@@ -1,29 +1,27 @@
 package uno.al
 
 import kool.adr
-import kool.free
 import kool.remSize
 import org.lwjgl.openal.ALC10.*
 import org.lwjgl.openal.ALC10.alcMakeContextCurrent
-import org.lwjgl.openal.AL
 import org.lwjgl.openal.AL10.*
 import org.lwjgl.openal.ALC
 import org.lwjgl.openal.ALCCapabilities
 import org.lwjgl.stb.STBVorbis.stb_vorbis_decode_filename
 import org.lwjgl.system.MemoryStack.stackGet
-import org.lwjgl.system.MemoryStack.stackPush
+import org.lwjgl.system.MemoryUtil
 import uno.glfw.stak
 import java.nio.Buffer
 import java.nio.IntBuffer
 import java.nio.ShortBuffer
 
-object alc {
+object alc_ {
 
     val currentContext: ALCcontext
         get() = ALCcontext(alcGetCurrentContext())
 }
 
-object al {
+object al_ {
 
     enum class Format(val i: Int) {
         UNDEFINED(-1),
@@ -65,32 +63,5 @@ object stbVorbis {
     }
 }
 
-inline class ALCdevice(val L: Long) {
 
-    fun createContext() = createContext(stackGet().callocInt(1))
-    fun createContext(attrList: IntBuffer) = ALCcontext(alcCreateContext(L, attrList))
 
-    fun close() = alcCloseDevice(L)
-
-    infix fun isExtensionPresent(extName: CharSequence) = alcIsExtensionPresent(L, extName)
-
-    fun createCapabilities(): ALCCapabilities = ALC.createCapabilities(L)
-
-    companion object {
-        fun open(deviceSpecifier: String? = alcGetString(0, ALC_DEFAULT_DEVICE_SPECIFIER)) = ALCdevice(alcOpenDevice(deviceSpecifier))
-    }
-}
-
-inline class ALCcontext(val L: Long) {
-
-    fun makeCurrent() = alcMakeContextCurrent(L)
-
-    fun process() = alcProcessContext(L)
-
-    fun suspend() = alcSuspendContext(L)
-
-    fun destroy() = alcDestroyContext(L)
-
-    val device: ALCdevice
-        get() = ALCdevice(alcGetContextsDevice(L))
-}

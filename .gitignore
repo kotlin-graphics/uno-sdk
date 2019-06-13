@@ -18,3 +18,7 @@
 #.idea/workspace.xml
 build/
 /.idea/
+
+# Project exclude paths
+/out/
+/uno-core/out/
