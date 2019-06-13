@@ -4,6 +4,8 @@ import glm_.vec3.Vec3
 import gln.vec3Address
 import kool.Stack
 import org.lwjgl.openal.AL10
+import uno.al.identifiers.AlBuffer
+import uno.al.identifiers.AlBuffers
 import uno.al.identifiers.AlSource
 import uno.al.identifiers.AlSources
 import java.nio.FloatBuffer
@@ -411,15 +413,17 @@ interface al10 {
     // --- [ alSourceQueueBuffers ] ---
 
     /**
-     * Unsafe version of: {@link #alSourceQueueBuffers SourceQueueBuffers}
+     * Queues up one or multiple buffer names to the specified source.
      *
-     * @param numBuffers the number of buffers to queue
+     * <p>The buffers will be queued in the sequence in which they appear in the array. This command is legal on a source in any playback state (to allow for
+     * streaming, queuing has to be possible on a AL_PLAYING source). All buffers in a queue must have the same format and attributes, with the exception of
+     * the {@code NULL} buffer (i.e., 0) which can always be queued.</p>
+     *
+     * @param source  the target source
+     * @param buffers the buffer names
      */
-    public static void nalSourceQueueBuffers(int sourceName, int numBuffers, long bufferNames)
-    {
-        long __functionAddress = AL . getICD ().alSourceQueueBuffers;
-        invokePV(sourceName, numBuffers, bufferNames, __functionAddress);
-    }
+    fun sourceQueueBuffers(source: AlSource, buffers: AlBuffers) =
+            AL10.nalSourceQueueBuffers(source.name, buffers.rem, buffers.adr)
 
     /**
      * Queues up one or multiple buffer names to the specified source.
@@ -428,48 +432,26 @@ interface al10 {
      * streaming, queuing has to be possible on a AL_PLAYING source). All buffers in a queue must have the same format and attributes, with the exception of
      * the {@code NULL} buffer (i.e., 0) which can always be queued.</p>
      *
-     * @param sourceName  the target source
-     * @param bufferNames the buffer names
+     * @param source the target source
      */
-    @NativeType("ALvoid")
-    public static void alSourceQueueBuffers(@NativeType("ALuint") int sourceName, @NativeType("ALuint *") IntBuffer bufferNames)
-    {
-        nalSourceQueueBuffers(sourceName, bufferNames.remaining(), memAddress(bufferNames));
-    }
-
-    /**
-     * Queues up one or multiple buffer names to the specified source.
-     *
-     * <p>The buffers will be queued in the sequence in which they appear in the array. This command is legal on a source in any playback state (to allow for
-     * streaming, queuing has to be possible on a AL_PLAYING source). All buffers in a queue must have the same format and attributes, with the exception of
-     * the {@code NULL} buffer (i.e., 0) which can always be queued.</p>
-     *
-     * @param sourceName the target source
-     */
-    @NativeType("ALvoid")
-    public static void alSourceQueueBuffers(@NativeType("ALuint") int sourceName, @NativeType("ALuint *") int bufferName)
-    {
-        MemoryStack stack = stackGet (); int stackPointer = stack . getPointer ();
-        try {
-            IntBuffer bufferNames = stack . ints (bufferName);
-            nalSourceQueueBuffers(sourceName, 1, memAddress(bufferNames));
-        } finally {
-            stack.setPointer(stackPointer);
-        }
-    }
+    fun sourceQueueBuffers(source: AlSource, buffer: AlBuffer) =
+            AL10.alSourceQueueBuffers(source.name, buffer.name)
 
     // --- [ alSourceUnqueueBuffers ] ---
 
     /**
-     * Unsafe version of: {@link #alSourceUnqueueBuffers SourceUnqueueBuffers}
+     * Removes a number of buffer entries that have finished processing, in the order of apperance, from the queue of the specified source.
      *
-     * @param numEntries the number of buffers to unqueue
+     * <p>Once a queue entry for a buffer has been appended to a queue and is pending processing, it should not be changed. Removal of a given queue entry is not
+     * possible unless either the source is stopped (in which case then entire queue is considered processed), or if the queue entry has already been processed
+     * (AL_PLAYING or AL_PAUSED source). A playing source will enter the AL_STOPPED state if it completes playback of the last buffer in its queue (the same
+     * behavior as when a single buffer has been attached to a source and has finished playback).</p>
+     *
+     * @param source  the target source
+     * @param buffers the buffer names
      */
-    public static void nalSourceUnqueueBuffers(int sourceName, int numEntries, long bufferNames)
-    {
-        long __functionAddress = AL . getICD ().alSourceUnqueueBuffers;
-        invokePV(sourceName, numEntries, bufferNames, __functionAddress);
-    }
+    fun sourceUnqueueBuffers(source: AlSource, buffers: AlBuffers) =
+            AL10.nalSourceUnqueueBuffers(source.name, buffers.rem, buffers.adr)
 
     /**
      * Removes a number of buffer entries that have finished processing, in the order of apperance, from the queue of the specified source.
@@ -479,37 +461,10 @@ interface al10 {
      * (AL_PLAYING or AL_PAUSED source). A playing source will enter the AL_STOPPED state if it completes playback of the last buffer in its queue (the same
      * behavior as when a single buffer has been attached to a source and has finished playback).</p>
      *
-     * @param sourceName  the target source
-     * @param bufferNames the buffer names
+     * @param source the target source
      */
-    @NativeType("ALvoid")
-    public static void alSourceUnqueueBuffers(@NativeType("ALuint") int sourceName, @NativeType("ALuint *") IntBuffer bufferNames)
-    {
-        nalSourceUnqueueBuffers(sourceName, bufferNames.remaining(), memAddress(bufferNames));
-    }
-
-    /**
-     * Removes a number of buffer entries that have finished processing, in the order of apperance, from the queue of the specified source.
-     *
-     * <p>Once a queue entry for a buffer has been appended to a queue and is pending processing, it should not be changed. Removal of a given queue entry is not
-     * possible unless either the source is stopped (in which case then entire queue is considered processed), or if the queue entry has already been processed
-     * (AL_PLAYING or AL_PAUSED source). A playing source will enter the AL_STOPPED state if it completes playback of the last buffer in its queue (the same
-     * behavior as when a single buffer has been attached to a source and has finished playback).</p>
-     *
-     * @param sourceName the target source
-     */
-    @NativeType("ALvoid")
-    public static int alSourceUnqueueBuffers(@NativeType("ALuint") int sourceName)
-    {
-        MemoryStack stack = stackGet (); int stackPointer = stack . getPointer ();
-        try {
-            IntBuffer bufferNames = stack . callocInt (1);
-            nalSourceUnqueueBuffers(sourceName, 1, memAddress(bufferNames));
-            return bufferNames.get(0);
-        } finally {
-            stack.setPointer(stackPointer);
-        }
-    }
+    fun sourceUnqueueBuffers(source: AlSource, buffer: AlBuffer) =
+            Stack.intAddress(buffer.name) { AL10.nalSourceUnqueueBuffers(source.name, 1, it) }
 
     // --- [ alSourcePlay ] ---
 
@@ -524,12 +479,8 @@ interface al10 {
      *
      * @param source the source to play
      */
-    @NativeType("ALvoid")
-    public static void alSourcePlay(@NativeType("ALuint") int source)
-    {
-        long __functionAddress = AL . getICD ().alSourcePlay;
-        invokeV(source, __functionAddress);
-    }
+    fun sourcePlay(source: AlSource) =
+            AL10.alSourcePlay(source.name)
 
     // --- [ alSourcePause ] ---
 
@@ -542,12 +493,8 @@ interface al10 {
      *
      * @param source the source to pause
      */
-    @NativeType("ALvoid")
-    public static void alSourcePause(@NativeType("ALuint") int source)
-    {
-        long __functionAddress = AL . getICD ().alSourcePause;
-        invokeV(source, __functionAddress);
-    }
+    fun sourcePause(source: AlSource) =
+            AL10.alSourcePause(source.name)
 
     // --- [ alSourceStop ] ---
 
@@ -560,12 +507,8 @@ interface al10 {
      *
      * @param source the source to stop
      */
-    @NativeType("ALvoid")
-    public static void alSourceStop(@NativeType("ALuint") int source)
-    {
-        long __functionAddress = AL . getICD ().alSourceStop;
-        invokeV(source, __functionAddress);
-    }
+    fun sourceStop(source: AlSource) =
+            AL10.alSourceStop(source.name)
 
     // --- [ alSourceRewind ] ---
 
@@ -579,136 +522,61 @@ interface al10 {
      *
      * @param source the source to rewind
      */
-    @NativeType("ALvoid")
-    public static void alSourceRewind(@NativeType("ALuint") int source)
-    {
-        long __functionAddress = AL . getICD ().alSourceRewind;
-        invokeV(source, __functionAddress);
-    }
+    fun sourceRewind(source: AlSource) =
+            AL10.alSourceRewind(source.name)
 
     // --- [ alSourcePlayv ] ---
-
-    /**
-     * Unsafe version of: {@link #alSourcePlayv SourcePlayv}
-     *
-     * @param n the number of sources to play
-     */
-    public static void nalSourcePlayv(int n, long sources)
-    {
-        long __functionAddress = AL . getICD ().alSourcePlayv;
-        invokePV(n, sources, __functionAddress);
-    }
 
     /**
      * Pointer version of {@link #alSourcePlay SourcePlay}.
      *
      * @param sources the sources to play
      */
-    @NativeType("ALvoid")
-    public static void alSourcePlayv(@NativeType("ALuint const *") IntBuffer sources)
-    {
-        nalSourcePlayv(sources.remaining(), memAddress(sources));
-    }
+    fun sourcePlay(sources: AlSources) =
+            AL10.nalSourcePlayv(sources.rem, sources.adr)
 
     // --- [ alSourcePausev ] ---
-
-    /**
-     * Unsafe version of: {@link #alSourcePausev SourcePausev}
-     *
-     * @param n the number of sources to pause
-     */
-    public static void nalSourcePausev(int n, long sources)
-    {
-        long __functionAddress = AL . getICD ().alSourcePausev;
-        invokePV(n, sources, __functionAddress);
-    }
 
     /**
      * Pointer version of {@link #alSourcePause SourcePause}.
      *
      * @param sources the sources to pause
      */
-    @NativeType("ALvoid")
-    public static void alSourcePausev(@NativeType("ALuint const *") IntBuffer sources)
-    {
-        nalSourcePausev(sources.remaining(), memAddress(sources));
-    }
+    fun sourcePause(sources: AlSources) =
+            AL10.nalSourcePausev(sources.rem, sources.adr)
 
     // --- [ alSourceStopv ] ---
-
-    /**
-     * Unsafe version of: {@link #alSourceStopv SourceStopv}
-     *
-     * @param n the number of sources to stop
-     */
-    public static void nalSourceStopv(int n, long sources)
-    {
-        long __functionAddress = AL . getICD ().alSourceStopv;
-        invokePV(n, sources, __functionAddress);
-    }
 
     /**
      * Pointer version of {@link #alSourceStop SourceStop}.
      *
      * @param sources the sources to stop
      */
-    @NativeType("ALvoid")
-    public static void alSourceStopv(@NativeType("ALuint const *") IntBuffer sources)
-    {
-        nalSourceStopv(sources.remaining(), memAddress(sources));
-    }
+    fun sourceStop(sources: AlSources) =
+            AL10.nalSourceStopv(sources.rem, sources.adr)
 
     // --- [ alSourceRewindv ] ---
-
-    /**
-     * Unsafe version of: {@link #alSourceRewindv SourceRewindv}
-     *
-     * @param n the number of sources to rewind
-     */
-    public static void nalSourceRewindv(int n, long sources)
-    {
-        long __functionAddress = AL . getICD ().alSourceRewindv;
-        invokePV(n, sources, __functionAddress);
-    }
 
     /**
      * Pointer version of {@link #alSourceRewind SourceRewind}.
      *
      * @param sources the sources to rewind
      */
-    @NativeType("ALvoid")
-    public static void alSourceRewindv(@NativeType("ALuint const *") IntBuffer sources)
-    {
-        nalSourceRewindv(sources.remaining(), memAddress(sources));
-    }
+    fun sourceRewind(sources: AlSources) =
+            AL10.nalSourceRewindv(sources.rem, sources.adr)
 
     // --- [ alGenBuffers ] ---
 
     /**
-     * Unsafe version of: {@link #alGenBuffers GenBuffers}
-     *
-     * @param n the number of buffer names to generate
-     */
-    public static void nalGenBuffers(int n, long bufferNames)
-    {
-        long __functionAddress = AL . getICD ().alGenBuffers;
-        invokePV(n, bufferNames, __functionAddress);
-    }
-
-    /**
      * Requests a number of buffer names.
      *
-     * @param bufferNames the buffer that will receive the buffer names
+     * @param buffers the buffer that will receive the buffer names
      */
-    @NativeType("ALvoid")
-    public static void alGenBuffers(@NativeType("ALuint *") IntBuffer bufferNames)
-    {
-        nalGenBuffers(bufferNames.remaining(), memAddress(bufferNames));
-    }
+    fun genBuffers(buffers: AlBuffers) =
+            AL10.nalGenBuffers(buffers.rem, buffers.adr)
 
     /** Requests a number of buffer names. */
-    @NativeType("ALvoid")
-    public static int alGenBuffers()
+    fun genBuffers(): AlBuffer
     {
         MemoryStack stack = stackGet (); int stackPointer = stack . getPointer ();
         try {

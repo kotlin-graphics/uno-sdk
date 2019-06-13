@@ -56,6 +56,18 @@ inline class AlSource(val name: Int) {
     val sourceType: SourceType
         get() = SourceType(AL10.alGetSourcei(name, AL10.AL_SOURCE_TYPE))
 
+
+    infix fun queueBuffers(buffers: AlBuffers) = AL10.nalSourceQueueBuffers(name, buffers.rem, buffers.adr)
+    infix fun queueBuffers(buffer: AlBuffer) = AL10.alSourceQueueBuffers(name, buffer.name)
+
+    infix fun unqueueBuffers(buffers: AlBuffers) = AL10.nalSourceUnqueueBuffers(name, buffers.rem, buffers.adr)
+    infix fun unqueueBuffers(buffer: AlBuffer) = Stack.intAddress(buffer.name) { AL10.nalSourceUnqueueBuffers(name, 1, it) }
+
+    fun play() = AL10.alSourcePlay(name)
+    fun pause() = AL10.alSourcePause(name)
+    fun stop() = AL10.alSourceStop(name)
+    fun rewind() = AL10.alSourceRewind(name)
+
     companion object {
         fun gen(): AlSource = AlSource(AL10.alGenSources())
     }
@@ -72,8 +84,12 @@ inline class AlSources(val names: IntBuffer) {
         get() = names.adr
 
     fun gen() = AL10.nalGenSources(names.rem, names.adr)
-
     fun delete() = AL10.nalDeleteSources(names.rem, names.adr)
+
+    fun play() = AL10.nalSourcePlayv(rem, adr)
+    fun pause() = AL10.nalSourcePausev(rem, adr)
+    fun stop() = AL10.nalSourceStopv(rem, adr)
+    fun rewind() = AL10.nalSourceRewindv(rem, adr)
 
     companion object {
 
