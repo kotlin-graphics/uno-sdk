@@ -24,12 +24,14 @@ dependencies {
     implementation "$kotlin-stdlib-jdk8"
     implementation "$kotlin-reflect"
 
-    ["", "-jawt"].each {
+    ["", "-jawt", "-opengl", "-glfw"].each {
         implementation "org.lwjgl:lwjgl$it:$lwjgl_version"
         if (it != "-vulkan" && it != "-jawt")
             runtime "org.lwjgl:lwjgl$it:$lwjgl_version:natives-$lwjgl_natives"
     }
     testCompile group: 'junit', name: 'junit', version: '4.12'
+
+    api project(":uno-core")
 }
 
 compileKotlin {

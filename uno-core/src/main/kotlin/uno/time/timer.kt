@@ -77,36 +77,34 @@ class Timer(var type: Type, val secDuration: Float) {
     }
 
     /** Returns a number [0, 1], representing progress through the duration. Only used for SINGLE and LOOP timers. */
-    fun getAlpha() = when (type) {
+    val alpha: Float
+        get() = when (type) {
 
-        Type.Loop -> glm.mod(secAccumTime, secDuration) / secDuration
+            Type.Loop -> glm.mod(secAccumTime, secDuration) / secDuration
 
-        Type.Single -> glm.clamp(secAccumTime / secDuration, 0f, 1f)
+            Type.Single -> glm.clamp(secAccumTime / secDuration, 0f, 1f)
 
-        else -> -1f //Garbage.
-    }
+            else -> -1f //Garbage.
+        }
 
     /** Returns a number [0, duration], representing the progress through the timer in seconds. Only for SINGLE and LOOP timers.    */
-    fun getProgression() = when (type) {
+    val progression: Float
+        get() = when (type) {
 
-        Type.Loop -> glm.mod(secAccumTime, secDuration)
+            Type.Loop -> glm.mod(secAccumTime, secDuration)
 
-        Type.Single -> glm.clamp(secAccumTime, 0f, secDuration)
+            Type.Single -> glm.clamp(secAccumTime, 0f, secDuration)
 
-        else -> -1f //Garbage.
-    }
+            else -> -1f //Garbage.
+        }
 
     /** Returns the time in seconds since the timer was started, excluding time for pausing.    */
-    fun getTimeSinceStart() = secAccumTime
+    val timeSinceStart: Float
+        get() = secAccumTime
 
     /** Returns the timer's duration that was passed in.    */
-    fun getDuration() = secDuration
+    val duration: Float
+        get() = secDuration
 
-    enum class Type {Loop, Single, Infinite, MAX }
-}
-
-fun main(args: Array<String>) {
-
-    val timer = Timer(Timer.Type.Single, 1f)
-
+    enum class Type { Loop, Single, Infinite, MAX }
 }

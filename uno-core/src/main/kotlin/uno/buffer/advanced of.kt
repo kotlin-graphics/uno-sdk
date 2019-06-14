@@ -12,10 +12,7 @@ import glm_.vec4.Vec4i
 import glm_.vec4.Vec4ub
 import gln.glf.Vertex
 import gln.glf.glf
-import kool.Buffer
-import kool.FloatBuffer
-import kool.IntBuffer
-import kool.set
+import kool.*
 import java.nio.ByteBuffer
 import java.nio.FloatBuffer
 import java.nio.IntBuffer
@@ -115,11 +112,7 @@ fun bufferOf(vararg elements: Any): ByteBuffer {
 fun floatBufferOf(vertices: Collection<*>): FloatBuffer {
     val res: FloatBuffer
     when (vertices.elementAt(0)) {
-        is Float -> {
-            res = FloatBuffer(vertices.size)
-            for (i in 0 until vertices.size)
-                res.put(i, (vertices.elementAt(i) as Float))
-        }
+        is Float -> res = FloatBuffer(vertices.size) { vertices.elementAt(it) as Float }
         is Vec2 -> {
             res = FloatBuffer(Vec2.length * vertices.size)
             for (i in 0 until vertices.size)
@@ -143,11 +136,7 @@ fun floatBufferOf(vertices: Collection<*>): FloatBuffer {
 fun intBufferOf(vertices: Collection<*>): IntBuffer {
     val res: IntBuffer
     when (vertices.elementAt(0)) {
-        is Int -> {
-            res = IntBuffer(vertices.size)
-            for (i in 0 until vertices.size)
-                res.put(i, (vertices.elementAt(i) as Int))
-        }
+        is Int -> res = IntBuffer(vertices.size) { vertices.elementAt(it) as Int }
         is Vec2i -> {
             res = IntBuffer(Vec2i.length * vertices.size)
             for (i in 0 until vertices.size)
@@ -168,9 +157,4 @@ fun intBufferOf(vertices: Collection<*>): IntBuffer {
     return res
 }
 
-fun bufferOf(charSequence: CharSequence): ByteBuffer {
-    val buffer = Buffer(charSequence.length)
-    for (i in charSequence.indices)
-        buffer[i] = charSequence[i].b
-    return buffer
-}
+fun bufferOf(charSequence: CharSequence) = ByteBuffer(charSequence.length) { charSequence[it].b }

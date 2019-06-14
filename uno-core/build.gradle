@@ -27,7 +27,7 @@ dependencies {
     implementation "$kotlin-reflect"
     api "com.github.kotlin-graphics:gln:$gln_version".toString()
 
-    ["", "-glfw", "-jawt"].each {
+    ["", "-glfw", "-opengl"].each {
         implementation "org.lwjgl:lwjgl$it:$lwjgl_version"
         if (it != "-vulkan" && it != "-jawt")
             runtime "org.lwjgl:lwjgl$it:$lwjgl_version:natives-$lwjgl_natives"
