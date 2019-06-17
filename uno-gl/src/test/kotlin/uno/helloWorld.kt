@@ -3,6 +3,7 @@ package uno
 import io.kotlintest.specs.StringSpec
 import org.lwjgl.opengl.GL11.*
 import uno.glfw.GlfwWindow
+import uno.glfw.glfw
 import uno.glfw.size
 
 

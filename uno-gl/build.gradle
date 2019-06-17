@@ -26,6 +26,7 @@ dependencies {
     implementation "$kotlin-stdlib-jdk8"
     implementation "$kotlin-reflect"
     api "com.github.kotlin-graphics:gln:$gln_version".toString()
+    testImplementation "io.kotlintest:kotlintest-runner-junit5:$kotlintest_version".toString()
 
     ["", "-glfw", "-opengl"].each {
         implementation "org.lwjgl:lwjgl$it:$lwjgl_version"

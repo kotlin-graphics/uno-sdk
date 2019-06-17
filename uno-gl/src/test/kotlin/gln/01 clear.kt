@@ -1,9 +1,11 @@
 package gln
 
 import glm_.f
+import glm_.i
 import glm_.vec2.Vec2i
 import gln.ClearBufferMask.Companion.COLOR_BUFFER_BIT
 import uno.glfw.GlfwWindow
+import uno.glfw.glfw
 
 fun main() {
     glfw.init("3.3")

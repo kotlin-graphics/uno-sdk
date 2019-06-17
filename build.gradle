@@ -31,17 +31,17 @@ dependencies {
 //    api "$kx:gln:$gln_version".toString()
 //    api "$kx:vkk:$vkk_version".toString()
 
-    testImplementation "io.kotlintest:kotlintest-runner-junit5:$kotlintest_version".toString()
-
-    def joglVersion = '2.3.2'
-    testImplementation "org.jogamp.gluegen:gluegen-rt-main:$joglVersion".toString()
-    testImplementation "org.jogamp.jogl:jogl-all-main:$joglVersion".toString()
-
-    ["", "-glfw", "-jemalloc", "-openal", "-opengl", "-stb", "-vulkan", "-jawt"].each {
-        implementation "org.lwjgl:lwjgl$it:$lwjgl_version"
-        if (it != "-vulkan" && it != "-jawt")
-            runtime "org.lwjgl:lwjgl$it:$lwjgl_version:natives-$lwjgl_natives"
-    }
+//    testImplementation "io.kotlintest:kotlintest-runner-junit5:$kotlintest_version".toString()
+//
+//    def joglVersion = '2.3.2'
+//    testImplementation "org.jogamp.gluegen:gluegen-rt-main:$joglVersion".toString()
+//    testImplementation "org.jogamp.jogl:jogl-all-main:$joglVersion".toString()
+//
+//    ["", "-glfw", "-jemalloc", "-openal", "-opengl", "-stb", "-vulkan", "-jawt"].each {
+//        implementation "org.lwjgl:lwjgl$it:$lwjgl_version"
+//        if (it != "-vulkan" && it != "-jawt")
+//            runtime "org.lwjgl:lwjgl$it:$lwjgl_version:natives-$lwjgl_natives"
+//    }
 }
 
 allprojects {

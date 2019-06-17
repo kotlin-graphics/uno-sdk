@@ -3,3 +3,4 @@ rootProject.buildFileName = 'build.gradle'
 include "uno-core"
 include "uno-awt"
 include "uno-gl"
+include "uno-vk"

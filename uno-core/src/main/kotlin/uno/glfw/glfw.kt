@@ -4,22 +4,16 @@ import glm_.BYTES
 import glm_.i
 import glm_.vec2.Vec2i
 import gln.misc.glDebugCallback
-import kool.adr
 import org.lwjgl.glfw.GLFW.*
 import org.lwjgl.glfw.GLFWErrorCallback
 import org.lwjgl.glfw.GLFWNativeWin32
 import org.lwjgl.glfw.GLFWVidMode
 import org.lwjgl.glfw.GLFWVulkan
-import org.lwjgl.system.APIUtil
 import org.lwjgl.system.MemoryUtil
 import org.lwjgl.system.MemoryUtil.*
 import org.lwjgl.system.Platform
-import org.lwjgl.vulkan.VkInstance
 import uno.glfw.windowHint.Profile
 import uno.kotlin.parseInt
-import vkk.VK_CHECK_RESULT
-import vkk.entities.VkSurfaceKHR
-import java.util.function.BiPredicate
 
 /**
  * Created by elect on 22/04/17.
@@ -128,11 +122,6 @@ object glfw {
                 res += MemoryUtil.memASCII(pNames[i])
             return res
         }
-
-    fun createWindowSurface(instance: VkInstance, windowHandle: GlfwWindowHandle): VkSurfaceKHR =
-            VkSurfaceKHR(stak.longAddress { surface ->
-                VK_CHECK_RESULT(GLFWVulkan.nglfwCreateWindowSurface(instance.adr, windowHandle.L, NULL, surface))
-            })
 
     fun attachWin32Window(handle: HWND): GlfwWindowHandle = GlfwWindowHandle(GLFWNativeWin32.glfwAttachWin32Window(handle.L, NULL))
 
