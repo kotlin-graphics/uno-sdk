@@ -21,4 +21,11 @@ build/
 
 # Project exclude paths
 /out/
-/out/test/classes/
+/uno-core/out/
+/uno-gl/out/
+/uno-gl/out/production/classes/
+/uno-awt/out/
+/uno-awt/out/test/classes/
+/uno-awt/out/production/classes/
+/uno-vk/out/
+/uno-vk/out/production/classes/
