@@ -9,7 +9,7 @@ plugins {
 }
 
 ext{
-    moduleName = 'com.github.kotlin_graphics.uno_core'
+    moduleName = 'com.github.kotlin_graphics.uno_awt'
     kotlin = 'org.jetbrains.kotlin:kotlin'
     kotlin_version = '1.3.41'
     kotlintest_version = '3.3.3'
@@ -33,8 +33,27 @@ dependencies {
 }
 
 compileKotlin {
-    kotlinOptions.jvmTarget = "1.8"
+    // Enable Kotlin compilation to Java 8 class files with method parameter name metadata
+    kotlinOptions {
+        jvmTarget = "1.8"
+//        javaParameters = true
+    }
+    // As per https://stackoverflow.com/a/47669720
+    // See also https://discuss.kotlinlang.org/t/kotlin-support-for-java-9-module-system/2499/9
+    destinationDir = compileJava.destinationDir
 }
+
 compileTestKotlin {
-    kotlinOptions.jvmTarget = "1.8"
+    kotlinOptions {
+        jvmTarget = "1.8"
+//        javaParameters = true
+    }
+}
+
+compileJava {
+    dependsOn(':compileKotlin')
+    doFirst {
+        options.compilerArgs = ['--module-path', classpath.asPath,]
+        classpath = files()
+    }
 }

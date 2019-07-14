@@ -2,6 +2,8 @@ module com.github.kotlin_graphics.uno_core {
 
     requires kotlin.stdlib;
 
+    requires java.desktop;
+
     requires org.lwjgl;
 
     requires com.github.kotlin_graphics.gln;
