@@ -8,24 +8,17 @@ plugins {
     id "com.github.johnrengelman.shadow"
 }
 
-ext{
-    moduleName = 'com.github.kotlin_graphics.uno_vk'
-    kotlin = 'org.jetbrains.kotlin:kotlin'
-    kotlin_version = '1.3.41'
-    kotlintest_version = '3.3.3'
-//    vkk_version = '448bdc596876beab3315d7e883f933fdaca50587'
-    lwjgl_version = "3.2.2"
-    lwjgl_natives = current() == WINDOWS ? "windows" : current() == LINUX ? "linux" : "macos"
-}
+ext.moduleName = 'com.github.kotlin_graphics.uno_vk'
 
 dependencies {
 
-    implementation "$kotlin-stdlib-jdk8"
-    implementation "$kotlin-reflect"
+    implementation "$kot-stdlib-jdk8"
+    implementation "$kot-reflect"
 
-    api "com.github.kotlin-graphics:vkk:-SNAPSHOT".toString()
+    implementation "$kx:vkk:$vkk_version"
+    implementation "$kx:kool:$kool_version"
 
-    testImplementation "io.kotlintest:kotlintest-runner-junit5:$kotlintest_version".toString()
+    testImplementation "io.kotlintest:kotlintest-runner-junit5:$kotlintest_version"
 
     ["", "-glfw", "-opengl", "-vulkan"].each {
         implementation "org.lwjgl:lwjgl$it:$lwjgl_version"

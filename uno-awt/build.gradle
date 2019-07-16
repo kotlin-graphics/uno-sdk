@@ -1,5 +1,3 @@
-import static org.gradle.internal.os.OperatingSystem.*
-
 plugins {
     id 'maven'
     id 'java'
@@ -8,19 +6,16 @@ plugins {
     id "com.github.johnrengelman.shadow"
 }
 
-ext{
-    moduleName = 'com.github.kotlin_graphics.uno_awt'
-    kotlin = 'org.jetbrains.kotlin:kotlin'
-    kotlin_version = '1.3.41'
-    kotlintest_version = '3.3.3'
-    lwjgl_version = "3.2.2"
-    lwjgl_natives = current() == WINDOWS ? "windows" : current() == LINUX ? "linux" : "macos"
-}
+ext.moduleName = 'com.github.kotlin_graphics.uno_awt'
 
 dependencies {
 
-    implementation "$kotlin-stdlib-jdk8"
-    implementation "$kotlin-reflect"
+    implementation "$kot-stdlib-jdk8"
+    implementation "$kot-reflect"
+
+    implementation "$kx:gln:$gln_version"
+    implementation "${kx}.glm:glm:$glm_version"
+    implementation "$kx:kool:$kool_version"
 
     ["", "-jawt", "-opengl", "-glfw"].each {
         implementation "org.lwjgl:lwjgl$it:$lwjgl_version"

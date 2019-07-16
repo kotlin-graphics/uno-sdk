@@ -8,33 +8,20 @@ plugins {
     id "com.github.johnrengelman.shadow"
 }
 
-ext {
-    moduleName = 'com.github.kotlin_graphics.uno_core'
-    kotlin = 'org.jetbrains.kotlin:kotlin'
-    kotlin_version = '1.3.41'
-    kotlintest_version = '3.3.3'
-    gln_version = '342bb4e960cec016dcf23228ef6510cc6ed96aee'
-    gli_version = '7215fca3cc82f8757b29f1a6b5e5527555ccd0ba'
-    glm_version = '148636ff5d0d7d744707bc39acc7fa7bf5bc4dd8'
-    kool_version = '12dabfead107537474721bbd84ba148ca339ee9b'
-    unsigned_version = '514405a59b36e8bf2420a0bd3bc6a7ac97dde3c7'
-    lwjgl_version = "3.2.2"
-    lwjgl_natives = current() == WINDOWS ? "windows" : current() == LINUX ? "linux" : "macos"
-}
+ext.moduleName = 'com.github.kotlin_graphics.uno_core'
 
 dependencies {
 
-    implementation "$kotlin-stdlib-jdk8"
-    implementation "$kotlin-reflect"
+    implementation "$kot-stdlib-jdk8"
+    implementation "$kot-reflect"
 
-    def kx = "com.github.kotlin-graphics"
-    api "${kx}:gln:$gln_version".toString()
-    api "${kx}:gli:$gli_version".toString()
-    api "${kx}.glm:glm:$glm_version".toString()
-    api "${kx}:kool:$kool_version".toString()
-    api "${kx}:kotlin-unsigned:$unsigned_version".toString()
+    implementation "$kx:gln:$gln_version"
+    implementation "$kx:gli:$gli_version"
+    implementation "${kx}.glm:glm:$glm_version"
+    implementation "$kx:kool:$kool_version"
+    implementation "$kx:kotlin-unsigned:$unsigned_version"
 
-    testImplementation "io.kotlintest:kotlintest-runner-junit5:$kotlintest_version".toString()
+    testImplementation "io.kotlintest:kotlintest-runner-junit5:$kotlintest_version"
 
     ["", "-glfw", "-opengl"].each {
         implementation "org.lwjgl:lwjgl$it:$lwjgl_version"
