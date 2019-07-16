@@ -18,7 +18,7 @@ ext{
     kotlin_version = '1.3.41'
     kotlintest_version = '3.3.3'
     vkk_version = 'a115b97af7fff1038833769dd274b024ce6d996c'
-    gln_version = '284c65eab1e974af400c4822bee18e42638b8e19'
+    gln_version = '6b54e7d463072e499e6132be998eac29cd434bf5'
     gli_version = '35fd742487eb585ce6807b782c4a9073b56a5f2a'
     glm_version = '96b8303d99a3d8cf0245c490b8fb4ca703393baa'
     unsigned_version = '6a5060027e295c503e4fac39127bdd57c36c7083'
