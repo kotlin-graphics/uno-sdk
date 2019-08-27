@@ -267,7 +267,7 @@ open class GlfwWindow(var handle: GlfwWindowHandle) {
 
     inline fun inContext(block: () -> Unit) {
         glfwMakeContextCurrent(handle.L)
-        GL.setCapabilities(caps.caps)
+        GL.setCapabilities(caps.gl!!)
         block()
         glfwMakeContextCurrent(NULL)
     }
@@ -275,7 +275,7 @@ open class GlfwWindow(var handle: GlfwWindowHandle) {
     /** for Java */
     fun inContext(runnable: Runnable) {
         glfwMakeContextCurrent(handle.L)
-        GL.setCapabilities(caps.caps)
+        GL.setCapabilities(caps.gl!!)
         runnable.run()
         glfwMakeContextCurrent(NULL)
     }
