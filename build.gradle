@@ -17,7 +17,7 @@ ext {
     kx = "com.github.kotlin-graphics"
     kotlin_version = '1.3.41'
     kotlintest_version = '3.3.3'
-    vkk_version = '03919ee5ff2d151a2d9b0a233733fa459cd44c6d'
+    vkk_version = 'c8b9f1da2e19744fd41efa30ea5c6392f4722eff'
     gln_version = '4ec09b72e22431a2921791c082a0e66bf858e6b6'
     gli_version = 'c8cb88947b77232beed84599fb7a01b5ce158f25'
     glm_version = '6048c31425ae6110258e4b42165f1e636f8b5603'
