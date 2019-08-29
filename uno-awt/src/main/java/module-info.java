@@ -10,6 +10,7 @@ module com.github.kotlin_graphics.uno_awt {
     requires org.lwjgl.jawt;
 
     requires java.desktop;
+    requires com.github.kotlin_graphics.kool;
 
     exports uno.awt;
 }
