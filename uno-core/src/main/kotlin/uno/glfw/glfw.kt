@@ -116,10 +116,11 @@ object glfw {
             val pCount = it.nmalloc(1, Int.BYTES)
             val ppNames = GLFWVulkan.nglfwGetRequiredInstanceExtensions(pCount)
             val count = memGetInt(pCount)
-            val pNames = MemoryUtil.memPointerBuffer(ppNames, count) ?: return arrayListOf()
+            if(count == 0) return arrayListOf()
+            val pNames = memPointerBuffer(ppNames, count)
             val res = ArrayList<String>(count)
             for (i in 0 until count)
-                res += MemoryUtil.memASCII(pNames[i])
+                res += memASCII(pNames[i])
             return res
         }
 
