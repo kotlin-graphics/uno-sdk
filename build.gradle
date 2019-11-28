@@ -17,12 +17,12 @@ ext {
     kx = "com.github.kotlin-graphics"
     kotlin_version = '1.3.50'
     kotlintest_version = '3.4.0'
-    vkk_version = '9fcbd74dffdbada82c12e5cfc20bd749650e39c9'
-    gln_version = '2f36e649bb3037981a625a3a2a1c0316adb05fd6'
-    gli_version = '336a02f5acd5db7f5c34cb673512714f1856577e'
-    glm_version = '3d3aea6d420bace96ced057cddeca023129d7c41'
+    vkk_version = '458ee6117581c5aa3cdd4fa1569778850519f6e8'
+    gln_version = '68f415aee0b76df5d39866e2a50fcd46f63d2aa7'
+    gli_version = '68dacd62535d84138534e5e9d38239e5e502abb5'
+    glm_version = 'bfd575eee019a080326b42bcc9641e6e5fdcfecf'
     unsigned_version = 'c81c2e39fb9e10403650c1b371b8573fc745bfb4'
-    kool_version = '1e564cfb7ab72523d0f748a235e21cf33d0c73bc'
+    kool_version = '0ef9ad97d0c709de3cda4d7f05e74bff883b00a6'
     lwjgl_version = "3.2.3"
     lwjgl_natives = current() == WINDOWS ? "windows" : current() == LINUX ? "linux" : "macos"
 }

@@ -12,6 +12,6 @@ import vkk.VK_CHECK_RESULT
 import vkk.entities.VkSurfaceKHR
 
 infix fun GlfwWindow.createSurface(instance: VkInstance): VkSurfaceKHR =
-        VkSurfaceKHR(stak.longAddress { p ->
+        VkSurfaceKHR(stak.longAdr { p ->
             VK_CHECK_RESULT(GLFWVulkan.nglfwCreateWindowSurface(instance.adr, handle.L, MemoryUtil.NULL, p))
         })
