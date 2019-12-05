@@ -11,11 +11,10 @@ import uno.glfw.HWND
 import uno.glfw.VSync
 import uno.glfw.glfw
 import java.awt.Canvas
+import java.awt.EventQueue
 import java.awt.Graphics
 import java.awt.event.ComponentAdapter
 import java.awt.event.ComponentEvent
-import java.lang.reflect.InvocationTargetException
-import javax.swing.SwingUtilities
 
 
 /**
@@ -107,7 +106,9 @@ abstract class LwjglCanvas(val glDebug: Boolean = false) : Canvas() {
 //            }
         })
 
-        SwingUtilities.invokeAndWait {
+        if (EventQueue.isDispatchThread())
+            surface = awt.getDrawingSurface(this)!!
+        else EventQueue.invokeAndWait {
             surface = awt.getDrawingSurface(this)!!
         }
     }
@@ -309,30 +310,16 @@ abstract class LwjglCanvas(val glDebug: Boolean = false) : Canvas() {
 
             animated = animate
 
-            if (animate) {
-
-                if (SwingUtilities.isEventDispatchThread()) {
-                    val g = graphics
-                    if (g != null) {
+            if (animate)
+                graphics?.let { g ->
+                    if (EventQueue.isDispatchThread()) {
+                        paint(g)
+                        g.dispose()
+                    } else EventQueue.invokeAndWait {
                         paint(g)
                         g.dispose()
                     }
-                } else {
-                    try {
-                        SwingUtilities.invokeAndWait {
-                            val g = graphics
-                            if (g != null) {
-                                paint(g)
-                                g.dispose()
-                            }
-                        }
-                    } catch (ex: InterruptedException) {
-                        println("Exception while starting viewer animation")
-                    } catch (ex: InvocationTargetException) {
-                        println("Exception while starting viewer animation")
-                    }
                 }
-            }
         }
     }
 

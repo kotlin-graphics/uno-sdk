@@ -32,6 +32,8 @@ fun JAWT.getDrawingSurface(canvas: Canvas): JAWTDrawingSurface? {
     return JAWTDrawingSurface.createSafe(result)
 }
 
+
+
 inline class JawtLock(val int: Int) {
     companion object {
         val ERROR = JawtLock(0x1)
