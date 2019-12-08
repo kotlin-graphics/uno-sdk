@@ -1,6 +1,5 @@
 package uno.glfw
 
-import glm_.BYTES
 import glm_.bool
 import glm_.f
 import glm_.i
@@ -420,7 +419,7 @@ open class GlfwWindow(var handle: GlfwWindowHandle) {
     val defaultKeyCallback: KeyCallbackT = { key, scanCode, action, mods -> onKey(Key of key, scanCode, action, mods) }
     val defaultMouseButtonCallback: MouseButtonCallbackT = { button, action, mods -> onMouse(MouseButton of button, action, mods) }
     val defaultCursorPosCallback: CursorPosCallbackT = { pos -> onMouseMoved(pos) }
-    val defaultCursorEnterCallback: CursorEnterCallbackT = { entered -> if(entered) onMouseEntered() else onMouseExited() }
+    val defaultCursorEnterCallback: CursorEnterCallbackT = { entered -> if (entered) onMouseEntered() else onMouseExited() }
     val defaultScrollCallback: ScrollCallbackT = { scroll -> onMouseScrolled(scroll.y.f) }
     val defaultWindowCloseCallback: WindowCloseCallbackT = ::onWindowClosed
     val defaultWindowContentScaleCallback: WindowContentScaleCallbackT = { newScale -> onWindowContentScaled(newScale) }
@@ -479,11 +478,11 @@ open class GlfwWindow(var handle: GlfwWindowHandle) {
 
     enum class CursorStatus { Normal, Hidden, Disabled }
 
-    fun isPressed(key: Key) = glfwGetKey(handle.L, key.i) == GLFW_PRESS
-    fun isReleased(key: Key) = glfwGetKey(handle.L, key.i) == GLFW_RELEASE
+    infix fun isPressed(key: Key): Boolean = glfwGetKey(handle.L, key.i) == GLFW_PRESS
+    infix fun isReleased(key: Key): Boolean = glfwGetKey(handle.L, key.i) == GLFW_RELEASE
 
-    fun isPressed(button: MouseButton) = glfwGetMouseButton(handle.L, button.i) == GLFW_PRESS
-    fun isRelease(button: MouseButton) = glfwGetMouseButton(handle.L, button.i) == GLFW_RELEASE
+    infix fun isPressed(button: MouseButton): Boolean = glfwGetMouseButton(handle.L, button.i) == GLFW_PRESS
+    infix fun isRelease(button: MouseButton): Boolean = glfwGetMouseButton(handle.L, button.i) == GLFW_RELEASE
 
     val joystick1Buttons: ByteBuffer?
         get() = getJoystickButtons(GLFW_JOYSTICK_1)
