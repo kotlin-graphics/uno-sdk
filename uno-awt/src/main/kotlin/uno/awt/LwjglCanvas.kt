@@ -165,7 +165,7 @@ abstract class LwjglCanvas(val glDebug: Boolean = false) : Canvas() {
                     frames++
                     if (time > 1000) {
                         time %= 1000
-                        println("fps = $frames")
+                        if (awtDebug) println("fps = $frames")
                         frames = 0
                     }
                 }
@@ -279,7 +279,7 @@ abstract class LwjglCanvas(val glDebug: Boolean = false) : Canvas() {
     }
 
     fun destroyInternal() {
-        println("destroyInternal")
+        if (awtDebug) println("destroyInternal")
 
         glfwWindow.inContext {
             destroy()
