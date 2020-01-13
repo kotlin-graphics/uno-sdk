@@ -18,17 +18,17 @@ This is kind of a small suite, born and shaped around GL, it includes the gln de
 
 A kind of a [gln](https://github.com/kotlin-graphics/glm) for glfw. So, code more compact, type-safe, clear and intuitive. You can have up and running a whole gl clear example in just a couple of lines:
 
-            glfw.init("3.3")
+    glfw.init("3.3")
 
-            val window = GlfwWindow(1280, 720, "ImGui Lwjgl OpenGL3 example").apply {
-                init()
-            }
+    val window = GlfwWindow(1280, 720, "OpenGL example").apply {
+        init()
+    }
             
-            glClearColor(1f, 0f, 0f, 0f)
+    glClearColor(1f, 0f, 0f, 0f)
 
-            window.loop {
-                glClear(GL_COLOR_BUFFER_BIT)
-            }
+    window.loop {
+        glClear(GL_COLOR_BUFFER_BIT)
+    }
 
 One cool feature is that it supports multiple listeners of the same type, like `CharCallback`:
 
