@@ -21,7 +21,7 @@ dependencies {
 
     testImplementation "io.kotlintest:kotlintest-runner-junit5:$kotlintest_version"
 
-    ["", "-glfw", "-opengl"].each {
+    ["", "-glfw", "-opengl", "-jemalloc"].each {
         implementation "org.lwjgl:lwjgl$it:$lwjgl_version"
         runtime "org.lwjgl:lwjgl$it:$lwjgl_version:natives-$lwjgl_natives"
     }
