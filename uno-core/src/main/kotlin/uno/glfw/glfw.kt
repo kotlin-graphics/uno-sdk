@@ -5,6 +5,7 @@ import glm_.i
 import glm_.vec2.Vec2i
 import gln.misc.glDebugCallback
 import kool.BYTES
+import kool.adr
 import org.lwjgl.glfw.GLFW.*
 import org.lwjgl.glfw.GLFWErrorCallback
 import org.lwjgl.glfw.GLFWNativeWin32
@@ -81,7 +82,7 @@ object glfw {
         set(value) {
             if (value != null) {
                 field = value
-                nglfwSetErrorCallback(nErrorCallback.address()) // TODO adr
+                nglfwSetErrorCallback(nErrorCallback.adr)
             } else
                 nglfwSetErrorCallback(NULL)
         }
