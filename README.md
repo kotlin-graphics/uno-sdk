@@ -1,11 +1,11 @@
 # unofficial-opengl-SDK
 
-[![Build Status](https://travis-ci.org/kotlin-graphics/uno-sdk.svg?branch=master)](https://travis-ci.org/kotlin-graphics/uno-sdk) 
+[![Build Status](https://github.com/kotlin-graphics/uno-sdk/workflows/build/badge.svg)](https://github.com/kotlin-graphics/uno-sdk/actions?workflow=build)
 [![license](https://img.shields.io/badge/License-MIT-orange.svg)](https://github.com/kotlin-graphics/uno-sdk/blob/master/LICENSE) 
-![](https://reposs.herokuapp.com/?path=kotlin-graphics/uno-sdk&color=yellow) 
-[![Release](https://jitpack.io/v/kotlin-graphics/uno-sdk.svg)](https://jitpack.io/#kotlin-graphics/uno-sdk)
+[![Release](https://jitpack.io/v/kotlin-graphics/uno-sdk.svg)](https://jitpack.io/#kotlin-graphics/uno-sdk) 
+![Size](https://github-size-badge.herokuapp.com/kotlin-graphics/uno-sdk.svg)
+[![Github All Releases](https://img.shields.io/github/downloads/kotlin-graphics/uno-sdk/total.svg)]()
 [![Awesome Kotlin Badge](https://kotlin.link/awesome-kotlin.svg)](https://github.com/KotlinBy/awesome-kotlin) 
-[![Slack Status](http://slack.kotlinlang.org/badge.svg)](http://slack.kotlinlang.org/)
 
 Gradle:
 ```
