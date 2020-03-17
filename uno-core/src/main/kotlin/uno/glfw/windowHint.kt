@@ -1,13 +1,12 @@
 package uno.glfw
 
 import glm_.i
-import glm_.s
-import glm_.i
 import org.lwjgl.glfw.GLFW.*
 
 object windowHint {
 
-    fun default() = glfwDefaultWindowHints()
+    // Window related hints
+
 
     var resizable = true
         set(value) {
@@ -68,6 +67,16 @@ object windowHint {
             glfwWindowHint(GLFW_FOCUS_ON_SHOW, value.i)
             field = value
         }
+
+    var scaleToMonitor = false
+        set(value) {
+            glfwWindowHint(GLFW_SCALE_TO_MONITOR, value.i)
+            field = value
+        }
+
+
+    // Framebuffer related hints
+
 
     var redBits = 8
         set(value) {
@@ -135,21 +144,15 @@ object windowHint {
             field = value
         }
 
-    var samples = 0
-        set(value) {
-            glfwWindowHint(GLFW_SAMPLES, value)
-            field = value
-        }
-
-    var refreshRate = GLFW_DONT_CARE
-        set(value) {
-            glfwWindowHint(GLFW_REFRESH_RATE, value)
-            field = value
-        }
-
     var stereo = false
         set(value) {
             glfwWindowHint(GLFW_STEREO, value.i)
+            field = value
+        }
+
+    var samples = 0
+        set(value) {
+            glfwWindowHint(GLFW_SAMPLES, value)
             field = value
         }
 
@@ -165,6 +168,20 @@ object windowHint {
             field = value
         }
 
+
+    // Monitor related hints
+
+
+    var refreshRate = GLFW_DONT_CARE
+        set(value) {
+            glfwWindowHint(GLFW_REFRESH_RATE, value)
+            field = value
+        }
+
+
+    // Context related hints
+
+
     enum class Api { gl, glEs, None }
 
     var api = Api.gl
@@ -177,11 +194,13 @@ object windowHint {
             field = value
         }
 
+    // Context related hints
     val context = Context
 
     object Context {
 
         enum class CreationApi { native, egl }
+
         var creationApi = CreationApi.native
             set(value) {
                 glfwWindowHint(GLFW_CONTEXT_CREATION_API, when (value) {
@@ -211,9 +230,10 @@ object windowHint {
             }
 
         enum class Robustness { noResetNotification, loseContextOnReset, none }
+
         var robustness = Robustness.none
             set(value) {
-                glfwWindowHint(GLFW_CONTEXT_ROBUSTNESS, when(value) {
+                glfwWindowHint(GLFW_CONTEXT_ROBUSTNESS, when (value) {
                     Robustness.none -> GLFW_NO_ROBUSTNESS
                     Robustness.noResetNotification -> GLFW_NO_RESET_NOTIFICATION
                     Robustness.loseContextOnReset -> GLFW_LOSE_CONTEXT_ON_RESET
@@ -222,13 +242,56 @@ object windowHint {
             }
 
         enum class ReleaseBehaviour { any, flush, none }
+
         var releaseBehaviour = ReleaseBehaviour.any
             set(value) {
-                glfwWindowHint(GLFW_CONTEXT_RELEASE_BEHAVIOR, when(value){
+                glfwWindowHint(GLFW_CONTEXT_RELEASE_BEHAVIOR, when (value) {
                     ReleaseBehaviour.any -> GLFW_ANY_RELEASE_BEHAVIOR
                     ReleaseBehaviour.flush -> GLFW_RELEASE_BEHAVIOR_FLUSH
                     ReleaseBehaviour.none -> GLFW_RELEASE_BEHAVIOR_NONE
                 })
+                field = value
+            }
+    }
+
+    // macOS specific window hints
+    val cocoa = Cocoa
+
+    object Cocoa {
+
+        var retinaFramebuffer = true
+            set(value) {
+                glfwWindowHint(GLFW_COCOA_RETINA_FRAMEBUFFER, value.i)
+                field = value
+            }
+
+        var frameName = ""
+            set(value) {
+                glfwWindowHintString(GLFW_COCOA_FRAME_NAME, value)
+                field = value
+            }
+
+        var graphicsSwitching = false
+            set(value) {
+                glfwWindowHint(GLFW_COCOA_GRAPHICS_SWITCHING, value.i)
+                field = value
+            }
+    }
+
+    // X11 specific window hints
+    val x11 = X11
+
+    object X11 {
+
+        var className = ""
+            set(value) {
+                glfwWindowHintString(GLFW_X11_CLASS_NAME, value)
+                field = value
+            }
+
+        var instanceName = ""
+            set(value) {
+                glfwWindowHintString(GLFW_X11_INSTANCE_NAME, value)
                 field = value
             }
     }
@@ -246,6 +309,7 @@ object windowHint {
         }
 
     enum class Profile { any, compat, core }
+
     var profile = Profile.any
         set(value) {
             glfwWindowHint(GLFW_OPENGL_PROFILE, when (value) {

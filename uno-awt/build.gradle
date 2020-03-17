@@ -1,12 +1,11 @@
 plugins {
-    id 'maven'
     id 'java'
     id 'java-library'
     id "org.jetbrains.kotlin.jvm"
     id "com.github.johnrengelman.shadow"
 }
 
-ext.moduleName = 'com.github.kotlin_graphics.uno_awt'
+ext.moduleName = "${group}.uno_awt"
 
 dependencies {
 
@@ -20,9 +19,9 @@ dependencies {
     ["", "-jawt", "-opengl", "-glfw"].each {
         implementation "org.lwjgl:lwjgl$it:$lwjgl_version"
         if (it != "-vulkan" && it != "-jawt")
-            runtime "org.lwjgl:lwjgl$it:$lwjgl_version:natives-$lwjgl_natives"
+            runtimeOnly "org.lwjgl:lwjgl$it:$lwjgl_version:natives-$lwjgl_natives"
     }
-    testCompile group: 'junit', name: 'junit', version: '4.12'
+    testImplementation group: 'junit', name: 'junit', version: '4.12'
 
     api project(":uno-core")
 }
@@ -47,8 +46,13 @@ compileTestKotlin {
 
 compileJava {
     dependsOn(':compileKotlin')
+    inputs.property("moduleName", moduleName)
     doFirst {
-        options.compilerArgs = ['--module-path', classpath.asPath,]
+        options.compilerArgs = [
+                '--module-path', classpath.asPath,
+                '--patch-module', "$moduleName=${sourceSets["main"].output.asPath}"]
         classpath = files()
     }
 }
+
+jar { duplicatesStrategy = DuplicatesStrategy.EXCLUDE }

@@ -67,7 +67,7 @@ abstract class LwjglCanvas(val glDebug: Boolean = false) : Canvas() {
 
         init()
 
-        glfwWindow.unmakeContextCurrent()
+        glfwWindow.makeContextCurrent(false)
 
 //        println("/LwjglCanvas.initInternal ${Date().toInstant()}")
     }

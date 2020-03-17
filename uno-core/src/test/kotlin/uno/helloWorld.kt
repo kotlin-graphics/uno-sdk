@@ -19,7 +19,7 @@ class HelloWorld : StringSpec() {
             // The window handle
             GlfwWindow(1280, 720, "ImGui Lwjgl OpenGL3 example").apply {
 
-                pos = (glfw.videoMode.size - size) / 2
+                pos = (glfw.primaryMonitor.videoMode.size - size) / 2
 
                 init()
 

@@ -10,16 +10,16 @@ enum class Key(val i: Int) {
     MINUS(GLFW_KEY_MINUS),
     PERIOD(GLFW_KEY_PERIOD),
     SLASH(GLFW_KEY_SLASH),
-    `0`(GLFW_KEY_0),
-    `1`(GLFW_KEY_1),
-    `2`(GLFW_KEY_2),
-    `3`(GLFW_KEY_3),
-    `4`(GLFW_KEY_4),
-    `5`(GLFW_KEY_5),
-    `6`(GLFW_KEY_6),
-    `7`(GLFW_KEY_7),
-    `8`(GLFW_KEY_8),
-    `9`(GLFW_KEY_9),
+    _0(GLFW_KEY_0),
+    _1(GLFW_KEY_1),
+    _2(GLFW_KEY_2),
+    _3(GLFW_KEY_3),
+    _4(GLFW_KEY_4),
+    _5(GLFW_KEY_5),
+    _6(GLFW_KEY_6),
+    _7(GLFW_KEY_7),
+    _8(GLFW_KEY_8),
+    _9(GLFW_KEY_9),
     SEMICOLON(GLFW_KEY_SEMICOLON),
     EQUAL(GLFW_KEY_EQUAL),
     A(GLFW_KEY_A),
@@ -126,6 +126,14 @@ enum class Key(val i: Int) {
     RIGHT_SUPER(GLFW_KEY_RIGHT_SUPER),
     MENU(GLFW_KEY_MENU),
     LAST(GLFW_KEY_MENU);
+
+    // --- [ glfwGetKeyName ] ---
+    val keyName: String?
+        get() = glfwGetKeyName(i, -1)
+
+    // --- [ glfwGetKeyScancode ] ---
+    val scancode: Int
+        get() = glfwGetKeyScancode(i)
 
     companion object {
         infix fun of(i: Int) = values().first { it.i == i }

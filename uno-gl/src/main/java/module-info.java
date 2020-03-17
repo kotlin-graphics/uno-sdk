@@ -1,4 +1,4 @@
-module com.github.kotlin_graphics.uno_awt {
+module com.github.kotlin_graphics.uno_gl {
 
     requires kotlin.stdlib;
 

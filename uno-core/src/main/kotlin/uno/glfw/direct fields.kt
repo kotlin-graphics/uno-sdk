@@ -24,4 +24,5 @@ inline val GLFWVidMode.refreshRate: Int
 inline class HWND(val L: Long)
 
 typealias Seconds = Double
+typealias Hz = Long
 typealias stak = Stack

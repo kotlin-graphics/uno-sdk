@@ -1,19 +1,15 @@
 package uno.glfw
 
-import glm_.BYTES
 import glm_.i
-import glm_.vec2.Vec2i
 import gln.misc.glDebugCallback
-import kool.BYTES
-import kool.adr
+import kool.Adr
+import kool.IntPtr
+import kool.mInt
+import org.lwjgl.glfw.*
 import org.lwjgl.glfw.GLFW.*
-import org.lwjgl.glfw.GLFWErrorCallback
-import org.lwjgl.glfw.GLFWNativeWin32
-import org.lwjgl.glfw.GLFWVidMode
-import org.lwjgl.glfw.GLFWVulkan
-import org.lwjgl.system.MemoryUtil
 import org.lwjgl.system.MemoryUtil.*
 import org.lwjgl.system.Platform
+import org.lwjgl.system.Pointer
 import uno.glfw.windowHint.Profile
 import uno.kotlin.parseInt
 
@@ -22,6 +18,12 @@ import uno.kotlin.parseInt
  */
 
 object glfw {
+
+    val versionMajor get() = GLFW_VERSION_MAJOR
+    val versionMinor get() = GLFW_VERSION_MAJOR
+    val versionRevision get() = GLFW_VERSION_REVISION
+
+    // --- [ glfwInit ] ---
 
     /** Short version of:
      *  glfw.init()
@@ -66,84 +68,33 @@ object glfw {
             windowHint.forwardComp = true
     }
 
+    // --- [ glfwTerminate ] ---
+
     fun terminate() {
         glfwTerminate()
         nErrorCallback.free()
         glDebugCallback?.free()
     }
 
-    val version: String
+    // --- [ glfwInitHint ] ---
+
+    fun <T> initHint(block: initHint.() -> T) = initHint.block()
+
+    // --- [ glfwGetVersion ] ---
+
+    val version: IntArray
+        get() = stak { s ->
+            val p = s.mInt(3)
+            nglfwGetVersion(p.adr, (p + 1).adr, (p + 2).adr)
+            IntArray(3) { p[it] }
+        }
+
+    // --- [ glfwGetVersionString ] ---
+
+    val versionString: String
         get() = glfwGetVersionString()
 
-    val nErrorCallback: GLFWErrorCallback = GLFWErrorCallback.create { error, description -> errorCallback?.invoke(Error of error, memUTF8(description)) }
-    val defaultErrorCallback: GLFWErrorCallbackT = { error, description -> System.err.println("glfw $error error: $description") }
-
-    var errorCallback: GLFWErrorCallbackT? = null
-        set(value) {
-            if (value != null) {
-                field = value
-                nglfwSetErrorCallback(nErrorCallback.adr)
-            } else
-                nglfwSetErrorCallback(NULL)
-        }
-
-    val vulkanSupported: Boolean
-        get() = GLFWVulkan.glfwVulkanSupported()
-
-    val time: Seconds
-        get() = glfwGetTime()
-
-    val primaryMonitor: GlfwMonitor
-        get() = glfwGetPrimaryMonitor()
-
-    /** videoMode of primaryMonitor */
-    val videoMode: GLFWVidMode
-        get() = glfwGetVideoMode(primaryMonitor)!!
-
-    fun videoMode(monitor: GlfwMonitor): GLFWVidMode? = glfwGetVideoMode(monitor)
-
-    val resolution: Vec2i
-        get() = Vec2i(videoMode.width, videoMode.height)
-
-    var swapInterval: VSync = VSync.ON
-        set(value) {
-            glfwSwapInterval(value.i)
-            field = value
-        }
-
-    fun pollEvents() = glfwPollEvents()
-
-    val requiredInstanceExtensions: ArrayList<String>
-        get() = stak {
-            val pCount = it.nmalloc(1, Int.BYTES)
-            val ppNames = GLFWVulkan.nglfwGetRequiredInstanceExtensions(pCount)
-            val count = memGetInt(pCount)
-            if(count == 0) return arrayListOf()
-            val pNames = memPointerBuffer(ppNames, count)
-            val res = ArrayList<String>(count)
-            for (i in 0 until count)
-                res += memASCII(pNames[i])
-            return res
-        }
-
-    fun attachWin32Window(handle: HWND): GlfwWindowHandle = GlfwWindowHandle(GLFWNativeWin32.glfwAttachWin32Window(handle.L, NULL))
-
-    enum class Error(val i: Int) {
-        none(GLFW_NO_ERROR),
-        notInitialized(0x00010001),
-        noCurrentContext(0x00010002),
-        invalidEnum(0x00010003),
-        invalidValue(0x00010004),
-        outOfMemory(0x00010005),
-        apiUnavailable(0x00010006),
-        versionUnavailable(0x00010007),
-        platformError(0x00010008),
-        formatUnavailable(0x00010009);
-
-        companion object {
-            infix fun of(i: Int) = values().first { it.i == i }
-        }
-    }
+    // --- [ glfwGetError ] ---
 
     val error: Error
         get() = stak {
@@ -157,10 +108,258 @@ object glfw {
         }
     var errorDescription = ""
 
+    enum class Error(val i: Int) {
+        none(GLFW_NO_ERROR),
+        notInitialized(GLFW_NOT_INITIALIZED),
+        noCurrentContext(GLFW_NO_CURRENT_CONTEXT),
+        invalidEnum(GLFW_INVALID_ENUM),
+        invalidValue(GLFW_INVALID_VALUE),
+        outOfMemory(GLFW_OUT_OF_MEMORY),
+        apiUnavailable(GLFW_API_UNAVAILABLE),
+        versionUnavailable(GLFW_VERSION_UNAVAILABLE),
+        platformError(GLFW_PLATFORM_ERROR),
+        formatUnavailable(GLFW_FORMAT_UNAVAILABLE),
+        noWindowContext(GLFW_NO_WINDOW_CONTEXT);
+
+        companion object {
+            infix fun of(i: Int) = values().first { it.i == i }
+        }
+    }
+
+    // --- [ glfwSetErrorCallback ] ---
+
+    val nErrorCallback: GLFWErrorCallback = GLFWErrorCallback.create { error, description -> errorCallback?.invoke(Error of error, memUTF8(description)) }
+    val defaultErrorCallback: GLFWErrorCallbackT = { error, description -> System.err.println("glfw $error error: $description") }
+
+    var errorCallback: GLFWErrorCallbackT? = null
+        set(value) {
+            if (value != null) {
+                field = value
+                glfwSetErrorCallback(nErrorCallback)?.free()
+            } else
+                nglfwSetErrorCallback(NULL)
+        }
+
+    val monitors: Array<GlfwMonitor>
+        get() = stak { s ->
+            val pCount = s.mInt()
+            val pMonitors = nglfwGetMonitors(pCount.adr)
+            Array(pCount[0]) {
+                GlfwMonitor(memGetAddress(pMonitors + it * Pointer.POINTER_SIZE))
+            }
+        }
+
+    // --- [ glfwGetPrimaryMonitor ] ---
+
+    val primaryMonitor: GlfwMonitor
+        get() = GlfwMonitor(glfwGetPrimaryMonitor())
+
+    /** [JVM] */
+    val primaryMonitorVideoMode: GlfwVidMode?
+        get() = when (val pMode = nglfwGetVideoMode(primaryMonitor.handle)) {
+            NULL -> null
+            else -> GlfwVidMode(IntPtr(pMode))
+        }
+
+    // --- [ glfwGetMonitorPos ] ---
+    // --- [ glfwGetMonitorWorkarea ] ---
+    // --- [ glfwGetMonitorPhysicalSize ] ---
+    // --- [ glfwGetMonitorContentScale ] ---
+    // --- [ glfwGetMonitorName ] ---
+    // --- [ glfwSetMonitorUserPointer ] ---
+    // --- [ glfwGetMonitorUserPointer ] ---
+    // -> GlfwMonitor class
+
+    // --- [ glfwSetMonitorCallback ] ---
+    fun setMonitorCallback(cbfun: GLFWMonitorCallbackI?): GLFWMonitorCallback? = glfwSetMonitorCallback(cbfun)
+
+    // --- [ glfwGetVideoModes ] ---
+    // --- [ glfwGetVideoMode ] ---
+    // --- [ glfwSetGamma ] ---
+    // --- [ glfwGetGammaRamp ] ---
+    // --- [ glfwSetGammaRamp ] ---
+    // -> GlfwMonitor class
+
+    // --- [ glfwDefaultWindowHints ] ---
+    fun resetWindowHints() = glfwDefaultWindowHints()
+
+    // --- [ glfwWindowHint ] ---
+    // --- [ glfwWindowHintString ] ---
+    fun <T> windowHint(block: windowHint.() -> T) = windowHint.block()
+
+    // --- [ glfwCreateWindow ] ---
+    // --- [ glfwDestroyWindow ] ---
+    // --- [ glfwWindowShouldClose ] ---
+    // --- [ glfwSetWindowShouldClose ] ---
+    // --- [ glfwSetWindowTitle ] ---
+    // --- [ glfwSetWindowIcon ] ---
+    // --- [ glfwGetWindowPos ] ---
+    // --- [ glfwSetWindowPos ] ---
+    // --- [ glfwGetWindowSize ] ---
+    // --- [ glfwSetWindowSizeLimits ] ---
+    // --- [ glfwSetWindowAspectRatio ] ---
+    // --- [ glfwSetWindowSize ] ---
+    // --- [ glfwGetFramebufferSize ] ---
+    // --- [ glfwGetWindowFrameSize ] ---
+    // --- [ glfwGetWindowContentScale ] ---
+    // --- [ glfwGetWindowOpacity ] ---
+    // --- [ glfwSetWindowOpacity ] ---
+    // --- [ glfwIconifyWindow ] ---
+    // --- [ glfwRestoreWindow ] ---
+    // --- [ glfwMaximizeWindow ] ---
+    // --- [ glfwShowWindow ] ---
+    // --- [ glfwHideWindow ] ---
+    // --- [ glfwFocusWindow ] ---
+    // --- [ glfwRequestWindowAttention ] ---
+    // --- [ glfwGetWindowMonitor ] ---
+    // --- [ glfwSetWindowMonitor ] ---
+    // --- [ glfwGetWindowAttrib ] ---
+    // --- [ glfwSetWindowAttrib ] ---
+    // --- [ glfwSetWindowUserPointer ] ---
+    // --- [ glfwGetWindowUserPointer ] ---
+    // --- [ glfwSetWindowPosCallback ] ---
+    // --- [ glfwSetWindowSizeCallback ] ---
+    // --- [ glfwSetWindowCloseCallback ] ---
+    // --- [ glfwSetWindowRefreshCallback ] ---
+    // --- [ glfwSetWindowFocusCallback ] ---
+    // --- [ glfwSetWindowIconifyCallback ] ---
+    // --- [ glfwSetWindowMaximizeCallback ] ---
+    // --- [ glfwSetFramebufferSizeCallback ] ---
+    // --- [ glfwSetWindowContentScaleCallback ] ---
+    // -> GlfwWindow
+
+    // --- [ glfwPollEvents ] ---
+    fun pollEvents() = glfwPollEvents()
+
+    // --- [ glfwWaitEvents ] ---
+    fun waitEvents() = glfwWaitEvents()
+
+    // --- [ glfwWaitEventsTimeout ] ---
+    fun waitEventsTimeout(timeout: Double) = glfwWaitEventsTimeout(timeout)
+
+    // --- [ glfwPostEmptyEvent ] ---
+    fun postEmptyEvent() = glfwPostEmptyEvent()
+
+    // --- [ glfwGetInputMode ] ---
+    // --- [ glfwSetInputMode ] ---
+    // -> GlfwWindow
+
+    // --- [ glfwRawMouseMotionSupported ] ---
+    val isRawMouseMotionSupported: Boolean
+        get() = glfwRawMouseMotionSupported()
+
+    // --- [ glfwGetKeyName ] ---
+    // also on Key enum
+    fun getKeyName(scancode: Int): String? = glfwGetKeyName(GLFW_KEY_UNKNOWN, scancode)
+
+    // --- [ glfwGetKeyScancode ] ---
+    // -> Key
+
+    // --- [ glfwGetKey ] ---
+    // --- [ glfwGetMouseButton ] ---
+    // --- [ glfwGetCursorPos ] ---
+    // --- [ glfwSetCursorPos ] ---
+    // -> GlfwWindow
+
+    // --- [ glfwCreateCursor ] ---
+    fun createCursor(image: GLFWImage, xhot: Int, yhot: Int) = GlfwCursor(glfwCreateCursor(image, xhot, yhot))
+
+    // --- [ glfwCreateStandardCursor ] ---
+
+    enum class CursorShape(val i: Int) {
+        arrow(GLFW_ARROW_CURSOR),
+        ibeam(GLFW_IBEAM_CURSOR),
+        crosshair(GLFW_CROSSHAIR_CURSOR),
+        hand(GLFW_HAND_CURSOR),
+        hResize(GLFW_HRESIZE_CURSOR),
+        vResize(GLFW_VRESIZE_CURSOR)
+    }
+
+    // --- [ glfwCreateStandardCursor ] ---
+    fun createStandardCursor(shape: CursorShape) = GlfwCursor(glfwCreateStandardCursor(shape.i))
+
+    // --- [ glfwDestroyCursor ] ---
+    // -> GlfwCursor
+
+    // --- [ glfwSetCursor ] ---
+    // --- [ glfwSetKeyCallback ] ---
+    // --- [ glfwSetCharCallback ] ---
+    // --- [ glfwSetCharModsCallback ] ---
+    // --- [ glfwSetMouseButtonCallback ] ---
+    // --- [ glfwSetCursorPosCallback ] ---
+    // --- [ glfwSetCursorEnterCallback ] ---
+    // --- [ glfwSetScrollCallback ] ---
+    // --- [ glfwSetDropCallback ] ---
+    // -> GlfwWindow
+
+    // --- [ glfwJoystickPresent ] ---
+    // --- [ glfwGetJoystickAxes ] ---
+    // --- [ glfwGetJoystickButtons ] ---
+    // --- [ glfwGetJoystickHats ] ---
+    // --- [ glfwGetJoystickName ] ---
+    // --- [ glfwGetJoystickGUID ] ---
+    // --- [ glfwSetJoystickUserPointer ] ---
+    // --- [ glfwGetJoystickUserPointer ] ---
+    // --- [ glfwJoystickIsGamepad ] ---
+    // --- [ glfwSetJoystickCallback ] ---
+    // -> Joystick
+
+    // --- [ glfwUpdateGamepadMappings ] ---
+    fun updateGamepadMappings(string: String): Boolean = stak.asciiAdr(string) { nglfwUpdateGamepadMappings(it) } == GLFW_TRUE
+
+    // --- [ glfwGetGamepadName ] ---
+    // --- [ glfwGetGamepadState ] ---
+    // -> Joystick
+
+    // --- [ glfwSetClipboardString ] ---
+    // --- [ glfwGetClipboardString ] ---
+    // -> GlfwWindow
+
+    // --- [ glfwGetTime ] ---
+    // --- [ glfwSetTime ] ---
+    var time: Seconds
+        get() = glfwGetTime()
+        set(value) = glfwSetTime(value)
+
+    // --- [ glfwGetTimerValue ] ---
+    val timerValue: Long
+        get() = glfwGetTimerValue()
+
+    // --- [ glfwGetTimerFrequency ] ---
+    val timerFrequency: Hz
+        get() = glfwGetTimerFrequency()
+
+    // --- [ glfwMakeContextCurrent ] ---
+    // -> GlfwWindow
+
+    // --- [ glfwGetCurrentContext ] ---
     val currentContext: GlfwWindowHandle
         get() = GlfwWindowHandle(glfwGetCurrentContext())
 
+    // --- [ glfwSwapBuffers ] ---
+    // -> GlfwWindow
+
+    // --- [ glfwSwapInterval ] ---
+
+    var swapInterval: VSync = VSync.ON
+        set(value) {
+            glfwSwapInterval(value.i)
+            field = value
+        }
+
+    // --- [ glfwExtensionSupported ] ---
+    fun extensionSupported(extension: CharSequence): Boolean = glfwExtensionSupported(extension)
+
+    // --- [ glfwGetProcAddress ] ---
+    fun getProcAddress(procName: CharSequence): Adr = glfwGetProcAddress(procName)
+
+
+//    val resolution: Vec2i
+//        get() = Vec2i(videoMode.width, videoMode.height)
+
+
+    fun attachWin32Window(handle: HWND): GlfwWindowHandle = GlfwWindowHandle(GLFWNativeWin32.glfwAttachWin32Window(handle.L, NULL))
+
+    // [JVM] dsl
     inline operator fun invoke(block: glfw.() -> Unit) = glfw.block()
-    fun <T> initHint(block: initHint.() -> T) = initHint.block()
-    fun <T> windowHint(block: windowHint.() -> T) = windowHint.block()
 }
