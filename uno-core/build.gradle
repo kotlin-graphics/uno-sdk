@@ -44,7 +44,7 @@ compileTestKotlin {
         jvmTarget = "11"
 //        javaParameters = true
     }
-    destinationDir = compileTestJava.destinationDir
+//    destinationDir = compileTestJava.destinationDir
 }
 
 compileJava {

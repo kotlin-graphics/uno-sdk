@@ -5,6 +5,6 @@ module com.github.kotlin_graphics.uno_gl {
     requires com.github.kotlin_graphics.glm;
 
 //    exports uno.debug;
-    exports uno.gl;
+//    exports uno.gl;
 //    exports uno.glsl;
 }
