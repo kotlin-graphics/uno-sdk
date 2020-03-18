@@ -303,7 +303,6 @@ object glfw {
     // --- [ glfwJoystickIsGamepad ] ---
     // --- [ glfwSetJoystickCallback ] ---
     // -> Joystick
-//    val joysticks = Array(GLFW_JOYSTICK_LAST) { Joystick(it) } TODO?
 
     // --- [ glfwUpdateGamepadMappings ] ---
     fun updateGamepadMappings(string: String): Boolean = stak.asciiAdr(string) { nglfwUpdateGamepadMappings(it) } == GLFW_TRUE

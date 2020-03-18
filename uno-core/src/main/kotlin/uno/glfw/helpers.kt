@@ -168,6 +168,12 @@ inline class Joystick(val id: Int) {
 
     // --- [ glfwGetGamepadState ] ---
     fun getGamepadState(state: GLFWGamepadState = GLFWGamepadState.create()): Boolean = glfwGetGamepadState(id, state)
+
+    companion object {
+        val _1: Joystick get() = Joystick(GLFW_JOYSTICK_1)
+        val _2: Joystick get() = Joystick(GLFW_JOYSTICK_2)
+        val _3: Joystick get() = Joystick(GLFW_JOYSTICK_3)
+    }
 }
 
 typealias WindowPosCB = (pos: Vec2i) -> Unit
