@@ -28,7 +28,7 @@ ext {
 
 dependencies {
 
-    implementation "$kot-stdlib"
+    implementation "$kot-stdlib-jdk8"
     implementation "$kot-reflect"
 }
 
