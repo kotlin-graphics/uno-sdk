@@ -32,5 +32,5 @@ val glfw.requiredInstanceExtensions: ArrayList<String>
     }
 
 // --- [ glfwCreateWindowSurface ] ---
-infix fun GlfwWindow.createSurface(instance: Instance): VkSurfaceKHR =
-        VkSurfaceKHR(stak.longAdr { VK_CHECK_RESULT(GLFWVulkan.nglfwCreateWindowSurface(instance.adr, handle.value, NULL, it)) })
+infix fun Instance.createSurface(window: GlfwWindow): VkSurfaceKHR =
+        VkSurfaceKHR(stak.longAdr { VK_CHECK_RESULT(GLFWVulkan.nglfwCreateWindowSurface(adr, window.handle.value, NULL, it)) })
