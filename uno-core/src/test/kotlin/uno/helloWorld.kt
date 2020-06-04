@@ -4,9 +4,7 @@ import io.kotest.core.spec.style.StringSpec
 import org.lwjgl.opengl.GL11.*
 import uno.glfw.GlfwWindow
 import uno.glfw.glfw
-
-val isNotCI: Boolean
-    get() = System.getenv("GITHUB_ACTIONS") != "true" && System.getenv("TRAVIS") != "true"
+import uno.kotlin.isNotCI
 
 class HelloWorld : StringSpec() {
 

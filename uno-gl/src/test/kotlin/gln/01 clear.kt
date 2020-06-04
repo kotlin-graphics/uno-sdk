@@ -6,10 +6,13 @@ import glm_.vec2.Vec2i
 import gln.ClearBufferMask.Companion.COLOR_BUFFER_BIT
 import uno.glfw.GlfwWindow
 import uno.glfw.glfw
+import uno.kotlin.isNotCI
 
 fun main() {
-    glfw.init("3.3")
-    Clear().run()
+    if(isNotCI) {
+        glfw.init("3.3")
+        Clear().run()
+    }
 }
 
 private class Clear : GlfwWindow(1280, 720, "[GLN] clear") {
