@@ -13,19 +13,21 @@ plugins {
     id("com.github.johnrengelman.shadow") version "5.2.0"
 }
 
-val moduleName = "${group}.uno_core"
+val moduleName = "${group}.uno_gl"
 
 dependencies {
+
+    implementation(project(":uno-core"))
 
     implementation(kotlin("stdlib"))
     implementation(kotlin("stdlib-jdk8"))
     implementation(kotlin("reflect"))
 
     val kx = "com.github.kotlin-graphics"
-    implementation("$kx:kotlin-unsigned:${findProperty("unsignedVersion")}")
-    implementation("$kx:kool:${findProperty("koolVersion")}")
+//    implementation("$kx:kotlin-unsigned:${findProperty("unsignedVersion")}")
+//    implementation("$kx:kool:${findProperty("koolVersion")}")
     implementation("$kx:glm:${findProperty("glmVersion")}")
-    implementation("$kx:gli:${findProperty("gliVersion")}")
+//    implementation("$kx:gli:${findProperty("gliVersion")}")
     implementation("$kx:gln:${findProperty("glnVersion")}")
 
     val lwjglNatives = when (current()) {
@@ -63,14 +65,15 @@ tasks {
             freeCompilerArgs = listOf("-XXLanguage:+InlineClasses", "-Xjvm-default=enable")
         }
         sourceCompatibility = "11"
-        destinationDir = compileJava.get().destinationDir
     }
-    jar { duplicatesStrategy = DuplicatesStrategy.EXCLUDE }
 
     compileTestKotlin {
         kotlinOptions.jvmTarget = "11"
         sourceCompatibility = "11"
+        destinationDir = compileJava.get().destinationDir
     }
+    jar { duplicatesStrategy = DuplicatesStrategy.EXCLUDE }
+
     compileJava {
         println(sourceSets.main.get().output.asPath)
         // this is needed because we have a separate compile step in this example with the 'module-info.java' is in 'main/java' and the Kotlin code is in 'main/kotlin'

@@ -1,7 +1,6 @@
 import org.gradle.api.attributes.LibraryElements.LIBRARY_ELEMENTS_ATTRIBUTE
 import org.gradle.api.attributes.java.TargetJvmVersion.TARGET_JVM_VERSION_ATTRIBUTE
 import org.gradle.internal.os.OperatingSystem.*
-import org.jetbrains.dokka.gradle.DokkaTask
 
 plugins {
     java
@@ -13,19 +12,22 @@ plugins {
     id("com.github.johnrengelman.shadow") version "5.2.0"
 }
 
-val moduleName = "${group}.uno_core"
+val moduleName = "${group}.uno_awt"
 
 dependencies {
+
+    implementation(project(":uno-core"))
+    implementation(project(":uno-gl"))
 
     implementation(kotlin("stdlib"))
     implementation(kotlin("stdlib-jdk8"))
     implementation(kotlin("reflect"))
 
     val kx = "com.github.kotlin-graphics"
-    implementation("$kx:kotlin-unsigned:${findProperty("unsignedVersion")}")
+//    implementation("$kx:kotlin-unsigned:${findProperty("unsignedVersion")}")
     implementation("$kx:kool:${findProperty("koolVersion")}")
     implementation("$kx:glm:${findProperty("glmVersion")}")
-    implementation("$kx:gli:${findProperty("gliVersion")}")
+//    implementation("$kx:gli:${findProperty("gliVersion")}")
     implementation("$kx:gln:${findProperty("glnVersion")}")
 
     val lwjglNatives = when (current()) {
@@ -33,9 +35,10 @@ dependencies {
         LINUX -> "linux"
         else -> "macos"
     }
-    listOf("", "-glfw", "-jemalloc", "-opengl").forEach {
+    listOf("", "-jawt", "-glfw", "-jemalloc", "-opengl").forEach {
         implementation("org.lwjgl:lwjgl$it:${findProperty("lwjglVersion")}")
-        implementation("org.lwjgl:lwjgl$it:${findProperty("lwjglVersion")}:natives-$lwjglNatives")
+        if (it != "-jawt")
+            implementation("org.lwjgl:lwjgl$it:${findProperty("lwjglVersion")}:natives-$lwjglNatives")
     }
 
     attributesSchema.attribute(LIBRARY_ELEMENTS_ATTRIBUTE).compatibilityRules.add(ModularJarCompatibilityRule::class)
@@ -52,7 +55,7 @@ java {
 }
 
 tasks {
-    val dokka by getting(DokkaTask::class) {
+    val dokka by getting(org.jetbrains.dokka.gradle.DokkaTask::class) {
         outputFormat = "html"
         outputDirectory = "$buildDir/dokka"
     }

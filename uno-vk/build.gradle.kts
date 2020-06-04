@@ -13,29 +13,30 @@ plugins {
     id("com.github.johnrengelman.shadow") version "5.2.0"
 }
 
-val moduleName = "${group}.uno_core"
+val moduleName = "${group}.uno_vk"
 
 dependencies {
+
+    implementation(project(":uno-core"))
+    implementation(project(":uno-gl"))
 
     implementation(kotlin("stdlib"))
     implementation(kotlin("stdlib-jdk8"))
     implementation(kotlin("reflect"))
 
     val kx = "com.github.kotlin-graphics"
-    implementation("$kx:kotlin-unsigned:${findProperty("unsignedVersion")}")
     implementation("$kx:kool:${findProperty("koolVersion")}")
-    implementation("$kx:glm:${findProperty("glmVersion")}")
-    implementation("$kx:gli:${findProperty("gliVersion")}")
-    implementation("$kx:gln:${findProperty("glnVersion")}")
+    implementation("$kx:vkk:${findProperty("vkkVersion")}")
 
     val lwjglNatives = when (current()) {
         WINDOWS -> "windows"
         LINUX -> "linux"
         else -> "macos"
     }
-    listOf("", "-glfw", "-jemalloc", "-opengl").forEach {
+    listOf("", "-glfw", "-jemalloc", "-opengl", "-vulkan").forEach {
         implementation("org.lwjgl:lwjgl$it:${findProperty("lwjglVersion")}")
-        implementation("org.lwjgl:lwjgl$it:${findProperty("lwjglVersion")}:natives-$lwjglNatives")
+        if (it != "-vulkan")
+            implementation("org.lwjgl:lwjgl$it:${findProperty("lwjglVersion")}:natives-$lwjglNatives")
     }
 
     attributesSchema.attribute(LIBRARY_ELEMENTS_ATTRIBUTE).compatibilityRules.add(ModularJarCompatibilityRule::class)
@@ -63,16 +64,24 @@ tasks {
             freeCompilerArgs = listOf("-XXLanguage:+InlineClasses", "-Xjvm-default=enable")
         }
         sourceCompatibility = "11"
-        destinationDir = compileJava.get().destinationDir
     }
-    jar { duplicatesStrategy = DuplicatesStrategy.EXCLUDE }
 
     compileTestKotlin {
         kotlinOptions.jvmTarget = "11"
         sourceCompatibility = "11"
+        destinationDir = compileJava.get().destinationDir
     }
+    jar { duplicatesStrategy = DuplicatesStrategy.EXCLUDE }
+
     compileJava {
-        println(sourceSets.main.get().output.asPath)
+//            dependsOn("compileKotlin")
+//            inputs.property("moduleName", moduleName)
+//            doFirst {
+//                options.compilerArgs = listOf(
+//                    "--module-path", classpath.asPath,
+//                    "--patch-module", "$moduleName=${sourceSets["main"].output.asPath}")
+//                classpath = files()
+//            }
         // this is needed because we have a separate compile step in this example with the 'module-info.java' is in 'main/java' and the Kotlin code is in 'main/kotlin'
         options.compilerArgs = listOf("--patch-module", "$moduleName=${sourceSets.main.get().output.asPath}")
     }
