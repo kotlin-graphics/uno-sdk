@@ -1,6 +1,6 @@
 package uno
 
-import io.kotlintest.specs.StringSpec
+import io.kotest.core.spec.style.StringSpec
 import org.lwjgl.opengl.GL11.*
 import uno.glfw.GlfwWindow
 import uno.glfw.glfw
