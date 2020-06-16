@@ -53,17 +53,17 @@ subprojects {
 
         compileKotlin {
             kotlinOptions {
-                jvmTarget = "11"
+                jvmTarget = "1.8"
                 freeCompilerArgs = listOf("-XXLanguage:+InlineClasses", "-Xjvm-default=enable")
             }
-            sourceCompatibility = "11"
+            sourceCompatibility = "1.8"
             destinationDir = compileJava.get().destinationDir
         }
         jar { duplicatesStrategy = DuplicatesStrategy.EXCLUDE }
 
         compileTestKotlin {
-            kotlinOptions.jvmTarget = "11"
-            sourceCompatibility = "11"
+            kotlinOptions.jvmTarget = "1.8"
+            sourceCompatibility = "1.8"
         }
 
         withType<Test> { useJUnitPlatform() }
@@ -89,7 +89,7 @@ subprojects {
 
     // == Add access to the 'modular' variant of kotlin("stdlib"): Put this into a buildSrc plugin and reuse it in all your subprojects
     configurations.all {
-        attributes.attribute(TargetJvmVersion.TARGET_JVM_VERSION_ATTRIBUTE, 11)
+        attributes.attribute(TargetJvmVersion.TARGET_JVM_VERSION_ATTRIBUTE, 8)
         val n = name.toLowerCase()
         if (n.endsWith("compileclasspath") || n.endsWith("runtimeclasspath"))
             attributes.attribute(LIBRARY_ELEMENTS_ATTRIBUTE, objects.named("modular-jar"))
