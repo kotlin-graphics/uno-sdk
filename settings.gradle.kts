@@ -1,3 +1,3 @@
 rootProject.name = "uno"
 
-include("uno-core", "uno-gl", "uno-awt", "uno-vk")
+include("uno-core", "uno-awt", "uno-vk")

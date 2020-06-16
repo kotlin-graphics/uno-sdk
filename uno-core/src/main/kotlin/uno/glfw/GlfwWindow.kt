@@ -567,6 +567,7 @@ open class GlfwWindow(var handle: GlfwWindowHandle) {
     // --- [ glfwSwapBuffers ] ---
 
     fun swapBuffers() = glfwSwapBuffers(handle.value)
+
     // [JVM] alias
     fun present() = swapBuffers()
 
@@ -616,7 +617,7 @@ open class GlfwWindow(var handle: GlfwWindowHandle) {
     open fun onWindowContentScaled(newScale: Vec2) {}
 
     var cursor: GlfwCursor
-        get() = throw Error("this is a setter-only property")
+        get() = error("this is a setter-only property")
         set(value) = glfwSetCursor(handle.value, value.handle)
 
 

@@ -17,7 +17,6 @@ val moduleName = "${group}.uno_awt"
 dependencies {
 
     implementation(project(":uno-core"))
-    implementation(project(":uno-gl"))
 
     implementation(kotlin("stdlib"))
     implementation(kotlin("stdlib-jdk8"))

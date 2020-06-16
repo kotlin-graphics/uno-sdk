@@ -18,7 +18,6 @@ val moduleName = "${group}.uno_vk"
 dependencies {
 
     implementation(project(":uno-core"))
-    implementation(project(":uno-gl"))
 
     implementation(kotlin("stdlib"))
     implementation(kotlin("stdlib-jdk8"))
