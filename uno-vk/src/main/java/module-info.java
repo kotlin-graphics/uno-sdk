@@ -10,5 +10,5 @@ module com.github.kotlin_graphics.uno_vk {
     requires com.github.kotlin_graphics.vkk;
     requires com.github.kotlin_graphics.kool;
 
-    exports uno;
+    exports uno.vk;
 }

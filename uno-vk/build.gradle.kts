@@ -68,19 +68,11 @@ tasks {
     compileTestKotlin {
         kotlinOptions.jvmTarget = "11"
         sourceCompatibility = "11"
-        destinationDir = compileJava.get().destinationDir
+//        destinationDir = compileJava.get().destinationDir
     }
-    jar { duplicatesStrategy = DuplicatesStrategy.EXCLUDE }
+//    jar { duplicatesStrategy = DuplicatesStrategy.EXCLUDE }
 
     compileJava {
-//            dependsOn("compileKotlin")
-//            inputs.property("moduleName", moduleName)
-//            doFirst {
-//                options.compilerArgs = listOf(
-//                    "--module-path", classpath.asPath,
-//                    "--patch-module", "$moduleName=${sourceSets["main"].output.asPath}")
-//                classpath = files()
-//            }
         // this is needed because we have a separate compile step in this example with the 'module-info.java' is in 'main/java' and the Kotlin code is in 'main/kotlin'
         options.compilerArgs = listOf("--patch-module", "$moduleName=${sourceSets.main.get().output.asPath}")
     }
