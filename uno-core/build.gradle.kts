@@ -63,9 +63,9 @@ tasks {
             freeCompilerArgs = listOf("-XXLanguage:+InlineClasses", "-Xjvm-default=enable")
         }
         sourceCompatibility = "11"
-//        destinationDir = compileJava.get().destinationDir
+        destinationDir = compileJava.get().destinationDir
     }
-//    jar { duplicatesStrategy = DuplicatesStrategy.EXCLUDE }
+    jar { duplicatesStrategy = DuplicatesStrategy.EXCLUDE }
 
     compileTestKotlin {
         kotlinOptions.jvmTarget = "11"
