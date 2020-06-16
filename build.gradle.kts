@@ -11,7 +11,7 @@ plugins {
     id("com.github.johnrengelman.shadow") version "5.2.0"
 }
 
-subprojects {
+allprojects {
     apply(plugin = "java")
     apply(plugin = "java-library")
     apply(plugin = "org.jetbrains.kotlin.jvm")
