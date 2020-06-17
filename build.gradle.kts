@@ -20,6 +20,7 @@ allprojects {
     apply(plugin = "com.github.johnrengelman.shadow")
 
 //    version = "0.9-beta"
+    group = "com.github.kotlin_graphics"
 
     java {
         modularity.inferModulePath.set(true)
@@ -57,9 +58,7 @@ allprojects {
                 freeCompilerArgs = listOf("-XXLanguage:+InlineClasses", "-Xjvm-default=enable")
             }
             sourceCompatibility = "11"
-            destinationDir = compileJava.get().destinationDir
         }
-        jar { duplicatesStrategy = DuplicatesStrategy.EXCLUDE }
 
         compileTestKotlin {
             kotlinOptions.jvmTarget = "11"
