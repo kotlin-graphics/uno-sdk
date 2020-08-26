@@ -9,9 +9,8 @@
 
 Gradle:
 ```
-["core", "gl"].each {
-    implementation "com.github.kotlin-graphics.uno-sdk:uno-$it:$uno_version" // uno_version can be a release tag or a commit id
-}
+implementation "com.github.kotlin-graphics.uno-sdk:uno-core:$unoVersion" // uno_version can be a release tag or a commit id
+implementation "com.github.kotlin-graphics.uno-sdk:uno-awt:$unoVersion" // uno_version can be a release tag or a commit id
 ```
 
 This is kind of a small suite, born and shaped around GL, it includes the gln dependencies, such as [unsigned support](https://github.com/elect86/kotlin-unsigned), [glm](https://github.com/kotlin-graphics/glm) and [gli](https://github.com/kotlin-graphics/gli). Its main usage is basically as wrapper for the lwjgl glfw binding.
@@ -54,7 +53,7 @@ I've been chosen that so they can be easier ordered, the default callback has al
 I actually asked for this multi-callback in the native glfw, but in the meanwhile we can already use it. And this is also faster because it's all on the jvm!
     
 Plus some other small utils like:
-- methods for allocating very easily many different type of buffers from a lot of different data type, such as different arrays and so on.
+- methods for allocating very easily many different type of buffers from a lot of different data type, such as different arrays and so on
 - an cap class for a deep and complete resume about a machine opengl capabilities
 - matrixStack for [glm](https://github.com/kotlin-graphics/glm)
 - glsl utils (to refresh)
