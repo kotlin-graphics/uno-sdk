@@ -3,7 +3,6 @@ package uno.kotlin
 import glm_.i
 import java.awt.event.KeyEvent
 import java.io.File
-import java.lang.Appendable
 import java.nio.IntBuffer
 import java.util.*
 import kotlin.reflect.KMutableProperty0
@@ -59,18 +58,24 @@ infix operator fun <T>StringBuilder.plusAssign(element: T) {
     append(element)
 }
 
-fun <T>treeSetOf() = java.util.TreeSet<T>()
+fun <T> treeSetOf() = TreeSet<T>()
 
-fun <K, V>SortedMap<K, V>.getOrfirst(key: K): V? = get(key) ?: first
-val <K, V>SortedMap<K, V>.first: V?  get() = get(firstKey())
+fun <K, V> SortedMap<K, V>.getOrfirst(key: K): V? = get(key) ?: first
+val <K, V>SortedMap<K, V>.first: V? get() = get(firstKey())
 
 operator fun <R> KMutableProperty0<R>.setValue(host: Any?, property: KProperty<*>, value: R) = set(value)
 operator fun <R> KMutableProperty0<R>.getValue(host: Any?, property: KProperty<*>): R = get()
+operator fun <T> KMutableProperty0<T>.invoke(t: T): KMutableProperty0<T> {
+    set(t)
+    return this
+}
 
 operator fun IntBuffer.plusAssign(bool: Boolean) = plusAssign(bool.i)
 operator fun IntBuffer.plusAssign(i: Int) {
     put(i)
 }
+
+const val NUL = '\u0000'
 
 val version = "0.7.8"
 

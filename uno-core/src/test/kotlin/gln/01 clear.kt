@@ -4,10 +4,19 @@ import glm_.f
 import glm_.i
 import glm_.vec2.Vec2i
 import gln.ClearBufferMask.Companion.COLOR_BUFFER_BIT
+import org.lwjgl.system.APIUtil
+import org.lwjgl.system.Library
+import org.lwjgl.system.windows.User32
 import uno.glfw.GlfwWindow
 import uno.glfw.glfw
 
 fun main() {
+
+    val USER32 = Library.loadNative(User32::class.java, "org.lwjgl", "user32")
+
+    val GetWindowLong = APIUtil.apiGetFunctionAddress(USER32, "GetWindowLong")
+    println(GetWindowLong)
+
     glfw.init("3.3")
     Clear().run()
 }
