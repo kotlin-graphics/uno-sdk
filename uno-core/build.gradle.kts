@@ -7,7 +7,7 @@ plugins {
 val moduleName = "${group}.uno_core"
 
 dependencies {
-
+    println("name $name")
     implementation(kotlin("reflect"))
 
     val kx = "com.github.kotlin-graphics"
