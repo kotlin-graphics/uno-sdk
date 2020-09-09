@@ -5,7 +5,7 @@ val moduleName = "${group}.uno_vk"
 
 dependencies {
 
-    implementation(project(":uno-core"))
+    implementation(project(":core"))
 
     val kx = "com.github.kotlin-graphics"
     implementation("$kx:kool:${findProperty("koolVersion")}")

@@ -5,7 +5,7 @@ val moduleName = "${group}.uno_awt"
 
 dependencies {
 
-    implementation(project(":uno-core"))
+    implementation(project(":core"))
 
     val kx = "com.github.kotlin-graphics"
 //    implementation("$kx:kotlin-unsigned:${findProperty("unsignedVersion")}")

@@ -52,7 +52,7 @@ allprojects {
             dokkaSourceSets.configureEach {
                 sourceLink {
                     localDirectory.set(file("src/main/kotlin"))
-                    remoteUrl.set(URL("https://github.com/kotlin-graphics/gli/tree/master/src/main/kotlin"))
+                    remoteUrl.set(URL("https://github.com/kotlin-graphics/uno-sdk/tree/master/src/main/kotlin"))
                     remoteLineSuffix.set("#L")
                 }
             }
@@ -73,18 +73,21 @@ allprojects {
         dependsOn(tasks.dokkaJavadoc)
         from(tasks.dokkaJavadoc.get().outputDirectory.get())
         archiveClassifier.set("javadoc")
+        archiveFileName.set("uno-" + archiveFileName.get())
     }
 
     val dokkaHtmlJar by tasks.register<Jar>("dokkaHtmlJar") {
         dependsOn(tasks.dokkaHtml)
         from(tasks.dokkaHtml.get().outputDirectory.get())
         archiveClassifier.set("html-doc")
+        archiveFileName.set("uno-" + archiveFileName.get())
     }
 
     val sourceJar = task("sourceJar", Jar::class) {
         dependsOn(tasks.classes)
         archiveClassifier.set("sources")
         from(sourceSets.main.get().allSource)
+        archiveFileName.set("uno-" + archiveFileName.get())
     }
 
     artifacts {
@@ -97,6 +100,8 @@ allprojects {
         publications.create<MavenPublication>("mavenJava") {
             from(components["java"])
             artifact(sourceJar)
+            println("artifactId: $artifactId")
+            artifactId = rootProject.name
         }
         repositories.maven {
             name = "GitHubPackages"
