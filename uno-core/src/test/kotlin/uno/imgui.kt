@@ -3,7 +3,7 @@ package uno
 import glm_.i
 import glm_.uc
 import io.kotest.core.spec.style.StringSpec
-import io.kotlintest.shouldBe
+import io.kotest.matchers.shouldBe
 import uno.convert.decode85
 import uno.kotlin.file
 import uno.stb.stb

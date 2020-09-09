@@ -11,7 +11,6 @@ import org.lwjgl.glfw.GLFWJoystickCallback
 import org.lwjgl.glfw.GLFWJoystickCallbackI
 import org.lwjgl.system.MemoryUtil.NULL
 import org.lwjgl.system.MemoryUtil.memUTF8
-import org.lwjgl.system.NativeType
 import java.nio.ByteBuffer
 import java.nio.FloatBuffer
 

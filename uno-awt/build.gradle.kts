@@ -14,14 +14,14 @@ dependencies {
 //    implementation("$kx:gli:${findProperty("gliVersion")}")
     implementation("$kx:gln:${findProperty("glnVersion")}")
 
-    val lwjglNatives = when (current()) {
+    val lwjglNatives = "natives-" + when (current()) {
         WINDOWS -> "windows"
         LINUX -> "linux"
         else -> "macos"
     }
     listOf("", "-jawt", "-glfw", "-jemalloc", "-opengl").forEach {
-        implementation("org.lwjgl:lwjgl$it:${findProperty("lwjglVersion")}")
+        implementation("org.lwjgl", "lwjgl$it")
         if (it != "-jawt")
-            implementation("org.lwjgl:lwjgl$it:${findProperty("lwjglVersion")}:natives-$lwjglNatives")
+            runtimeOnly("org.lwjgl", "lwjgl$it", classifier = lwjglNatives)
     }
 }

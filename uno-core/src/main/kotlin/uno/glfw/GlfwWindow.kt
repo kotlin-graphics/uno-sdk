@@ -536,10 +536,10 @@ open class GlfwWindow(var handle: GlfwWindowHandle) {
     val nDropCB = GLFWDropCallbackI { _, xOffset, yOffset -> scrollCBs.values.forEach { it(Vec2d(xOffset, yOffset)) } }
 
 
-    // --- [ glfwSetClipboardString ] ---
-    // --- [ glfwGetClipboardString ] ---
     var clipboardString: String?
+        // --- [ glfwGetClipboardString ] ---
         get() = glfwGetClipboardString(handle.value)
+        // --- [ glfwSetClipboardString ] ---
         set(value) {
             value?.let { glfwSetClipboardString(handle.value, it) }
         }

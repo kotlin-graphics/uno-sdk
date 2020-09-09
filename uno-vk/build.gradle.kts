@@ -11,14 +11,14 @@ dependencies {
     implementation("$kx:kool:${findProperty("koolVersion")}")
     implementation("$kx:vkk:${findProperty("vkkVersion")}")
 
-    val lwjglNatives = when (current()) {
+    val lwjglNatives = "natives-" + when (current()) {
         WINDOWS -> "windows"
         LINUX -> "linux"
         else -> "macos"
     }
     listOf("", "-glfw", "-jemalloc", "-opengl", "-vulkan").forEach {
-        implementation("org.lwjgl:lwjgl$it:${findProperty("lwjglVersion")}")
+        implementation("org.lwjgl", "lwjgl$it")
         if (it != "-vulkan")
-            implementation("org.lwjgl:lwjgl$it:${findProperty("lwjglVersion")}:natives-$lwjglNatives")
+            runtimeOnly("org.lwjgl", "lwjgl$it", classifier = lwjglNatives)
     }
 }
