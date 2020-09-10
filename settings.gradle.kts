@@ -1,3 +1,8 @@
-rootProject.name = "uno-jdk8"
+fun prefix(prefix: String) {
+    rootProject.name = prefix
+    rootProject.children.forEach { it.name = "$prefix-${it.name}" }
+}
 
-include("uno-core", "uno-awt", "uno-vk")
+include("core", "awt", "vk")
+
+//prefix("uno")
