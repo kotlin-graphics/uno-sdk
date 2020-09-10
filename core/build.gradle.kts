@@ -4,7 +4,7 @@ plugins {
     kotlin("jvm")
 }
 
-val moduleName = "${group}.uno_core"
+val moduleName = "$group.uno_core"
 
 dependencies {
 

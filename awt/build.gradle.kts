@@ -1,7 +1,7 @@
 import org.gradle.internal.os.OperatingSystem.*
 
 
-val moduleName = "${group}.uno_awt"
+val moduleName = "$group.uno_awt"
 
 dependencies {
 
