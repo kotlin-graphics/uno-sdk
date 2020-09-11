@@ -1,4 +1,4 @@
-module com.github.kotlin_graphics.uno_core {
+module com.github.kotlin_graphics.uno.core {
 
     requires kotlin.stdlib;
 

@@ -1,7 +1,7 @@
 import org.gradle.internal.os.OperatingSystem.*
 
 
-val moduleName = "$group.awt"
+val moduleName = "$group.${rootProject.name}.awt"
 
 dependencies {
 

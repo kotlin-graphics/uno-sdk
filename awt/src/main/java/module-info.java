@@ -1,10 +1,10 @@
-module com.github.kotlin_graphics.uno_awt {
+module com.github.kotlin_graphics.uno.awt {
 
     requires kotlin.stdlib;
 
     requires com.github.kotlin_graphics.gln;
     requires com.github.kotlin_graphics.glm;
-    requires com.github.kotlin_graphics.uno_core;
+    requires com.github.kotlin_graphics.uno.core;
 
     requires org.lwjgl.glfw;
     requires org.lwjgl.opengl;
