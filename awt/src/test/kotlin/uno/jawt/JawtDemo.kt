@@ -1,6 +1,7 @@
 package uno.jawt
 
 import glm_.vec2.Vec2i
+import org.lwjgl.opengl.GL11C
 import org.lwjgl.system.Platform
 import uno.awt.LwjglCanvas
 import java.awt.BorderLayout
@@ -100,7 +101,7 @@ fun main() {
 }
 
 
-class Viewer : LwjglCanvas() {
+class Viewer : LwjglCanvas(true) {
 
     val gears = AbstractGears()
 

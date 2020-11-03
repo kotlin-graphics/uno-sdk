@@ -1,7 +1,7 @@
 import org.gradle.internal.os.OperatingSystem.*
 
 
-val moduleName = "${group}.uno_vk"
+val moduleName = "$group.${rootProject.name}.vk"
 
 dependencies {
 
