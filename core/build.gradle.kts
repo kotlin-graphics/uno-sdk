@@ -7,7 +7,7 @@ plugins {
 val moduleName = "$group.${rootProject.name}.core"
 
 dependencies {
-
+    println(moduleName)
     implementation(kotlin("reflect"))
 
     val kx = "com.github.kotlin-graphics"
