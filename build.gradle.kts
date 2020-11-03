@@ -26,8 +26,6 @@ allprojects {
     java { modularity.inferModulePath.set(true) }
 
     dependencies {
-
-        implementation(kotlin("stdlib"))
         implementation(kotlin("stdlib-jdk8"))
 
         implementation(platform("org.lwjgl:lwjgl-bom:${findProperty("lwjglVersion")}"))
