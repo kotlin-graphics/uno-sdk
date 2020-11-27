@@ -135,7 +135,9 @@ object glfw {
         set(value) {
             if (value != null) {
                 field = value
-                glfwSetErrorCallback(nErrorCallback)?.free()
+                val previous = glfwSetErrorCallback(nErrorCallback)
+                if (previous != null && previous != nErrorCallback)
+                    previous.free()
             } else
                 nglfwSetErrorCallback(NULL)
         }

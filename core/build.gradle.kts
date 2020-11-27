@@ -11,8 +11,13 @@ dependencies {
     implementation(kotlin("reflect"))
 
     val kx = "com.github.kotlin-graphics"
+    val unsignedVersion = findProperty("unsignedVersion") as String
+    val koolVersion = findProperty("koolVersion") as String
+    val glmVersion = findProperty("glmVersion") as String
+    val gliVersion = findProperty("gliVersion") as String
+    val glnVersion = findProperty("glnVersion") as String
     implementation("$kx:kotlin-unsigned:${findProperty("unsignedVersion")}")
-    implementation("$kx:kool:${findProperty("koolVersion")}")
+    implementation("$kx:kool:$koolVersion")// { version { strictly(koolVersion) } }
     implementation("$kx:glm:${findProperty("glmVersion")}")
     implementation("$kx:gli:${findProperty("gliVersion")}")
     implementation("$kx:gln:${findProperty("glnVersion")}")
