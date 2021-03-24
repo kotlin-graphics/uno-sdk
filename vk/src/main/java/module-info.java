@@ -1,4 +1,4 @@
-module com.github.kotlin_graphics.uno.vk {
+module kotlin.graphics.uno.vk {
 
     requires kotlin.stdlib;
 
@@ -6,9 +6,9 @@ module com.github.kotlin_graphics.uno.vk {
     requires org.lwjgl.vulkan;
     requires org.lwjgl.glfw;
 
-    requires com.github.kotlin_graphics.uno.core;
-    requires com.github.kotlin_graphics.vkk;
-//    requires com.github.kotlin_graphics.kool;
+    requires kotlin.graphics.uno.core;
+    requires kotlin.graphics.vkk;
+//    requires kotlin.graphics.kool;
 
     exports uno.vk;
 }

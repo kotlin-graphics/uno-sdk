@@ -1,4 +1,4 @@
-module com.github.kotlin_graphics.uno.core {
+module kotlin.graphics.uno.core {
 
     requires kotlin.stdlib;
 
@@ -6,7 +6,7 @@ module com.github.kotlin_graphics.uno.core {
 
     requires org.lwjgl;
 
-    requires com.github.kotlin_graphics.gln;
+    requires kotlin.graphics.gln;
 //    requires com.github.kotlin_graphics.gli;
 //    requires com.github.kotlin_graphics.glm;
 //    requires com.github.kotlin_graphics.kool;

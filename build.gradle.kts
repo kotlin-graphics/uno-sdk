@@ -1,111 +1,64 @@
-import org.gradle.api.attributes.LibraryElements.JAR
-import org.gradle.api.attributes.LibraryElements.LIBRARY_ELEMENTS_ATTRIBUTE
-import org.jetbrains.dokka.gradle.DokkaTask
-import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
-import java.net.URL
+import kx.KxProject.*
+import kx.LwjglModules.*
+import kx.kxImplementation
+import kx.lwjglImplementation
 
 plugins {
+    val build = "0.7.0+71"
+    id("kx.kotlin.11") version build apply false
+    id("kx.lwjgl") version build apply false
+    id("kx.dokka") version build apply false
+    id("kx.publish") version build apply false
+    id("org.jetbrains.dokka") version "1.4.20"
     java
-    kotlin("jvm") version "1.4.10"
-    `maven-publish`
-    //    id "org.jetbrains.kotlin.kapt" version "1.3.10"
-    id("org.jetbrains.dokka") version "1.4.10"
-    id("com.github.johnrengelman.shadow") version "6.1.0"
 }
 
-allprojects {
+version = "0.7.9+23" // for ::bump
+
+repositories {
+    mavenCentral()
+}
+
+subprojects {
+    apply(plugin = "kx.kotlin.11")
+    apply(plugin = "kx.lwjgl")
+    apply(plugin = "kx.dokka")
+    apply(plugin = "kx.publish")
     apply(plugin = "java")
-    apply(plugin = "org.jetbrains.kotlin.jvm")
-    apply(plugin = "maven-publish")
-    apply(plugin = "org.jetbrains.dokka")
-    apply(plugin = "com.github.johnrengelman.shadow")
 
-//    version = "0.9-beta"
-    group = "com.github.kotlin_graphics"
-
-    java { modularity.inferModulePath.set(true) }
-
-    dependencies {
-        implementation(kotlin("stdlib-jdk8"))
-
-        implementation(platform("org.lwjgl:lwjgl-bom:${findProperty("lwjglVersion")}"))
-
-        testImplementation("io.kotest:kotest-runner-junit5-jvm:${findProperty("kotestVersion")}")
-        testImplementation("io.kotest:kotest-assertions-core-jvm:${findProperty("kotestVersion")}")
-    }
+    version = rootProject.version
+    group = "kotlin.graphics.uno"
 
     repositories {
         mavenCentral()
-        jcenter()
-        maven("https://jitpack.io")
     }
+}
 
-    tasks {
-
-        dokkaHtml {
-            dokkaSourceSets.configureEach {
-                sourceLink {
-                    localDirectory.set(file("src/main/kotlin"))
-                    remoteUrl.set(URL("https://github.com/kotlin-graphics/uno-sdk/tree/master/src/main/kotlin"))
-                    remoteLineSuffix.set("#L")
-                }
-            }
-        }
-
-        withType<KotlinCompile>().all {
-            kotlinOptions {
-                jvmTarget = "11"
-                freeCompilerArgs += listOf("-Xinline-classes", "-Xopt-in=kotlin.RequiresOptIn")
-            }
-            sourceCompatibility = "11"
-        }
-
-        withType<Test> { useJUnitPlatform() }
+project(":core") {
+    dependencies {
+        implementation(kotlin("reflect"))
+        kxImplementation(unsigned, kool, glm, gli, gln)
+        lwjglImplementation(glfw, jemalloc, opengl)
     }
-
-    val dokkaJavadocJar by tasks.register<Jar>("dokkaJavadocJar") {
-        dependsOn(tasks.dokkaJavadoc)
-        from(tasks.dokkaJavadoc.get().outputDirectory.get())
-        archiveClassifier.set("javadoc")
-//        archiveFileName.set("uno-" + archiveFileName.get())
+}
+project(":awt") {
+    dependencies {
+        implementation(project(":core"))
+        kxImplementation(kool, glm, gln)
+        lwjglImplementation(jawt, glfw, jemalloc, opengl)
     }
-
-    val dokkaHtmlJar by tasks.register<Jar>("dokkaHtmlJar") {
-        dependsOn(tasks.dokkaHtml)
-        from(tasks.dokkaHtml.get().outputDirectory.get())
-        archiveClassifier.set("html-doc")
-//        archiveFileName.set("uno-" + archiveFileName.get())
+}
+project(":vk") {
+    dependencies {
+        implementation(projects.core)
+        kxImplementation(kool, vkk)
+        lwjglImplementation(glfw, jemalloc, opengl, vulkan)
     }
+}
 
-    val sourceJar = task("sourceJar", Jar::class) {
-        dependsOn(tasks.classes)
-        archiveClassifier.set("sources")
-        from(sourceSets.main.get().allSource)
-//        archiveFileName.set("uno-" + archiveFileName.get())
+println(buildDir.resolve("dokkaCustomMultiModuleOutput"))
+tasks {
+    dokkaHtmlMultiModule.configure {
+        outputDirectory.set(buildDir.resolve("dokkaCustomMultiModuleOutput"))
     }
-
-    artifacts {
-        archives(dokkaJavadocJar)
-        archives(dokkaHtmlJar)
-        archives(sourceJar)
-    }
-
-    publishing {
-        publications.create<MavenPublication>("mavenJava") {
-            from(components["java"])
-            artifact(sourceJar)
-//            artifactId = rootProject.name
-        }
-        repositories.maven {
-            name = "GitHubPackages"
-            url = uri("https://maven.pkg.github.com/kotlin-graphics/uno-sdk")
-            credentials {
-                username = System.getenv("GITHUB_ACTOR")
-                password = System.getenv("GITHUB_TOKEN")
-            }
-        }
-    }
-
-    // == Add access to the 'modular' variant of kotlin("stdlib"): Put this into a buildSrc plugin and reuse it in all your subprojects
-    configurations.all { attributes.attribute(TargetJvmVersion.TARGET_JVM_VERSION_ATTRIBUTE, 11) }
 }
