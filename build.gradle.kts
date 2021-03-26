@@ -4,20 +4,18 @@ import kx.kxImplementation
 import kx.lwjglImplementation
 
 plugins {
-    val build = "0.7.0+71"
+    val build = "0.7.0+82"
     id("kx.kotlin.11") version build apply false
     id("kx.lwjgl") version build apply false
     id("kx.dokka") version build apply false
-    id("kx.publish") version build apply false
-    id("org.jetbrains.dokka") version "1.4.20"
+    id("kx.dokka.multimodule") version build
+//    id("kx.publish") version build apply false
+    `maven-publish`
+    id("kx.snapshot") version "0.0.5"
     java
 }
 
-version = "0.7.9+23" // for ::bump
-
-repositories {
-    mavenCentral()
-}
+version = "0.7.9+25" // for ::bump
 
 subprojects {
     apply(plugin = "kx.kotlin.11")
@@ -28,10 +26,6 @@ subprojects {
 
     version = rootProject.version
     group = "kotlin.graphics.uno"
-
-    repositories {
-        mavenCentral()
-    }
 }
 
 project(":core") {
@@ -43,22 +37,28 @@ project(":core") {
 }
 project(":awt") {
     dependencies {
-        implementation(project(":core"))
+        implementation(rootProject.projects.core)
         kxImplementation(kool, glm, gln)
         lwjglImplementation(jawt, glfw, jemalloc, opengl)
     }
 }
 project(":vk") {
     dependencies {
-        implementation(projects.core)
+        implementation(rootProject.projects.core)
         kxImplementation(kool, vkk)
         lwjglImplementation(glfw, jemalloc, opengl, vulkan)
     }
 }
 
-println(buildDir.resolve("dokkaCustomMultiModuleOutput"))
-tasks {
-    dokkaHtmlMultiModule.configure {
-        outputDirectory.set(buildDir.resolve("dokkaCustomMultiModuleOutput"))
+// limited dsl support inside here
+extensions.configure<PublishingExtension>("publishing")  {
+    publications.create<MavenPublication>("maven") {
+        from(components["java"])
+        suppressPomMetadataWarningsFor("runtimeElements")
+    }
+    repositories {
+        maven {
+            url = uri("mary")
+        }
     }
 }
