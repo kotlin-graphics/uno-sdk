@@ -15,7 +15,7 @@ plugins {
     java
 }
 
-version = "0.7.9+25" // for ::bump
+version = "0.7.9+26" // for ::bump
 
 subprojects {
     apply(plugin = "kx.kotlin.11")
