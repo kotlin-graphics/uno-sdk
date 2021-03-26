@@ -15,13 +15,13 @@ plugins {
     java
 }
 
-version = "0.7.9+26" // for ::bump
+version = "0.7.9+27" // for ::bump
 
 subprojects {
     apply(plugin = "kx.kotlin.11")
     apply(plugin = "kx.lwjgl")
     apply(plugin = "kx.dokka")
-    apply(plugin = "kx.publish")
+//    apply(plugin = "kx.publish")
     apply(plugin = "java")
 
     version = rootProject.version
