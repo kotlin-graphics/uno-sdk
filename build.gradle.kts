@@ -4,18 +4,18 @@ import kx.kxImplementation
 import kx.lwjglImplementation
 
 plugins {
-    val build = "0.7.0+82"
+    val build = "0.7.0+83"
     id("kx.kotlin.11") version build apply false
     id("kx.lwjgl") version build apply false
     id("kx.dokka") version build apply false
     id("kx.dokka.multimodule") version build
-//    id("kx.publish") version build apply false
-    `maven-publish`
+//    id("kx.publish.multimodule") version build
+//    `maven-publish`
     id("kx.snapshot") version "0.0.5"
     java
 }
 
-version = "0.7.9+27" // for ::bump
+version = "0.7.9+28" // for ::bump
 
 subprojects {
     apply(plugin = "kx.kotlin.11")
@@ -26,6 +26,19 @@ subprojects {
 
     version = rootProject.version
     group = "kotlin.graphics.uno"
+
+    // limited dsl support inside here
+//    extensions.configure<PublishingExtension>("publishing")  {
+//        publications.create<MavenPublication>("maven") {
+//            from(components["java"])
+//            suppressPomMetadataWarningsFor("runtimeElements")
+//        }
+//        repositories {
+//            maven {
+//                url = uri("mary")
+//            }
+//        }
+//    }
 }
 
 project(":core") {
@@ -47,18 +60,5 @@ project(":vk") {
         implementation(rootProject.projects.core)
         kxImplementation(kool, vkk)
         lwjglImplementation(glfw, jemalloc, opengl, vulkan)
-    }
-}
-
-// limited dsl support inside here
-extensions.configure<PublishingExtension>("publishing")  {
-    publications.create<MavenPublication>("maven") {
-        from(components["java"])
-        suppressPomMetadataWarningsFor("runtimeElements")
-    }
-    repositories {
-        maven {
-            url = uri("mary")
-        }
     }
 }
