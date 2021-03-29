@@ -4,21 +4,17 @@ import kx.kxImplementation
 import kx.lwjglImplementation
 
 plugins {
-    val build = "0.7.0+88"
+    val build = "0.7.0+97"
     id("kx.kotlin.11") version build
-    id("kx.lwjgl") version build apply false
-    id("kx.dokka") version build apply false
-    id("kx.dokka.multimodule") version build
+    id("kx.lwjgl") version build
+    id("kx.dokka") version build
     id("kx.publish") version build
-    //    java
 }
 
-version = "0.7.9+33" // for ::bump
+version = "0.7.9+34" // for ::bump
 
 subprojects {
-    apply(plugin = "kx.lwjgl")
-    apply(plugin = "kx.dokka")
-    apply(plugin = "java")
+    version = rootProject.version
 }
 
 project(":core") {
