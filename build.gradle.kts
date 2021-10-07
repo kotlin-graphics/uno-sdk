@@ -1,36 +1,52 @@
-import kx.KxProject.*
-import kx.LwjglModules.*
-import kx.kxImplementation
-import kx.lwjglImplementation
+import kx.KxProject.gli
+import kx.KxProject.glm
+import kx.KxProject.gln
+import kx.KxProject.kool
+import kx.KxProject.unsigned
+import kx.KxProject.vkk
+import kx.Lwjgl
+import kx.Lwjgl.Modules.*
+import kx.implementation
 
 plugins {
-    val build = "0.7.0+98"
-    id("kx.kotlin.11") version build
-    id("kx.lwjgl") version build
-    id("kx.dokka") version build
+    val build = "0.7.3+43"
+    id("kx.kotlin") version build
+    //    id("kx.dokka") version build
     id("kx.publish") version build
+    id("kx.dynamic-align") version build
+    id("kx.util") version build
 }
 
-version = "0.7.9+35" // for ::bump
+subprojects {
+    apply(plugin = "kx.kotlin")
+    apply(plugin = "kx.publish")
+    apply(plugin = "kx.dynamic-align")
+    apply(plugin = "kx.util")
 
-project(":core") {
-    dependencies {
-        implementation(kotlin("reflect"))
-        kxImplementation(unsigned, kool, glm, gli, gln)
-        lwjglImplementation(glfw, jemalloc, opengl)
+    publishing {
+        publications.create<MavenPublication>("prova") {
+            repositories {
+                maven {
+                    name = "prova"
+                    url = uri("$rootDir/prova")
+                }
+            }
+        }
     }
 }
-project(":awt") {
-    dependencies {
-        implementation(rootProject.projects.core)
-        kxImplementation(kool, glm, gln)
-        lwjglImplementation(jawt, glfw, jemalloc, opengl)
-    }
+
+project(":core").dependencies {
+    implementation(kotlin("reflect"))
+    implementation(unsigned, kool, glm, gli, gln)
+    Lwjgl { implementation(glfw, jemalloc, opengl) }
 }
-project(":vk") {
-    dependencies {
-        implementation(rootProject.projects.core)
-        kxImplementation(kool, vkk)
-        lwjglImplementation(glfw, jemalloc, opengl, vulkan)
-    }
+project(":awt").dependencies {
+    implementation(rootProject.projects.core)
+    implementation(kool, glm, gln)
+    Lwjgl { implementation(jawt, glfw, jemalloc, opengl) }
+}
+project(":vk").dependencies {
+    implementation(rootProject.projects.core)
+    implementation(kool, vkk)
+    Lwjgl { implementation(glfw, jemalloc, opengl, vulkan) }
 }

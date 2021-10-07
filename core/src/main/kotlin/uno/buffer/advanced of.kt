@@ -23,22 +23,22 @@ fun bufferOf(vertices: Collection<*>): ByteBuffer {
     when (vertices.elementAt(0)) {
         is Vec2 -> {
             res = Buffer(Vec2.size * vertices.size)
-            for (i in 0 until vertices.size)
+            for (i in vertices.indices)
                 (vertices.elementAt(i) as Vec2).to(res, i * Vec2.size)
         }
         is Vec3 -> {
             res = Buffer(Vec3.size * vertices.size)
-            for (i in 0 until vertices.size)
+            for (i in vertices.indices)
                 (vertices.elementAt(i) as Vec3).to(res, i * Vec3.size)
         }
         is Vec4 -> {
             res = Buffer(Vec4.size * vertices.size)
-            for (i in 0 until vertices.size)
+            for (i in vertices.indices)
                 (vertices.elementAt(i) as Vec4).to(res, i * Vec4.size)
         }
         is Vertex.pos2_tc2 -> {
             res = Buffer(glf.pos2_tc2.stride * vertices.size)
-            for (i in 0 until vertices.size) {
+            for (i in vertices.indices) {
                 val v = vertices.elementAt(i) as Vertex.pos2_tc2
                 v.p.to(res, i * glf.pos2_tc2.stride)
                 v.t.to(res, i * glf.pos2_tc2.stride + Vec2.size)
@@ -46,7 +46,7 @@ fun bufferOf(vertices: Collection<*>): ByteBuffer {
         }
         is Vertex.pos3_col4ub -> {
             res = Buffer(glf.pos3_col4ub.stride * vertices.size)
-            for (i in 0 until vertices.size) {
+            for (i in vertices.indices) {
                 val v = vertices.elementAt(i) as Vertex.pos3_col4ub
                 v.p.to(res, i * glf.pos2_tc2.stride)
                 v.c.to(res, i * glf.pos2_tc2.stride + Vec3.size)
@@ -115,17 +115,17 @@ fun floatBufferOf(vertices: Collection<*>): FloatBuffer {
         is Float -> res = FloatBuffer(vertices.size) { vertices.elementAt(it) as Float }
         is Vec2 -> {
             res = FloatBuffer(Vec2.length * vertices.size)
-            for (i in 0 until vertices.size)
+            for (i in vertices.indices)
                 (vertices.elementAt(i) as Vec2).to(res, i * Vec2.length)
         }
         is Vec3 -> {
             res = FloatBuffer(Vec3.length * vertices.size)
-            for (i in 0 until vertices.size)
+            for (i in vertices.indices)
                 (vertices.elementAt(i) as Vec3).to(res, i * Vec3.length)
         }
         is Vec4 -> {
             res = FloatBuffer(Vec4.length * vertices.size)
-            for (i in 0 until vertices.size)
+            for (i in vertices.indices)
                 (vertices.elementAt(i) as Vec4).to(res, i * Vec4.length)
         }
         else -> throw Error()
@@ -139,17 +139,17 @@ fun intBufferOf(vertices: Collection<*>): IntBuffer {
         is Int -> res = IntBuffer(vertices.size) { vertices.elementAt(it) as Int }
         is Vec2i -> {
             res = IntBuffer(Vec2i.length * vertices.size)
-            for (i in 0 until vertices.size)
+            for (i in vertices.indices)
                 (vertices.elementAt(i) as Vec2i).to(res, i * Vec2i.length)
         }
         is Vec3i -> {
             res = IntBuffer(Vec3i.length * vertices.size)
-            for (i in 0 until vertices.size)
+            for (i in vertices.indices)
                 (vertices.elementAt(i) as Vec3i).to(res, i * Vec3i.length)
         }
         is Vec4i -> {
             res = IntBuffer(Vec4i.length * vertices.size)
-            for (i in 0 until vertices.size)
+            for (i in vertices.indices)
                 (vertices.elementAt(i) as Vec4i).to(res, i * Vec4i.length)
         }
         else -> throw Error()
