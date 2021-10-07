@@ -22,17 +22,6 @@ subprojects {
     apply(plugin = "kx.publish")
     apply(plugin = "kx.dynamic-align")
     apply(plugin = "kx.util")
-
-    publishing {
-        publications.create<MavenPublication>("prova") {
-            repositories {
-                maven {
-                    name = "prova"
-                    url = uri("$rootDir/prova")
-                }
-            }
-        }
-    }
 }
 
 project(":core").dependencies {
