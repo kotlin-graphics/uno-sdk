@@ -9,7 +9,7 @@ import kx.Lwjgl.Modules.*
 import kx.implementation
 
 plugins {
-    val build = "0.7.3+43"
+    val build = "0.7.3+44"
     id("kx.kotlin") version build
     //    id("kx.dokka") version build
     id("kx.publish") version build
@@ -41,7 +41,8 @@ project(":core").dependencies {
     Lwjgl { implementation(glfw, jemalloc, opengl) }
 }
 project(":awt").dependencies {
-    implementation(rootProject.projects.core)
+//    implementation(rootProject.projects.core)
+    implementation(project(":core"))
     implementation(kool, glm, gln)
     Lwjgl { implementation(jawt, glfw, jemalloc, opengl) }
 }
