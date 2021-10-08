@@ -9,7 +9,7 @@ import kx.Lwjgl.Modules.*
 import kx.implementation
 
 plugins {
-    val build = "0.7.3+45"
+    val build = "0.7.3+49"
     id("kx.kotlin") version build
     //    id("kx.dokka") version build
     id("kx.publish") version build
