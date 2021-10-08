@@ -24,19 +24,22 @@ subprojects {
     apply(plugin = "kx.util")
 }
 
+dependencies {
+    project.subprojects.forEach(::implementation)
+}
+
 project(":core").dependencies {
     implementation(kotlin("reflect"))
     implementation(unsigned, kool, glm, gli, gln)
     Lwjgl { implementation(glfw, jemalloc, opengl) }
 }
 project(":awt").dependencies {
-//    implementation(rootProject.projects.core)
-    implementation(project(":core"))
+    implementation(projects.core)
     implementation(kool, glm, gln)
     Lwjgl { implementation(jawt, glfw, jemalloc, opengl) }
 }
 project(":vk").dependencies {
-    implementation(rootProject.projects.core)
+    implementation(projects.core)
     implementation(kool, vkk)
     Lwjgl { implementation(glfw, jemalloc, opengl, vulkan) }
 }
