@@ -28,6 +28,8 @@ dependencies {
     project.subprojects.forEach(::implementation)
 }
 
+magik { verbose.set(true) }
+
 project(":core").dependencies {
     implementation(kotlin("reflect"))
     implementation(unsigned, kool, glm, gli, gln)

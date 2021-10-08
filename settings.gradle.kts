@@ -13,7 +13,8 @@ pluginManagement {
         gradlePluginPortal()
         maven("https://raw.githubusercontent.com/kotlin-graphics/mary/master")
     }
-//    includeBuild("../build-logic")
+    includeBuild("../build-logic")
+    includeBuild("../magik")
 }
 
 rootProject.name = "uno"
@@ -28,5 +29,5 @@ enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 
 gradle.rootProject {
     group = "kotlin.graphics"
-    version = "0.7.9+38"
+    version = "0.7.9+39"
 }
