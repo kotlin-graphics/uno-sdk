@@ -13,8 +13,8 @@ pluginManagement {
         gradlePluginPortal()
         maven("https://raw.githubusercontent.com/kotlin-graphics/mary/master")
     }
-    includeBuild("../build-logic")
-    includeBuild("../magik")
+//    includeBuild("../build-logic")
+//    includeBuild("../magik")
 }
 
 rootProject.name = "uno"
