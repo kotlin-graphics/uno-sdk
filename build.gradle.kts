@@ -1,15 +1,10 @@
-import kx.KxProject.gli
-import kx.KxProject.glm
-import kx.KxProject.gln
-import kx.KxProject.kool
-import kx.KxProject.unsigned
-import kx.KxProject.vkk
+import kx.*
 import kx.Lwjgl
 import kx.Lwjgl.Modules.*
 import kx.implementation
 
 plugins {
-    val build = "0.7.3+50"
+    val build = "0.7.3+51"
     id("kx.kotlin") version build
     //    id("kx.dokka") version build
     id("kx.publish") version build
