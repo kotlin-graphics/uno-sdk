@@ -111,15 +111,18 @@ class GlfwGammaRamp(val red: Int, val green: Int, val blue: Int, val size: Int)
 
 data class Monitor(val handle: Long, val xPos: Int, val yPos: Int, val width: Int, val height: Int, val refreshRate: Int = GLFW_DONT_CARE)
 
-inline class GlfwWindowHandle(val value: Long)
+@JvmInline
+value class GlfwWindowHandle(val value: Long)
 
-inline class GlfwCursor(val handle: Long) {
+@JvmInline
+value class GlfwCursor(val handle: Long) {
 
     // --- [ glfwDestroyCursor ] ---
     fun destroy() = glfwDestroyCursor(handle)
 }
 
-inline class Joystick(val id: Int) {
+@JvmInline
+value class Joystick(val id: Int) {
 
     // --- [ glfwJoystickPresent ] ---
 

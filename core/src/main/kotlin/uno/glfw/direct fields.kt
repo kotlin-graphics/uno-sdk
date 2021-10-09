@@ -21,7 +21,8 @@ inline val GLFWVidMode.blueBits: Int
 inline val GLFWVidMode.refreshRate: Int
     get() = GLFWVidMode.nrefreshRate(adr)
 
-inline class HWND(val L: Long)
+@JvmInline
+value class HWND(val L: Long)
 
 typealias Seconds = Double
 typealias Hz = Long

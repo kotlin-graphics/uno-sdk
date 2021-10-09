@@ -58,7 +58,7 @@ fun bufferOf(vertices: Collection<*>): ByteBuffer {
 }
 
 fun bufferOf(vararg elements: Any): ByteBuffer {
-    val size = elements.sumBy {
+    val size = elements.sumOf {
         when (it) {
             is Float, Int, Vec4b -> Float.BYTES
             is Vec2 -> Vec2.size

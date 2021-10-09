@@ -10,7 +10,7 @@ module kotlin.graphics.uno.core {
 //    requires com.github.kotlin_graphics.gli;
     requires kotlin.graphics.glm;
     requires kotlin.graphics.kool;
-//    requires com.github.kotlin_graphics.kotlin_unsigned;
+    requires kotlin.graphics.unsigned;
     requires org.lwjgl.glfw;
     requires org.lwjgl.opengl;
 

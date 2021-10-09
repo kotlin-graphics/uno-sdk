@@ -13,7 +13,8 @@ import uno.glfw.HWND
 import java.awt.Canvas
 
 
-inline class JawtVersion(val int: Int) {
+@JvmInline
+value class JawtVersion(val int: Int) {
     companion object {
         val _1_3 = JawtVersion(0x10003)
         val _1_4 = JawtVersion(0x10004)
@@ -34,7 +35,8 @@ fun JAWT.getDrawingSurface(canvas: Canvas): JAWTDrawingSurface? {
 
 
 
-inline class JawtLock(val int: Int) {
+@JvmInline
+value class JawtLock(val int: Int) {
     companion object {
         val ERROR = JawtLock(0x1)
         val CLIP_CHANGED = JawtLock(0x2)
@@ -64,7 +66,8 @@ fun JAWTWin32DrawingSurfaceInfo(info: JAWTDrawingSurfaceInfo): JAWTWin32DrawingS
     return org.lwjgl.system.jawt.JAWTWin32DrawingSurfaceInfo.create(adr)
 }
 
-inline class HDC(val L: Long) {
+@JvmInline
+value class HDC(val L: Long) {
     val isValid get() = L != NULL
     val isInvalid get() = L == NULL
 }
