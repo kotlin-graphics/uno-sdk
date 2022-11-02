@@ -31,7 +31,7 @@ enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 
 gradle.rootProject {
     group = "kotlin.graphics"
-    version = "0.7.13"
+    version = "0.7.14"
 }
 
 dependencyResolutionManagement {

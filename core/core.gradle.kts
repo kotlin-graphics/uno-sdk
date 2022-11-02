@@ -27,6 +27,20 @@ dependencies {
     testImplementation("io.kotest:kotest-assertions-core:5.4.1")
 }
 
+kotlin.jvmToolchain {
+    this as JavaToolchainSpec
+    languageVersion.set(JavaLanguageVersion.of(8))
+}
+
+tasks {
+    withType<org.jetbrains.kotlin.gradle.dsl.KotlinCompile<*>>().all {
+        kotlinOptions {
+            freeCompilerArgs += listOf("-opt-in=kotlin.RequiresOptIn")
+        }
+    }
+    withType<Test>().configureEach { useJUnitPlatform() }
+}
+
 publishing {
     publications {
         createGithubPublication {
