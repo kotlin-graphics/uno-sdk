@@ -21,6 +21,9 @@ dependencies {
     implementation("kotlin.graphics:kool:0.9.68")
 
     lwjgl { implementation(jawt, glfw, jemalloc, opengl) }
+
+    testImplementation("io.kotest:kotest-runner-junit5:5.4.1")
+    testImplementation("io.kotest:kotest-assertions-core:5.4.1")
 }
 
 kotlin.jvmToolchain {
