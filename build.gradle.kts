@@ -1,4 +1,5 @@
 import magik.createGithubPublication
+import magik.github
 import org.gradle.kotlin.dsl.dependencies
 import org.gradle.kotlin.dsl.embeddedKotlinVersion
 import org.gradle.kotlin.dsl.implementation
@@ -26,9 +27,8 @@ publishing {
         }
     }
     repositories {
-        maven {
-            name = "local"
-            url = uri(layout.buildDirectory.file(name))
+        github {
+            domain = "kotlin-graphics/mary"
         }
     }
 }

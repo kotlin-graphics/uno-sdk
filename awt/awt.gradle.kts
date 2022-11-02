@@ -1,4 +1,5 @@
 import magik.createGithubPublication
+import magik.github
 import org.lwjgl.lwjgl
 import org.lwjgl.lwjgl.Module.*
 
@@ -29,9 +30,8 @@ publishing {
         }
     }
     repositories {
-        maven {
-            name = "local"
-            url = uri(layout.buildDirectory.file(name))
+        github {
+            domain = "kotlin-graphics/mary"
         }
     }
 }
