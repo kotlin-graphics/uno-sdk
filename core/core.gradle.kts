@@ -31,6 +31,7 @@ publishing {
     publications {
         createGithubPublication {
             from(components["java"])
+            artifactId = "${rootProject.name}-${project.name}"
             suppressAllPomMetadataWarnings()
         }
     }
