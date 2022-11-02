@@ -1,11 +1,5 @@
 import magik.createGithubPublication
 import magik.github
-import org.gradle.kotlin.dsl.dependencies
-import org.gradle.kotlin.dsl.embeddedKotlinVersion
-import org.gradle.kotlin.dsl.implementation
-import org.gradle.kotlin.dsl.kotlin
-import org.gradle.kotlin.dsl.`maven-publish`
-import org.gradle.kotlin.dsl.version
 
 plugins {
     kotlin("jvm") version embeddedKotlinVersion
@@ -15,8 +9,8 @@ plugins {
 }
 
 dependencies {
-    implementation(projects.core)
-    implementation(projects.awt)
+    api(projects.core)
+    api(projects.awt)
 }
 
 kotlin.jvmToolchain {
