@@ -9,15 +9,18 @@
 //}
 
 pluginManagement {
-    repositories {
-        gradlePluginPortal()
-        maven("https://raw.githubusercontent.com/kotlin-graphics/mary/master")
-    }
+//    repositories {
+//        gradlePluginPortal()
+//        maven("https://raw.githubusercontent.com/kotlin-graphics/mary/master")
+//    }
     //    includeBuild("../build-logic")
     //    includeBuild("../magik")
 }
 
-include("core", "awt", "vk")
+for (module in listOf("core", "awt"/*, "vk"*/)) {
+    include(module)
+    project(":$module").buildFileName = "$module.gradle.kts"
+}
 
 rootProject.name = "uno"
 
@@ -28,5 +31,12 @@ enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 
 gradle.rootProject {
     group = "kotlin.graphics"
-    version = "0.7.10"
+    version = "0.7.11"
+}
+
+dependencyResolutionManagement {
+    repositories {
+        mavenCentral()
+        maven("https://raw.githubusercontent.com/kotlin-graphics/mary/master")
+    }
 }

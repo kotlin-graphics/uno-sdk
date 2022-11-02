@@ -1,17 +1,37 @@
-import kx.*
-import org.lwjgl.Lwjgl
-import org.lwjgl.Lwjgl.Module.*
+import magik.createGithubPublication
+import org.lwjgl.lwjgl
+import org.lwjgl.lwjgl.Module.*
 
 plugins {
-    fun kx(vararg p: String) = p.forEach { id("io.github.kotlin-graphics.$it") }
-    kx("align", "base", "publish", "utils")
+    kotlin("jvm")
     id("org.lwjgl.plugin")
+    id("elect86.magik")
+    `maven-publish`
 }
 
 version = rootProject.version
 
 dependencies {
     implementation(projects.core)
-    implementation(kool, glm, gln)
-    Lwjgl { implementation(jawt, glfw, jemalloc, opengl) }
+
+    implementation("kotlin.graphics:gln:0.5.31")
+    implementation("kotlin.graphics:glm:0.9.9.1-5")
+    implementation("kotlin.graphics:kool:0.9.68")
+
+    lwjgl { implementation(jawt, glfw, jemalloc, opengl) }
+}
+
+publishing {
+    publications {
+        createGithubPublication {
+            from(components["java"])
+            suppressAllPomMetadataWarnings()
+        }
+    }
+    repositories {
+        maven {
+            name = "local"
+            url = uri(layout.buildDirectory.file(name))
+        }
+    }
 }

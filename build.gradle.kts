@@ -1,38 +1,34 @@
-import kx.*
-import org.lwjgl.Lwjgl
-import org.lwjgl.Lwjgl.Module.*
+import magik.createGithubPublication
+import org.gradle.kotlin.dsl.dependencies
+import org.gradle.kotlin.dsl.embeddedKotlinVersion
+import org.gradle.kotlin.dsl.implementation
+import org.gradle.kotlin.dsl.kotlin
+import org.gradle.kotlin.dsl.`maven-publish`
+import org.gradle.kotlin.dsl.version
 
 plugins {
-    for ((p, v) in listOf("align" to "0.0.7",
-                          "base" to "0.0.10",
-                          "publish" to "0.0.6",
-                          "utils" to "0.0.5"))
-        id("io.github.kotlin-graphics.$p") version v
-    id("org.lwjgl.plugin") version "0.0.20"
+    kotlin("jvm") version embeddedKotlinVersion
+    id("org.lwjgl.plugin") version "0.0.29"
+    id("elect86.magik") version "0.3.1"
+    `maven-publish`
 }
 
 dependencies {
-    subprojects.forEach(::implementation)
+    implementation(projects.core)
+    implementation(projects.awt)
 }
 
-subprojects {
-    version = rootProject.version
-    fun kx(vararg p: String) = p.forEach { apply(plugin = "io.github.kotlin-graphics.$it") }
-    kx("align", "base", "publish", "utils")
-}
-
-projects.core.dependencyProject.dependencies {
-    implementation(kotlin("reflect"))
-    implementation(unsigned, kool, glm, gli, gln)
-    Lwjgl { implementation(glfw, jemalloc, opengl) }
-}
-projects.awt.dependencyProject.dependencies {
-    implementation(projects.core)
-    implementation(kool, glm, gln)
-    Lwjgl { implementation(jawt, glfw, jemalloc, opengl) }
-}
-projects.vk.dependencyProject.dependencies {
-    implementation(projects.core)
-    implementation(kool, vkk)
-    Lwjgl { implementation(glfw, jemalloc, opengl, vulkan) }
+publishing {
+    publications {
+        createGithubPublication {
+            from(components["java"])
+            suppressAllPomMetadataWarnings()
+        }
+    }
+    repositories {
+        maven {
+            name = "local"
+            url = uri(layout.buildDirectory.file(name))
+        }
+    }
 }
