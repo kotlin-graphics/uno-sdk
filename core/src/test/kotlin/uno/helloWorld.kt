@@ -46,29 +46,3 @@ class HelloWorld : StringSpec() {
             }
     }
 }
-
-fun main() {
-    // init
-    glfw.init("3.3")
-
-
-    // Setup an error callback. The default implementation
-    // will print the error message in System.err.
-    GLFWErrorCallback.createPrint(System.err).set()
-
-    // The window handle
-    val glfwWindow = GlfwWindow(1280, 720, "ImGui Lwjgl OpenGL3 example")
-//    GlWindow(glfwWindow).apply {
-//
-//        pos = (glfw.primaryMonitor.videoMode.size - size) / 2
-//
-//        init()
-//
-//        // Set the clear color
-//        glClearColor(1f, 0f, 0f, 0f)
-//
-//        loop({ glfw.time < 1 }) {
-//            glClear(GL_COLOR_BUFFER_BIT)
-//        }
-//    }
-}
