@@ -1,6 +1,16 @@
 package uno.kotlin
 
 import glm_.i
+import glm_.vec2.Vec2
+import glm_.vec2.Vec2d
+import glm_.vec2.Vec2i
+import glm_.vec3.Vec3i
+import glm_.vec4.Vec4i
+import gln.L
+import gln.offHeapAdr
+import gln.offHeapPtr
+import kool.*
+import org.lwjgl.system.MemoryStack
 import java.awt.event.KeyEvent
 import java.io.File
 import java.nio.IntBuffer
@@ -50,8 +60,8 @@ infix operator fun Appendable.plusAssign(char: Char) {
     append(char)
 }
 
-infix operator fun Appendable.plusAssign(charSequence: CharSequence) {
-    append(charSequence)
+infix operator fun Appendable.plusAssign(string: String) {
+    append(string)
 }
 
 infix operator fun <T>StringBuilder.plusAssign(element: T) {
@@ -75,7 +85,45 @@ operator fun IntBuffer.plusAssign(i: Int) {
     put(i)
 }
 
+
+//fun <T> MemoryStack.Ptr() = 0
+
 const val NUL = '\u0000'
 
 val isNotCI: Boolean
     get() = System.getenv("GITHUB_ACTIONS") != "true" && System.getenv("TRAVIS") != "true"
+
+inline fun readVec2(block: (Long, Long) -> Unit): Vec2 = stack {
+    val ptr = it.PtrFloat(Vec2.length)
+    block(ptr.adr.L, (ptr + 1).adr.L)
+    return Vec2(ptr)
+}
+inline fun readVec2d(block: (Long, Long) -> Unit): Vec2d = stack {
+    val ptr = it.PtrDouble(Vec2d.length)
+    block(ptr.adr.L, (ptr + 1).adr.L)
+    return Vec2d(ptr)
+}
+
+inline fun readVec2i(block: (Long, Long) -> Unit): Vec2i = stack {
+    val ptr = it.PtrInt(Vec2i.length)
+    block(ptr.adr.L, (ptr + 1).adr.L)
+    return Vec2i(ptr)
+}
+
+inline fun readVec3i(block: (Long, Long, Long) -> Unit): Vec3i = stack {
+    val ptr = it.PtrInt(Vec3i.length)
+    block(ptr.adr.L, (ptr + 1).adr.L, (ptr + 2).adr.L)
+    return Vec3i(ptr)
+}
+
+inline fun readVec4i(block: (Long, Long, Long, Long) -> Unit): Vec4i = stack {
+    val ptr = it.PtrInt(Vec4i.length)
+    block(ptr.adr.L, (ptr + 1).adr.L, (ptr + 2).adr.L, (ptr + 3).adr.L)
+    return Vec4i(ptr)
+}
+
+@JvmInline
+value class HWND(val L: Long)
+
+typealias Seconds = Double
+typealias Hz = ULong

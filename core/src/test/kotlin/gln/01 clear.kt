@@ -7,6 +7,7 @@ import gln.ClearBufferMask.Companion.COLOR_BUFFER_BIT
 import org.lwjgl.system.APIUtil
 import org.lwjgl.system.Library
 import org.lwjgl.system.windows.User32
+import uno.glfw.GlWindow
 import uno.glfw.GlfwWindow
 import uno.glfw.glfw
 
@@ -21,11 +22,11 @@ fun main() {
     Clear().run()
 }
 
-private class Clear : GlfwWindow(1280, 720, "[GLN] clear") {
+private class Clear : GlWindow(GlfwWindow(1280, 720, "[GLN] clear")) {
 
     init {
         init()
-        installDefaultCallbacks()
+        sizeCB = { _, size -> gl.viewport(size) }
     }
 
     fun run() = loop {
@@ -39,6 +40,4 @@ private class Clear : GlfwWindow(1280, 720, "[GLN] clear") {
 
         gl.clear(COLOR_BUFFER_BIT)
     }
-
-    override fun onWindowResized(newSize: Vec2i) = gl.viewport(newSize)
 }

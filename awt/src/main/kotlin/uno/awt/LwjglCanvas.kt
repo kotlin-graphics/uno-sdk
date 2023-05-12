@@ -6,10 +6,11 @@ import org.lwjgl.opengl.GLUtil
 import org.lwjgl.system.Callback
 import org.lwjgl.system.jawt.JAWTDrawingSurface
 import org.lwjgl.system.jawt.JAWTFunctions
+import uno.glfw.GlWindow
 import uno.glfw.GlfwWindow
-import uno.glfw.HWND
 import uno.glfw.VSync
 import uno.glfw.glfw
+import uno.kotlin.HWND
 import java.awt.Canvas
 import java.awt.EventQueue
 import java.awt.Graphics
@@ -31,7 +32,7 @@ abstract class LwjglCanvas(val glDebug: Boolean = false) : Canvas() {
 
     val awt = JAWT()
 
-    lateinit var glfwWindow: GlfwWindow
+    lateinit var glWindow: GlWindow
 
     var swapBuffers = true
     var fps = true
@@ -45,7 +46,7 @@ abstract class LwjglCanvas(val glDebug: Boolean = false) : Canvas() {
     init {
         glfw {
             init()
-            windowHint { debug = glDebug }
+            hints.context.debug = glDebug
         }
     }
 
@@ -55,9 +56,9 @@ abstract class LwjglCanvas(val glDebug: Boolean = false) : Canvas() {
         initialized = true
 
         // glfwWindowHint can be used here to configure the GL context
-        glfwWindow = GlfwWindow.fromWin32Window(hwnd).apply {
+        val glfwWindow = GlfwWindow fromWin32Window hwnd
+        glWindow = GlWindow(glfwWindow, forwardCompatible = false).apply {
             makeContextCurrent()
-            createCapabilities(forwardCompatible = false)
         }
 
         if (glDebug)
@@ -134,12 +135,12 @@ abstract class LwjglCanvas(val glDebug: Boolean = false) : Canvas() {
             if (!initialized)
                 initInternal(hwnd)
 
-            glfwWindow.inContext {
+            glWindow.inContext {
 
                 if (resized) {
 //                    println("LwjglCanvas.reshape ${Date().toInstant()}")
                     val newSize = Vec2i(width, height)
-                    glfwWindow.size = newSize
+                    glWindow.size = newSize
                     reshape(newSize)
                     resized = false
 //                    println("/LwjglCanvas.reshape ${Date().toInstant()}")
@@ -156,7 +157,7 @@ abstract class LwjglCanvas(val glDebug: Boolean = false) : Canvas() {
                     println("paint end")
 
                 if (swapBuffers)
-                    glfwWindow.swapBuffers()
+                    glWindow.swapBuffers()
 
                 if (fps) {
                     val now = System.currentTimeMillis()
@@ -281,7 +282,7 @@ abstract class LwjglCanvas(val glDebug: Boolean = false) : Canvas() {
     fun destroyInternal() {
         if (awtDebug) println("destroyInternal")
 
-        glfwWindow.inContext {
+        glWindow.inContext {
             destroy()
             debugProc?.free()
         }
@@ -289,7 +290,7 @@ abstract class LwjglCanvas(val glDebug: Boolean = false) : Canvas() {
         JAWTFunctions.JAWT_FreeDrawingSurface(surface, awt.FreeDrawingSurface())
         awt.free()
 
-        glfwWindow.destroy()
+        glWindow.destroy()
         glfw.terminate()
         glfwErrorCallback.free()
     }

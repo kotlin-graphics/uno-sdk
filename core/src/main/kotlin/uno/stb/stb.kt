@@ -42,7 +42,7 @@ object stb {
         var len = 0
         var i = 0
 
-        val chash = IntArray(hashSize, { -1 })
+        val chash = IntArray(hashSize) { -1 }
 
         // stream signature
         out(0x57); out(0xbc)
@@ -62,7 +62,7 @@ object stb {
 
         out4(runningAdler)
 
-        return CharArray(out, { res[it] })
+        return CharArray(out) { res[it] }
     }
 
     fun out(v: Int) {

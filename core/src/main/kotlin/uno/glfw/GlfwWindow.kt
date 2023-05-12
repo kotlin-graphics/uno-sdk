@@ -1,625 +1,523 @@
 package uno.glfw
 
 import glm_.bool
-import glm_.f
 import glm_.i
 import glm_.vec2.Vec2
 import glm_.vec2.Vec2d
 import glm_.vec2.Vec2i
 import glm_.vec4.Vec4i
-import gln.cap.Caps
-import gln.misc.GlDebugSeverity
-import gln.misc.GlDebugSource
-import gln.misc.GlDebugType
+import gln.L
 import kool.*
 import org.lwjgl.glfw.*
 import org.lwjgl.glfw.GLFW.*
-import org.lwjgl.opengl.GL
-import org.lwjgl.opengl.GL43C
-import org.lwjgl.opengl.GLUtil
-import org.lwjgl.system.Callback
 import org.lwjgl.system.MemoryStack
-import org.lwjgl.system.MemoryUtil.NULL
-import uno.kotlin.getOrfirst
+import org.lwjgl.system.MemoryUtil
+import org.lwjgl.system.MemoryUtil.*
+import org.lwjgl.system.Pointer
+import uno.kotlin.*
 import java.util.*
 import java.util.function.BooleanSupplier
 import java.util.function.Consumer
 
-/**
- * Created by GBarbieri on 24.04.2017.
- */
+class Wut(dummy: Int) {
 
-// --- [ glfwCreateWindow ] ---
-
-open class GlfwWindow(var handle: GlfwWindowHandle) {
+    constructor() : this(0)
+    init {
+        println("init")
+    }
+}
+open class GlfwWindow(var handle: Long) {
 
     @Throws(RuntimeException::class)
     constructor(windowSize: Vec2i,
-                title: String,
-                monitor: GlfwMonitor? = null,
-                position: Vec2i = Vec2i(Int.MIN_VALUE),
-                installCallbacks: Boolean = true) : this(windowSize.x, windowSize.y, title, monitor, position, installCallbacks)
+                title: String = "Glfw Window",
+                monitor: GlfwMonitor = GlfwMonitor.NULL,
+                share: GlfwWindow = NULL,
+                position: Vec2i? = null) : this(windowSize.x, windowSize.y, title, monitor, share, position)
 
     @Throws(RuntimeException::class)
     constructor(x: Int,
-                title: String,
-                monitor: GlfwMonitor? = null,
-                position: Vec2i = Vec2i(Int.MIN_VALUE),
-                installCallbacks: Boolean = true) : this(x, x, title, monitor, position, installCallbacks)
+                title: String = "Glfw Window",
+                monitor: GlfwMonitor = GlfwMonitor.NULL,
+                share: GlfwWindow = NULL,
+                position: Vec2i? = null) : this(x, x, title, monitor, share, position)
 
     @Throws(RuntimeException::class)
     constructor(width: Int, height: Int,
-                title: String,
-                monitor: GlfwMonitor? = null,
-                position: Vec2i = Vec2i(Int.MIN_VALUE),
-                installCallbacks: Boolean = true) :
-            this(GlfwWindowHandle(glfwCreateWindow(width, height, title, monitor?.handle ?: NULL, NULL))) {
+                title: String = "Glfw Window",
+                monitor: GlfwMonitor = GlfwMonitor.NULL,
+                share: GlfwWindow = NULL,
+                position: Vec2i? = null) : this(glfwCreateWindow(width, height, title, monitor.handle, share.handle)) {
 
         this.title = title
 
-        if (position != Vec2i(Int.MIN_VALUE))
-            glfwSetWindowPos(handle.value, position.x, position.y)
-
-        if (installCallbacks)
-            installNativeCallbacks() // TODO default too?
+        position?.let { pos = it }
     }
+
+    // --- [ glfwCreateWindow ] ---
 
     init {
-        if (handle.value == NULL) {
-            glfw.terminate()
-            throw RuntimeException("Failed to create the GLFW window")
-        }
-    }
-
-    fun installNativeCallbacks() {
-        glfwSetCharCallback(handle.value, nCharCB)
-        glfwSetCursorPosCallback(handle.value, nCursorPosCB)
-        glfwSetCursorEnterCallback(handle.value, nCursorEnterCB)
-        glfwSetFramebufferSizeCallback(handle.value, nFramebufferSizeCB)
-        glfwSetKeyCallback(handle.value, nKeyCB)
-        glfwSetMouseButtonCallback(handle.value, nMouseButtonCB)
-        glfwSetScrollCallback(handle.value, nScrollCB)
-        glfwSetWindowCloseCallback(handle.value, nWindowCloseCB)
-        glfwSetWindowContentScaleCallback(handle.value, nWindowContentScaleCB)
-    }
-
-    fun installDefaultCallbacks() {
-        cursorPosCB = defaultCursorPosCallback
-        cursorEnterCB = defaultCursorEnterCallback
-        framebufferSizeCB = defaultFramebufferSizeCallback
-        keyCB = defaultKeyCallback
-        mouseButtonCB = defaultMouseButtonCallback
-        scrollCB = defaultScrollCallback
-        windowCloseCB = defaultWindowCloseCallback
-        windowContentScaleCB = defaultWindowContentScaleCallback
-    }
-
-    lateinit var caps: Caps
-
-    /**
-     * Spasi: "the ideal option for modern applications is: compatibility context + forwardCompatible. A compatibility context
-     * does not do extra validations that may cost performance and with `forwardCompatible == true` you don't risk using
-     * legacy functionality by mistake.
-     * LWJGL will not try to load deprecated functions, so calling them will crash but the context will actually expose them"
-     */
-    fun createCapabilities(profile: Caps.Profile = Caps.Profile.COMPATIBILITY, forwardCompatible: Boolean = true) {
-        caps = Caps(profile, forwardCompatible)
-    }
-
-    var debugProc: Callback? = null
-
-    fun init(show: Boolean = true) {
-        makeContextCurrent()
-        /*  This line is critical for LWJGL's interoperation with GLFW's OpenGL context,
-            or any context that is managed externally.
-            LWJGL detects the context that is current in the current thread, creates the GLCapabilities instance and
-            makes the OpenGL bindings available for use. */
-        GL.createCapabilities()
-        show(show)
-        if (windowHint.debug) {
-            debugProc = GLUtil.setupDebugMessageCallback()
-            // turn off notifications only
-            GL43C.nglDebugMessageControl(GlDebugSource.DONT_CARE.i, GlDebugType.DONT_CARE.i, GlDebugSeverity.NOTIFICATION.i, 0, NULL, false)
-        }
+        println("init")
+//        if (handle == MemoryUtil.NULL) {
+//            glfw.terminate()
+//            throw RuntimeException("Failed to create the GLFW window")
+//        }
     }
 
     // --- [ glfwDestroyWindow ] ---
 
     /** Free the window callbacks and destroy the window and reset its handle back to NULL */
-    fun destroy() {
-        Callbacks.glfwFreeCallbacks(handle.value)
-        debugProc?.free()
-        glfwDestroyWindow(handle.value)
-        handle = GlfwWindowHandle(NULL)
+    open fun destroy() {
+        freeAllCBs()
+        glfwDestroyWindow(handle)
+//        handle = Ptr.NULL
     }
+
+    /** [JVM] */
+    fun freeAllCBs() = Callbacks.glfwFreeCallbacks(handle)
 
     // --- [ glfwWindowShouldClose ] ---
     // --- [ glfwSetWindowShouldClose ] ---
 
+    var shouldClose: Boolean
+        get() = glfwWindowShouldClose(handle)
+        set(value) = glfwSetWindowShouldClose(handle, value)
+
     val isOpen: Boolean
         get() = !shouldClose
 
-    var shouldClose: Boolean
-        get() = glfwWindowShouldClose(handle.value)
-        set(value) = glfwSetWindowShouldClose(handle.value, value)
+    val isNotOpen: Boolean
+        get() = !isOpen
 
     // --- [ glfwSetWindowTitle ] ---
-
     var title: String = ""
         set(value) {
-            glfwSetWindowTitle(handle.value, value)
+            glfwSetWindowTitle(handle, value)
             field = value
         }
 
     // --- [ glfwSetWindowIcon ] ---
-
-    fun setIcon(images: GLFWImage.Buffer?) = nglfwSetWindowIcon(handle.value, images?.rem ?: 0, images?.adr ?: NULL)
+    fun setIcon(images: GLFWImage.Buffer?) = nglfwSetWindowIcon(handle, images?.rem ?: 0, images?.adr?.L ?: MemoryUtil.NULL)
 
     // --- [ glfwGetWindowPos ] ---
     // --- [ glfwSetWindowPos ] ---
 
     var pos: Vec2i
-        get() = stak {
-            val p = it.mInt(2)
-            nglfwGetWindowPos(handle.value, p.adr, (p + 1).adr)
-            Vec2i(p[0], p[1]) // TODO glm
-        }
-        set(value) = glfwSetWindowPos(handle.value, value.x, value.y)
+        get() = readVec2i { x, y -> nglfwGetWindowPos(handle, x, y) }
+        set(value) = glfwSetWindowPos(handle, value.x, value.y)
 
     // --- [ glfwGetWindowSize ] ---
     // --- [ glfwSetWindowSize ] ---
 
     var size: Vec2i
-        get() = stak {
-            val p = it.mInt(2)
-            nglfwGetWindowSize(handle.value, p.adr, (p + 1).adr)
-            Vec2i(p[0], p[1]) // TODO glm
-        }
-        set(value) = glfwSetWindowSize(handle.value, value.x, value.y)
+        get() = readVec2i { x, y -> nglfwGetWindowSize(handle, x, y) }
+        set(value) = glfwSetWindowSize(handle, value.x, value.y)
 
     // --- [ glfwSetWindowSizeLimits ] ---
 
-    fun setSizeLimit(width: IntRange, height: IntRange) = glfwSetWindowSizeLimits(handle.value, width.first, height.first, width.last, height.last)
-    fun setSizeLimit(minWidth: Int, minHeight: Int, maxWidth: Int, maxHeight: Int) = glfwSetWindowSizeLimits(handle.value, minWidth, minHeight, maxWidth, maxHeight)
+    fun setSizeLimit(width: IntRange, height: IntRange) = setSizeLimit(width.first, width.last, height.first, height.last)
+    fun setSizeLimit(minWidth: Int, minHeight: Int, maxWidth: Int, maxHeight: Int) = glfwSetWindowSizeLimits(handle, minWidth, minHeight, maxWidth, maxHeight)
 
     // --- [ glfwSetWindowAspectRatio ] ---
+    fun setAspectRatio(ratio: Vec2i) = setAspectRatio(ratio.x, ratio.y)
+    fun setAspectRatio(numer: Int, denom: Int) = glfwSetWindowAspectRatio(handle, numer, denom)
 
+    /** [JVM] */
     val aspect: Float
         get() = size.aspect
-//        set(value) = glfwSetWindowAspectRatio(handle, (value * 1_000).i, 1_000)
-
-    var aspectRatio: Vec2i
-        get() = Vec2i(size.x, size.y)
-        set(value) = glfwSetWindowAspectRatio(handle.value, value.x, value.y)
 
     // --- [ glfwGetFramebufferSize ] ---
 
     val framebufferSize: Vec2i
-        get() = stak {
-            val p = it.mInt(2)
-            nglfwGetFramebufferSize(handle.value, p.adr, (p + 1).adr)
-            Vec2i(p[0], p[1]) // TODO glm
-        }
+        get() = readVec2i { x, y -> nglfwGetFramebufferSize(handle, x, y) }
 
     // --- [ glfwGetWindowFrameSize ] ---
 
     val frameSize: Vec4i
-        get() = stak {
-            val p = it.mInt(4)
-            nglfwGetWindowFrameSize(handle.value, p.adr, (p + 1).adr, (p + 2).adr, (p + 3).adr)
-            Vec4i(p[0], p[1], p[2], p[3]) // TODO glm
-        }
+        get() = readVec4i { x, y, z, w -> nglfwGetWindowFrameSize(handle, x, y, z, w) }
 
     // --- [ glfwGetWindowContentScale ] ---
 
     val contentScale: Vec2
-        get() = stak {
-            val p = it.mInt(2)
-            nglfwGetWindowContentScale(handle.value, p.adr, (p + 1).adr)
-            Vec2(p[0], p[1]) // TODO glm
-        }
+        get() = readVec2 { x, y -> nglfwGetWindowContentScale(handle, x, y) }
 
     // --- [ glfwGetWindowOpacity ] ---
     // --- [ glfwSetWindowOpacity ] ---
 
     var opacity: Float
-        get() = glfwGetWindowOpacity(handle.value)
-        set(value) = glfwSetWindowOpacity(handle.value, value)
+        get() = glfwGetWindowOpacity(handle)
+        set(value) = glfwSetWindowOpacity(handle, value)
 
     // --- [ glfwIconifyWindow ] ---
+    fun iconify(iconify: Boolean = true) = if (iconify) glfwIconifyWindow(handle) else restore()
+
     // --- [ glfwRestoreWindow ] ---
-
-    fun iconify() = glfwIconifyWindow(handle.value)
-    fun restore() = glfwRestoreWindow(handle.value)
-
-    // [JVM]
-    fun iconify(iconify: Boolean) = if (iconify) iconify() else restore()
+    fun restore() = glfwRestoreWindow(handle)
 
     // --- [ glfwMaximizeWindow ] ---
-
-    fun maximize() = glfwMaximizeWindow(handle.value)
+    fun maximize() = glfwMaximizeWindow(handle)
 
     // --- [ glfwShowWindow ] ---
-
-    fun show(show: Boolean) = if (show) show() else hide()
-    fun show() = glfwShowWindow(handle.value)
+    fun show(show: Boolean = true) = if (show) glfwShowWindow(handle) else hide()
 
     // --- [ glfwHideWindow ] ---
-
-    fun hide() = glfwHideWindow(handle.value)
+    fun hide() = glfwHideWindow(handle)
 
     // --- [ glfwFocusWindow ] ---
-
-    fun focus() = glfwFocusWindow(handle.value)
+    fun focus() = glfwFocusWindow(handle)
 
     // --- [ glfwRequestWindowAttention ] ---
-
-    fun requestAttention() = glfwRequestWindowAttention(handle.value)
+    fun requestAttention() = glfwRequestWindowAttention(handle)
 
     // --- [ glfwGetWindowMonitor ] ---
-    // --- [ glfwSetWindowMonitor ] ---
+    val monitor: GlfwMonitor
+        get() = GlfwMonitor(glfwGetWindowMonitor(handle))
 
-    var monitor: Monitor
-        get() = Monitor(glfwGetWindowMonitor(handle.value), pos.x, pos.y, size.x, size.y)
-        set(value) = glfwSetWindowMonitor(handle.value, value.handle, value.xPos, value.yPos, value.width, value.height, value.refreshRate)
+    // --- [ glfwSetWindowMonitor ] ---
+    fun setMonitor(monitor: GlfwMonitor, pos: Vec2i, size: Vec2i, refreshRate: Int) = setMonitor(monitor, pos.x, pos.y, size.x, size.y, refreshRate)
+    fun setMonitor(monitor: GlfwMonitor, posX: Int, posY: Int, width: Int, height: Int, refreshRate: Int) =
+            glfwSetWindowMonitor(handle, monitor.handle, posX, posY, width, height, refreshRate)
 
     // --- [ glfwGetWindowAttrib ] ---
     // --- [ glfwSetWindowAttrib ] ---
 
-    val isFocused: Boolean
-        get() = glfwGetWindowAttrib(handle.value, GLFW_FOCUSED).bool
-    val isIconified: Boolean
-        get() = glfwGetWindowAttrib(handle.value, GLFW_ICONIFIED).bool
-    val isMaximized: Boolean
-        get() = glfwGetWindowAttrib(handle.value, GLFW_MAXIMIZED).bool
-    val isHovered: Boolean
-        get() = glfwGetWindowAttrib(handle.value, GLFW_HOVERED).bool
-    val isVisible: Boolean
-        get() = glfwGetWindowAttrib(handle.value, GLFW_VISIBLE).bool
+    // Window related attributes
+    val focused: Boolean
+        get() = glfwGetWindowAttrib(handle, GLFW_FOCUSED).bool
+    val iconified: Boolean
+        get() = glfwGetWindowAttrib(handle, GLFW_ICONIFIED).bool
+    val maximized: Boolean
+        get() = glfwGetWindowAttrib(handle, GLFW_MAXIMIZED).bool
+    val hovered: Boolean
+        get() = glfwGetWindowAttrib(handle, GLFW_HOVERED).bool
+    val visible: Boolean
+        get() = glfwGetWindowAttrib(handle, GLFW_VISIBLE).bool
     var resizable: Boolean
-        get() = glfwGetWindowAttrib(handle.value, GLFW_RESIZABLE).bool
-        set(value) = glfwSetWindowAttrib(handle.value, GLFW_RESIZABLE, value.i)
+        get() = glfwGetWindowAttrib(handle, GLFW_RESIZABLE).bool
+        set(value) = glfwSetWindowAttrib(handle, GLFW_RESIZABLE, value.i)
     var decorated: Boolean
-        get() = glfwGetWindowAttrib(handle.value, GLFW_DECORATED).bool
-        set(value) = glfwSetWindowAttrib(handle.value, GLFW_DECORATED, value.i)
+        get() = glfwGetWindowAttrib(handle, GLFW_DECORATED).bool
+        set(value) = glfwSetWindowAttrib(handle, GLFW_DECORATED, value.i)
     var autoIconified: Boolean
-        get() = glfwGetWindowAttrib(handle.value, GLFW_AUTO_ICONIFY).bool
-        set(value) = glfwSetWindowAttrib(handle.value, GLFW_AUTO_ICONIFY, value.i)
+        get() = glfwGetWindowAttrib(handle, GLFW_AUTO_ICONIFY).bool
+        set(value) = glfwSetWindowAttrib(handle, GLFW_AUTO_ICONIFY, value.i)
     var floating: Boolean
-        get() = glfwGetWindowAttrib(handle.value, GLFW_FLOATING).bool
-        set(value) = glfwSetWindowAttrib(handle.value, GLFW_FLOATING, value.i)
+        get() = glfwGetWindowAttrib(handle, GLFW_FLOATING).bool
+        set(value) = glfwSetWindowAttrib(handle, GLFW_FLOATING, value.i)
     val transparentFramebuffer: Boolean
-        get() = glfwGetWindowAttrib(handle.value, GLFW_TRANSPARENT_FRAMEBUFFER).bool
+        get() = glfwGetWindowAttrib(handle, GLFW_TRANSPARENT_FRAMEBUFFER).bool
     var focusOnShow: Boolean
-        get() = glfwGetWindowAttrib(handle.value, GLFW_FOCUS_ON_SHOW).bool
-        set(value) = glfwSetWindowAttrib(handle.value, GLFW_FOCUS_ON_SHOW, value.i)
+        get() = glfwGetWindowAttrib(handle, GLFW_FOCUS_ON_SHOW).bool
+        set(value) = glfwSetWindowAttrib(handle, GLFW_FOCUS_ON_SHOW, value.i)
+
+    // Context related attributes
+    fun context(block: ContextAttributes.() -> Unit) = ContextAttributes().block()
+
+    inner class ContextAttributes {
+
+        val clientApi: Hints.Context.ClientApi
+            get() = when (glfwGetWindowAttrib(handle, GLFW_CLIENT_API)) {
+                GLFW_OPENGL_API -> Hints.Context.ClientApi.Gl
+                GLFW_OPENGL_ES_API -> Hints.Context.ClientApi.GlEs
+                else -> Hints.Context.ClientApi.None
+            }
+
+        val creationApi: Hints.Context.CreationApi
+            get() = when (glfwGetWindowAttrib(handle, GLFW_CONTEXT_CREATION_API)) {
+                GLFW_NATIVE_CONTEXT_API -> Hints.Context.CreationApi.Native
+                GLFW_EGL_CONTEXT_API -> Hints.Context.CreationApi.Egl
+                else -> Hints.Context.CreationApi.OsMesa
+            }
+
+        val version: String
+            get() = "$major.$minor"
+
+        val major: Int
+            get() = glfwGetWindowAttrib(handle, GLFW_CONTEXT_VERSION_MAJOR)
+
+        val minor: Int
+            get() = glfwGetWindowAttrib(handle, GLFW_CONTEXT_VERSION_MINOR)
+
+        val forwardComp: Boolean
+            get() = glfwGetWindowAttrib(handle, GLFW_OPENGL_FORWARD_COMPAT).bool
+
+        val debug: Boolean
+            get() = glfwGetWindowAttrib(handle, GLFW_OPENGL_DEBUG_CONTEXT).bool
+
+        val profile: Hints.Context.Profile
+            get() = when (glfwGetWindowAttrib(handle, GLFW_OPENGL_PROFILE)) {
+                GLFW_OPENGL_CORE_PROFILE -> Hints.Context.Profile.Core
+                GLFW_OPENGL_COMPAT_PROFILE -> Hints.Context.Profile.Compat
+                else -> Hints.Context.Profile.Any
+            }
+
+        val robustness: Hints.Context.Robustness
+            get() = when (glfwGetWindowAttrib(handle, GLFW_CONTEXT_ROBUSTNESS)) {
+                GLFW_NO_ROBUSTNESS -> Hints.Context.Robustness.None
+                GLFW_NO_RESET_NOTIFICATION -> Hints.Context.Robustness.NoResetNotification
+                else -> Hints.Context.Robustness.LoseContextOnReset
+            }
+
+        val releaseBehaviour: Hints.Context.ReleaseBehaviour
+            get() = when (glfwGetWindowAttrib(handle, GLFW_CONTEXT_RELEASE_BEHAVIOR)) {
+                GLFW_ANY_RELEASE_BEHAVIOR -> Hints.Context.ReleaseBehaviour.Any
+                GLFW_RELEASE_BEHAVIOR_FLUSH -> Hints.Context.ReleaseBehaviour.Flush
+                else -> Hints.Context.ReleaseBehaviour.None
+            }
+
+        val noError: Boolean
+            get() = glfwGetWindowAttrib(handle, GLFW_CONTEXT_NO_ERROR).bool
+    }
 
     // --- [ glfwSetWindowUserPointer ] ---
     // --- [ glfwGetWindowUserPointer ] ---
 
-    var userPointer: Ptr
-        get() = glfwGetWindowUserPointer(handle.value)
-        set(value) = glfwSetWindowUserPointer(handle.value, value)
-
-    // ------------------- Callbacks -------------------
-
-    val defaultKey = "0 - default"
+    var userPointer: Ptr<*>
+        get() = glfwGetWindowUserPointer(handle).toPtr<Nothing>()
+        set(value) = glfwSetWindowUserPointer(handle, value.adr.L)
 
     // --- [ glfwSetWindowPosCallback ] ---
-
-    var windowPosCB: WindowPosCB?
-        get() = windowPosCBs.getOrfirst(defaultKey)
+    var posCB: WindowPosCB?
+        @Deprecated(message = "Write only property", level = DeprecationLevel.HIDDEN) get() = error("")
         set(value) {
-            if (value != null)
-                windowPosCBs[defaultKey] = value
-            else
-                windowPosCBs -= defaultKey
+            val cb = value?.let { GLFWWindowPosCallbackI { wnd, x, y -> it(GlfwWindow(wnd), Vec2i(x, y)) } }
+            glfwSetWindowPosCallback(handle, cb)?.free()
         }
 
-    val windowPosCBs = TreeMap<String, WindowPosCB>()
-    val nWindowPosCB = GLFWWindowPosCallbackI { _, x, y -> windowPosCBs.values.forEach { it(Vec2i(x, y)) } }
-
     // --- [ glfwSetWindowSizeCallback ] ---
-
-    var windowSizeCB: WindowSizeCB?
-        get() = windowSizeCBs.getOrfirst(defaultKey)
-        set(value) =
-            if (value != null) windowSizeCBs[defaultKey] = value
-            else windowSizeCBs -= defaultKey
-
-    val windowSizeCBs = TreeMap<String, WindowSizeCB>()
-    val nWindowSizeCB = GLFWWindowSizeCallbackI { _, x, y -> windowSizeCBs.values.forEach { it(Vec2i(x, y)) } }
+    var sizeCB: WindowSizeCB?
+        @Deprecated(message = "Write only property", level = DeprecationLevel.HIDDEN) get() = error("")
+        set(value) {
+            val cb = value?.let { GLFWWindowSizeCallbackI { wnd, x, y -> it(GlfwWindow(wnd), Vec2i(x, y)) } }
+            glfwSetWindowSizeCallback(handle, cb)?.free()
+        }
 
     // --- [ glfwSetWindowCloseCallback ] ---
 
-    var windowCloseCB: WindowCloseCB?
-        get() = windowCloseCBs.getOrfirst(defaultKey)
-        set(value) =
-            if (value != null) windowCloseCBs[defaultKey] = value
-            else windowCloseCBs -= defaultKey
-    val windowCloseCBs = TreeMap<String, WindowCloseCB>()
-    val nWindowCloseCB = GLFWWindowCloseCallbackI { windowCloseCBs.values.forEach { it() } }
+    var closeCB: WindowCloseCB?
+        @Deprecated(message = "Write only property", level = DeprecationLevel.HIDDEN) get() = error("")
+        set(value) {
+            val cb = value?.let { GLFWWindowCloseCallbackI { wnd -> it(GlfwWindow(wnd)) } }
+            glfwSetWindowCloseCallback(handle, cb)?.free()
+        }
 
     // --- [ glfwSetWindowRefreshCallback ] ---
 
-    var windowRefreshCB: WindowRefreshCB?
-        get() = windowRefreshCBs.getOrfirst(defaultKey)
-        set(value) =
-            if (value != null) windowRefreshCBs[defaultKey] = value
-            else windowRefreshCBs -= defaultKey
-    val windowRefreshCBs = TreeMap<String, WindowRefreshCB>()
-    val nWindowRefreshCB = GLFWWindowRefreshCallbackI { windowRefreshCBs.values.forEach { it() } }
+    var refreshCB: WindowRefreshCB?
+        @Deprecated(message = "Write only property", level = DeprecationLevel.HIDDEN) get() = error("")
+        set(value) {
+            val cb = value?.let { GLFWWindowRefreshCallbackI { wnd -> it(GlfwWindow(wnd)) } }
+            glfwSetWindowRefreshCallback(handle, cb)?.free()
+        }
 
     // --- [ glfwSetWindowFocusCallback ] ---
 
-    var windowFocusCB: WindowFocusCB?
-        get() = windowFocusCBs.getOrfirst(defaultKey)
-        set(value) =
-            if (value != null) windowFocusCBs[defaultKey] = value
-            else windowFocusCBs -= defaultKey
-    val windowFocusCBs = TreeMap<String, WindowFocusCB>()
-    val nWindowFocusCB = GLFWWindowFocusCallbackI { _, focused -> windowFocusCBs.values.forEach { it(focused) } }
+    var focusCB: WindowFocusCB?
+        @Deprecated(message = "Write only property", level = DeprecationLevel.HIDDEN) get() = error("")
+        set(value) {
+            val cb = value?.let { GLFWWindowFocusCallbackI { wnd, focused -> it(GlfwWindow(wnd), focused) } }
+            glfwSetWindowFocusCallback(handle, cb)?.free()
+        }
 
     // --- [ glfwSetWindowIconifyCallback ] ---
 
-    var windowIconifyCB: WindowIconifyCB?
-        get() = windowIconifyCBs.getOrfirst(defaultKey)
-        set(value) =
-            if (value != null) windowIconifyCBs[defaultKey] = value
-            else windowIconifyCBs -= defaultKey
-    val windowIconifyCBs = TreeMap<String, WindowIconifyCB>()
-    val nWindowIconifyCB = GLFWWindowIconifyCallbackI { _, iconify -> windowIconifyCBs.values.forEach { it(iconify) } }
+    var iconifyCB: WindowIconifyCB?
+        @Deprecated(message = "Write only property", level = DeprecationLevel.HIDDEN) get() = error("")
+        set(value) {
+            val cb = value?.let { GLFWWindowIconifyCallbackI { wnd, iconify -> it(GlfwWindow(wnd), iconify) } }
+            glfwSetWindowIconifyCallback(handle, cb)?.free()
+        }
 
     // --- [ glfwSetWindowMaximizeCallback ] ---
 
-    var windowMaximizeCB: WindowMaximizeCB?
-        get() = windowMaximizeCBs.getOrfirst(defaultKey)
-        set(value) =
-            if (value != null) windowMaximizeCBs[defaultKey] = value
-            else windowMaximizeCBs -= defaultKey
-    val windowMaximizeCBs = TreeMap<String, WindowMaximizeCB>()
-    val nWindowMaximizeCB = GLFWWindowMaximizeCallbackI { _, maximized -> windowMaximizeCBs.values.forEach { it(maximized) } }
+    var maximizeCB: WindowMaximizeCB?
+        @Deprecated(message = "Write only property", level = DeprecationLevel.HIDDEN) get() = error("")
+        set(value) {
+            val cb = value?.let { GLFWWindowMaximizeCallbackI { wnd, maximized -> it(GlfwWindow(wnd), maximized) } }
+            glfwSetWindowMaximizeCallback(handle, cb)?.free()
+        }
 
     // --- [ glfwSetFramebufferSizeCallback ] ---
 
     var framebufferSizeCB: FramebufferSizeCB?
-        get() = framebufferSizeCBs.getOrfirst(defaultKey)
-        set(value) =
-            if (value != null) framebufferSizeCBs[defaultKey] = value
-            else framebufferSizeCBs -= defaultKey
-    val framebufferSizeCBs = TreeMap<String, FramebufferSizeCB>()
-    val nFramebufferSizeCB = GLFWFramebufferSizeCallbackI { _, width, height -> framebufferSizeCBs.values.forEach { it(Vec2i(width, height)) } }
+        @Deprecated(message = "Write only property", level = DeprecationLevel.HIDDEN) get() = error("")
+        set(value) {
+            val cb = value?.let { GLFWFramebufferSizeCallbackI { wnd, width, height -> it(GlfwWindow(wnd), Vec2i(width, height)) } }
+            glfwSetFramebufferSizeCallback(handle, cb)?.free()
+        }
 
     // --- [ glfwSetWindowContentScaleCallback ] ---
 
-    var windowContentScaleCB: WindowContentScaleCB?
-        get() = windowContentScaleCBs.getOrfirst(defaultKey)
-        set(value) =
-            if (value != null) windowContentScaleCBs[defaultKey] = value
-            else windowContentScaleCBs -= defaultKey
-    val windowContentScaleCBs = TreeMap<String, WindowContentScaleCB>()
-    val nWindowContentScaleCB = GLFWWindowContentScaleCallbackI { _, xScale, yScale -> windowContentScaleCBs.values.forEach { it(Vec2(xScale, yScale)) } }
+    var contentScaleCB: WindowContentScaleCB?
+        @Deprecated(message = "Write only property", level = DeprecationLevel.HIDDEN) get() = error("")
+        set(value) {
+            val cb = value?.let { GLFWWindowContentScaleCallbackI { wnd, xScale, yScale -> it(GlfwWindow(wnd), Vec2(xScale, yScale)) } }
+            glfwSetWindowContentScaleCallback(handle, cb)?.free()
+        }
 
     // --- [ glfwGetInputMode ] ---
     // --- [ glfwSetInputMode ] ---
 
-    var cursorMode: CursorMode
-        get() = CursorMode of glfwGetInputMode(handle.value, GLFW_CURSOR)
-        set(value) = glfwSetInputMode(handle.value, GLFW_CURSOR, value.i)
-
     enum class CursorMode(val i: Int) {
-        normal(GLFW_CURSOR_NORMAL), hidden(GLFW_CURSOR_HIDDEN), disabled(GLFW_CURSOR_DISABLED);
+        Normal(GLFW_CURSOR_NORMAL),
+        Hidden(GLFW_CURSOR_HIDDEN),
+        Disabled(GLFW_CURSOR_DISABLED), ;
 
         companion object {
             infix fun of(i: Int) = values().first { it.i == i }
         }
     }
 
+    var cursorMode: CursorMode
+        get() = CursorMode of glfwGetInputMode(handle, GLFW_CURSOR)
+        set(value) = glfwSetInputMode(handle, GLFW_CURSOR, value.i)
+
     var stickyKeys: Boolean
-        get() = glfwGetInputMode(handle.value, GLFW_STICKY_KEYS).bool
-        set(value) = glfwSetInputMode(handle.value, GLFW_STICKY_KEYS, value.i)
+        get() = glfwGetInputMode(handle, GLFW_STICKY_KEYS).bool
+        set(value) = glfwSetInputMode(handle, GLFW_STICKY_KEYS, value.i)
 
     var stickyMouseButtons: Boolean
-        get() = glfwGetInputMode(handle.value, GLFW_STICKY_MOUSE_BUTTONS).bool
-        set(value) = glfwSetInputMode(handle.value, GLFW_STICKY_MOUSE_BUTTONS, value.i)
+        get() = glfwGetInputMode(handle, GLFW_STICKY_MOUSE_BUTTONS).bool
+        set(value) = glfwSetInputMode(handle, GLFW_STICKY_MOUSE_BUTTONS, value.i)
 
     var lockKeyMods: Boolean
-        get() = glfwGetInputMode(handle.value, GLFW_LOCK_KEY_MODS).bool
-        set(value) = glfwSetInputMode(handle.value, GLFW_LOCK_KEY_MODS, value.i)
+        get() = glfwGetInputMode(handle, GLFW_LOCK_KEY_MODS).bool
+        set(value) = glfwSetInputMode(handle, GLFW_LOCK_KEY_MODS, value.i)
 
+    var rawMouseMotion: Boolean
+        get() = glfwGetInputMode(handle, GLFW_RAW_MOUSE_MOTION).bool
+        set(value) = glfwSetInputMode(handle, GLFW_RAW_MOUSE_MOTION, value.i)
+
+    // --- [ glfwRawMouseMotionSupported ] ---
+    val rawMouseMotionSupported: Boolean
+        get() = glfwRawMouseMotionSupported()
+
+    // --- [ glfwGetKeyName ] ---
+    // --- [ glfwGetKeyScancode ] ---
+    // -> Key
 
     // --- [ glfwGetKey ] ---
-
-    infix fun isPressed(key: Key): Boolean = glfwGetKey(handle.value, key.i) == GLFW_PRESS
-    infix fun isReleased(key: Key): Boolean = glfwGetKey(handle.value, key.i) == GLFW_RELEASE
+    infix fun isPressed(key: Key): Boolean = glfwGetKey(handle, key.i) == GLFW_PRESS
+    infix fun isReleased(key: Key): Boolean = glfwGetKey(handle, key.i) == GLFW_RELEASE
 
     // --- [ glfwGetMouseButton ] ---
-
-    infix fun isPressed(button: MouseButton): Boolean = glfwGetMouseButton(handle.value, button.i) == GLFW_PRESS
-    infix fun isRelease(button: MouseButton): Boolean = glfwGetMouseButton(handle.value, button.i) == GLFW_RELEASE
+    infix fun isPressed(button: MouseButton): Boolean = glfwGetMouseButton(handle, button.i) == GLFW_PRESS
+    infix fun isRelease(button: MouseButton): Boolean = glfwGetMouseButton(handle, button.i) == GLFW_RELEASE
 
     // --- [ glfwGetCursorPos ] ---
     // --- [ glfwSetCursorPos ] ---
     var cursorPos: Vec2d
-        get() = stak {
-            val p = it.mDouble(2)
-            nglfwGetCursorPos(handle.value, p.adr, (p + 1).adr)
-            Vec2d(p[0], p[1]) // TODO glm
-        }
-        set(value) = glfwSetCursorPos(handle.value, value.x, value.y)
+        get() = readVec2d { x, y -> nglfwGetCursorPos(handle, x, y) }
+        set(value) = glfwSetCursorPos(handle, value.x, value.y)
+
+
+    // --- [ glfwSetCursor ] ---
+    var cursor: GlfwCursor
+        @Deprecated(message = "Write only property", level = DeprecationLevel.HIDDEN) get() = error("")
+        set(value) = glfwSetCursor(handle, value.handle)
 
     // --- [ glfwSetKeyCallback ] ---
-
     var keyCB: KeyCB?
-        get() = keyCBs.getOrfirst(defaultKey)
-        set(value) =
-            if (value != null) keyCBs[defaultKey] = value
-            else keyCBs -= defaultKey
-    val keyCBs = TreeMap<String, KeyCB>()
-    val nKeyCB = GLFWKeyCallbackI { _, key, scanCode, action, mods -> keyCBs.values.forEach { it(key, scanCode, action, mods) } }
+        @Deprecated(message = "Write only property", level = DeprecationLevel.HIDDEN) get() = error("")
+        set(value) {
+            val cb = value?.let { GLFWKeyCallbackI { wnd, key, scanCode, action, mods -> it(GlfwWindow(wnd), key, scanCode, action, mods) } }
+            glfwSetKeyCallback(handle, cb)?.free()
+        }
 
     // --- [ glfwSetCharCallback ] ---
-
     var charCB: CharCB?
-        get() = charCBs.getOrfirst(defaultKey)
-        set(value) =
-            if (value != null) charCBs[defaultKey] = value
-            else charCBs -= defaultKey
-
-    val charCBs = TreeMap<String, CharCB>()
-    val nCharCB = GLFWCharCallbackI { _, codePoint -> charCBs.values.forEach { it(codePoint) } }
+        @Deprecated(message = "Write only property", level = DeprecationLevel.HIDDEN) get() = error("")
+        set(value) {
+            val cb = value?.let { GLFWCharCallbackI { wnd, codePoint -> it(GlfwWindow(wnd), codePoint) } }
+            glfwSetCharCallback(handle, cb)?.free()
+        }
 
     // --- [ glfwSetCharModsCallback ] ---
-
     var charModsCB: CharModsCB?
-        get() = charModsCBs.getOrfirst(defaultKey)
-        set(value) =
-            if (value != null) charModsCBs[defaultKey] = value
-            else charModsCBs -= defaultKey
-
-    val charModsCBs = TreeMap<String, CharModsCB>()
-    val nCharModsCB = GLFWCharModsCallbackI { _, codePoint, mods -> charModsCBs.values.forEach { it(codePoint, mods) } }
+        @Deprecated(message = "Write only property", level = DeprecationLevel.HIDDEN) get() = error("")
+        set(value) {
+            val cb = value?.let { GLFWCharModsCallbackI { wnd, codePoint, mods -> it(GlfwWindow(wnd), codePoint, mods) } }
+            glfwSetCharModsCallback(handle, cb)?.free()
+        }
 
     // --- [ glfwSetMouseButtonCallback ] ---
-
     var mouseButtonCB: MouseButtonCB?
-        get() = mouseButtonCBs.getOrfirst(defaultKey)
-        set(value) =
-            if (value != null) mouseButtonCBs[defaultKey] = value
-            else mouseButtonCBs -= defaultKey
-
-    val mouseButtonCBs = TreeMap<String, MouseButtonCB>()
-    val nMouseButtonCB = GLFWMouseButtonCallbackI { _, button, action, mods -> mouseButtonCBs.values.forEach { it(button, action, mods) } }
+        @Deprecated(message = "Write only property", level = DeprecationLevel.HIDDEN) get() = error("")
+        set(value) {
+            val cb = value?.let { GLFWMouseButtonCallbackI { wnd, button, action, mods -> it(GlfwWindow(wnd), button, action, mods) } }
+            glfwSetMouseButtonCallback(handle, cb)?.free()
+        }
 
     // --- [ glfwSetCursorPosCallback ] ---
 
     var cursorPosCB: CursorPosCB?
-        get() = cursorPosCBs.getOrfirst(defaultKey)
-        set(value) =
-            if (value != null) cursorPosCBs[defaultKey] = value
-            else cursorPosCBs -= defaultKey
-
-    val cursorPosCBs = TreeMap<String, CursorPosCB>()
-    val nCursorPosCB = GLFWCursorPosCallbackI { _, xPos, yPos -> cursorPosCBs.values.forEach { it(Vec2(xPos, yPos)) } }
+        @Deprecated(message = "Write only property", level = DeprecationLevel.HIDDEN) get() = error("")
+        set(value) {
+            val cb = value?.let { GLFWCursorPosCallbackI { wnd, xPos, yPos -> it(GlfwWindow(wnd), Vec2(xPos, yPos)) } }
+            glfwSetCursorPosCallback(handle, cb)?.free()
+        }
 
     // --- [ glfwSetCursorEnterCallback ] ---
-
     var cursorEnterCB: CursorEnterCB?
-        get() = cursorEnterCBs.getOrfirst(defaultKey)
-        set(value) =
-            if (value != null) cursorEnterCBs[defaultKey] = value
-            else cursorEnterCBs -= defaultKey
-
-    val cursorEnterCBs = TreeMap<String, CursorEnterCB>()
-    val nCursorEnterCB = GLFWCursorEnterCallbackI { _, entered -> cursorEnterCBs.values.forEach { it(entered) } }
+        @Deprecated(message = "Write only property", level = DeprecationLevel.HIDDEN) get() = error("")
+        set(value) {
+            val cb = value?.let { GLFWCursorEnterCallbackI { wnd, entered -> it(GlfwWindow(wnd), entered) } }
+            glfwSetCursorEnterCallback(handle, cb)?.free()
+        }
 
     // --- [ glfwSetScrollCallback ] ---
-
     var scrollCB: ScrollCB?
-        get() = scrollCBs.getOrfirst(defaultKey)
-        set(value) =
-            if (value != null) scrollCBs[defaultKey] = value
-            else scrollCBs -= defaultKey
-
-    val scrollCBs = TreeMap<String, ScrollCB>()
-    val nScrollCB = GLFWScrollCallbackI { _, xOffset, yOffset -> scrollCBs.values.forEach { it(Vec2d(xOffset, yOffset)) } }
+        @Deprecated(message = "Write only property", level = DeprecationLevel.HIDDEN) get() = error("")
+        set(value) {
+            val cb = value?.let { GLFWScrollCallbackI { wnd, xOffset, yOffset -> it(GlfwWindow(wnd), Vec2d(xOffset, yOffset)) } }
+            glfwSetScrollCallback(handle, cb)?.free()
+        }
 
     // --- [ glfwSetDropCallback ] ---
-
     var dropCB: DropCB?
-        get() = dropCBs.getOrfirst(defaultKey)
-        set(value) =
-            if (value != null) dropCBs[defaultKey] = value
-            else dropCBs -= defaultKey
-
-    val dropCBs = TreeMap<String, DropCB>()
-    val nDropCB = GLFWDropCallbackI { _, xOffset, yOffset -> scrollCBs.values.forEach { it(Vec2d(xOffset, yOffset)) } }
-
-
-    var clipboardString: String?
-        // --- [ glfwGetClipboardString ] ---
-        get() = glfwGetClipboardString(handle.value)
-        // --- [ glfwSetClipboardString ] ---
+        @Deprecated(message = "Write only property", level = DeprecationLevel.HIDDEN) get() = error("")
         set(value) {
-            value?.let { glfwSetClipboardString(handle.value, it) }
+            val cb = value?.let {
+                GLFWDropCallbackI { wnd, count, ppNames ->
+                    it(GlfwWindow(wnd), Array(count) {
+                        memUTF8(memGetAddress(ppNames + it * Pointer.POINTER_SIZE))
+                    })
+                }
+            }
+            glfwSetDropCallback(handle, cb)?.free()
+        }
+
+
+    // --- [ glfwGetClipboardString ] ---
+    // --- [ glfwSetClipboardString ] ---
+    var clipboardString: String?
+        get() = glfwGetClipboardString(handle)
+        set(value) {
+            value?.let { glfwSetClipboardString(handle, it) }
         }
 
     // --- [ glfwMakeContextCurrent ] ---
-
-    fun makeContextCurrent() = glfwMakeContextCurrent(handle.value)
-    fun makeContextCurrent(current: Boolean) = glfwMakeContextCurrent(if (current) handle.value else NULL)
-
-    inline fun inContext(block: () -> Unit) {
-        glfwMakeContextCurrent(handle.value)
-        GL.setCapabilities(caps.gl)
-        block()
-        glfwMakeContextCurrent(NULL)
-    }
-
-    /** for Java */
-    fun inContext(runnable: Runnable) {
-        glfwMakeContextCurrent(handle.value)
-        GL.setCapabilities(caps.gl)
-        runnable.run()
-        glfwMakeContextCurrent(NULL)
-    }
+    fun makeContextCurrent(current: Boolean = true) = glfwMakeContextCurrent(if (current) handle else MemoryUtil.NULL)
 
     // --- [ glfwSwapBuffers ] ---
 
-    fun swapBuffers() = glfwSwapBuffers(handle.value)
+    fun swapBuffers() = glfwSwapBuffers(handle)
 
-    // [JVM] alias
+    /** [JVM] alias */
     fun present() = swapBuffers()
 
-
-    val defaultKeyCallback: KeyCB = { key, scanCode, action, mods -> onKey(Key of key, scanCode, action, mods) }
-    val defaultMouseButtonCallback: MouseButtonCB = { button, action, mods -> onMouse(MouseButton of button, action, mods) }
-    val defaultCursorPosCallback: CursorPosCB = { pos -> onMouseMoved(pos) }
-    val defaultCursorEnterCallback: CursorEnterCB = { entered -> if (entered) onMouseEntered() else onMouseExited() }
-    val defaultScrollCallback: ScrollCB = { scroll -> onMouseScrolled(scroll.y.f) }
-    val defaultWindowCloseCallback: WindowCloseCB = ::onWindowClosed
-    val defaultWindowContentScaleCallback: WindowContentScaleCB = { newScale -> onWindowContentScaled(newScale) }
-    val defaultFramebufferSizeCallback: FramebufferSizeCB = { size -> onWindowResized(size) }
-
-    //
-    // Event handlers are called by the GLFW callback mechanism and should not be called directly
-    //
-
-    open fun onWindowResized(newSize: Vec2i) {}
-    open fun onWindowClosed() {}
-
-    // Keyboard handling
-    open fun onKey(key: Key, scanCode: Int, action: Int, mods: Int) {
-        when (action) {
-            GLFW_PRESS -> onKeyPressed(key, mods)
-            GLFW_RELEASE -> onKeyReleased(key, mods)
-        }
+    inline fun inContext(block: () -> Unit) {
+        makeContextCurrent()
+        block()
+        makeContextCurrent(false)
     }
 
-    open fun onKeyPressed(key: Key, mods: Int) {}
-    open fun onKeyReleased(key: Key, mods: Int) {}
-
-    // Mouse handling
-    open fun onMouse(button: MouseButton, action: Int, mods: Int) {
-        when (action) {
-            GLFW_PRESS -> onMousePressed(button, mods)
-            GLFW_RELEASE -> onMouseReleased(button, mods)
-        }
+    /** for Java */
+    open fun inContext(runnable: Runnable) {
+        makeContextCurrent()
+        runnable.run()
+        makeContextCurrent(false)
     }
-
-    open fun onMousePressed(button: MouseButton, mods: Int) {}
-    open fun onMouseReleased(button: MouseButton, mods: Int) {}
-    open fun onMouseMoved(newPos: Vec2) {}
-    open fun onMouseEntered() {}
-    open fun onMouseExited() {}
-    open fun onMouseScrolled(delta: Float) {}
-
-    open fun onWindowContentScaled(newScale: Vec2) {}
-
-    var cursor: GlfwCursor
-        get() = error("this is a setter-only property")
-        set(value) = glfwSetCursor(handle.value, value.handle)
-
 
     var autoSwap = true
 
@@ -633,16 +531,16 @@ open class GlfwWindow(var handle: GlfwWindowHandle) {
      */
     inline fun loop(condition: () -> Boolean, block: (MemoryStack) -> Unit) {
         while (condition()) {
-            glfwPollEvents()
-            stak {
+            glfw.pollEvents()
+            stack {
                 block(it)
                 if (autoSwap)
-                    glfwSwapBuffers(handle.value)
+                    swapBuffers()
             }
         }
     }
 
-    fun loop(block: Consumer<MemoryStack>) = loop(BooleanSupplier { isOpen }, block)
+    fun loop(block: Consumer<MemoryStack>) = loop({ isOpen }, block)
 
     /**
      *  The `stack` passed to `block` will be automatically a stack frame in place
@@ -652,11 +550,11 @@ open class GlfwWindow(var handle: GlfwWindowHandle) {
      */
     fun loop(condition: BooleanSupplier, block: Consumer<MemoryStack>) {
         while (condition.asBoolean) {
-            glfwPollEvents()
-            stak {
+            glfw.pollEvents()
+            stack {
                 block.accept(it)
                 if (autoSwap)
-                    glfwSwapBuffers(handle.value)
+                    glfwSwapBuffers(handle)
             }
         }
     }
@@ -665,15 +563,17 @@ open class GlfwWindow(var handle: GlfwWindowHandle) {
 
 
     val hwnd: HWND
-        get() = HWND(GLFWNativeWin32.glfwGetWin32Window(handle.value))
+        get() = HWND(GLFWNativeWin32.glfwGetWin32Window(handle))
 
     val isCurrent: Boolean
-        get() = glfw.currentContext == handle
+        get() = glfw.currentContext == this
 
     companion object {
-        infix fun fromWin32Window(hwnd: HWND): GlfwWindow = GlfwWindow(glfw.attachWin32Window(hwnd))
+        infix fun fromWin32Window(hwnd: HWND): GlfwWindow = glfw attachWin32Window hwnd
 
         @JvmStatic
-        fun from(handle: Long) = GlfwWindow(GlfwWindowHandle(handle))
+        infix fun from(handle: Long): GlfwWindow = GlfwWindow(handle)
+
+        val NULL = GlfwWindow(MemoryUtil.NULL)
     }
 }

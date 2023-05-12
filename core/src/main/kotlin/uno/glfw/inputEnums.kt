@@ -10,16 +10,16 @@ enum class Key(val i: Int) {
     MINUS(GLFW_KEY_MINUS),
     PERIOD(GLFW_KEY_PERIOD),
     SLASH(GLFW_KEY_SLASH),
-    _0(GLFW_KEY_0),
-    _1(GLFW_KEY_1),
-    _2(GLFW_KEY_2),
-    _3(GLFW_KEY_3),
-    _4(GLFW_KEY_4),
-    _5(GLFW_KEY_5),
-    _6(GLFW_KEY_6),
-    _7(GLFW_KEY_7),
-    _8(GLFW_KEY_8),
-    _9(GLFW_KEY_9),
+    `0`(GLFW_KEY_0),
+    `1`(GLFW_KEY_1),
+    `2`(GLFW_KEY_2),
+    `3`(GLFW_KEY_3),
+    `4`(GLFW_KEY_4),
+    `5`(GLFW_KEY_5),
+    `6`(GLFW_KEY_6),
+    `7`(GLFW_KEY_7),
+    `8`(GLFW_KEY_8),
+    `9`(GLFW_KEY_9),
     SEMICOLON(GLFW_KEY_SEMICOLON),
     EQUAL(GLFW_KEY_EQUAL),
     A(GLFW_KEY_A),
@@ -54,7 +54,9 @@ enum class Key(val i: Int) {
     GRAVE_ACCENT(GLFW_KEY_GRAVE_ACCENT),
     WORLD_1(GLFW_KEY_WORLD_1),
     WORLD_2(GLFW_KEY_WORLD_2),
+
     // Function keys.
+
     ESCAPE(GLFW_KEY_ESCAPE),
     ENTER(GLFW_KEY_ENTER),
     TAB(GLFW_KEY_TAB),
@@ -129,7 +131,7 @@ enum class Key(val i: Int) {
 
     // --- [ glfwGetKeyName ] ---
     val keyName: String?
-        get() = glfwGetKeyName(i, -1)
+        get() = glfwGetKeyName(i, scancode)
 
     // --- [ glfwGetKeyScancode ] ---
     val scancode: Int

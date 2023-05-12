@@ -1,6 +1,5 @@
 package uno.buffer
 
-import glm_.BYTES
 import glm_.b
 import glm_.vec2.Vec2
 import glm_.vec2.Vec2i
@@ -157,4 +156,4 @@ fun intBufferOf(vertices: Collection<*>): IntBuffer {
     return res
 }
 
-fun bufferOf(charSequence: CharSequence) = ByteBuffer(charSequence.length) { charSequence[it].b }
+fun bufferOf(s: String) = ByteBuffer(s.length) { s[it].b }

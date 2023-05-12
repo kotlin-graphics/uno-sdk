@@ -3,7 +3,7 @@ package uno.glfw
 import glm_.i
 import org.lwjgl.glfw.GLFW.*
 
-object initHint {
+class InitHint {
 
     var joystickHatButtons = true
         set(value) {
