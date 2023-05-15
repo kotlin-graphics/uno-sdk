@@ -96,30 +96,30 @@ val isNotCI: Boolean
 inline fun readVec2(block: (Long, Long) -> Unit): Vec2 = stack {
     val ptr = it.PtrFloat(Vec2.length)
     block(ptr.adr.L, (ptr + 1).adr.L)
-    return Vec2(ptr)
+    Vec2(ptr)
 }
 inline fun readVec2d(block: (Long, Long) -> Unit): Vec2d = stack {
     val ptr = it.PtrDouble(Vec2d.length)
     block(ptr.adr.L, (ptr + 1).adr.L)
-    return Vec2d(ptr)
+    Vec2d(ptr)
 }
 
 inline fun readVec2i(block: (Long, Long) -> Unit): Vec2i = stack {
     val ptr = it.PtrInt(Vec2i.length)
     block(ptr.adr.L, (ptr + 1).adr.L)
-    return Vec2i(ptr)
+    Vec2i(ptr)
 }
 
 inline fun readVec3i(block: (Long, Long, Long) -> Unit): Vec3i = stack {
     val ptr = it.PtrInt(Vec3i.length)
     block(ptr.adr.L, (ptr + 1).adr.L, (ptr + 2).adr.L)
-    return Vec3i(ptr)
+    Vec3i(ptr)
 }
 
 inline fun readVec4i(block: (Long, Long, Long, Long) -> Unit): Vec4i = stack {
     val ptr = it.PtrInt(Vec4i.length)
     block(ptr.adr.L, (ptr + 1).adr.L, (ptr + 2).adr.L, (ptr + 3).adr.L)
-    return Vec4i(ptr)
+    Vec4i(ptr)
 }
 
 @JvmInline

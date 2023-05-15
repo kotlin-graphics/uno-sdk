@@ -277,7 +277,7 @@ object glfw {
     // -> GlfwWindow
 
     // --- [ glfwRawMouseMotionSupported ] ---
-    val isRawMouseMotionSupported: Boolean
+    val rawMouseMotionSupported: Boolean
         get() = glfwRawMouseMotionSupported()
 
     // --- [ glfwGetKeyName ] ---
@@ -294,7 +294,8 @@ object glfw {
     // -> GlfwWindow
 
     // --- [ glfwCreateCursor ] ---
-    fun createCursor(image: GLFWImage, xhot: Int, yhot: Int) = GlfwCursor(glfwCreateCursor(image, xhot, yhot))
+    // --- [ glfwDestroyCursor ] ---
+    // -> GlfwCursor
 
     // --- [ glfwCreateStandardCursor ] ---
 
@@ -349,7 +350,14 @@ object glfw {
 
     // --- [ glfwSetClipboardString ] ---
     // --- [ glfwGetClipboardString ] ---
-    // -> GlfwWindow
+//    Parameters
+//    [in]	window	Deprecated. Any valid window or NULL.
+    // -> here
+    var clipboardString: String?
+        get() = glfwGetClipboardString(NULL)
+        set(value) {
+            value?.let { glfwSetClipboardString(NULL, it) }
+        }
 
     // --- [ glfwGetTime ] ---
     // --- [ glfwSetTime ] ---

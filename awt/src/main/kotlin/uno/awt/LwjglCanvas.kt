@@ -58,7 +58,7 @@ abstract class LwjglCanvas(val glDebug: Boolean = false) : Canvas() {
         // glfwWindowHint can be used here to configure the GL context
         val glfwWindow = GlfwWindow fromWin32Window hwnd
         glWindow = GlWindow(glfwWindow, forwardCompatible = false).apply {
-            makeContextCurrent()
+            makeCurrent()
         }
 
         if (glDebug)
@@ -68,7 +68,7 @@ abstract class LwjglCanvas(val glDebug: Boolean = false) : Canvas() {
 
         init()
 
-        glfwWindow.makeContextCurrent(false)
+        glfwWindow.makeCurrent(false)
 
 //        println("/LwjglCanvas.initInternal ${Date().toInstant()}")
     }

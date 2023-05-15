@@ -1,3 +1,5 @@
+@file:OptIn(ExperimentalUnsignedTypes::class)
+
 package uno.glfw
 
 import glm_.vec2.Vec2
@@ -5,11 +7,14 @@ import glm_.vec2.Vec2d
 import glm_.vec2.Vec2i
 import gln.L
 import kool.*
+import org.lwjgl.glfw.GLFW
 import org.lwjgl.glfw.GLFW.glfwDestroyCursor
 import org.lwjgl.glfw.GLFWGammaRamp
+import org.lwjgl.glfw.GLFWImage
 import org.lwjgl.system.MemoryStack
-import org.lwjgl.system.MemoryUtil.memPutAddress
-import uno.kotlin.ptrInt
+import org.lwjgl.system.MemoryUtil
+import org.lwjgl.system.MemoryUtil.*
+import uno.kotlin.ptrUByte
 import uno.kotlin.ptrUShort
 
 
@@ -27,7 +32,7 @@ operator fun Ptr<GlfwVidMode>.get(index: Int) = GlfwVidMode((adr.L + index * Glf
 
 class GlfwGammaRamp(val red: IntArray, val green: IntArray, val blue: IntArray) {
 
-    fun toStack(stack: MemoryStack): Ptr<GlfwGammaRamp> {
+    infix fun toStack(stack: MemoryStack): Ptr<GlfwGammaRamp> {
         val r = stack.ptrUShort(red.size)
         val g = stack.ptrUShort(red.size)
         val b = stack.ptrUShort(red.size)
@@ -36,13 +41,11 @@ class GlfwGammaRamp(val red: IntArray, val green: IntArray, val blue: IntArray) 
             g[i] = green[i].toUShort()
             b[i] = blue[i].toUShort()
         }
-        val s = stack.ptrInt()
-        s[0] = red.size
         val ptr = stack.nmalloc(GLFWGammaRamp.ALIGNOF, GLFWGammaRamp.SIZEOF)
         memPutAddress(ptr + GLFWGammaRamp.RED, r.adr.L)
         memPutAddress(ptr + GLFWGammaRamp.GREEN, g.adr.L)
         memPutAddress(ptr + GLFWGammaRamp.BLUE, b.adr.L)
-        memPutAddress(ptr + GLFWGammaRamp.SIZE, s.adr.L)
+        memPutInt(ptr + GLFWGammaRamp.SIZE, red.size)
         return ptr.toPtr()
     }
 }
@@ -57,9 +60,21 @@ fun GlfwGammaRamp(ptr: Ptr<GlfwGammaRamp>): GlfwGammaRamp {
 
 @JvmInline
 value class GlfwCursor(val handle: Long) {
+    // --- [ glfwCreateCursor ] ---
+    constructor(image: GlfwImage, hot: Int) : this(image, hot, hot)
+    constructor(image: GlfwImage, xHot: Int, yHot: Int) : this(stack { GLFW.nglfwCreateCursor(image.toStack(it).adr.L, xHot, yHot) })
 
     // --- [ glfwDestroyCursor ] ---
     fun destroy() = glfwDestroyCursor(handle)
+
+    val isValid: Boolean
+        get() = handle != MemoryUtil.NULL
+    val isNotValid: Boolean
+        get() = !isValid
+
+    companion object {
+        val NULL = GlfwCursor(MemoryUtil.NULL)
+    }
 }
 
 typealias WindowPosCB = (window: GlfwWindow, pos: Vec2i) -> Unit
@@ -71,11 +86,11 @@ typealias WindowIconifyCB = (window: GlfwWindow, iconified: Boolean) -> Unit
 typealias WindowMaximizeCB = (window: GlfwWindow, maximized: Boolean) -> Unit
 typealias FramebufferSizeCB = (window: GlfwWindow, size: Vec2i) -> Unit
 typealias WindowContentScaleCB = (window: GlfwWindow, scale: Vec2) -> Unit
-typealias KeyCB = (window: GlfwWindow, key: Int, scanCode: Int, action: Int, mods: Int) -> Unit
+typealias KeyCB = (window: GlfwWindow, key: Key, scanCode: Int, action: InputAction, mods: Int) -> Unit
 typealias CharCB = (window: GlfwWindow, codePoint: Int) -> Unit
 typealias CharModsCB = (window: GlfwWindow, codePoint: Int, mods: Int) -> Unit
 typealias MouseButtonCB = (window: GlfwWindow, button: Int, action: Int, mods: Int) -> Unit
-typealias CursorPosCB = (window: GlfwWindow, pos: Vec2) -> Unit
+typealias CursorPosCB = (window: GlfwWindow, pos: Vec2d) -> Unit
 typealias CursorEnterCB = (window: GlfwWindow, entered: Boolean) -> Unit
 typealias ScrollCB = (window: GlfwWindow, scroll: Vec2d) -> Unit
 typealias DropCB = (window: GlfwWindow, names: Array<String>) -> Unit
@@ -89,3 +104,18 @@ enum class VSync {
 }
 
 typealias GLFWglproc = Long
+
+class GlfwImage(val width: Int, val height: Int, val pixels: UByteArray) {
+    constructor(size: Int, pixels: UByteArray) : this(size, size, pixels)
+
+    infix fun toStack(stack: MemoryStack): Ptr<GlfwImage> {
+        val ptr = stack.nmalloc(GLFWImage.ALIGNOF, GLFWImage.SIZEOF)
+        memPutInt(ptr + GLFWImage.WIDTH, width)
+        memPutInt(ptr + GLFWImage.HEIGHT, height)
+        val pPixels = stack.ptrUByte(pixels.size)
+        for (i in pixels.indices)
+            pPixels[i] = pixels[i]
+        memPutAddress(ptr + GLFWImage.PIXELS, pPixels.adr.L)
+        return ptr.toPtr()
+    }
+}

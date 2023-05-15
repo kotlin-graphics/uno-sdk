@@ -142,6 +142,13 @@ enum class Key(val i: Int) {
     }
 }
 
+enum class InputAction(val i: Int) {
+    Press(GLFW_PRESS), Release(GLFW_RELEASE), Repeat(GLFW_REPEAT);
+    companion object {
+        infix fun of(i: Int) = values().first { it.i == i }
+    }
+}
+
 enum class MouseButton(@JvmField val i: Int) {
 
     `1`(0),
@@ -152,9 +159,9 @@ enum class MouseButton(@JvmField val i: Int) {
     `6`(5),
     `7`(6),
     `8`(7),
-    LAST  (`8`.i),
-    LEFT  (`1`.i),
-    RIGHT (`2`.i),
+    LAST(`8`.i),
+    LEFT(`1`.i),
+    RIGHT(`2`.i),
     MIDDLE(`3`.i);
 
     companion object {

@@ -4,7 +4,6 @@ import gln.cap.Caps
 import gln.misc.GlDebugSeverity
 import gln.misc.GlDebugSource
 import gln.misc.GlDebugType
-import org.lwjgl.glfw.GLFW
 import org.lwjgl.opengl.GL
 import org.lwjgl.opengl.GL43C
 import org.lwjgl.opengl.GLUtil
@@ -21,17 +20,19 @@ open class GlWindow(val glfwWindow: GlfwWindow,
      * legacy functionality by mistake.
      * LWJGL will not try to load deprecated functions, so calling them will crash but the context will actually expose them"
      */
+    init {
+        makeCurrent()
+        /*  This line is critical for LWJGL's interoperation with GLFW's OpenGL context,
+            or any context that is managed externally.
+            LWJGL detects the context that is current in the current thread, creates the GLCapabilities instance and
+            makes the OpenGL bindings available for use. */
+//        GL.createCapabilities() // useless, it's in Caps instantiation
+    }
     val caps = Caps(profile, forwardCompatible)
 
     var debugProc: Callback? = null
 
     fun init(show: Boolean = true) {
-        makeContextCurrent()
-        /*  This line is critical for LWJGL's interoperation with GLFW's OpenGL context,
-            or any context that is managed externally.
-            LWJGL detects the context that is current in the current thread, creates the GLCapabilities instance and
-            makes the OpenGL bindings available for use. */
-        GL.createCapabilities()
         glfwWindow.show(show)
         if (glfw.hints.context.debug) {
             debugProc = GLUtil.setupDebugMessageCallback()
@@ -46,17 +47,17 @@ open class GlWindow(val glfwWindow: GlfwWindow,
     }
 
     inline fun inGlContext(block: () -> Unit) {
-        makeContextCurrent()
+        makeCurrent()
         GL.setCapabilities(caps.gl)
         block()
-        makeContextCurrent(false)
+        makeCurrent(false)
     }
 
     /** for Java */
     override fun inContext(runnable: Runnable) {
-        makeContextCurrent()
+        makeCurrent()
         GL.setCapabilities(caps.gl)
         runnable.run()
-        makeContextCurrent(false)
+        makeCurrent(false)
     }
 }

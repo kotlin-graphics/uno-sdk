@@ -12,42 +12,35 @@ import org.lwjgl.glfw.*
 import org.lwjgl.glfw.GLFW.*
 import org.lwjgl.system.MemoryStack
 import org.lwjgl.system.MemoryUtil
-import org.lwjgl.system.MemoryUtil.*
+import org.lwjgl.system.MemoryUtil.memGetAddress
+import org.lwjgl.system.MemoryUtil.memUTF8
 import org.lwjgl.system.Pointer
 import uno.kotlin.*
 import java.util.*
 import java.util.function.BooleanSupplier
 import java.util.function.Consumer
-
-class Wut(dummy: Int) {
-
-    constructor() : this(0)
-    init {
-        println("init")
-    }
-}
 open class GlfwWindow(var handle: Long) {
 
     @Throws(RuntimeException::class)
     constructor(windowSize: Vec2i,
                 title: String = "Glfw Window",
                 monitor: GlfwMonitor = GlfwMonitor.NULL,
-                share: GlfwWindow = NULL,
+                share: GlfwWindow? = null,
                 position: Vec2i? = null) : this(windowSize.x, windowSize.y, title, monitor, share, position)
 
     @Throws(RuntimeException::class)
     constructor(x: Int,
                 title: String = "Glfw Window",
                 monitor: GlfwMonitor = GlfwMonitor.NULL,
-                share: GlfwWindow = NULL,
+                share: GlfwWindow? = null,
                 position: Vec2i? = null) : this(x, x, title, monitor, share, position)
 
     @Throws(RuntimeException::class)
     constructor(width: Int, height: Int,
                 title: String = "Glfw Window",
                 monitor: GlfwMonitor = GlfwMonitor.NULL,
-                share: GlfwWindow = NULL,
-                position: Vec2i? = null) : this(glfwCreateWindow(width, height, title, monitor.handle, share.handle)) {
+                share: GlfwWindow? = null,
+                position: Vec2i? = null) : this(glfwCreateWindow(width, height, title, monitor.handle, share?.handle ?: MemoryUtil.NULL)) {
 
         this.title = title
 
@@ -57,11 +50,10 @@ open class GlfwWindow(var handle: Long) {
     // --- [ glfwCreateWindow ] ---
 
     init {
-        println("init")
-//        if (handle == MemoryUtil.NULL) {
-//            glfw.terminate()
-//            throw RuntimeException("Failed to create the GLFW window")
-//        }
+        if (handle == MemoryUtil.NULL) {
+            glfw.terminate()
+            throw RuntimeException("Failed to create the GLFW window")
+        }
     }
 
     // --- [ glfwDestroyWindow ] ---
@@ -361,7 +353,8 @@ open class GlfwWindow(var handle: Long) {
     enum class CursorMode(val i: Int) {
         Normal(GLFW_CURSOR_NORMAL),
         Hidden(GLFW_CURSOR_HIDDEN),
-        Disabled(GLFW_CURSOR_DISABLED), ;
+        Disabled(GLFW_CURSOR_DISABLED),
+        Captured(GLFW_CURSOR_CAPTURED);
 
         companion object {
             infix fun of(i: Int) = values().first { it.i == i }
@@ -420,7 +413,7 @@ open class GlfwWindow(var handle: Long) {
     var keyCB: KeyCB?
         @Deprecated(message = "Write only property", level = DeprecationLevel.HIDDEN) get() = error("")
         set(value) {
-            val cb = value?.let { GLFWKeyCallbackI { wnd, key, scanCode, action, mods -> it(GlfwWindow(wnd), key, scanCode, action, mods) } }
+            val cb = value?.let { GLFWKeyCallbackI { wnd, key, scanCode, action, mods -> it(GlfwWindow(wnd), Key of key, scanCode, InputAction of action, mods) } }
             glfwSetKeyCallback(handle, cb)?.free()
         }
 
@@ -453,7 +446,7 @@ open class GlfwWindow(var handle: Long) {
     var cursorPosCB: CursorPosCB?
         @Deprecated(message = "Write only property", level = DeprecationLevel.HIDDEN) get() = error("")
         set(value) {
-            val cb = value?.let { GLFWCursorPosCallbackI { wnd, xPos, yPos -> it(GlfwWindow(wnd), Vec2(xPos, yPos)) } }
+            val cb = value?.let { GLFWCursorPosCallbackI { wnd, xPos, yPos -> it(GlfwWindow(wnd), Vec2d(xPos, yPos)) } }
             glfwSetCursorPosCallback(handle, cb)?.free()
         }
 
@@ -487,9 +480,11 @@ open class GlfwWindow(var handle: Long) {
             glfwSetDropCallback(handle, cb)?.free()
         }
 
-
     // --- [ glfwGetClipboardString ] ---
     // --- [ glfwSetClipboardString ] ---
+//    Parameters
+//    [in]	window	Deprecated. Any valid window or NULL.
+    // -> glfw object
     var clipboardString: String?
         get() = glfwGetClipboardString(handle)
         set(value) {
@@ -497,7 +492,7 @@ open class GlfwWindow(var handle: Long) {
         }
 
     // --- [ glfwMakeContextCurrent ] ---
-    fun makeContextCurrent(current: Boolean = true) = glfwMakeContextCurrent(if (current) handle else MemoryUtil.NULL)
+    fun makeCurrent(current: Boolean = true) = glfwMakeContextCurrent(if (current) handle else MemoryUtil.NULL)
 
     // --- [ glfwSwapBuffers ] ---
 
@@ -507,16 +502,16 @@ open class GlfwWindow(var handle: Long) {
     fun present() = swapBuffers()
 
     inline fun inContext(block: () -> Unit) {
-        makeContextCurrent()
+        makeCurrent()
         block()
-        makeContextCurrent(false)
+        makeCurrent(false)
     }
 
     /** for Java */
     open fun inContext(runnable: Runnable) {
-        makeContextCurrent()
+        makeCurrent()
         runnable.run()
-        makeContextCurrent(false)
+        makeCurrent(false)
     }
 
     var autoSwap = true
@@ -573,7 +568,5 @@ open class GlfwWindow(var handle: Long) {
 
         @JvmStatic
         infix fun from(handle: Long): GlfwWindow = GlfwWindow(handle)
-
-        val NULL = GlfwWindow(MemoryUtil.NULL)
     }
 }

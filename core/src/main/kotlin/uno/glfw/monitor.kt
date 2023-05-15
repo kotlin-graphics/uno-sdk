@@ -41,6 +41,11 @@ value class GlfwMonitors(val handles: LongArray) : Iterable<GlfwMonitor> {
 @JvmInline
 value class GlfwMonitor(val handle: Long) {
 
+    val isValid: Boolean
+        get() = handle != MemoryUtil.NULL
+    val isNotValid: Boolean
+        get() = !isValid
+
     // --- [ glfwGetMonitorPos ] ---
     val pos: Vec2i
         get() = readVec2i { x, y -> nglfwGetMonitorPos(handle, x, y) }
