@@ -1,4 +1,4 @@
-@file:OptIn(ExperimentalUnsignedTypes::class)
+@file:OptIn(ExperimentalUnsignedTypes::class, ExperimentalUnsignedTypes::class)
 
 package tests
 
@@ -13,7 +13,9 @@ import gln.draw.glDrawArrays
 import kool.floatBufferOf
 import kool.free
 import org.lwjgl.glfw.GLFW
+import org.lwjgl.opengl.GL11
 import uno.glfw.*
+import java.awt.Color
 import kotlin.math.abs
 import kotlin.math.floor
 import kotlin.math.sqrt
@@ -295,7 +297,8 @@ fun main() {
 
     while (!window.shouldClose) {
 
-        glClearColor()
+        glClearColor(Color.BLACK)
+        GL11.glClear(GL11.GL_COLOR_BUFFER_BIT)
 
         if (trackCursor) {
 
