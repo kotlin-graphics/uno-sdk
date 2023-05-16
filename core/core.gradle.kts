@@ -10,7 +10,6 @@ plugins {
     id("org.lwjgl.plugin")
     id("elect86.magik")
     `maven-publish`
-//    id("com.github.johnrengelman.shadow") version "8.1.1"
 }
 
 group = rootProject.group
