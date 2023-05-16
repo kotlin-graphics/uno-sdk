@@ -32,3 +32,5 @@ publishing {
     }
     repositories.github { domain = "kotlin-graphics/mary" }
 }
+
+java.withSourcesJar()
