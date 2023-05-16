@@ -5,7 +5,6 @@ package uno.glfw
 import glm_.vec2.Vec2
 import glm_.vec2.Vec2d
 import glm_.vec2.Vec2i
-import gln.L
 import kool.*
 import org.lwjgl.glfw.GLFW
 import org.lwjgl.glfw.GLFW.glfwDestroyCursor
@@ -28,7 +27,7 @@ class GlfwVidMode(val size: Vec2i, val redBits: Int, val greenBits: Int, val blu
     }
 }
 
-operator fun Ptr<GlfwVidMode>.get(index: Int) = GlfwVidMode((adr.L + index * GlfwVidMode.Size).toPtr())
+operator fun Ptr<GlfwVidMode>.get(index: Int) = GlfwVidMode((adr.toLong() + index * GlfwVidMode.Size).toPtr())
 
 class GlfwGammaRamp(val red: IntArray, val green: IntArray, val blue: IntArray) {
 
@@ -42,9 +41,9 @@ class GlfwGammaRamp(val red: IntArray, val green: IntArray, val blue: IntArray) 
             b[i] = blue[i].toUShort()
         }
         val ptr = stack.nmalloc(GLFWGammaRamp.ALIGNOF, GLFWGammaRamp.SIZEOF)
-        memPutAddress(ptr + GLFWGammaRamp.RED, r.adr.L)
-        memPutAddress(ptr + GLFWGammaRamp.GREEN, g.adr.L)
-        memPutAddress(ptr + GLFWGammaRamp.BLUE, b.adr.L)
+        memPutAddress(ptr + GLFWGammaRamp.RED, r.adr.toLong())
+        memPutAddress(ptr + GLFWGammaRamp.GREEN, g.adr.toLong())
+        memPutAddress(ptr + GLFWGammaRamp.BLUE, b.adr.toLong())
         memPutInt(ptr + GLFWGammaRamp.SIZE, red.size)
         return ptr.toPtr()
     }
@@ -62,7 +61,7 @@ fun GlfwGammaRamp(ptr: Ptr<GlfwGammaRamp>): GlfwGammaRamp {
 value class GlfwCursor(val handle: Long) {
     // --- [ glfwCreateCursor ] ---
     constructor(image: GlfwImage, hot: Int) : this(image, hot, hot)
-    constructor(image: GlfwImage, xHot: Int, yHot: Int) : this(stack { GLFW.nglfwCreateCursor(image.toStack(it).adr.L, xHot, yHot) })
+    constructor(image: GlfwImage, xHot: Int, yHot: Int) : this(stack { GLFW.nglfwCreateCursor(image.toStack(it).adr.toLong(), xHot, yHot) })
 
     // --- [ glfwDestroyCursor ] ---
     fun destroy() = glfwDestroyCursor(handle)
@@ -115,7 +114,7 @@ class GlfwImage(val width: Int, val height: Int, val pixels: UByteArray) {
         val pPixels = stack.ptrUByte(pixels.size)
         for (i in pixels.indices)
             pPixels[i] = pixels[i]
-        memPutAddress(ptr + GLFWImage.PIXELS, pPixels.adr.L)
+        memPutAddress(ptr + GLFWImage.PIXELS, pPixels.adr.toLong())
         return ptr.toPtr()
     }
 }

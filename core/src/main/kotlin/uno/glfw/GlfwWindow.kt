@@ -6,7 +6,6 @@ import glm_.vec2.Vec2
 import glm_.vec2.Vec2d
 import glm_.vec2.Vec2i
 import glm_.vec4.Vec4i
-import gln.L
 import kool.*
 import org.lwjgl.glfw.*
 import org.lwjgl.glfw.GLFW.*
@@ -89,7 +88,7 @@ open class GlfwWindow(var handle: Long) {
         }
 
     // --- [ glfwSetWindowIcon ] ---
-    fun setIcon(images: GLFWImage.Buffer?) = nglfwSetWindowIcon(handle, images?.rem ?: 0, images?.adr?.L ?: MemoryUtil.NULL)
+    fun setIcon(images: GLFWImage.Buffer?) = nglfwSetWindowIcon(handle, images?.rem ?: 0, images?.adr?.toLong() ?: MemoryUtil.NULL)
 
     // --- [ glfwGetWindowPos ] ---
     // --- [ glfwSetWindowPos ] ---
@@ -266,7 +265,7 @@ open class GlfwWindow(var handle: Long) {
 
     var userPointer: Ptr<*>
         get() = glfwGetWindowUserPointer(handle).toPtr<Nothing>()
-        set(value) = glfwSetWindowUserPointer(handle, value.adr.L)
+        set(value) = glfwSetWindowUserPointer(handle, value.adr.toLong())
 
     // --- [ glfwSetWindowPosCallback ] ---
     var posCB: WindowPosCB?

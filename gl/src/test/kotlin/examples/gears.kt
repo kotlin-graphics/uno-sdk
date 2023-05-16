@@ -12,6 +12,7 @@ import gln.glClearColor
 import kool.floatBufferOf
 import org.lwjgl.glfw.GLFW
 import org.lwjgl.opengl.GL11
+import uno.gl.GlWindow
 import uno.glfw.*
 import kotlin.math.sqrt
 

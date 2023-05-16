@@ -3,7 +3,6 @@ package uno.glfw
 import glm_.vec2.Vec2
 import glm_.vec2.Vec2i
 import glm_.vec4.Vec4i
-import gln.L
 import kool.Ptr
 import kool.get
 import kool.stack
@@ -69,14 +68,14 @@ value class GlfwMonitor(val handle: Long) {
     // --- [ glfwSetMonitorUserPointer ] ---
     var userPointer: Ptr<*>
         get() = glfwGetMonitorUserPointer(handle).toPtr<Nothing>()
-        set(value) = glfwSetMonitorUserPointer(handle, value.adr.L)
+        set(value) = glfwSetMonitorUserPointer(handle, value.adr.toLong())
 
 
     // --- [ glfwGetVideoModes ] ---
     val videoModes: Array<GlfwVidMode>
         get() = stack { s ->
             val pCount = s.ptrInt()
-            val pModes = nglfwGetVideoModes(handle, pCount.adr.L).toPtr<GlfwVidMode>()
+            val pModes = nglfwGetVideoModes(handle, pCount.adr.toLong()).toPtr<GlfwVidMode>()
             val count = pCount[0]
             Array(count) { pModes[it] }
         }
@@ -93,7 +92,7 @@ value class GlfwMonitor(val handle: Long) {
     // --- [ glfwGetGammaRamp ] ---
     var gammaRamp: GlfwGammaRamp
         get() = GlfwGammaRamp(nglfwGetGammaRamp(handle).toPtr())
-        set(value) = stack { nglfwSetGammaRamp(handle, value.toStack(it).adr.L) }
+        set(value) = stack { nglfwSetGammaRamp(handle, value.toStack(it).adr.toLong()) }
 
     companion object {
         val NULL = GlfwMonitor(MemoryUtil.NULL)

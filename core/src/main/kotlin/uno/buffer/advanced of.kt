@@ -9,8 +9,8 @@ import glm_.vec4.Vec4
 import glm_.vec4.Vec4b
 import glm_.vec4.Vec4i
 import glm_.vec4.Vec4ub
-import gln.glf.Vertex
-import gln.glf.glf
+//import gln.glf.Vertex
+//import gln.glf.glf
 import kool.*
 import java.nio.ByteBuffer
 import java.nio.FloatBuffer
@@ -35,22 +35,22 @@ fun bufferOf(vertices: Collection<*>): ByteBuffer {
             for (i in vertices.indices)
                 (vertices.elementAt(i) as Vec4).to(res, i * Vec4.size)
         }
-        is Vertex.pos2_tc2 -> {
-            res = Buffer(glf.pos2_tc2.stride * vertices.size)
-            for (i in vertices.indices) {
-                val v = vertices.elementAt(i) as Vertex.pos2_tc2
-                v.p.to(res, i * glf.pos2_tc2.stride)
-                v.t.to(res, i * glf.pos2_tc2.stride + Vec2.size)
-            }
-        }
-        is Vertex.pos3_col4ub -> {
-            res = Buffer(glf.pos3_col4ub.stride * vertices.size)
-            for (i in vertices.indices) {
-                val v = vertices.elementAt(i) as Vertex.pos3_col4ub
-                v.p.to(res, i * glf.pos2_tc2.stride)
-                v.c.to(res, i * glf.pos2_tc2.stride + Vec3.size)
-            }
-        }
+//        is Vertex.pos2_tc2 -> {
+//            res = Buffer(glf.pos2_tc2.stride * vertices.size)
+//            for (i in vertices.indices) {
+//                val v = vertices.elementAt(i) as Vertex.pos2_tc2
+//                v.p.to(res, i * glf.pos2_tc2.stride)
+//                v.t.to(res, i * glf.pos2_tc2.stride + Vec2.size)
+//            }
+//        }
+//        is Vertex.pos3_col4ub -> {
+//            res = Buffer(glf.pos3_col4ub.stride * vertices.size)
+//            for (i in vertices.indices) {
+//                val v = vertices.elementAt(i) as Vertex.pos3_col4ub
+//                v.p.to(res, i * glf.pos2_tc2.stride)
+//                v.c.to(res, i * glf.pos2_tc2.stride + Vec3.size)
+//            }
+//        }
         else -> throw Error()
     }
     return res
@@ -63,9 +63,9 @@ fun bufferOf(vararg elements: Any): ByteBuffer {
             is Vec2 -> Vec2.size
             is Vec3 -> Vec3.size
             is Vec4 -> Vec4.size
-            is Vertex.pos2_tc2 -> Vec2.size * 2
-            is Vertex.pos3_col4ub -> Vec3.size + Vec4ub.size
-            is Vertex.pos3_nor3_col4 -> Vec3.size * 2 + Vec4.size
+//            is Vertex.pos2_tc2 -> Vec2.size * 2
+//            is Vertex.pos3_col4ub -> Vec3.size + Vec4ub.size
+//            is Vertex.pos3_nor3_col4 -> Vec3.size * 2 + Vec4.size
             else -> throw Exception("Invalid")
         }
     }

@@ -1,14 +1,17 @@
-package uno.glfw
+package uno.gl
 
 import gln.cap.Caps
 import gln.misc.GlDebugSeverity
 import gln.misc.GlDebugSource
 import gln.misc.GlDebugType
+import gln.misc.glDebugCallback
 import org.lwjgl.opengl.GL
 import org.lwjgl.opengl.GL43C
 import org.lwjgl.opengl.GLUtil
 import org.lwjgl.system.Callback
 import org.lwjgl.system.MemoryUtil
+import uno.glfw.GlfwWindow
+import uno.glfw.glfw
 
 open class GlWindow(val glfwWindow: GlfwWindow,
                     profile: Caps.Profile = Caps.Profile.COMPATIBILITY,
@@ -44,6 +47,7 @@ open class GlWindow(val glfwWindow: GlfwWindow,
     override fun destroy() {
         super.destroy()
         debugProc?.free()
+        glDebugCallback?.free()
     }
 
     inline fun inGlContext(block: () -> Unit) {

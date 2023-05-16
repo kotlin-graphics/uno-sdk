@@ -6,7 +6,7 @@ import org.lwjgl.opengl.GLUtil
 import org.lwjgl.system.Callback
 import org.lwjgl.system.jawt.JAWTDrawingSurface
 import org.lwjgl.system.jawt.JAWTFunctions
-import uno.glfw.GlWindow
+import uno.gl.GlWindow
 import uno.glfw.GlfwWindow
 import uno.glfw.VSync
 import uno.glfw.glfw

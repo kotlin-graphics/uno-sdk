@@ -1,8 +1,7 @@
 import magik.createGithubPublication
 import magik.github
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompilationTask
-import org.lwjgl.Lwjgl.Module.glfw
-import org.lwjgl.Lwjgl.Module.jemalloc
+import org.lwjgl.Lwjgl.Module.*
 import org.lwjgl.lwjgl
 
 plugins {
@@ -17,10 +16,10 @@ group = rootProject.group
 version = rootProject.version
 
 dependencies {
-    implementation(kotlin("reflect"))
+    implementation(projects.core)
 
-    api("kotlin.graphics:glm:0.9.9.1-11")
-    lwjgl { implementation(glfw, jemalloc) }
+    api("kotlin.graphics:gln:0.5.32")
+    lwjgl { implementation(glfw, jemalloc, opengl) }
 
     testImplementation("io.kotest:kotest-runner-junit5:5.5.5")
     testImplementation("io.kotest:kotest-assertions-core:5.5.5")

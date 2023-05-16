@@ -17,7 +17,7 @@ pluginManagement {
     //    includeBuild("../magik")
 }
 
-for (module in listOf("core", "awt"/*, "vk"*/)) {
+for (module in listOf("core", "awt", "gl"/*, "vk"*/)) {
     include(module)
     project(":$module").buildFileName = "$module.gradle.kts"
 }
@@ -31,7 +31,7 @@ enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 
 gradle.rootProject {
     group = "kotlin.graphics"
-    version = "0.7.17"
+    version = "0.7.18"
 }
 
 dependencyResolutionManagement {

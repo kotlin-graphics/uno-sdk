@@ -12,11 +12,11 @@ plugins {
 dependencies {
     api(projects.core)
     api(projects.awt)
+    api(projects.gl)
     // vk
 }
 
 kotlin.jvmToolchain { languageVersion.set(JavaLanguageVersion.of(8)) }
-
 
 tasks {
     withType<KotlinCompile<*>>().all { kotlinOptions { freeCompilerArgs += listOf("-opt-in=kotlin.RequiresOptIn") } }
@@ -30,5 +30,5 @@ publishing {
             suppressAllPomMetadataWarnings()
         }
     }
-    repositories { github { domain = "kotlin-graphics/mary" } }
+    repositories.github { domain = "kotlin-graphics/mary" }
 }

@@ -14,6 +14,7 @@ import kool.floatBufferOf
 import kool.free
 import org.lwjgl.glfw.GLFW
 import org.lwjgl.opengl.GL11
+import uno.gl.GlWindow
 import uno.glfw.*
 import java.awt.Color
 import kotlin.math.abs

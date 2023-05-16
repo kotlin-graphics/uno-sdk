@@ -3,8 +3,6 @@
 package uno.glfw
 
 import glm_.bool
-import gln.L
-import gln.writeAscii
 import kool.Ptr
 import kool.get
 import kool.stack
@@ -28,7 +26,7 @@ value class Joystick(val id: Int) {
     val axes: FloatArray?
         get() = stack { s ->
             val pCount = s.ptrInt()
-            val pAxes = GLFW.nglfwGetJoystickAxes(id, pCount.adr.L).toPtr<Float>()
+            val pAxes = GLFW.nglfwGetJoystickAxes(id, pCount.adr.toLong()).toPtr<Float>()
             if (pAxes.isValid)
                 FloatArray(pCount[0]) { pAxes[it] }
             else null
@@ -39,7 +37,7 @@ value class Joystick(val id: Int) {
     val buttons: BooleanArray?
         get() = stack { s ->
             val pCount = s.ptrInt()
-            val pButtons = GLFW.nglfwGetJoystickButtons(id, pCount.adr.L).toPtr<Int>()
+            val pButtons = GLFW.nglfwGetJoystickButtons(id, pCount.adr.toLong()).toPtr<Int>()
             if (pButtons.isValid)
                 BooleanArray(pCount[0]) { pButtons[0] == GLFW.GLFW_PRESS }
             else null
@@ -66,7 +64,7 @@ value class Joystick(val id: Int) {
     val hats: Array<Hat>?
         get() = stack { s ->
             val pCount = s.ptrInt()
-            val pHats = GLFW.nglfwGetJoystickHats(id, pCount.adr.L).toPtr<UByte>()
+            val pHats = GLFW.nglfwGetJoystickHats(id, pCount.adr.toLong()).toPtr<UByte>()
             if (pHats.isValid)
                 Array(pCount[0]) { Hat of pHats[it].toInt() }
             else null
@@ -84,7 +82,7 @@ value class Joystick(val id: Int) {
     // --- [ glfwGetJoystickUserPointer ] ---
     var userPointer: Ptr<*>
         get() = GLFW.glfwGetJoystickUserPointer(id).toPtr<Nothing>()
-        set(value) = GLFW.glfwSetJoystickUserPointer(id, value.adr.L)
+        set(value) = GLFW.glfwSetJoystickUserPointer(id, value.adr.toLong())
 
     // --- [ glfwJoystickIsGamepad ] ---
     val isGamepad: Boolean
@@ -117,9 +115,7 @@ value class Joystick(val id: Int) {
         }
 
     companion object {
-        val _1: Joystick get() = Joystick(GLFW.GLFW_JOYSTICK_1)
-        val _2: Joystick get() = Joystick(GLFW.GLFW_JOYSTICK_2)
-        val _3: Joystick get() = Joystick(GLFW.GLFW_JOYSTICK_3)
+        val joysticks: Array<Joystick> = Array(16) { Joystick(GLFW.GLFW_JOYSTICK_1 + it) }
     }
 }
 

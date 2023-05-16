@@ -1,9 +1,8 @@
 import magik.createGithubPublication
 import magik.github
-import org.jetbrains.kotlin.gradle.dsl.KotlinVersion
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompilationTask
-import org.lwjgl.lwjgl
 import org.lwjgl.Lwjgl.Module.*
+import org.lwjgl.lwjgl
 
 plugins {
     kotlin("jvm")
@@ -17,6 +16,7 @@ version = rootProject.version
 
 dependencies {
     implementation(projects.core)
+    implementation(projects.gl)
 
     api("kotlin.graphics:gln:0.5.32")
 
@@ -41,7 +41,7 @@ publishing {
             suppressAllPomMetadataWarnings()
         }
     }
-    repositories { github { domain = "kotlin-graphics/mary" } }
+    repositories.github { domain = "kotlin-graphics/mary" }
 }
 
 java.withSourcesJar()

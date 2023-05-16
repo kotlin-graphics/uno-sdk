@@ -1,9 +1,6 @@
 package uno.glfw
 
 import glm_.bool
-import gln.L
-import gln.misc.glDebugCallback
-import gln.writeAscii
 import kool.*
 import org.lwjgl.glfw.*
 import org.lwjgl.glfw.GLFW.*
@@ -67,7 +64,6 @@ object glfw {
     fun terminate() {
         glfwTerminate()
         errorCB = null // ~ free the current cb
-        glDebugCallback?.free()
     }
 
     // --- [ glfwInitHint ] ---
@@ -114,7 +110,7 @@ object glfw {
     val error: Error
         get() = stack {
             val ppDescription = it.ptrLong()
-            val code = nglfwGetError(ppDescription.adr.L)
+            val code = nglfwGetError(ppDescription.adr.toLong())
             errorDescription = when {
                 code != GLFW_NO_ERROR -> memUTF8(ppDescription[0])
                 else -> ""
@@ -167,7 +163,7 @@ object glfw {
     val monitors: GlfwMonitors
         get() = stack { s ->
             val pCount = s.ptrInt()
-            val pMonitors = nglfwGetMonitors(pCount.adr.L)
+            val pMonitors = nglfwGetMonitors(pCount.adr.toLong())
             GlfwMonitors(LongArray(pCount[0]) { memGetAddress(pMonitors + it shl 3) })
         }
 
@@ -342,7 +338,7 @@ object glfw {
     // -> Joystick
 
     // --- [ glfwUpdateGamepadMappings ] ---
-    fun updateGamepadMappings(string: String): Boolean = stack.writeAscii(string) { nglfwUpdateGamepadMappings(it.adr.L) }.bool
+    infix fun updateGamepadMappings(string: String): Boolean = stack.writeAsciiToAdr(string) { nglfwUpdateGamepadMappings(it.toLong()) }.bool
 
     // --- [ glfwGetGamepadName ] ---
     // --- [ glfwGetGamepadState ] ---
