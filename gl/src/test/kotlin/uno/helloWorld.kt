@@ -2,7 +2,7 @@ package uno
 
 import io.kotest.core.spec.style.StringSpec
 import org.lwjgl.opengl.GL11.*
-import uno.glfw.GlWindow
+import uno.gl.GlWindow
 import uno.glfw.GlfwWindow
 import uno.glfw.glfw
 import uno.kotlin.isNotCI

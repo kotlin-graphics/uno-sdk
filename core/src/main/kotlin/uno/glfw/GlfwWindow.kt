@@ -11,13 +11,13 @@ import org.lwjgl.glfw.*
 import org.lwjgl.glfw.GLFW.*
 import org.lwjgl.system.MemoryStack
 import org.lwjgl.system.MemoryUtil
-import org.lwjgl.system.MemoryUtil.memGetAddress
-import org.lwjgl.system.MemoryUtil.memUTF8
+import org.lwjgl.system.MemoryUtil.*
 import org.lwjgl.system.Pointer
 import uno.kotlin.*
 import java.util.*
 import java.util.function.BooleanSupplier
 import java.util.function.Consumer
+
 open class GlfwWindow(var handle: Long) {
 
     @Throws(RuntimeException::class)
@@ -565,7 +565,11 @@ open class GlfwWindow(var handle: Long) {
     companion object {
         infix fun fromWin32Window(hwnd: HWND): GlfwWindow = glfw attachWin32Window hwnd
 
-        @JvmStatic
-        infix fun from(handle: Long): GlfwWindow = GlfwWindow(handle)
+        @JvmStatic @Throws(RuntimeException::class)
+        fun create(width: Int, height: Int,
+                   title: String = "Glfw Window",
+                   monitor: Long = MemoryUtil.NULL,
+                   share: GlfwWindow? = null,
+                   position: Vec2i? = null): GlfwWindow = GlfwWindow(glfwCreateWindow(width, height, title, monitor, share?.handle ?: NULL))
     }
 }
