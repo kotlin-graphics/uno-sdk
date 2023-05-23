@@ -1,36 +1,31 @@
 package uno.kotlin
 
-import gli_.has
-import glm_.i
+import glm_.has
 import kool.Ptr
-import kool.adr
-import org.lwjgl.system.Pointer
+import kool.toPtr
 import kotlin.random.Random
 
 
-val Pointer.speakable: String
+val Ptr<*>.speakable: String
     get() = formatUidDigit(adr)
-
-val Ptr.speakable: String
-    get() = formatUidDigit(this)
 
 private val evenLetters = "bcdfghlmnprstwx"
 
 private val oddLetters = "aeiou"
-private fun formatUidDigit(n: Long, level: Int = 0): String {
-    if (n != 0L) {
+private fun formatUidDigit(n: ULong, level: Int = 0): String {
+    if (n != 0uL) {
         val letters = if (level has 1) oddLetters else evenLetters
-        val base = letters.length
+        val base = letters.length.toULong()
         val s = formatUidDigit(n / base, level + 1)
-        return s + letters[(n % base).i]
+        return s + letters[(n % base).toInt()]
     }
     return ""
 }
 
-fun main(args: Array<String>) {
+fun main() {
 
     for (i in 0..99) {
-        val k = Random.nextLong(1000000, 2000000)
+        val k = Random.nextLong(1000000, 2000000).toPtr<Nothing>()
         println("$k, ${k.speakable}")
     }
 }

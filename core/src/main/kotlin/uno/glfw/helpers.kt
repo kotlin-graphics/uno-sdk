@@ -1,202 +1,120 @@
+@file:OptIn(ExperimentalUnsignedTypes::class)
+
 package uno.glfw
 
 import glm_.vec2.Vec2
 import glm_.vec2.Vec2d
 import glm_.vec2.Vec2i
-import glm_.vec4.Vec4i
 import kool.*
-import org.lwjgl.glfw.GLFW.*
-import org.lwjgl.glfw.GLFWGamepadState
-import org.lwjgl.glfw.GLFWJoystickCallback
-import org.lwjgl.glfw.GLFWJoystickCallbackI
-import org.lwjgl.system.MemoryUtil.NULL
-import org.lwjgl.system.MemoryUtil.memUTF8
-import java.nio.ByteBuffer
-import java.nio.FloatBuffer
+import org.lwjgl.glfw.GLFW
+import org.lwjgl.glfw.GLFW.glfwDestroyCursor
+import org.lwjgl.glfw.GLFWGammaRamp
+import org.lwjgl.glfw.GLFWImage
+import org.lwjgl.system.MemoryStack
+import org.lwjgl.system.MemoryUtil
+import org.lwjgl.system.MemoryUtil.*
+import uno.kotlin.ptrUByte
+import uno.kotlin.ptrUShort
 
 
-typealias GLFWErrorCallbackT = (glfw.Error, String) -> Unit
-
-class GlfwMonitor(val handle: Long) {
-
-    // --- [ glfwGetMonitorPos ] ---
-    val pos: Vec2i
-        get() = stak {
-            val pos = it.mInt(2)
-            nglfwGetMonitorPos(handle, pos.adr, (pos + 1).adr)
-            Vec2i(pos[0], pos[1]) // TODO glm
-        }
-
-    // --- [ glfwGetMonitorWorkarea ] ---
-    val workArea: Vec4i
-        get() = stak {
-            val area = it.mInt(4)
-            nglfwGetMonitorWorkarea(handle, area.adr, (area + 1).adr, (area + 2).adr, (area + 3).adr)
-            Vec4i(area[0], area[1], area[2], area[3]) // TODO glm
-        }
-
-    // --- [ glfwGetMonitorPhysicalSize ] ---
-    val physicalSize: Vec2i
-        get() = stak {
-            val size = it.mInt(2)
-            nglfwGetMonitorPhysicalSize(handle, size.adr, (size + 1).adr)
-            Vec2i(size[0], size[1]) // TODO glm
-        }
-
-    // --- [ glfwGetMonitorContentScale ] ---
-    val contentScale: Vec2
-        get() = stak {
-            val scale = it.mFloat(2)
-            nglfwGetMonitorPhysicalSize(handle, scale.adr, (scale + 1).adr)
-            Vec2(scale[0], scale[1]) // TODO glm
-        }
-
-    // --- [ glfwGetMonitorName ] ---
-    val name: String?
-        get() = stak {
-            val pName = nglfwGetMonitorName(handle)
-            when (pName) {
-                NULL -> null
-                else -> memUTF8(pName)
-            }
-        }
-
-    // --- [ glfwSetMonitorUserPointer ] ---
-    var userPointer: Ptr
-        get() = glfwGetMonitorUserPointer(handle)
-        set(value) = glfwSetMonitorUserPointer(handle, value)
-
-
-    // --- [ glfwGetVideoModes ] ---
-    val videoModes: Array<GlfwVidMode>
-        get() = stak { s ->
-            val pCount = s.mInt()
-            val pModes = nglfwGetVideoModes(handle, pCount.adr)
-            val count = pCount[0]
-            Array(count) {
-                GlfwVidMode(IntPtr(pModes + it * Int.BYTES * 6))
-            }
-        }
-
-    // --- [ glfwGetVideoMode ] ---
-    val videoMode: GlfwVidMode
-        get() = stak {
-            GlfwVidMode(IntPtr(nglfwGetVideoMode(handle)))
-        }
-
-    // --- [ glfwSetGamma ] ---
-    fun setGamma(gamma: Float) = glfwSetGamma(handle, gamma)
-
-    // --- [ glfwGetGammaRamp ] ---
-    var gammaRamp: GlfwGammaRamp
-        get() = stak {
-            val pRamp = IntPtr(nglfwGetGammaRamp(handle))
-            GlfwGammaRamp(pRamp[0], pRamp[1], pRamp[2], pRamp[3])
-        }
-        set(value) = stak {
-            val pRamp = it.mInt(4)
-            pRamp[0] = value.red
-            pRamp[1] = value.green
-            pRamp[2] = value.blue
-            pRamp[3] = value.size
-            nglfwSetGammaRamp(handle, pRamp.adr)
-        }
-}
+typealias GLFWErrorCallbackT = (error: glfw.Error, desc: String) -> Unit
 
 class GlfwVidMode(val size: Vec2i, val redBits: Int, val greenBits: Int, val blueBits: Int, val refreshRate: Int) {
-    constructor(intPtr: IntPtr) : this(Vec2i(intPtr[0], intPtr[1]), intPtr[2], intPtr[3], intPtr[4], intPtr[5])
-}
-
-class GlfwGammaRamp(val red: Int, val green: Int, val blue: Int, val size: Int)
-
-data class Monitor(val handle: Long, val xPos: Int, val yPos: Int, val width: Int, val height: Int, val refreshRate: Int = GLFW_DONT_CARE)
-
-inline class GlfwWindowHandle(val value: Long)
-
-inline class GlfwCursor(val handle: Long) {
-
-    // --- [ glfwDestroyCursor ] ---
-    fun destroy() = glfwDestroyCursor(handle)
-}
-
-inline class Joystick(val id: Int) {
-
-    // --- [ glfwJoystickPresent ] ---
-
-    val isPresent: Boolean
-        get() = glfwJoystickPresent(id)
-
-    // --- [ glfwGetJoystickAxes ] ---
-
-    val axes: FloatBuffer?
-        get() = glfwGetJoystickAxes(id)
-
-    // --- [ glfwGetJoystickButtons ] ---
-
-    val buttons: ByteBuffer?
-        get() = glfwGetJoystickButtons(id)
-
-    // --- [ glfwGetJoystickHats ] ---
-    val hats: ByteBuffer?
-        get() = glfwGetJoystickHats(id)
-
-    // --- [ glfwGetJoystickName ] ---
-    val name: String?
-        get() = glfwGetJoystickName(id)
-
-    // --- [ glfwGetJoystickGUID ] ---
-    val guid: String?
-        get() = glfwGetJoystickGUID(id)
-
-    // --- [ glfwSetJoystickUserPointer ] ---
-    // --- [ glfwGetJoystickUserPointer ] ---
-    var userPointer: Ptr
-        get() = glfwGetJoystickUserPointer(id)
-        set(value) = glfwSetJoystickUserPointer(id, value)
-
-    // --- [ glfwJoystickIsGamepad ] ---
-    val isGamepad: Boolean
-        get() = glfwJoystickIsGamepad(id)
-
-    // --- [ glfwSetJoystickCallback ] ---
-    fun setJoystickCallback(cbfun: GLFWJoystickCallbackI?): GLFWJoystickCallback? = glfwSetJoystickCallback(cbfun)
-
-    // --- [ glfwGetGamepadName ] ---
-    val gamepadName: String?
-        get() = glfwGetGamepadName(id)
-
-    // --- [ glfwGetGamepadState ] ---
-    fun getGamepadState(state: GLFWGamepadState = GLFWGamepadState.create()): Boolean = glfwGetGamepadState(id, state)
+    constructor(ptr: Ptr<Int>) : this(Vec2i(ptr), ptr[2], ptr[3], ptr[4], ptr[5])
 
     companion object {
-        val _1: Joystick get() = Joystick(GLFW_JOYSTICK_1)
-        val _2: Joystick get() = Joystick(GLFW_JOYSTICK_2)
-        val _3: Joystick get() = Joystick(GLFW_JOYSTICK_3)
+        val Size = Vec2i.size + Int.BYTES * 4
     }
 }
 
-typealias WindowPosCB = (pos: Vec2i) -> Unit
-typealias WindowSizeCB = (size: Vec2i) -> Unit
-typealias WindowCloseCB = () -> Unit
-typealias WindowRefreshCB = () -> Unit
-typealias WindowFocusCB = (focused: Boolean) -> Unit
-typealias WindowIconifyCB = (iconified: Boolean) -> Unit
-typealias WindowMaximizeCB = (maximized: Boolean) -> Unit
-typealias FramebufferSizeCB = (size: Vec2i) -> Unit
-typealias WindowContentScaleCB = (Vec2) -> Unit
-typealias CharCB = (codePoint: Int) -> Unit
-typealias CharModsCB = (codePoint: Int, mods: Int) -> Unit
-typealias MouseButtonCB = (button: Int, action: Int, mods: Int) -> Unit
-typealias CursorPosCB = (pos: Vec2) -> Unit
-typealias CursorEnterCB = (entered: Boolean) -> Unit
-typealias ScrollCB = (scroll: Vec2d) -> Unit
-typealias DropCB = (names: Array<String>) -> Unit
-typealias KeyCB = (key: Int, scanCode: Int, action: Int, mods: Int) -> Unit
+operator fun Ptr<GlfwVidMode>.get(index: Int) = GlfwVidMode((adr.toLong() + index * GlfwVidMode.Size).toPtr())
 
-//typealias JoystickCB = (connected: Boolean) -> Unit
+class GlfwGammaRamp(val red: IntArray, val green: IntArray, val blue: IntArray) {
+
+    infix fun toStack(stack: MemoryStack): Ptr<GlfwGammaRamp> {
+        val r = stack.ptrUShort(red.size)
+        val g = stack.ptrUShort(red.size)
+        val b = stack.ptrUShort(red.size)
+        for (i in red.indices) {
+            r[i] = red[i].toUShort()
+            g[i] = green[i].toUShort()
+            b[i] = blue[i].toUShort()
+        }
+        val ptr = stack.nmalloc(GLFWGammaRamp.ALIGNOF, GLFWGammaRamp.SIZEOF)
+        memPutAddress(ptr + GLFWGammaRamp.RED, r.adr.toLong())
+        memPutAddress(ptr + GLFWGammaRamp.GREEN, g.adr.toLong())
+        memPutAddress(ptr + GLFWGammaRamp.BLUE, b.adr.toLong())
+        memPutInt(ptr + GLFWGammaRamp.SIZE, red.size)
+        return ptr.toPtr()
+    }
+}
+
+fun GlfwGammaRamp(ptr: Ptr<GlfwGammaRamp>): GlfwGammaRamp {
+    val red = ptr.toPtr<UShort>()
+    val green = red + 1
+    val blue = red + 2
+    val size = (red + 3).toPtr<Int>()[0]
+    return GlfwGammaRamp(IntArray(size) { red[it].toInt() }, IntArray(size) { green[it].toInt() }, IntArray(size) { blue[it].toInt() })
+}
+
+@JvmInline
+value class GlfwCursor(val handle: Long) {
+    // --- [ glfwCreateCursor ] ---
+    constructor(image: GlfwImage, hot: Int) : this(image, hot, hot)
+    constructor(image: GlfwImage, xHot: Int, yHot: Int) : this(stack { GLFW.nglfwCreateCursor(image.toStack(it).adr.toLong(), xHot, yHot) })
+
+    // --- [ glfwDestroyCursor ] ---
+    fun destroy() = glfwDestroyCursor(handle)
+
+    val isValid: Boolean
+        get() = handle != MemoryUtil.NULL
+    val isNotValid: Boolean
+        get() = !isValid
+
+    companion object {
+        val NULL = GlfwCursor(MemoryUtil.NULL)
+    }
+}
+
+typealias WindowPosCB = (window: GlfwWindow, pos: Vec2i) -> Unit
+typealias WindowSizeCB = (window: GlfwWindow, size: Vec2i) -> Unit
+typealias WindowCloseCB = (window: GlfwWindow) -> Unit
+typealias WindowRefreshCB = (window: GlfwWindow) -> Unit
+typealias WindowFocusCB = (window: GlfwWindow, focused: Boolean) -> Unit
+typealias WindowIconifyCB = (window: GlfwWindow, iconified: Boolean) -> Unit
+typealias WindowMaximizeCB = (window: GlfwWindow, maximized: Boolean) -> Unit
+typealias FramebufferSizeCB = (window: GlfwWindow, size: Vec2i) -> Unit
+typealias WindowContentScaleCB = (window: GlfwWindow, scale: Vec2) -> Unit
+typealias KeyCB = (window: GlfwWindow, key: Key, scanCode: Int, action: InputAction, mods: Int) -> Unit
+typealias CharCB = (window: GlfwWindow, codePoint: Int) -> Unit
+typealias CharModsCB = (window: GlfwWindow, codePoint: Int, mods: Int) -> Unit
+typealias MouseButtonCB = (window: GlfwWindow, button: Int, action: Int, mods: Int) -> Unit
+typealias CursorPosCB = (window: GlfwWindow, pos: Vec2d) -> Unit
+typealias CursorEnterCB = (window: GlfwWindow, entered: Boolean) -> Unit
+typealias ScrollCB = (window: GlfwWindow, scroll: Vec2d) -> Unit
+typealias DropCB = (window: GlfwWindow, names: Array<String>) -> Unit
+
+typealias JoystickCB = (joystick: Joystick, connected: Boolean) -> Unit
 
 enum class VSync {
     AdaptiveHalfRate, Adaptive, OFF, ON;
 
     val i = ordinal - 2
+}
+
+typealias GLFWglproc = Long
+
+class GlfwImage(val width: Int, val height: Int, val pixels: UByteArray) {
+    constructor(size: Int, pixels: UByteArray) : this(size, size, pixels)
+
+    infix fun toStack(stack: MemoryStack): Ptr<GlfwImage> {
+        val ptr = stack.nmalloc(GLFWImage.ALIGNOF, GLFWImage.SIZEOF)
+        memPutInt(ptr + GLFWImage.WIDTH, width)
+        memPutInt(ptr + GLFWImage.HEIGHT, height)
+        val pPixels = stack.ptrUByte(pixels.size)
+        for (i in pixels.indices)
+            pPixels[i] = pixels[i]
+        memPutAddress(ptr + GLFWImage.PIXELS, pPixels.adr.toLong())
+        return ptr.toPtr()
+    }
 }

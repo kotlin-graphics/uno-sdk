@@ -65,7 +65,7 @@ object Ascii85 {
         var longValue = value.toULong()
         val encodedChunk = CharArray(5)
         for (i in encodedChunk.indices) {
-            encodedChunk[i] = (longValue / BASE85_POW[4 - i] + ASCII_SHIFT).toChar()
+            encodedChunk[i] = (longValue / BASE85_POW[4 - i] + ASCII_SHIFT).toInt().toChar()
             longValue %= BASE85_POW[4 - i]
         }
         return encodedChunk
@@ -137,8 +137,8 @@ object Ascii85 {
         if (chunk.size != 5) throw IllegalArgumentException("You can only decode chunks of size 5.")
 
         return (0..4)
-                .sumBy { (chunk[it] - ASCII_SHIFT) * BASE85_POW[4 - it] }
-                .byteArray
+            .sumOf { (chunk[it] - ASCII_SHIFT) * BASE85_POW[4 - it] }
+            .byteArray
     }
 
     private val ByteArray.int: Int
