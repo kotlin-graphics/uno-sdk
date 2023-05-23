@@ -17,7 +17,7 @@ pluginManagement {
     //    includeBuild("../magik")
 }
 
-for (module in listOf("core", "awt", "gl"/*, "vk"*/)) {
+for (module in listOf("core", "awt", "gl"/*, "vk"*/, "platform")) {
     include(module)
     project(":$module").buildFileName = "$module.gradle.kts"
 }
