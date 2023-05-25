@@ -14,7 +14,7 @@ import org.lwjgl.system.MemoryUtil
 import uno.glfw.GlfwWindow
 import uno.glfw.glfw
 
-open class GlWindow(val glfwWindow: GlfwWindow,
+open class GlWindow(glfwWindow: GlfwWindow,
                     profile: Caps.Profile = Caps.Profile.COMPATIBILITY,
                     forwardCompatible: Boolean = true): GlfwWindow(glfwWindow.handle) {
 
@@ -37,7 +37,7 @@ open class GlWindow(val glfwWindow: GlfwWindow,
     var debugProc: Callback? = null
 
     fun init(show: Boolean = true) {
-        glfwWindow.show(show)
+        show(show)
         if (glfw.hints.context.debug) {
             debugProc = GLUtil.setupDebugMessageCallback()
             // turn off notifications only

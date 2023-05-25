@@ -268,82 +268,82 @@ open class GlfwWindow(var handle: Long) {
         set(value) = glfwSetWindowUserPointer(handle, value.adr.toLong())
 
     // --- [ glfwSetWindowPosCallback ] ---
-    var posCB: WindowPosCB?
-        @Deprecated(message = "Write only property", level = DeprecationLevel.HIDDEN) get() = error("")
+    var posCB: WindowPosCB? = null
         set(value) {
             val cb = value?.let { GLFWWindowPosCallbackI { wnd, x, y -> it(GlfwWindow(wnd), Vec2i(x, y)) } }
             glfwSetWindowPosCallback(handle, cb)?.free()
+            field = value
         }
 
     // --- [ glfwSetWindowSizeCallback ] ---
-    var sizeCB: WindowSizeCB?
-        @Deprecated(message = "Write only property", level = DeprecationLevel.HIDDEN) get() = error("")
+    var sizeCB: WindowSizeCB? = null
         set(value) {
             val cb = value?.let { GLFWWindowSizeCallbackI { wnd, x, y -> it(GlfwWindow(wnd), Vec2i(x, y)) } }
             glfwSetWindowSizeCallback(handle, cb)?.free()
+            field = value
         }
 
     // --- [ glfwSetWindowCloseCallback ] ---
 
-    var closeCB: WindowCloseCB?
-        @Deprecated(message = "Write only property", level = DeprecationLevel.HIDDEN) get() = error("")
+    var closeCB: WindowCloseCB? = null
         set(value) {
             val cb = value?.let { GLFWWindowCloseCallbackI { wnd -> it(GlfwWindow(wnd)) } }
             glfwSetWindowCloseCallback(handle, cb)?.free()
+            field = value
         }
 
     // --- [ glfwSetWindowRefreshCallback ] ---
 
-    var refreshCB: WindowRefreshCB?
-        @Deprecated(message = "Write only property", level = DeprecationLevel.HIDDEN) get() = error("")
+    var refreshCB: WindowRefreshCB? = null
         set(value) {
             val cb = value?.let { GLFWWindowRefreshCallbackI { wnd -> it(GlfwWindow(wnd)) } }
             glfwSetWindowRefreshCallback(handle, cb)?.free()
+            field = value
         }
 
     // --- [ glfwSetWindowFocusCallback ] ---
 
-    var focusCB: WindowFocusCB?
-        @Deprecated(message = "Write only property", level = DeprecationLevel.HIDDEN) get() = error("")
+    var focusCB: WindowFocusCB? = null
         set(value) {
             val cb = value?.let { GLFWWindowFocusCallbackI { wnd, focused -> it(GlfwWindow(wnd), focused) } }
             glfwSetWindowFocusCallback(handle, cb)?.free()
+            field = value
         }
 
     // --- [ glfwSetWindowIconifyCallback ] ---
 
-    var iconifyCB: WindowIconifyCB?
-        @Deprecated(message = "Write only property", level = DeprecationLevel.HIDDEN) get() = error("")
+    var iconifyCB: WindowIconifyCB? = null
         set(value) {
             val cb = value?.let { GLFWWindowIconifyCallbackI { wnd, iconify -> it(GlfwWindow(wnd), iconify) } }
             glfwSetWindowIconifyCallback(handle, cb)?.free()
+            field = value
         }
 
     // --- [ glfwSetWindowMaximizeCallback ] ---
 
-    var maximizeCB: WindowMaximizeCB?
-        @Deprecated(message = "Write only property", level = DeprecationLevel.HIDDEN) get() = error("")
+    var maximizeCB: WindowMaximizeCB? = null
         set(value) {
             val cb = value?.let { GLFWWindowMaximizeCallbackI { wnd, maximized -> it(GlfwWindow(wnd), maximized) } }
             glfwSetWindowMaximizeCallback(handle, cb)?.free()
+            field = value
         }
 
     // --- [ glfwSetFramebufferSizeCallback ] ---
 
-    var framebufferSizeCB: FramebufferSizeCB?
-        @Deprecated(message = "Write only property", level = DeprecationLevel.HIDDEN) get() = error("")
+    var framebufferSizeCB: FramebufferSizeCB? = null
         set(value) {
             val cb = value?.let { GLFWFramebufferSizeCallbackI { wnd, width, height -> it(GlfwWindow(wnd), Vec2i(width, height)) } }
             glfwSetFramebufferSizeCallback(handle, cb)?.free()
+            field = value
         }
 
     // --- [ glfwSetWindowContentScaleCallback ] ---
 
-    var contentScaleCB: WindowContentScaleCB?
-        @Deprecated(message = "Write only property", level = DeprecationLevel.HIDDEN) get() = error("")
+    var contentScaleCB: WindowContentScaleCB? = null
         set(value) {
             val cb = value?.let { GLFWWindowContentScaleCallbackI { wnd, xScale, yScale -> it(GlfwWindow(wnd), Vec2(xScale, yScale)) } }
             glfwSetWindowContentScaleCallback(handle, cb)?.free()
+            field = value
         }
 
     // --- [ glfwGetInputMode ] ---
