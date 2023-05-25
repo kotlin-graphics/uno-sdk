@@ -491,7 +491,7 @@ open class GlfwWindow(var handle: Long) {
         }
 
     // --- [ glfwMakeContextCurrent ] ---
-    fun makeCurrent(current: Boolean = true) = glfwMakeContextCurrent(if (current) handle else MemoryUtil.NULL)
+    // -> GlWindow
 
     // --- [ glfwSwapBuffers ] ---
 
@@ -499,19 +499,6 @@ open class GlfwWindow(var handle: Long) {
 
     /** [JVM] alias */
     fun present() = swapBuffers()
-
-    inline fun inContext(block: () -> Unit) {
-        makeCurrent()
-        block()
-        makeCurrent(false)
-    }
-
-    /** for Java */
-    open fun inContext(runnable: Runnable) {
-        makeCurrent()
-        runnable.run()
-        makeCurrent(false)
-    }
 
     var autoSwap = true
 
