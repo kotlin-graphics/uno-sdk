@@ -68,7 +68,7 @@ abstract class LwjglCanvas(val glDebug: Boolean = false) : Canvas() {
 
         init()
 
-        glfwWindow.makeCurrent(false)
+        glWindow.makeCurrent(false)
 
 //        println("/LwjglCanvas.initInternal ${Date().toInstant()}")
     }
@@ -135,7 +135,7 @@ abstract class LwjglCanvas(val glDebug: Boolean = false) : Canvas() {
             if (!initialized)
                 initInternal(hwnd)
 
-            glWindow.inContext {
+            glWindow.withinContext {
 
                 if (resized) {
 //                    println("LwjglCanvas.reshape ${Date().toInstant()}")
@@ -282,10 +282,10 @@ abstract class LwjglCanvas(val glDebug: Boolean = false) : Canvas() {
     fun destroyInternal() {
         if (awtDebug) println("destroyInternal")
 
-        glWindow.inContext {
-            destroy()
-            debugProc?.free()
-        }
+//        glWindow.inContext {
+//            destroy()
+//            debugProc?.free()
+//        }
 
         JAWTFunctions.JAWT_FreeDrawingSurface(surface, awt.FreeDrawingSurface())
         awt.free()
