@@ -7,6 +7,7 @@ import org.lwjgl.glfw.GLFW
 import org.lwjgl.opengl.GL
 import org.lwjgl.opengl.GL11
 import org.lwjgl.system.Platform
+import uno.gl.GlWindow
 import uno.glfw.*
 
 class Clipboard: StringSpec() {
@@ -50,7 +51,8 @@ class Clipboard: StringSpec() {
 
             glfw.init()
 
-            val window = GlfwWindow(200, "Clipboard Test")
+            val glfwWindow = GlfwWindow(200, "Clipboard Test")
+            val window = GlWindow(glfwWindow)
 
             window.makeCurrent()
 //    gladLoadGL(glfwGetProcAddress)

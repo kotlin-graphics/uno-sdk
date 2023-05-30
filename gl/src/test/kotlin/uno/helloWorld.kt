@@ -1,6 +1,8 @@
 package uno
 
 import io.kotest.core.spec.style.StringSpec
+import io.kotest.matchers.shouldBe
+import io.kotest.matchers.shouldNotBe
 import org.lwjgl.opengl.GL11.*
 import uno.gl.GlWindow
 import uno.glfw.GlfwWindow
@@ -11,7 +13,8 @@ class HelloWorld : StringSpec() {
 
     init {
 
-        if (isNotCI)
+        if (isNotCI) {
+
             "Hello World" {
 
                 // init
@@ -34,5 +37,14 @@ class HelloWorld : StringSpec() {
                     }
                 }
             }
+
+            "equality" {
+                val a = GlfwWindow(1L)
+                val b = GlfwWindow(1L)
+                a shouldBe b
+                val c = GlfwWindow(2L)
+                a shouldNotBe c
+            }
+        }
     }
 }

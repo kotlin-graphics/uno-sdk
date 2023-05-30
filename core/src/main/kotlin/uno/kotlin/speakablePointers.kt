@@ -5,21 +5,22 @@ import kool.Ptr
 import kool.toPtr
 import kotlin.random.Random
 
-
+// TODO remove when kool is updated
 val Ptr<*>.speakable: String
     get() = formatUidDigit(adr)
 
 private val evenLetters = "bcdfghlmnprstwx"
 
 private val oddLetters = "aeiou"
-private fun formatUidDigit(n: ULong, level: Int = 0): String {
-    if (n != 0uL) {
+private fun formatUidDigit(n: ULong, level: Int = 0): String = when {
+    n != 0uL -> {
         val letters = if (level has 1) oddLetters else evenLetters
         val base = letters.length.toULong()
         val s = formatUidDigit(n / base, level + 1)
-        return s + letters[(n % base).toInt()]
+        s + letters[(n % base).toInt()]
     }
-    return ""
+
+    else -> ""
 }
 
 fun main() {

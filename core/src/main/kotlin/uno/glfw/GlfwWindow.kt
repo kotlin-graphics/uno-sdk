@@ -559,4 +559,7 @@ open class GlfwWindow(var handle: Long) {
                    share: GlfwWindow? = null,
                    position: Vec2i? = null): GlfwWindow = GlfwWindow(glfwCreateWindow(width, height, title, monitor, share?.handle ?: NULL))
     }
+
+    override fun equals(other: Any?): Boolean = other is GlfwWindow && handle == other.handle
+    override fun toString(): String = handle.toPtr<Nothing>().toString()
 }
