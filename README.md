@@ -41,10 +41,20 @@ Plus some other small utils like:
 
 And lately it also includes a counterpart of gln for vulkan, [vkk](https://github.com/kotlin-graphics/vkk), plus an util for making short-live allocations easy and free, [kool](https://github.com/kotlin-graphics/kool).
 
-
 Don't hesitate to contribute to the project by submitting [issues](https://github.com/kotlin-graphics/uno-sdk/issues) or [pull requests](https://github.com/kotlin-graphics/uno-sdk/pulls) for bugs and features. Any feedback is welcome at [elect86@gmail.com](mailto://elect86@gmail.com).
 
+### How to retrieve it:
 
+```kotlin
+repositories {
+    maven("https://raw.githubusercontent.com/kotlin-graphics/mary/master")
+    // or with magik plugin
+    //github("kotlin-graphics/mary")
+}
+dependencies {
+    implementation("kotlin.graphics:uno:0.7.21")
+}
+```
 
 ## Credits:
 
