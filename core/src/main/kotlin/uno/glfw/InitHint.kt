@@ -22,4 +22,22 @@ class InitHint {
             glfwInitHint(GLFW_COCOA_MENUBAR, value.i)
             field = value
         }
+
+    var platform: Int
+        get() = throw Exception("No getting allowed")
+        set(value) {
+            glfwInitHint(GLFW_PLATFORM, value)
+        }
+
+    val wayland = Wayland()
+    fun wayland(block: Wayland.() -> Unit) = wayland.block()
+
+    class Wayland {
+        var libDecor: Int
+            get() = throw Exception("No getting allowed")
+            set(value) {
+                glfwInitHint(GLFW_WAYLAND_LIBDECOR, value)
+            }
+    }
+
 }
